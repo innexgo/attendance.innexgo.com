@@ -30,7 +30,17 @@ public class Event implements Serializable {
 	Location location;
 	@Column(name="time")
 	Timestamp time;
+	@Column(name="in")
+	private boolean in;
 	
+	public boolean isIn() {
+		return in;
+	}
+
+	public void setIn(boolean in) {
+		this.in = in;
+	}
+
 	public Event() 
 	{
 		

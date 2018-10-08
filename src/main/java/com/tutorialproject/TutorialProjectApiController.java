@@ -58,8 +58,6 @@ public class TutorialProjectApiController {
 					}
 				}
 				
-				
-				
 				eventCrudRepository.save(event);
 				return OK;
 		}
