@@ -1,0 +1,142 @@
+body {
+  background: #faf0e6;
+}
+
+.tabcontent {
+    display: none;
+    position: relative;
+    margin-left: 250px;
+}
+
+.tab {
+  overflow: hidden;
+}
+
+.name {
+  margin-left: 1px;
+  font-size: 40px;
+}
+
+/* Style the buttons inside the tab */
+.tablinks {
+  position: static;
+  background-color: inherit;
+  float: right;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  transition: 0.3s;
+  font-size: 20px;
+  color: #f1f1f1;
+  font-family: "Oswald", serif;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+  background-color: #ddd;
+}
+
+/* Create an active/current tablink class */
+.tab button.active {
+  background-color: #ccc;
+}
+
+.title {
+  position: static;
+  font-family: "Oswald", sans-serif;
+  background-color: #005daa;
+  color: #f1f1f1;
+  margin: -8px 0 0 -8px;
+  padding: 15px;
+}
+
+#topnav {
+  float: left;
+  display: block;
+  color: black;
+  text-align: center;
+  padding: 14px 0 16px 0;
+  text-decoration: none;
+  font-size: 17px;
+  margin: -42px 0 0 1px;
+}
+
+#topnav a:hover {
+  background-color: #ddd;
+  color: black;
+}
+
+#topnav a.active {
+  background-color: #2196f3;
+  color: white;
+}
+
+.search-container {
+  float: right;
+}
+
+#topnav input[type="text"] {
+  padding: 6px;
+  margin-top: 8px;
+  font-size: 17px;
+  border: none;
+}
+
+.search-container button {
+  float: right;
+  background: #f58426;
+  font-size: 17px;
+  border: none;
+  cursor: pointer;
+  height: 32px;
+  width: 40px;
+  margin-top: 8px;
+}
+
+#topnav .search-container button:hover {
+  background: #ccc;
+}
+
+.st_logo {
+  height: 60px;
+  width: 60px;
+  position: absolute;
+  float: left;
+  margin-left: 15px;
+}
+
+/* The sidebar menu */
+.sidenav {
+  height: 100%; /* Full-height: remove this if you want "auto" height */
+  width: 240px; /* Set the width of the sidebar */
+  position: absolute; /* Fixed Sidebar (stay in place on scroll) */
+  z-index: 1; /* Stay on top */
+  top: 0; /* Stay at the top */
+  left: 0;
+  background-color: #111; /* Black */
+  overflow-x: hidden; /* Disable horizontal scroll */
+  padding-top: 20px;
+  margin-left: -2px;
+  margin-top: 90px;
+}
+
+/* The navigation menu links */
+.sidenav a {
+  padding: 6px 8px 6px 16px;
+  text-decoration: none;
+  font-size: 25px;
+  color: #818181;
+  display: block;
+}
+
+/* When you mouse over the navigation links, change their color */
+.sidenav a:hover {
+  color: #f1f1f1;
+}
+
+/* Style page content */
+.main {
+  margin-left: 160px; /* Same as the width of the sidebar */
+  padding: 0px 10px;
+}
