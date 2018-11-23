@@ -1,43 +1,44 @@
 <!DOCTYPE html">
 <html lang="en">
-  <head>
-    <title>Tutorial Project</title>
-    <!-- <link rel="icon" href="img/g.png" /> -->
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="stylesheet" type="text/css" href="main.css" />
-    <link href="https://fonts.googleapis.com/css?family=Cardo:400,700|Oswald" rel="stylesheet"/>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
-	  <script src="nav_bar.js"></script>
-    <!-- <script src="js/main.js"></script> -->
-  </head>
+		<head>
+				<title>Tutorial Project</title>
+				<!-- <link rel="icon" href="img/g.png" /> -->
+				<meta charset="UTF-8" />
+				<meta name="viewport" content="width=device-width, initial-scale=1" />
+				<link rel="stylesheet" type="text/css" href="css/main.css" />
+				<link href="https://fonts.googleapis.com/css?family=Cardo:400,700|Oswald" rel="stylesheet"/>
+				<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
+		</head>
 
-  <body>
-    <h1 class="title">
-      <div class="tab">
-		    <a class="name">Tutorial Dashboard</a>
-        <button class="tablinks" onclick="openCity(event, 'London')" id="defaultOpen"> Sign-Out </button>
-        <button class="tablinks" onclick="openCity(event, 'Paris')"> Sign-In </button>
-		    <img class="st_logo" src="st_logo.png" />
-      </div>
-    </h1>
-	  <div id="London" class="tabcontent">
-		  <h3>London <img src="test_photo.png" </h3>
-		  <p>London is the capital city of England.</p>
-	  </div>
-	  <div id="Paris" class="tabcontent">
-		  <h3>Paris</h3>
-		  <p>Paris is the capital of France.</p>
-	  </div>	
+		<body>
+				<h1 class="title">
+						<script src="js/nav_bar.js"></script>
+						<div class="tab">
+								<a class="name">Tutorial Dashboard</a>
+								<button class="tablinks" onclick="openCity(event, 'London')" id="defaultOpen"> Sign-Out </button>
+								<button class="tablinks" onclick="openCity(event, 'Paris')"> Sign-In </button>
+								<img class="st_logo" src="imgs/st_logo.png" />
+						</div>
+				</h1>
+				<div id="London" class="tabcontent">
+						<h3>London <img src="imgs/test_photo.png"> </h3>
+						<p>London is the capital city of England.</p>
+				</div>
+				<div id="Paris" class="tabcontent">
+						<h3>Paris</h3>
+						<p>Paris is the capital of France.</p>
+				</div>	
 
-    <div id="studentdisplay"></div>
-    <div class="sidenav">
-      <div id="topnav" class="search-container">
-        <form action="/action_page.php">
-          <input type="text" placeholder="Student ID" name="search" />
-          <button type="submit"><i class="fa fa-search"></i></button>
-        </form>
-      </div>
-    </div>
-  </body>
+				<div id="studentdisplay"></div>
+				<div class="sidenav">
+						<div id="topnav" class="search-container">
+								<form action="/action_page.php">
+										<input type="text" placeholder="Student ID" name="search" />
+										<button type="submit">
+												<i class="fa fa-search"></i>
+										</button>
+								</form>
+						</div>
+				</div>
+		</body>
 </html>
