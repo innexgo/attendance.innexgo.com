@@ -1,0 +1,128 @@
+-- MySQL dump 10.16  Distrib 10.1.37-MariaDB, for Linux (x86_64)
+--
+-- Host: localhost    Database: studenttracker
+-- ------------------------------------------------------
+-- Server version	10.1.37-MariaDB
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `location`
+--
+
+DROP TABLE IF EXISTS `location`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `location` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `location`
+--
+
+LOCK TABLES `location` WRITE;
+/*!40000 ALTER TABLE `location` DISABLE KEYS */;
+INSERT INTO `location` VALUES (1,'home');
+/*!40000 ALTER TABLE `location` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `student`
+--
+
+DROP TABLE IF EXISTS `student`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `student` (
+  `id` bigint(20) NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `student`
+--
+
+LOCK TABLES `student` WRITE;
+/*!40000 ALTER TABLE `student` DISABLE KEYS */;
+INSERT INTO `student` VALUES (1,'adam'),(2,'solomon'),(50,'mike'),(30090001,'StudentOne'),(30090069,'daniel'),(30090420,'DanielBinoy'),(30094614,'govind');
+/*!40000 ALTER TABLE `student` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `tracker_event`
+--
+
+DROP TABLE IF EXISTS `tracker_event`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tracker_event` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `student_id` bigint(20) DEFAULT NULL,
+  `location_id` bigint(20) DEFAULT NULL,
+  `time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `type` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tracker_event`
+--
+
+LOCK TABLES `tracker_event` WRITE;
+/*!40000 ALTER TABLE `tracker_event` DISABLE KEYS */;
+INSERT INTO `tracker_event` VALUES (1,30090001,1,'2018-09-19 16:52:05',NULL),(2,30090001,1,'2018-09-19 16:52:05',NULL),(3,30090001,1,'2018-09-19 16:52:05',NULL),(4,30090001,1,'2018-09-19 16:52:06',NULL),(5,30090001,1,'2018-09-19 16:52:06',NULL),(6,30090001,1,'2018-09-19 16:52:07',NULL),(7,30090001,1,'2018-09-19 16:52:32',NULL),(8,30090001,1,'2018-09-19 16:52:33',NULL),(9,30090001,1,'2018-09-19 16:52:33',NULL),(10,30090001,1,'2018-09-19 16:52:34',NULL),(11,30090001,1,'2018-09-19 16:52:34',NULL),(12,30090001,1,'2018-09-19 16:52:34',NULL),(13,30090001,1,'2018-09-19 16:52:36',NULL),(14,30090001,1,'2018-09-19 16:52:36',NULL),(15,30090001,1,'2018-09-19 16:52:37',NULL),(16,30090001,1,'2018-09-19 16:52:52',NULL),(17,30090001,1,'2018-09-19 16:52:53',NULL),(18,30090001,1,'2018-09-19 16:52:53',NULL),(19,30090001,1,'2018-09-19 16:52:53',NULL),(20,30090001,1,'2018-09-19 16:52:54',NULL),(21,30090001,1,'2018-09-19 16:52:54',NULL),(22,30090001,1,'2018-09-19 16:52:55',NULL),(23,30090001,1,'2018-09-19 16:52:55',NULL),(24,30090001,1,'2018-09-19 16:52:56',NULL),(25,30090001,1,'2018-09-19 16:52:56',NULL),(26,30090001,1,'2018-09-19 16:52:56',NULL),(27,30090001,1,'2018-09-19 16:52:57',NULL),(28,30090001,1,'2018-09-19 16:53:39',NULL),(29,30090001,1,'2018-09-19 16:53:45',NULL);
+/*!40000 ALTER TABLE `tracker_event` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `tracker_session`
+--
+
+DROP TABLE IF EXISTS `tracker_session`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tracker_session` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `student_id` bigint(20) DEFAULT NULL,
+  `location_id` bigint(20) DEFAULT NULL,
+  `start_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `end_time` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tracker_session`
+--
+
+LOCK TABLES `tracker_session` WRITE;
+/*!40000 ALTER TABLE `tracker_session` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tracker_session` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2018-12-03 19:57:11
