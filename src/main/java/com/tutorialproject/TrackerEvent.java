@@ -13,8 +13,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="event")
-public class Event implements Serializable {
+public class TrackerEvent implements Serializable {
 	
 	/**
 	 * 
@@ -22,37 +21,25 @@ public class Event implements Serializable {
 	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
-	@Column(name="id")
+	@Column
 	private long id;
 	@OneToOne
 	Student student;
 	@OneToOne
 	Location location;
-	@Column(name="time")
+	@Column
 	Timestamp time;
-	@Column(name="in")
-	private boolean in;
+	@Column
+	private String type;
 	
-	public boolean isIn() {
-		return in;
+	public String getType() {
+		return type;
 	}
 
-	public void setIn(boolean in) {
-		this.in = in;
+	public void setType(String type) {
+		this.type = type;
 	}
 
-	public Event() 
-	{
-		
-	}
-	
-	public Event(Student student, Location location, Timestamp timestamp)
-	{
-		this.student = student;
-		this.location = location;
-		this.time = timestamp;
-	}
-	
 	public long getId()
 	{
 		return id;

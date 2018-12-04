@@ -25,10 +25,10 @@ public class TutorialProjectApiController {
 	StudentCrudRepository studentCrudRepository;
 
 	@Autowired
-	EventCrudRepository eventCrudRepository;
+	TrackerEventCrudRepository trackerEventCrudRepository;
 
 	@Autowired
-	SessionCrudRepository sessionCrudRepository;
+	TrackerSessionCrudRepository trackerSessionCrudRepository;
 
 	static final ResponseEntity<?> BAD_REQUEST = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 	static final ResponseEntity<?> INTERNAL_SERVER_ERROR = new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -39,27 +39,27 @@ public class TutorialProjectApiController {
 	@RequestMapping(value="events/new/")
 	public ResponseEntity<?> newEvent(@RequestParam("studentId")Long studentId, @RequestParam("locationId")Long locationId)
 	{
-		Event event = new Event();
-		event.setLocation(locationCrudRepository.findById(locationId).get());
-		event.setStudent(studentCrudRepository.findById(studentId).get());
-		event.setTime(new Timestamp(System.currentTimeMillis()));
+		TrackerEvent trackerEvent = new TrackerEvent();
+		trackerEvent.setLocation(locationCrudRepository.findById(locationId).get());
+		trackerEvent.setStudent(studentCrudRepository.findById(studentId).get());
+		trackerEvent.setTime(new Timestamp(System.currentTimeMillis()));
 
-		List<Event> eventList = eventCrudRepository.mostRecentEvents(event.student);
+		List<TrackerEvent> eventList = trackerEventCrudRepository.mostRecentEvents(trackerEvent.student);
 		if(eventList.size() > 0)
 		{	
-			Event oldEvent = eventList.get(0);
-			if(oldEvent.getLocation().getId() != event.getLocation().getId())
+			TrackerEvent oldEvent = eventList.get(0);
+			if(oldEvent.getLocation().getId() != trackerEvent.getLocation().getId())
 			{
-				Session session = new Session();
-				session.setLocation(oldEvent.getLocation());
-				session.setStudent(oldEvent.getStudent());
-				session.setStartTime(oldEvent.getTime());
-				session.setEndTime(event.getTime());
-				sessionCrudRepository.save(session);
+				TrackerSession trackerSession = new TrackerSession();
+				trackerSession.setLocation(oldEvent.getLocation());
+				trackerSession.setStudent(oldEvent.getStudent());
+				trackerSession.setStartTime(oldEvent.getTime());
+				trackerSession.setEndTime(trackerEvent.getTime());
+				trackerSessionCrudRepository.save(trackerSession);
 			}
 		}
 
-		eventCrudRepository.save(event);
+		trackerEventCrudRepository.save(trackerEvent);
 		return OK;
 	}
 
@@ -86,7 +86,7 @@ public class TutorialProjectApiController {
 	@RequestMapping(value="events/delete/")
 	public ResponseEntity<?> deleteEvent(@RequestParam(value="eventId")Long eventId)
 	{
-		eventCrudRepository.deleteById(eventId);
+		trackerEventCrudRepository.deleteById(eventId);
 		return OK;
 	}
 
@@ -152,38 +152,40 @@ public class TutorialProjectApiController {
 			studentId = Long.parseLong(allRequestParam.get("studentId"));
 		}
 
-		ArrayList<Event> eventReturnList = new ArrayList<Event>(); 
+		List<TrackerEvent> eventReturnList = (List<TrackerEvent>)trackerEventCrudRepository.findAll();
 		
-		for(Event e : eventCrudRepository.findAll())
+		for(TrackerEvent e : trackerEventCrudRepository.findAll())
 		{
-			
 			//filter by criteria
 			if(hasMaxDate && e.getTime().getTime() > maxDate)
 			{
+				eventReturnList.remove(e);
 				continue;
 			}
 			
 			if(hasMinDate && e.getTime().getTime() < minDate)
 			{
+				eventReturnList.remove(e);
 				continue;
 			}
 			
 			if(hasEventId && e.getId() != eventId)
 			{
+				eventReturnList.remove(e);
 				continue;
 			}
 			
 			if(hasLocationId && e.getLocation().getId() != locationId)
 			{
+				eventReturnList.remove(e);
 				continue;
 			}
 			
 			if(hasStudentId && e.getStudent().getId() != studentId)
 			{
+				eventReturnList.remove(e);
 				continue;
 			}
-			//add to list;
-			eventReturnList.add(e);
 		}
 		
 		return new ResponseEntity<>(eventReturnList,HttpStatus.OK);

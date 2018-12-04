@@ -13,24 +13,23 @@ import javax.persistence.Table;
 
 
 @Entity
-@Table(name="session")
-public class Session implements Serializable {
+public class TrackerSession implements Serializable {
 	
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 8651234561431234L;
 	@Id
-	@Column(name="id")
+	@Column
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long id;
 	@OneToOne
 	private Student student;
 	@OneToOne
 	private Location location;
-	@Column(name="start_time")
+	@Column
 	private Timestamp startTime;
-	@Column(name="end_time")
+	@Column
 	private Timestamp endTime;
 	
 	public Student getStudent() {

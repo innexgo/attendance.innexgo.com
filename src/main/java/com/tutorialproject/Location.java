@@ -10,7 +10,6 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="location")
 public class Location implements Serializable {
 	
 	/**
@@ -19,9 +18,9 @@ public class Location implements Serializable {
 	private static final long serialVersionUID = -3910639736424954785L;
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
-	@Column(name="id")
+	@Column
 	private Long id;
-	@Column(name="name")
+	@Column
 	private String name;
 	
 	public Location()
