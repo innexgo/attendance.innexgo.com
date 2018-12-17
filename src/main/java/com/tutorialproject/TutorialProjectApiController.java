@@ -37,13 +37,13 @@ public class TutorialProjectApiController {
 
 
 	@RequestMapping(value="events/new/")
-	public ResponseEntity<?> newEvent(@RequestParam("studentId")Long studentId, @RequestParam("locationId")Long locationId)
+	public ResponseEntity<?> newEvent(@RequestParam("studentId")Long studentId, @RequestParam("locationId")Long locationId, @RequestParam("type")String type)
 	{
 		TrackerEvent trackerEvent = new TrackerEvent();
 		trackerEvent.setLocation(locationCrudRepository.findById(locationId).get());
 		trackerEvent.setStudent(studentCrudRepository.findById(studentId).get());
 		trackerEvent.setTime(new Timestamp(System.currentTimeMillis()));
-
+		trackerEvent.setType(type);
 		List<TrackerEvent> eventList = trackerEventCrudRepository.mostRecentEvents(trackerEvent.student);
 		if(eventList.size() > 0)
 		{	

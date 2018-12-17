@@ -1,51 +1,84 @@
+"use strict"
 function thisUrl(){
 	return window.location;
 }
 
-function expandStudent(id) {
-	var url = thisUrl().host+"students/"+id+"/";
-	var request = new XMLHttpRequest();
-	request.open('GET', url, true);
-	request.onload = function () {
-		if (request.status >= 200 && request.status < 400) {
-			var data = JSON.parse(this.response);
+function timeSince(date) {
+	var seconds = Math.floor((new Date() - new Date(date)) / 1000);
+	var interval = Math.floor(seconds / 31536000);
 
-		} else {
-			console.log('error');
-		}
+	if (interval > 1) {
+		return interval + " years";
 	}
-	request.send();
+	interval = Math.floor(seconds / 2592000);
+	if (interval > 1) {
+		return interval + " months";
+	}
+	interval = Math.floor(seconds / 86400);
+	if (interval > 1) {
+		return interval + " days";
+	}
+	interval = Math.floor(seconds / 3600);
+	if (interval > 1) {
+		return interval + " hours";
+	}
+	interval = Math.floor(seconds / 60);
+	if (interval > 1) {
+		return interval + " minutes";
+	}
+	return Math.floor(seconds) + " seconds";
 }
 
-function addAllToTable() {
-	var Http = new XMLHttpRequest();
-	Http.open("GET", thisUrl().host + "/events/");
-	Http.send();
-	Http.onreadystatechange=(e)=>{
-		console.log(Http.responseText);
-		var data = JSON.parse(Http.responseText);
-		for(var i = 0; i < data.length; i++) {
-			addHistoryTableEntry(data[i].student.name, data[i].location.id, data[i].timestamp);
-			console.log(data[i]);
+function request(url, functionOnLoad, functionOnError) {
+	var xhr = new XMLHttpRequest();
+	xhr.open('GET', url, true);
+	xhr.onload = function() {
+		if (xhr.readyState === 4 && xhr.status === 200) {
+			functionOnLoad(xhr.responseText);
+		} else if(xhr.status != 200) {
+			functionOnError(xhr);
 		}
-	} 
+	};
+	xhr.send();
 }
 
-function addHistoryTableEntry(name, roomNumber, timestamp)
+function addHistoryTableEntry(isSignIn, color, studentName, placeName, timestamp)
 {
-	document.getElementById("history-table").innerHTML =
+	var timeAgoText = timeSince(timestamp) + ' ago';
+	var textIconClass = isSignIn ? 'fa fa-sign-in text-blue large' : 'fa fa-sign-out text-red large';
+	var tableId = isSignIn ? "sign-in-table" : "sign-out-table";
+	var signInOrSignOutText = isSignIn ? 'in to' : 'out of';
+	document.getElementById(tableId).innerHTML =
 		'<tr>' + 
-		'<td><i class="fa fa-sign-in text-red large"></i></td>' +
-		'<td class="yellow">' +
-		'<strong> ' + name + ' </strong>' +
-		'signed in to Room' +
-		'<strong> ' + roomNumber + ' </strong>' + 
-		'<td><i>'+ timestamp +'</i></td>' + 
-		'</tr>' + document.getElementById("history-table").innerHTML;
+		'<td><i class="'+textIconClass+'"></i></td>' +
+		'<td class="' + color + '">' +
+		'<strong> ' + studentName + ' </strong>' +
+		'signed ' + signInOrSignOutText+ ' <b>' + placeName + '</b> ' + 
+		'<td><i>' + timeAgoText +'</i></td>' + 
+		'</tr>' + document.getElementById(tableId).innerHTML;
 }
 
 
-addAllToTable();
+function updateHistoryTables() {
+	request(thisUrl()+'/events/', 
+			function(xhrResponseText){
+		var events = JSON.parse(xhrResponseText);
+		for(var i = 0; i < events.length; i++) {
+			addHistoryTableEntry(events[i].type == "sign-in", 'yellow', events[i].student.name, events[i].location.name, events[i].time);
+		}
+	},
+	function(xhr) 
+	{
+		console.log(xhr.responseText);
+	}
+	);
+}
+
+function toggleSignInOrOut() {
+	var icon = document.getElementById("sign-in-or-out-icon");
+	var checkBox = document.getElementById("sign-in-or-out-checkbox");
+	icon.innerHTML = checkBox.checked ? '<i class="fa fa-sign-out xxxlarge"></i>' : '<i class="fa fa-sign-in xxxlarge"></i>';
+}
 
 //Get the Sidebar
 var mySidebar = document.getElementById("mySidebar");
@@ -69,3 +102,10 @@ function w3_close() {
 	mySidebar.style.display = "none";
 	overlayBg.style.display = "none";
 }
+
+setTimeout(function(){
+	window.location.reload(1);
+}, 100000);
+
+
+updateHistoryTables();
