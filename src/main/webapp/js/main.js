@@ -31,7 +31,7 @@ function timeSince(date) {
 
 function request(url, functionOnLoad, functionOnError) {
 	var xhr = new XMLHttpRequest();
-	xhr.open('GET', url, true);
+	xhr.open('POST', url, true);
 	xhr.onload = function() {
 		if (xhr.readyState == 4 && xhr.status == 200) {
 			functionOnLoad(xhr);
@@ -58,6 +58,11 @@ function addHistoryTableEntry(isSignIn, color, studentName, placeName, timestamp
 		'</tr>' + document.getElementById(tableId).innerHTML;
 }
 
+function clearHistoryTables()
+{
+	document.getElementById('sign-in-table').innerHTML = '';
+	document.getElementById('sign-out-table').innerHTML = '';
+}
 
 function updateHistoryTables() {
 	request(thisUrl()+'/events/', 
@@ -77,7 +82,7 @@ function updateHistoryTables() {
 function toggleSignInOrOut() {
 	var icon = document.getElementById("sign-in-or-out-icon");
 	var checkBox = document.getElementById("sign-in-or-out-checkbox");
-	icon.innerHTML = checkBox.checked ? '<i class="fa fa-sign-out xxxlarge"></i>' : '<i class="fa fa-sign-in xxxlarge"></i>';
+	icon.innerHTML = checkBox.checked ? '<i class="fa fa-sign-in xxxlarge"></i>' : '<i class="fa fa-sign-out xxxlarge"></i>';
 }
 
 function newEvent(studentId, locationId, type) {
@@ -93,8 +98,9 @@ function newEvent(studentId, locationId, type) {
 function submitEvent() {
 	var textBox = document.getElementById("student-id-textbox");
 	var checkBox = document.getElementById("sign-in-or-out-checkbox");
-	newEvent(textBox.value, 1, checkBox.checked ? "sign-out" : "sign-in")
-	return false;
+	newEvent(textBox.value, 1, checkBox.checked ? "sign-out" : "sign-in");
+	clearHistoryTables();
+	updateHistoryTables();
 }
 
 //Get the Sidebar
@@ -121,8 +127,8 @@ function w3_close() {
 }
 
 setTimeout(function(){
-	window.location.reload(1);
-}, 100000);
-
+	clearHistoryTables();
+	updateHistoryTables();
+}, 1000);
 
 updateHistoryTables();

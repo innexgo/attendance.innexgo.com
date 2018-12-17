@@ -14,8 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+@RestController
 public class TutorialProjectApiController {
 
 	@Autowired
@@ -37,7 +38,7 @@ public class TutorialProjectApiController {
 
 
 	@RequestMapping(value="events/new/")
-	public ResponseEntity<?> newEvent(@RequestParam("studentId")Long studentId, @RequestParam("locationId")Long locationId, @RequestParam("type")String type)
+	public  ResponseEntity<?> newEvent(@RequestParam("studentId")Long studentId, @RequestParam("locationId")Long locationId, @RequestParam("type")String type)
 	{
 		TrackerEvent trackerEvent = new TrackerEvent();
 		trackerEvent.setLocation(locationCrudRepository.findById(locationId).get());
@@ -64,7 +65,7 @@ public class TutorialProjectApiController {
 	}
 
 	@RequestMapping(value="students/new/")
-	public ResponseEntity<?> newStudent(@RequestParam("studentId")Long studentId, @RequestParam("name")String name)
+	public  ResponseEntity<?> newStudent(@RequestParam("studentId")Long studentId, @RequestParam("name")String name)
 	{
 		Student s = new Student();
 		s.setName(name);
@@ -74,7 +75,7 @@ public class TutorialProjectApiController {
 	}
 
 	@RequestMapping(value="locations/new/")
-	public ResponseEntity<?> newLocation(@RequestParam("locationId")Long locationId, @RequestParam("name")String name)
+	public  ResponseEntity<?> newLocation(@RequestParam("locationId")Long locationId, @RequestParam("name")String name)
 	{
 		Location location = new Location();
 		location.setName(name);
@@ -84,35 +85,35 @@ public class TutorialProjectApiController {
 	}
 
 	@RequestMapping(value="events/delete/")
-	public ResponseEntity<?> deleteEvent(@RequestParam(value="eventId")Long eventId)
+	public  ResponseEntity<?> deleteEvent(@RequestParam(value="eventId")Long eventId)
 	{
 		trackerEventCrudRepository.deleteById(eventId);
 		return OK;
 	}
 
 	@RequestMapping(value="students/delete/")
-	public ResponseEntity<?> deleteStudent(@RequestParam(value="studentId")Long studentId)
+	public  ResponseEntity<?> deleteStudent(@RequestParam(value="studentId")Long studentId)
 	{
 		studentCrudRepository.deleteById(studentId);
 		return OK;
 	}
 
 	@RequestMapping(value="locations/delete/")
-	public ResponseEntity<?> deleteLocation(@RequestParam(value="locationId")Long locationId)
+	public  ResponseEntity<?> deleteLocation(@RequestParam(value="locationId")Long locationId)
 	{
 		locationCrudRepository.deleteById(locationId);
 		return OK;
 	}
 
 	@RequestMapping(value="events/")
-	public @ResponseBody ResponseEntity<?> viewEvent(@RequestParam Map<String,String> allRequestParam)
+	public  ResponseEntity<?> viewEvent(@RequestParam Map<String,String> allRequestParam)
 	{
 		boolean hasMaxDate = false;
 		boolean hasMinDate = false;
 
 		long maxDate = Long.MAX_VALUE;
 		long minDate = Long.MIN_VALUE;
-		
+
 		boolean hasEventId = false;
 		boolean hasLocationId = false;
 		boolean hasStudentId = false;
@@ -120,8 +121,8 @@ public class TutorialProjectApiController {
 		long eventId = 0;
 		long locationId = 0;
 		long studentId = 0;
-		
-		
+
+
 		if(allRequestParam.containsKey("maxDate"))
 		{
 			hasMaxDate=true;
@@ -133,19 +134,19 @@ public class TutorialProjectApiController {
 			hasMinDate=true;
 			minDate = Long.parseLong(allRequestParam.get("minDate"));
 		}
-		
+
 		if(allRequestParam.containsKey("eventId"))
 		{
 			hasEventId = true;
 			eventId = Long.parseLong(allRequestParam.get("eventId"));
 		}
-		
+
 		if(allRequestParam.containsKey("locationId"))
 		{
 			hasLocationId = true;
 			locationId = Long.parseLong(allRequestParam.get("locationId"));
 		}
-		
+
 		if(allRequestParam.containsKey("studentId"))
 		{
 			hasStudentId = true;
@@ -153,7 +154,7 @@ public class TutorialProjectApiController {
 		}
 
 		List<TrackerEvent> eventReturnList = (List<TrackerEvent>)trackerEventCrudRepository.findAll();
-		
+
 		for(TrackerEvent e : trackerEventCrudRepository.findAll())
 		{
 			//filter by criteria
@@ -162,37 +163,37 @@ public class TutorialProjectApiController {
 				eventReturnList.remove(e);
 				continue;
 			}
-			
+
 			if(hasMinDate && e.getTime().getTime() < minDate)
 			{
 				eventReturnList.remove(e);
 				continue;
 			}
-			
+
 			if(hasEventId && e.getId() != eventId)
 			{
 				eventReturnList.remove(e);
 				continue;
 			}
-			
+
 			if(hasLocationId && e.getLocation().getId() != locationId)
 			{
 				eventReturnList.remove(e);
 				continue;
 			}
-			
+
 			if(hasStudentId && e.getStudent().getId() != studentId)
 			{
 				eventReturnList.remove(e);
 				continue;
 			}
 		}
-		
+
 		return new ResponseEntity<>(eventReturnList,HttpStatus.OK);
 	}
 
 	@RequestMapping(value="students/")
-	public @ResponseBody ResponseEntity<?> viewStudent(@RequestParam Map<String,String> allRequestParam)
+	public  ResponseEntity<?> viewStudent(@RequestParam Map<String,String> allRequestParam)
 	{
 		Long studentId = Long.parseLong(allRequestParam.get("studentId"));
 		if(studentCrudRepository.existsById(studentId))
@@ -207,7 +208,7 @@ public class TutorialProjectApiController {
 	}
 
 	@RequestMapping(value="locations/")
-	public @ResponseBody ResponseEntity<?> viewLocation(@RequestParam Map<String,String> allRequestParam)
+	public  ResponseEntity<?> viewLocation(@RequestParam Map<String,String> allRequestParam)
 	{
 		Long locationId = Long.parseLong(allRequestParam.get("locationId"));
 
