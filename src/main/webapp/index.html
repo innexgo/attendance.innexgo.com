@@ -138,13 +138,13 @@
 				<table id="sign-out-table" class="table striped white"> </table>
 			</div>
 
-			<form>
+			<form target="" onsubmit="return submitEvent();">
 				<div class="row-padding margin-bottom">
 					<h5 class="padding-small">Manual Sign-In/Sign-Out</h5>
 					<div class="half">
 						<div class="container indigo padding-16">
-							<input class="left input-box round" type="text" name="student_id"
-								maxlength="8" size="8" style="padding-right: 100px;" value="">
+							<input id="student-id-textbox" class="left input-box round" type="text" name="student_id"
+								maxlength="10" size="10" style="font-size: 16px; padding-right: 100px;" value="">
 							<div class="right">
 								<i class="fa fa-id-card xxxlarge"></i>
 							</div>
@@ -175,5 +175,6 @@
 			<!-- End page content -->
 		</div>
 	</div>
+	<iframe name="frame" style="display:none;"></iframe>
 </body>
 </html>

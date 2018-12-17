@@ -1,10 +1,10 @@
 "use strict"
 function thisUrl(){
-	return window.location;
+	return window.location.protocol  + "//" + window.location.host;
 }
 
 function timeSince(date) {
-	var seconds = Math.floor((new Date() - new Date(date)) / 1000);
+	var seconds = Math.floor((new Date().getTime() - Date.parse(date)) / 1000);
 	var interval = Math.floor(seconds / 31536000);
 
 	if (interval > 1) {
@@ -33,9 +33,9 @@ function request(url, functionOnLoad, functionOnError) {
 	var xhr = new XMLHttpRequest();
 	xhr.open('GET', url, true);
 	xhr.onload = function() {
-		if (xhr.readyState === 4 && xhr.status === 200) {
-			functionOnLoad(xhr.responseText);
-		} else if(xhr.status != 200) {
+		if (xhr.readyState == 4 && xhr.status == 200) {
+			functionOnLoad(xhr);
+		} else if(xhr.readyStat == 4 && xhr.status != 200) {
 			functionOnError(xhr);
 		}
 	};
@@ -61,8 +61,8 @@ function addHistoryTableEntry(isSignIn, color, studentName, placeName, timestamp
 
 function updateHistoryTables() {
 	request(thisUrl()+'/events/', 
-			function(xhrResponseText){
-		var events = JSON.parse(xhrResponseText);
+			function(xhr){
+		var events = JSON.parse(xhr.responseText);
 		for(var i = 0; i < events.length; i++) {
 			addHistoryTableEntry(events[i].type == "sign-in", 'yellow', events[i].student.name, events[i].location.name, events[i].time);
 		}
@@ -78,6 +78,23 @@ function toggleSignInOrOut() {
 	var icon = document.getElementById("sign-in-or-out-icon");
 	var checkBox = document.getElementById("sign-in-or-out-checkbox");
 	icon.innerHTML = checkBox.checked ? '<i class="fa fa-sign-out xxxlarge"></i>' : '<i class="fa fa-sign-in xxxlarge"></i>';
+}
+
+function newEvent(studentId, locationId, type) {
+	request(thisUrl()+'/events/new/?studentId='+studentId+'&locationId='+locationId+'&type='+type,
+			function(xhr){}, 
+			function(xhr)
+			{
+				console.log(xhr.responseText);
+			});
+}
+
+
+function submitEvent() {
+	var textBox = document.getElementById("student-id-textbox");
+	var checkBox = document.getElementById("sign-in-or-out-checkbox");
+	newEvent(textBox.value, 1, checkBox.checked ? "sign-out" : "sign-in")
+	return false;
 }
 
 //Get the Sidebar
