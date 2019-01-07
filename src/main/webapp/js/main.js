@@ -1,27 +1,22 @@
-function thisUrl(){
-	return window.location;
-}
+//Get the Sidebar
+var mySidebar = document.getElementById("mySidebar");
 
-function baseUrl(url) {
-	return url.protocol + "//" + url.host + "/" + url.pathname.split('/')[1];
-}
+//Get the DIV with overlay effect
+var overlayBg = document.getElementById("myOverlay");
 
-function expandStudent(id) {
-	var url = baseUrl(thisUrl())+"students/"+id+"/";
-	var request = new XMLHttpRequest();
-	request.open('GET', url, true);
-	request.onload = function () {
-		if (request.status >= 200 && request.status < 400) {
-			var data = JSON.parse(this.response);
-			document.getElementById('studentdisplay').innerHTML = 
-				'<p>Student ID: ' + data.id + '</p>' + 
-				'<p>Name: ' + data.name + '</p>';
-		} else {
-			console.log('error');
-		}
+//Toggle between showing and hiding the sidebar, and add overlay effect
+function w3_open() {
+	if (mySidebar.style.display === 'block') {
+		mySidebar.style.display = 'none';
+		overlayBg.style.display = "none";
+	} else {
+		mySidebar.style.display = 'block';
+		overlayBg.style.display = "block";
 	}
-	request.send();
 }
 
-expandStudent(1);
-
+//Close the sidebar with the close button
+function w3_close() {
+	mySidebar.style.display = "none";
+	overlayBg.style.display = "none";
+}
