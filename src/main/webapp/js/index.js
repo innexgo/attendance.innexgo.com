@@ -54,6 +54,9 @@ function addSignInOutFeedEntry(isSignIn, studentName, studentId, placeName, time
 {
   var table = document.getElementById(isSignIn ? "sign-in-feed" : "sign-out-feed");
   var signInOrSignOutText = isSignIn ? 'in to' : 'out of';
+  if(table.rows.length < 1) {
+    clearFeed();
+  }
   table.insertRow(1).innerHTML=
     ('<tr>' + 
     '<td>' + studentName + '</td>' +
@@ -70,7 +73,7 @@ function clearFeed()
               '<td>ID</td>' +
               '<td>Time</td>' +
             '</tr>';
-  document.getElementById('sign-in-feed').innerHTML = 
+  document.getElementById('sign-out-feed').innerHTML = 
             '<tr class="dark-gray">' +
               '<td>Name</td>' +
               '<td>Id</td>' +
@@ -83,6 +86,7 @@ function updateFeed() {
   request(thisUrl()+'/events/', 
     function(xhr){
       var events = JSON.parse(xhr.responseText);
+      clearFeed();
       for(var i = 0; i < events.length; i++) {
         addSignInOutFeedEntry(events[i].type == "sign-in", events[i].student.name, events[i].student.id, events[i].location.name, events[i].time);
       }
@@ -103,7 +107,9 @@ function toggleSignInOrOut() {
 
 //actually sends http request to server
 function newEvent(studentId, locationId, type) {
-  request(thisUrl()+'/events/new/?studentId='+studentId+'&locationId='+locationId+'&type='+type,
+  var url = thisUrl()+'/events/new/?studentId='+studentId+'&locationId='+locationId+'&type='+type;
+  console.log(url);
+  request(url,
     function(xhr){}, 
     function(xhr)
     {
@@ -118,9 +124,8 @@ function submitEvent() {
   var checkBox = document.getElementById("sign-in-or-out-checkbox");
   newEvent(textBox.value, 1, checkBox.checked ? "sign-out" : "sign-in");
   setTimeout(function() {
-    clearFeed();
     updateFeed();
-  }, 5000);
+  }, 500);
 }
 
 
@@ -137,7 +142,6 @@ function orangeGrayButton(element) {
 
 //update every 5 seconds
 setTimeout(function(){
-  clearFeed();
   updateFeed();
 }, 5 * 1000);
 

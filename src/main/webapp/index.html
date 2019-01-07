@@ -87,11 +87,21 @@
 
         <div class="half table-list">
           <table id="sign-in-feed" class="table striped white">
+            <tr class="dark-gray">
+              <td>Name</td>
+              <td>ID</td>
+              <td>Time</td>
+            </tr>
           </table>
         </div>
 
         <div class="half table-list">
           <table id="sign-out-feed" class="table striped white">
+            <tr class="dark-gray">
+              <td>Name</td>
+              <td>ID</td>
+              <td>Time</td>
+            </tr>
           </table>
         </div>
 
@@ -100,8 +110,10 @@
             <h5 class="padding-small">Manual Sign-In/Sign-Out</h5>
             <div class="half">
               <div class="container indigo padding-16">
-                <input class="left input-box round" type="text" name="student_id" maxlength="8" size="8" style="padding-right: 100px;" value="">
-                <div class="right"><i class="fa fa-id-card xxxlarge"></i></div>
+                <input id="student-id-textbox" onkeydown = "if (event.keyCode == 13) {document.getElementById('submit-button').click(); setTimeout(function(){this.value = ''},50)}" class="left input-box round" maxlength="8" size="8" style="font-size: 16px; padding-right: 100px;" value="">
+                <div class="right">
+                  <i class="fa fa-id-card xxxlarge"></i>
+                </div>
                 <div class="clear"></div>
                 <h4>Student ID</h4>
               </div>
@@ -110,9 +122,9 @@
             <div class="half">
               <div class="container indigo padding-16">
                 <h4 style="display: inline">In</h4>
-                <label class="switch" style="margin: 0 15px 0 15px"> <input
-                                      id="sign-in-or-out-checkbox" type="checkbox"> <span
-                                                                   onclick="toggleSignInOrOut()" class="slider"></span>
+                <label class="switch" style="margin: 0 15px 0 15px"> 
+                  <input id="sign-in-or-out-checkbox" type="checkbox"> 
+                  <span onclick="toggleSignInOrOut()" class="slider"></span>
                 </label>
                 <h4 style="display: inline">Out</h4>
                 <div class="right" id="sign-in-or-out-icon">
