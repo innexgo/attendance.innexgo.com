@@ -1,13 +1,13 @@
--- MySQL dump 10.16  Distrib 10.1.37-MariaDB, for Linux (x86_64)
+-- MySQL dump 10.17  Distrib 10.3.12-MariaDB, for Linux (x86_64)
 --
 -- Host: localhost    Database: studenttracker
 -- ------------------------------------------------------
--- Server version	10.1.37-MariaDB
+-- Server version	10.3.12-MariaDB-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
+/*!40101 SET NAMES utf8mb4 */;
 /*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
 /*!40103 SET TIME_ZONE='+00:00' */;
 /*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
@@ -26,7 +26,7 @@ CREATE TABLE `location` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -35,7 +35,6 @@ CREATE TABLE `location` (
 
 LOCK TABLES `location` WRITE;
 /*!40000 ALTER TABLE `location` DISABLE KEYS */;
-INSERT INTO `location` VALUES (1,'home');
 /*!40000 ALTER TABLE `location` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -47,10 +46,10 @@ DROP TABLE IF EXISTS `student`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `student` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `id` bigint(20) NOT NULL,
   `name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -59,7 +58,6 @@ CREATE TABLE `student` (
 
 LOCK TABLES `student` WRITE;
 /*!40000 ALTER TABLE `student` DISABLE KEYS */;
-INSERT INTO `student` VALUES (1,'GenericName'),(2,'Bob_McJohnson'),(3,'Adam'),(4,'Name With Spaces');
 /*!40000 ALTER TABLE `student` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -74,10 +72,10 @@ CREATE TABLE `tracker_event` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `student_id` bigint(20) DEFAULT NULL,
   `location_id` bigint(20) DEFAULT NULL,
-  `time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `time` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `type` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=83 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -86,7 +84,6 @@ CREATE TABLE `tracker_event` (
 
 LOCK TABLES `tracker_event` WRITE;
 /*!40000 ALTER TABLE `tracker_event` DISABLE KEYS */;
-INSERT INTO `tracker_event` VALUES (1,1,1,'2018-12-17 09:37:39','sign-in'),(2,1,1,'2018-12-17 09:37:40','sign-in'),(3,1,1,'2018-12-17 09:37:43','sign-in'),(4,2,1,'2018-12-17 09:37:48','sign-in'),(5,2,1,'2018-12-17 09:51:21','sign-in'),(6,1,1,'2018-12-17 09:51:26','sign-in'),(7,4,1,'2018-12-17 09:51:36','sign-in'),(8,3,1,'2018-12-17 09:51:40','sign-in'),(9,1,1,'2018-12-17 09:55:46','sign-in'),(10,1,1,'2018-12-17 09:56:08','sign-out'),(11,1,1,'2018-12-17 09:56:31','sign-out'),(12,1,1,'2018-12-17 10:02:34','sign-out'),(13,2,1,'2018-12-17 10:02:41','sign-out'),(14,4,1,'2018-12-17 10:07:19','sign-out'),(15,4,1,'2018-12-17 11:20:23','sign-in'),(16,1,1,'2018-12-17 11:22:31','sign-in'),(17,1,1,'2018-12-17 11:23:09','sign-in'),(18,1,1,'2018-12-17 11:28:36','sign-in'),(19,1,1,'2018-12-17 11:29:45','sign-in'),(20,1,1,'2018-12-17 11:31:14','sign-out'),(21,1,1,'2018-12-17 11:31:26','sign-out'),(22,4,1,'2018-12-17 11:31:36','sign-out'),(23,4,1,'2018-12-17 11:31:39','sign-out'),(24,4,1,'2018-12-17 11:31:40','sign-out'),(25,4,1,'2018-12-17 11:31:41','sign-out'),(26,4,1,'2018-12-17 11:31:41','sign-out'),(27,4,1,'2018-12-17 11:31:41','sign-out'),(28,4,1,'2018-12-17 11:31:42','sign-out'),(29,4,1,'2018-12-17 11:31:42','sign-out'),(30,4,1,'2018-12-17 11:31:42','sign-out'),(31,4,1,'2018-12-17 11:31:42','sign-out'),(32,4,1,'2018-12-17 11:31:42','sign-out'),(33,4,1,'2018-12-17 11:31:43','sign-out'),(34,1,1,'2018-12-17 11:31:45','sign-out'),(35,1,1,'2018-12-17 11:35:23','sign-out'),(36,1,1,'2018-12-17 11:35:25','sign-out'),(37,1,1,'2018-12-17 11:35:33','sign-out'),(38,1,1,'2018-12-17 11:37:18','sign-out'),(39,1,1,'2018-12-17 11:37:20','sign-out'),(40,1,1,'2018-12-17 11:37:20','sign-out'),(41,1,1,'2018-12-17 11:37:21','sign-out'),(42,1,1,'2018-12-17 11:38:16','sign-in'),(43,1,1,'2018-12-17 11:38:32','sign-out'),(44,4,1,'2018-12-17 11:39:12','sign-in'),(45,4,1,'2018-12-17 11:40:15','sign-oin'),(46,3,1,'2018-12-17 11:41:02','sign-oin'),(47,3,1,'2018-12-17 11:41:21','sign-in'),(48,4,1,'2018-12-17 11:41:35','sign-out'),(49,1,1,'2018-12-17 11:45:00','sign-in'),(50,1,1,'2018-12-17 11:50:44','sign-in'),(51,3,1,'2018-12-17 11:59:26','sign-in'),(52,3,1,'2018-12-17 11:59:31','sign-in'),(53,1,1,'2018-12-17 11:59:36','sign-in'),(54,4,1,'2018-12-17 11:59:43','sign-in'),(55,1,1,'2018-12-17 11:59:51','sign-out'),(56,1,1,'2018-12-17 12:08:10','sign-in'),(57,1,1,'2018-12-17 12:08:12','sign-in'),(58,1,1,'2018-12-17 12:08:13','sign-in'),(59,1,1,'2018-12-17 12:08:13','sign-in'),(60,3,1,'2018-12-17 12:08:34','sign-in'),(61,1,1,'2018-12-17 12:12:04','sign-in'),(62,1,1,'2018-12-17 12:12:06','sign-in'),(63,1,1,'2018-12-17 12:12:11','sign-in'),(64,1,1,'2018-12-17 12:16:55','sign-in'),(65,1,1,'2018-12-17 12:16:57','sign-in'),(66,1,1,'2018-12-17 12:19:04','sign-in'),(67,2,1,'2018-12-17 12:19:06','sign-in'),(68,1,1,'2018-12-17 12:20:18','sign-in'),(69,2,1,'2018-12-17 12:20:21','sign-in'),(70,4,1,'2018-12-17 12:20:27','sign-in'),(71,4,1,'2018-12-17 12:20:31','sign-in'),(72,1,1,'2018-12-17 12:22:42','sign-out'),(73,1,1,'2018-12-17 12:24:12','sign-out'),(74,1,1,'2018-12-17 12:24:12','sign-out'),(75,1,1,'2018-12-17 12:24:13','sign-out'),(76,1,1,'2018-12-17 12:24:13','sign-out'),(77,1,1,'2018-12-17 12:24:17','sign-in'),(78,1,1,'2018-12-17 12:24:18','sign-in'),(79,1,1,'2018-12-17 12:24:18','sign-in'),(80,1,1,'2018-12-17 12:24:19','sign-in'),(81,1,1,'2018-12-17 12:24:20','sign-in'),(82,1,1,'2018-12-17 12:24:21','sign-in');
 /*!40000 ALTER TABLE `tracker_event` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -101,7 +98,7 @@ CREATE TABLE `tracker_session` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `student_id` bigint(20) DEFAULT NULL,
   `location_id` bigint(20) DEFAULT NULL,
-  `start_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `start_time` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `end_time` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -125,4 +122,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-12-16 21:07:02
+-- Dump completed on 2019-01-25 20:32:02
