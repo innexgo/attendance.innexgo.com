@@ -93,7 +93,7 @@ function updateFeed() {
     },
     function(xhr) 
     {
-      console.log(xhr.responseText);
+      console.log(xhr);
     }
   );
 }
@@ -108,24 +108,25 @@ function toggleSignInOrOut() {
 //actually sends http request to server
 function newEvent(studentId, locationId, type) {
   var url = thisUrl()+'/events/new/?studentId='+studentId+'&locationId='+locationId+'&type='+type;
-  console.log(url);
+  console.log('making request to: ' + url);
   request(url,
     function(xhr){}, 
-    function(xhr)
-    {
-      console.log(xhr.responseText);
-    });
+    function(xhr){});
 }
 
 
 //submits event to server and then refreshes the screen
-function submitEvent() {
-  var textBox = document.getElementById("student-id-textbox");
-  var checkBox = document.getElementById("sign-in-or-out-checkbox");
-  newEvent(textBox.value, 1, checkBox.checked ? "sign-out" : "sign-in");
+function sendEvent(id) {
+  var checkBox = document.getElementById('sign-in-or-out-checkbox');
+  newEvent(id, 1, checkBox.checked ? 'sign-out' : 'sign-in');
   setTimeout(function() {
     updateFeed();
   }, 500);
+}
+
+function submitEvent() {
+  var textBox = document.getElementById('student-id-textbox');
+  sendEvent(textBox.value);
 }
 
 
@@ -138,6 +139,12 @@ function orangeGrayButton(element) {
   element.classList().remove("gray");
   element.classList().add("deep-orange");
 }
+$(document).ready(function () {
+  //Initialize scanner selector
+  $(document).scannerDetection(function(e, data) {
+    sendEvent(e);
+  });
+});
 
 
 //update every 5 seconds
