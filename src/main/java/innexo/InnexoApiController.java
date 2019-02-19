@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -56,14 +57,14 @@ public class InnexoApiController{
 
 	@RequestMapping(value="user/new/")
 	public ResponseEntity<?> newUser(
-			@RequestParam("uname")String uname, 
-			@RequestParam("fullName")String fullName,
+			@RequestParam("userId")Integer userId, 
+			@RequestParam("name")String name,
 			@RequestParam("password")String password,
 			@RequestParam("groupId")Integer groupId)
 	{
 		User u = new User();
-		u.uname = uname;
-		u.fullName = fullName;
+		u.id = userId;
+		u.name = name;
 		u.passwordHash = new BCryptPasswordEncoder().encode(password);
 		u.permissionId = 0; //TODO auth
 		u.groupId = groupId;
@@ -84,21 +85,21 @@ public class InnexoApiController{
 	}
 
 	@RequestMapping(value="encounter/delete/")
-	public  ResponseEntity<?> deleteEncounter(
+	public ResponseEntity<?> deleteEncounter(
 			@RequestParam(value="encounterId")Integer encounterId) {
 		encounterService.delete(encounterId);
 		return OK;
 	}
 
 	@RequestMapping(value="user/delete/")
-	public  ResponseEntity<?> deleteStudent(@RequestParam(value="userId")Integer userId)
+	public ResponseEntity<?> deleteStudent(@RequestParam(value="userId")Integer userId)
 	{
 		userService.delete(userId);
 		return OK;
 	}
 
 	@RequestMapping(value="location/delete/")
-	public  ResponseEntity<?> deleteLocation(@RequestParam(value="locationId")Integer locationId)
+	public ResponseEntity<?> deleteLocation(@RequestParam(value="locationId")Integer locationId)
 	{
 		locationService.delete(locationId);
 		return OK;
@@ -108,23 +109,26 @@ public class InnexoApiController{
 	{
 		Function<String, Integer> parseInteger = (str) -> str == null ? null : Integer.parseInt(str);
 		Function<String, Timestamp> parseTimestamp = (str) -> 
-			str == null ? 
-				null : Timestamp.from(Instant.ofEpochSecond(Long.parseLong(str)));
-		return new ResponseEntity<>(
-				encounterService.query(
-						parseInteger.apply(allRequestParam.get("encounterId")), 
-						parseInteger.apply(allRequestParam.get("userId")),
-						parseInteger.apply(allRequestParam.get("locationId")), 
-						parseTimestamp.apply(allRequestParam.get("minDate")), 
-						parseTimestamp.apply(allRequestParam.get("maxDate"))
-						),
-				HttpStatus.OK
-				);
+		str == null ? null : Timestamp.from(Instant.ofEpochSecond(Long.parseLong(str)));
+		List<Encounter> els = encounterService.query(
+				parseInteger.apply(allRequestParam.get("encounterId")), 
+				parseInteger.apply(allRequestParam.get("userId")),
+				parseInteger.apply(allRequestParam.get("locationId")), 
+				parseTimestamp.apply(allRequestParam.get("minDate")), 
+				parseTimestamp.apply(allRequestParam.get("maxDate")))
+		.stream()
+		.map((e) -> {
+			e.location = locationService.getById(e.locationId);
+			e.user = userService.getById(e.userId);
+			return e;
+		}).collect(Collectors.toList());
+		return new ResponseEntity<>(els, HttpStatus.OK);
 	}
 
 	@RequestMapping(value="user/")
-	public  ResponseEntity<?> viewStudent(@RequestParam Map<String,String> allRequestParam)
+	public ResponseEntity<?> viewStudent(@RequestParam Map<String,String> allRequestParam)
 	{
+
 		if(allRequestParam.containsKey("userId")) {
 			return new ResponseEntity<>(
 					Arrays.asList(userService.getById(Integer.parseInt(allRequestParam.get("userId")))),
@@ -132,14 +136,14 @@ public class InnexoApiController{
 					);
 		} else {
 			return new ResponseEntity<>(
-					userService.getAll(), 
+					userService.getAll(),
 					HttpStatus.OK
 					);
 		}
 	}
 
 	@RequestMapping(value="location/")
-	public  ResponseEntity<?> viewLocation(@RequestParam Map<String,String> allRequestParam)
+	public ResponseEntity<?> viewLocation(@RequestParam Map<String,String> allRequestParam)
 	{
 		if(allRequestParam.containsKey("locationId")) {
 			return new ResponseEntity<>(
@@ -154,3 +158,9 @@ public class InnexoApiController{
 		}
 	}
 }
+
+/* 
+ * BE SURE TO CAST TO THIS BEFORE SENDING
+ * OTHERWISE YOU WILL DISTRIBUTE THE PASSWORD HASHES
+ */
+

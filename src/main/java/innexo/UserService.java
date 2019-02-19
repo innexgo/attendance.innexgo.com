@@ -17,33 +17,33 @@ public class UserService {
   private JdbcTemplate jdbcTemplate;
 
   public User getById(int id) {
-    String sql = "SELECT id, uname, full_name, password_hash, permission_id, group_id FROM user WHERE id=?";
-    RowMapper<User> rowMapper = new BeanPropertyRowMapper<User>(User.class);
+    String sql = "SELECT id, name, password_hash, permission_id, group_id FROM user WHERE id=?";
+    RowMapper<User> rowMapper = new UserRowMapper();
     User user = jdbcTemplate.queryForObject(sql, rowMapper, id);
     return user;
   }
   public List<User> getAll() {
-    String sql = "SELECT id, uname, full_name, password_hash, permission_id, group_id FROM user";
+    String sql = "SELECT id,  name, password_hash, permission_id, group_id FROM user";
     RowMapper<User> rowMapper = new UserRowMapper();
     return this.jdbcTemplate.query(sql, rowMapper);
   }	
 
   public void add(User user) {
     //Add user
-    String sql = "INSERT INTO user (id, uname, full_name, password_hash, permission_id, group_id) values (?, ?, ?, ?, ?, ?)";
-    jdbcTemplate.update(sql, user.id, user.uname, user.fullName, user.passwordHash, user.permissionId, user.groupId);
+    String sql = "INSERT INTO user (id,  name, password_hash, permission_id, group_id) values (?, ?, ?, ?, ?)";
+    jdbcTemplate.update(sql, user.id, user.name, user.passwordHash, user.permissionId, user.groupId);
 
     //Fetch user id
-    sql = "SELECT id FROM user WHERE uname=? AND full_name=? AND password_hash=? AND permission_id=? AND group_id=?";
-    int id = jdbcTemplate.queryForObject(sql, Integer.class, user.uname, user.fullName, user.passwordHash, user.permissionId, user.groupId);
+    sql = "SELECT id FROM user WHERE name=? AND password_hash=? AND permission_id=? AND group_id=?";
+    int id = jdbcTemplate.queryForObject(sql, Integer.class, user.name, user.passwordHash, user.permissionId, user.groupId);
 
     //Set user id 
     user.id = id;
   }
 
   public void update(User user) {
-    String sql = "UPDATE user SET id=?, uname=?, full_name=?, password_hash=?, permission_id=?, group_id=? WHERE id=?";
-    jdbcTemplate.update(sql, user.id, user.uname, user.fullName, user.passwordHash, user.permissionId, user.groupId, user.id);
+    String sql = "UPDATE user SET id=?, name=?, password_hash=?, permission_id=?, group_id=? WHERE id=?";
+    jdbcTemplate.update(sql, user.id, user.name, user.passwordHash, user.permissionId, user.groupId, user.id);
   }
 
   public void delete(int id) {

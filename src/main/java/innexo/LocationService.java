@@ -18,7 +18,7 @@ public class LocationService {
 
   public Location getById(int id) {
     String sql = "SELECT id, name, tags FROM location WHERE id=?";
-    RowMapper<Location> rowMapper = new BeanPropertyRowMapper<Location>(Location.class);
+    RowMapper<Location> rowMapper = new LocationRowMapper();
     Location location = jdbcTemplate.queryForObject(sql, rowMapper, id);
     return location;
   }

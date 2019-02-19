@@ -50,7 +50,7 @@ function request(url, functionOnLoad, functionOnError) {
   xhr.send();
 }
 
-function addSignInOutFeedEntry(isSignIn, studentName, studentId, placeName, timestamp)
+function addSignInOutFeedEntry(isSignIn, studentName, userId, placeName, timestamp)
 {
   var table = document.getElementById(isSignIn ? "sign-in-feed" : "sign-out-feed");
   var signInOrSignOutText = isSignIn ? 'in to' : 'out of';
@@ -60,7 +60,7 @@ function addSignInOutFeedEntry(isSignIn, studentName, studentId, placeName, time
   table.insertRow(1).innerHTML=
     ('<tr>' + 
     '<td>' + studentName + '</td>' +
-    '<td>' + studentId  + '</td>' +
+    '<td>' + userId  + '</td>' +
     '<td>' + getDateString(timestamp) + '</td>' + 
     '</tr>');
 }
@@ -83,12 +83,13 @@ function clearFeed()
 
 //gets new data from server and inserts it at the beginning
 function updateFeed() {
-  request(thisUrl()+'/events/', 
+  request(thisUrl()+'/encounter/', 
     function(xhr){
-      var events = JSON.parse(xhr.responseText);
+      var encounters = JSON.parse(xhr.responseText);
       clearFeed();
-      for(var i = 0; i < events.length; i++) {
-        addSignInOutFeedEntry(events[i].type == "sign-in", events[i].student.name, events[i].student.id, events[i].location.name, events[i].time);
+      for(var i = 0; i < encounters.length; i++) {
+        var user = user[1]
+        addSignInOutFeedEntry(encounters[i].type == "in", encounters[i].name, encounters[i].id, encounters[i].location.name, encounters[i].time);
       }
     },
     function(xhr) 
@@ -106,8 +107,8 @@ function toggleSignInOrOut() {
 }
 
 //actually sends http request to server
-function newEvent(studentId, locationId, type) {
-  var url = thisUrl()+'/events/new/?studentId='+studentId+'&locationId='+locationId+'&type='+type;
+function newEvent(userId, locationId, type) {
+  var url = thisUrl()+'/encounter/new/?userId='+userId+'&locationId='+locationId+'&type='+type;
   console.log('making request to: ' + url);
   request(url,
     function(xhr){}, 
@@ -118,7 +119,7 @@ function newEvent(studentId, locationId, type) {
 //submits event to server and then refreshes the screen
 function sendEvent(id) {
   var checkBox = document.getElementById('sign-in-or-out-checkbox');
-  newEvent(id, 1, checkBox.checked ? 'sign-out' : 'sign-in');
+  newEvent(id, 1, checkBox.checked ? 'out' : 'in');
   setTimeout(function() {
     updateFeed();
   }, 500);

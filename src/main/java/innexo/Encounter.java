@@ -5,7 +5,13 @@ import java.sql.Timestamp;
 public class Encounter {
 	public int id;
 	public Timestamp time;
-	public int locationId;
-	public int userId;
+	int locationId;
+	int userId;
 	public String type;
+	
+	//Initialized by jackson during serialization
+	public User user;
+	public Location location;
+	
+
 }
