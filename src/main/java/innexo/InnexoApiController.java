@@ -111,13 +111,14 @@ public class InnexoApiController{
 		Function<String, Timestamp> parseTimestamp = (str) -> 
 		str == null ? null : Timestamp.from(Instant.ofEpochSecond(Long.parseLong(str)));
 		List<Encounter> els = encounterService.query(
+				parseInteger.apply(allRequestParam.get("count")),
 				parseInteger.apply(allRequestParam.get("encounterId")), 
 				parseInteger.apply(allRequestParam.get("userId")),
 				parseInteger.apply(allRequestParam.get("locationId")), 
-				Utils.valString(allRequestParam.get("type")), 
 				parseTimestamp.apply(allRequestParam.get("minDate")), 
 				parseTimestamp.apply(allRequestParam.get("maxDate")),
-				parseInteger.apply(allRequestParam.get("count")))
+				Utils.valString(allRequestParam.get("userName")),
+				Utils.valString(allRequestParam.get("type")))
 		.stream()
 		.map((e) -> {
 			e.location = locationService.getById(e.locationId);

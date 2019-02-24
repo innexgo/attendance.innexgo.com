@@ -28,13 +28,14 @@ public class EncounterService {
 		return this.jdbcTemplate.query(sql, rowMapper);
 	}	
 
-	public List<Encounter> query(Integer encounterId, 
+	public List<Encounter> query(Integer count,
+			Integer encounterId, 
 			Integer userId, 
 			Integer locationId, 
-			String type, 
 			Timestamp minTime, 
 			Timestamp maxTime, 
-			Integer count) {
+			String userName, 
+			String type) {
 		String sql = "SELECT id, time, location_id, user_id, type FROM encounter WHERE 1=1 " + 
 				(encounterId == null ? "" : " AND id="+encounterId) +
 				(userId == null ?      "" : " AND user_id="+userId) +

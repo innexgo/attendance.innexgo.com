@@ -33,7 +33,7 @@ function clearFeed()
 
 //gets new data from server and inserts it at the beginning
 function updateFeed() {
-  request(thisUrl()+'/encounter/', 
+  request(thisUrl()+'/encounter/?count=100', 
     function(xhr){
       var encounters = JSON.parse(xhr.responseText);
       clearFeed();

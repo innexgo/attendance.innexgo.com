@@ -1,156 +1,158 @@
 <!DOCTYPE html>
 
 <html>
+  <head>
+    <!--Background Information -->
+    <title>Tutorial Dashboard</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/main.css">
+    <script src="js/common.js"></script>
+    <script src="js/history.js"></script>
+  </head>
 
-<!--Background Information -->
-<title>Tutorial Dashboard</title>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<link rel="stylesheet" href="css/main.css">
+  <body class="light-grey">
 
-
-<body class="light-grey">
-
-	<!--Navigation Bar-->
+    <!--Navigation Bar-->
     <div class="bar top black large" style="z-index:4">
-		<button class="bar-item button hide-large hover-none hover-text-light-grey" onclick="w3_open();"><i class="fa fa-bars"></i>  Menu</button>
-        <a href="index.html" class="bar-item left" style="padding-top: 12.5px; text-decoration: none">Tutorial Dashboard</a>
-	    <span class="bar-item right"><img src="assets/st_logo.png"></span>
+      <button class="bar-item button hide-large hover-none hover-text-light-grey" onclick="w3_open();"><i class="fa fa-bars"></i>  Menu</button>
+      <a href="index.html" class="bar-item left" style="padding-top: 12.5px; text-decoration: none">Tutorial Dashboard</a>
+      <span class="bar-item right"><img src="assets/st_logo.png"></span>
     </div>
 
-<!--Sidebar-->
+    <!--Sidebar-->
     <nav class="sidebar collapse white animate-left" style="z-index:3;width:300px;" id="mySidebar"><br>
-        <div class="container row">
-            <div class="col s4">
-                <img src="assets/test.gif" class="circle margin-right" style="width:46px">
-            </div>
-            <div class="col s8 bar">
-                <span><strong>Mr. Davis</strong></span><br>
-			 <span>English 1A</span><br>
-			 <span>Room 100</span><br>
-            </div>
+      <div class="container row">
+        <div class="col s4">
+          <img src="assets/test.gif" class="circle margin-right" style="width:46px">
         </div>
-        <hr>
-        <div class="container">
-            <h5>Dashboard</h5>
+        <div class="col s8 bar">
+          <span><strong>Mr. Davis</strong></span><br>
+          <span>English 1A</span><br>
+          <span>Room 100</span><br>
         </div>
-        <div class="bar-block">
-            <a href="index.html" class="bar-item button padding"><i class="fa fa-bullseye fa-fw"></i>  Overview</a>
-            <a href="history.html" class="bar-item button padding blue"><i class="fa fa-history fa-fw"></i>  History</a>
-            <a href="requests.html" class="bar-item button padding"><i class="fa fa-bookmark fa-fw"></i>  Requests/Quota</a>
-            <a href="p4roster.html" class="bar-item button padding"><i class="fa fa-users fa-fw"></i>  4th Period Roster</a>
-        </div>
+      </div>
+      <hr>
+      <div class="container">
+        <h5>Dashboard</h5>
+      </div>
+      <div class="bar-block">
+        <a href="index.html" class="bar-item button padding"><i class="fa fa-bullseye fa-fw"></i>  Overview</a>
+        <a href="history.html" class="bar-item button padding blue"><i class="fa fa-history fa-fw"></i>  History</a>
+        <a href="requests.html" class="bar-item button padding"><i class="fa fa-bookmark fa-fw"></i>  Requests/Quota</a>
+        <a href="p4roster.html" class="bar-item button padding"><i class="fa fa-users fa-fw"></i>  4th Period Roster</a>
+      </div>
     </nav>
 
-<!-- Overlay on small screens -->
+    <!-- Overlay on small screens -->
     <div class="overlay hide-large animate-opacity" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
 
-<!-- !PAGE CONTENT! -->
+    <!-- !PAGE CONTENT! -->
     <div class="main" style="margin-left:300px;margin-top:43px;">
 
-<!-- Header -->
-    <header class="container" style="padding-top:22px">
+      <!-- Header -->
+      <header class="container" style="padding-top:22px">
         <h5><b><i class="fa fa-history"></i> Please use the filters to see your history.</b></h5>
-    </header>
-
-    <div class="row-padding margin-bottom" style="padding-bottom: 10px;">
-      <div class="col">
-	      <div class="container indigo padding-16">
-		     <form action="" target="_blank">
-                <div class="quarter">
-                    <p class="large"><label><i class="fa fa-calendar-check-o"></i> Date (From)</label><label class="text-red">*</label></p>
-                    <input class="w3-input w3-border input-box" type="date" placeholder="MM/DD/YYYY" name="CheckIn" style="padding-right: 32px;" required> 
-                </div>
-                <div class="quarter">
-                    <p class="large"><label><i class="fa fa-calendar-o"></i> Date (To)</label><label class="text-red">*</label></p>
-                    <input class="w3-input w3-border input-box" type="date" placeholder="MM/DD/YYYY" name="CheckOut" style="padding-right: 32px;" required>
-                </div>
-                <div class="quarter">
-                    <p class="large"><label><i class="fa fa-id-card medium"></i> Student ID</label></p>
-                    <input class="w3-input w3-border input-box" type="text" placeholder="ID" name="CheckIn" maxlength="8" size="8" style="padding-right: 100px;" value=""> 
-                </div>
-                <div class="quarter">
-                    <p class="large"><label><i class="fa fa-male"></i> Student Name</label></p>
-                    <input class="w3-input w3-border input-box" type="text" placeholder="Name" name="CheckIn" style="padding-right: 32px;"> 
-                </div>
-                <button class="btn col padding-large margin-top deep-orange" type="submit" onclick="myFunction()">Submit</button>
-              </form>
-          </div>
-      </div>
-      
-      <header class="container" >
-        <h5><b><i class="fa fa-history" style="padding-top:20px;"></i> My History</b></h5>
       </header>
-      <div class="col table-list" style="height: 325px !important;">
-	       <table class="table striped white">
-                <tr class="dark-gray">
-                    <td>Name</td>
-                    <td>In/Out</td>
-                    <td>Left From</td>
-                    <td>Destination</td>
-                    <td>Time</td>
-                </tr>
-                <tr>
-                    <td>Generic Generic</td>
-                    <td><i class="fa fa-sign-in text-red"></i> Signed-In</td>
-                    <td>Room 100</td>
-                    <td>Room 100</td>
-                    <td>01/01/19 at 00:00:00 am</td>
-                </tr>
-                <tr>
-                    <td>Generic Generic</td>
-                    <td><i class="fa fa-sign-out text-blue"></i> Signed-Out</td>
-                    <td>Room 100</td>
-                    <td>Room 100</td>
-                    <td>01/01/19 at 00:00:00 am</td>
-                </tr>
-                <tr>
-                    <td>Generic Generic</td>
-                    <td><i class="fa fa-sign-in text-red"></i> Signed-In</td>
-                    <td>Room 100</td>
-                    <td>Room 100</td>
-                    <td>01/01/19 at 00:00:00 am</td>
-                </tr>
-                <tr>
-                    <td>Generic Generic</td>
-                    <td><i class="fa fa-sign-out text-blue"></i> Signed-Out</td>
-                    <td>Room 100</td>
-                    <td>Room 100</td>
-                    <td>01/01/19 at 00:00:00 am</td>
-                </tr> 
-               <tr>
-                    <td>Generic Generic</td>
-                    <td><i class="fa fa-sign-in text-red"></i> Signed-In</td>
-                    <td>Room 100</td>
-                    <td>Room 100</td>
-                    <td>01/01/19 at 00:00:00 am</td>
-                </tr>
-                <tr>
-                    <td>Generic Generic</td>
-                    <td><i class="fa fa-sign-out text-blue"></i> Signed-Out</td>
-                    <td>Room 100</td>
-                    <td>Room 100</td>
-                    <td>01/01/19 at 00:00:00 am</td>
-                </tr>
-                <tr>
-                    <td>Generic Generic</td>
-                    <td><i class="fa fa-sign-in text-red"></i> Signed-In</td>
-                    <td>Room 100</td>
-                    <td>Room 100</td>
-                    <td>01/01/19 at 00:00:00 am</td>
-                </tr>
-                <tr>
-                    <td>Generic Generic</td>
-                    <td><i class="fa fa-sign-out text-blue"></i> Signed-Out</td>
-                    <td>Room 100</td>
-                    <td>Room 100</td>
-                    <td>01/01/19 at 00:00:00 am</td>
-                </tr> 
-            </table>
+
+      <div class="row-padding margin-bottom" style="padding-bottom: 10px;">
+        <div class="col">
+          <div class="container indigo padding-16">
+            <form action="" target="_blank">
+              <div class="quarter">
+                <p class="large"><label><i class="fa fa-calendar-check-o"></i> Date (From)</label><label class="text-red">*</label></p>
+                <input id="minDate" class="w3-input w3-border input-box" type="date" placeholder="MM/DD/YYYY" name="CheckIn" style="padding-right: 32px;" required> 
+              </div>
+              <div class="quarter">
+                <p class="large"><label><i class="fa fa-calendar-o"></i> Date (To)</label><label class="text-red">*</label></p>
+                <input id="maxDate" class="w3-input w3-border input-box" type="date" placeholder="MM/DD/YYYY" name="CheckOut" style="padding-right: 32px;" required>
+              </div>
+              <div class="quarter">
+                <p class="large"><label><i class="fa fa-id-card medium"></i> Student ID</label></p>
+                <input id="userId" class="w3-input w3-border input-box" type="text" placeholder="ID" name="CheckIn" maxlength="8" size="8" style="padding-right: 100px;" value=""> 
+              </div>
+              <div class="quarter">
+                <p class="large"><label><i class="fa fa-male"></i> Student Name</label></p>
+                <input id="userName" class="w3-input w3-border input-box" type="text" placeholder="Name" name="CheckIn" style="padding-right: 32px;"> 
+              </div>
+              <button id="submitButton" class="btn col padding-large margin-top deep-orange" onclick="makeQuery()">Submit</button>
+            </form>
+          </div>
         </div>
+
+        <header class="container" >
+          <h5><b><i class="fa fa-history" style="padding-top:20px;"></i> My History</b></h5>
+        </header>
+        <div class="col table-list" style="height: 325px !important;">
+          <table id="result-table" class="table striped white">
+            <tr class="dark-gray">
+              <td>Name</td>
+              <td>In/Out</td>
+              <td>Left From</td>
+              <td>Destination</td>
+              <td>Time</td>
+            </tr>
+            <tr>
+              <td>Generic Generic</td>
+              <td><i class="fa fa-sign-in text-red"></i> Signed-In</td>
+              <td>Room 100</td>
+              <td>Room 100</td>
+              <td>01/01/19 at 00:00:00 am</td>
+            </tr>
+            <tr>
+              <td>Generic Generic</td>
+              <td><i class="fa fa-sign-out text-blue"></i> Signed-Out</td>
+              <td>Room 100</td>
+              <td>Room 100</td>
+              <td>01/01/19 at 00:00:00 am</td>
+            </tr>
+            <tr>
+              <td>Generic Generic</td>
+              <td><i class="fa fa-sign-in text-red"></i> Signed-In</td>
+              <td>Room 100</td>
+              <td>Room 100</td>
+              <td>01/01/19 at 00:00:00 am</td>
+            </tr>
+            <tr>
+              <td>Generic Generic</td>
+              <td><i class="fa fa-sign-out text-blue"></i> Signed-Out</td>
+              <td>Room 100</td>
+              <td>Room 100</td>
+              <td>01/01/19 at 00:00:00 am</td>
+            </tr> 
+            <tr>
+              <td>Generic Generic</td>
+              <td><i class="fa fa-sign-in text-red"></i> Signed-In</td>
+              <td>Room 100</td>
+              <td>Room 100</td>
+              <td>01/01/19 at 00:00:00 am</td>
+            </tr>
+            <tr>
+              <td>Generic Generic</td>
+              <td><i class="fa fa-sign-out text-blue"></i> Signed-Out</td>
+              <td>Room 100</td>
+              <td>Room 100</td>
+              <td>01/01/19 at 00:00:00 am</td>
+            </tr>
+            <tr>
+              <td>Generic Generic</td>
+              <td><i class="fa fa-sign-in text-red"></i> Signed-In</td>
+              <td>Room 100</td>
+              <td>Room 100</td>
+              <td>01/01/19 at 00:00:00 am</td>
+            </tr>
+            <tr>
+              <td>Generic Generic</td>
+              <td><i class="fa fa-sign-out text-blue"></i> Signed-Out</td>
+              <td>Room 100</td>
+              <td>Room 100</td>
+              <td>01/01/19 at 00:00:00 am</td>
+            </tr> 
+          </table>
+        </div>
+      </div>
     </div>
-  </div>
-</body>
+  </body>
 </html>
