@@ -44,7 +44,7 @@ public class EncounterService {
 				(maxTime == null ?     "" : " AND time <= FROM_UNIXTIME(" + maxTime.toInstant().getEpochSecond() + ")") +
 				" ORDER BY time DESC " +
 				(count == null ?       "" :  " limit="+count) +
-				";";
+				";" ;
 		RowMapper<Encounter> rowMapper = new EncounterRowMapper();
 		return this.jdbcTemplate.query(sql, rowMapper);
 	}
@@ -55,11 +55,12 @@ public class EncounterService {
 		jdbcTemplate.update(sql, encounter.id, encounter.time, encounter.locationId, encounter.userId, encounter.type);
 
 		//Fetch encounter id
-		sql = "SELECT id FROM encounter WHERE time=? AND location_id=? AND user_id=? AND type=? ";
-		int id = jdbcTemplate.queryForObject(sql, Integer.class, encounter.time, encounter.locationId, encounter.userId, encounter.type);
+		sql = "SELECT id FROM encounter WHERE time=? AND location_id=? AND user_id=? AND type=?";
+		List<Integer> id = jdbcTemplate.queryForList(sql, Integer.class, encounter.time, encounter.locationId, encounter.userId, encounter.type);
 
-		//Set encounter id 
-		encounter.id = id;
+		if(!id.isEmpty()) {
+			encounter.id = id.get(0);
+		}
 	}
 
 	public void update(Encounter encounter) {
