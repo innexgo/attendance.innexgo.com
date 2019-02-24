@@ -50,7 +50,7 @@ public class InnexoApiController{
 		encounter.locationId = locationId;
 		encounter.userId = userId;
 		encounter.time = new Timestamp(System.currentTimeMillis());
-		encounter.type = type;
+		encounter.type = Utils.valString(type);
 		encounterService.add(encounter);
 		return OK;
 	}
@@ -64,7 +64,7 @@ public class InnexoApiController{
 	{
 		User u = new User();
 		u.id = userId;
-		u.name = name;
+		u.name = Utils.valString(name);
 		u.passwordHash = new BCryptPasswordEncoder().encode(password);
 		u.permissionId = 0; //TODO auth
 		u.groupId = groupId;
@@ -78,8 +78,8 @@ public class InnexoApiController{
 			@RequestParam("tags")String tags)
 	{
 		Location location = new Location();
-		location.name = name;
-		location.tags = tags;
+		location.name = Utils.valString(name);
+		location.tags = Utils.valString(tags);
 		locationService.add(location);
 		return OK;
 	}
@@ -114,8 +114,10 @@ public class InnexoApiController{
 				parseInteger.apply(allRequestParam.get("encounterId")), 
 				parseInteger.apply(allRequestParam.get("userId")),
 				parseInteger.apply(allRequestParam.get("locationId")), 
+				Utils.valString(allRequestParam.get("type")), 
 				parseTimestamp.apply(allRequestParam.get("minDate")), 
-				parseTimestamp.apply(allRequestParam.get("maxDate")))
+				parseTimestamp.apply(allRequestParam.get("maxDate")),
+				parseInteger.apply(allRequestParam.get("count")))
 		.stream()
 		.map((e) -> {
 			e.location = locationService.getById(e.locationId);
@@ -158,9 +160,3 @@ public class InnexoApiController{
 		}
 	}
 }
-
-/* 
- * BE SURE TO CAST TO THIS BEFORE SENDING
- * OTHERWISE YOU WILL DISTRIBUTE THE PASSWORD HASHES
- */
-

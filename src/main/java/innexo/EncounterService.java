@@ -28,13 +28,23 @@ public class EncounterService {
 		return this.jdbcTemplate.query(sql, rowMapper);
 	}	
 
-	public List<Encounter> query(Integer encounterId, Integer userId, Integer locationId, Timestamp minTime, Timestamp maxTime) {
+	public List<Encounter> query(Integer encounterId, 
+			Integer userId, 
+			Integer locationId, 
+			String type, 
+			Timestamp minTime, 
+			Timestamp maxTime, 
+			Integer count) {
 		String sql = "SELECT id, time, location_id, user_id, type FROM encounter WHERE 1=1 " + 
 				(encounterId == null ? "" : " AND id="+encounterId) +
 				(userId == null ?      "" : " AND user_id="+userId) +
 				(locationId == null ?  "" : " AND location_id="+locationId) + 
+				(type == null ?        "" : " AND type="+Utils.valString(type)) + 
 				(minTime == null ?     "" : " AND time >= FROM_UNIXTIME(" + minTime.toInstant().getEpochSecond() + ")") + 
-				(maxTime == null ?     "" : " AND time <= FROM_UNIXTIME(" + maxTime.toInstant().getEpochSecond() + ")");
+				(maxTime == null ?     "" : " AND time <= FROM_UNIXTIME(" + maxTime.toInstant().getEpochSecond() + ")") +
+				" ORDER BY time DESC " +
+				(count == null ?       "" :  " limit="+count) +
+				";";
 		RowMapper<Encounter> rowMapper = new EncounterRowMapper();
 		return this.jdbcTemplate.query(sql, rowMapper);
 	}

@@ -1,5 +1,6 @@
 "use strict"
 
+
 function addSignInOutFeedEntry(isSignIn, studentName, userId, placeName, timestamp)
 {
   var table = document.getElementById(isSignIn ? "sign-in-feed" : "sign-out-feed");
@@ -90,7 +91,6 @@ function orangeGrayButton(element) {
   element.classList().remove("gray");
   element.classList().add("deep-orange");
 }
-
 $(document).ready(function () {
   //Initialize scanner selector
   $(document).scannerDetection(function(e, data) {
