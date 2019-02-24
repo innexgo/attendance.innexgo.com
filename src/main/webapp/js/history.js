@@ -2,25 +2,26 @@
 
 function addQueryEntry(encounter)
 {
-  var table = document.getElementById(isSignIn ? "sign-in-feed" : "sign-out-feed");
+  var table = document.getElementById('result-table');
   var signInOrSignOutText = encounter.type == 'in' ? 
               '<i class="fa fa-sign-in text-red"></i> Signed-In' :
               '<i class="fa fa-sign-out text-blue"></i> Signed-Out';
   if(table.rows.length < 1) {
-    clearFeed();
+    clearResultTable();
   }
   table.insertRow(1).innerHTML=
     ('<tr>' + 
     '<td>' + encounter.user.name+ '</td>' +
     '<td>' + signInOrSignOutText + '</td>' +
-    '<td>' + getDateString(timestamp) + '</td>' + 
+    '<td>' + encounter.location.name + '</td>' +
+    '<td>' + getDateString(encounter.time) + '</td>' + 
     '</tr>');
 }
 
 function clearResultTable()
 {
   document.getElementById('result-table').innerHTML = 
-            '<tr class="dark-gray">'
+            '<tr class="dark-gray">'+
               '<td>Name</td>'+
               '<td>In/Out</td>'+
               '<td>Location</td>'+
@@ -30,20 +31,20 @@ function clearResultTable()
 //gets new data from server and inserts it at the beginning
 function submitQuery(encounterId,userId, locationId, type, minDate, maxDate, count) {
   var url = thisUrl() + '/encounter/?' +
-    (isNAN(encounterId) ?       '' : '&encounterId='+encounterId) +
-    (isNAN(userId) ?            '' : '&userId='+userId) +
-    (isNAN(locationId) ?        '' : '&locationId='+locationId) +
-    (isValidString(type) ?      '' : '&type='+encodeURIComponent(type)) +
-    (isNAN(minDate.getTime()) ? '' : '&minDate='+minDate.getTime()) +
-    (isNAN(maxDate.getTime()) ? '' : '&maxDate='+maxDate.getTime()) +
-    (isNAN(count) ?             '' : '&count='+count);
+    (isNaN(encounterId) ?       '' : '&encounterId='+encounterId) +
+    (isNaN(userId) ?            '' : '&userId='+userId) +
+    (isNaN(locationId) ?        '' : '&locationId='+locationId) +
+    (!isValidString(type) ?     '' : '&type='+encodeURIComponent(type)) +
+    (isNaN(minDate.getTime()) ? '' : '&minDate='+minDate.getTime()/1000) +
+    (isNaN(maxDate.getTime()) ? '' : '&maxDate='+maxDate.getTime()/1000) +
+    (isNaN(count) ?             '' : '&count='+count);
   console.log('making request to: ' + url);
   request(url, 
     function(xhr){
       var encounters = JSON.parse(xhr.responseText);
-      clearFeed();
+      clearResultTable();
       for(var i = 0; i < encounters.length; i++) {
-        addQueryEntry(encounter);
+        addQueryEntry(encounters[i]);
       }
     },
     function(xhr) 
@@ -54,8 +55,12 @@ function submitQuery(encounterId,userId, locationId, type, minDate, maxDate, cou
 }
 
 function onQueryClick() {
-  var encounterId = null; //TODO add query box
+  var encounterId = undefined; //TODO add query box
   var userId = document.getElementById('userId').value;
-  var = document.getElementById('userId').value;
-  var userId = document.getElementById('userId').value;
+  var locationId = undefined;//document.getElementById('locationId').value;
+  var type = undefined;
+  var minDate = new Date(document.getElementById('minDate').value)
+  var maxDate = new Date(document.getElementById('maxDate').value)
+  var count = 100;
+  submitQuery(encounterId, userId, locationId, type, minDate, maxDate, count);
 }

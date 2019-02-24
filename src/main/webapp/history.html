@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+'<!DOCTYPE html>
 
 <html>
   <head>
@@ -63,21 +63,21 @@
             <form action="" target="_blank">
               <div class="quarter">
                 <p class="large"><label><i class="fa fa-calendar-check-o"></i> Date (From)</label><label class="text-red">*</label></p>
-                <input id="minDate" class="w3-input w3-border input-box" type="date" placeholder="MM/DD/YYYY" name="CheckIn" style="padding-right: 32px;" required> 
+                <input id="minDate" class="w3-input w3-border input-box" type="date" placeholder="MM/DD/YYYY" name="minDate" style="padding-right: 32px;" required> 
               </div>
               <div class="quarter">
                 <p class="large"><label><i class="fa fa-calendar-o"></i> Date (To)</label><label class="text-red">*</label></p>
-                <input id="maxDate" class="w3-input w3-border input-box" type="date" placeholder="MM/DD/YYYY" name="CheckOut" style="padding-right: 32px;" required>
+                <input id="maxDate" class="w3-input w3-border input-box" type="date" placeholder="MM/DD/YYYY" name="maxDate" style="padding-right: 32px;" required>
               </div>
               <div class="quarter">
                 <p class="large"><label><i class="fa fa-id-card medium"></i> Student ID</label></p>
-                <input id="userId" class="w3-input w3-border input-box" type="text" placeholder="ID" name="CheckIn" maxlength="8" size="8" style="padding-right: 100px;" value=""> 
+                <input id="userId" class="w3-input w3-border input-box" type="text" placeholder="ID" name="userId" maxlength="8" size="8" style="padding-right: 100px;" value=""> 
               </div>
               <div class="quarter">
                 <p class="large"><label><i class="fa fa-male"></i> Student Name</label></p>
-                <input id="userName" class="w3-input w3-border input-box" type="text" placeholder="Name" name="CheckIn" style="padding-right: 32px;"> 
+                <input id="userName" class="w3-input w3-border input-box" type="text" placeholder="Name" name="userName" style="padding-right: 32px;"> 
               </div>
-              <button id="submitButton" class="btn col padding-large margin-top deep-orange" onclick="makeQuery()">Submit</button>
+              <button id="submitButton" type="button" class="btn col padding-large margin-top deep-orange" onclick="onQueryClick()">Submit</button>
             </form>
           </div>
         </div>

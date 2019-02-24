@@ -6,7 +6,7 @@
     <title>Tutorial Dashboard</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="css/montserrat.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
     <link rel="stylesheet" href="css/main.css">
     <script src="js/jquery.min.js"></script>
@@ -111,12 +111,12 @@
             <h5 class="padding-small">Manual Sign-In/Sign-Out</h5>
             <div class="half">
               <div class="container indigo padding-16">
-                <input id="student-id-textbox" onkeydown = "if (event.keyCode == 13) {document.getElementById('submit-button').click(); setTimeout(function(){this.value = ''},50)}" class="left input-box round" maxlength="8" size="8" style="font-size: 16px; padding-right: 100px;" value="">
+                <input id="user-id-textbox" onkeydown = "if (event.keyCode == 13) {document.getElementById('submit-button').click(); setTimeout(function(){this.value = ''},50)}" class="left input-box round" maxlength="8" size="8" style="font-size: 16px; padding-right: 100px;" value="">
                 <div class="right">
                   <i class="fa fa-id-card xxxlarge"></i>
                 </div>
                 <div class="clear"></div>
-                <h4>Student ID</h4>
+                <h4>User ID</h4>
               </div>
             </div>
 
@@ -136,7 +136,7 @@
               </div>
             </div>
           </div>
-          <button id="submit-button" class="btn col padding-large margin-top deep-orange" onclick="submitEvent()">Submit!</button>
+          <button id="submit-button" type='button' class="btn col padding-large margin-top deep-orange" onclick="submitEvent()">Submit!</button>
       </div>
         </form>
     </div>

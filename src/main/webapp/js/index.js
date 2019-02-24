@@ -1,6 +1,6 @@
 "use strict"
 
-function addSignInOutFeedEntry(isSignIn, studentName, userId, placeName, timestamp)
+function addSignInOutFeedEntry(isSignIn, userName, userId, placeName, timestamp)
 {
   var table = document.getElementById(isSignIn ? "sign-in-feed" : "sign-out-feed");
   var signInOrSignOutText = isSignIn ? 'in to' : 'out of';
@@ -9,7 +9,7 @@ function addSignInOutFeedEntry(isSignIn, studentName, userId, placeName, timesta
   }
   table.insertRow(1).innerHTML=
     ('<tr>' + 
-    '<td>' + studentName + '</td>' +
+    '<td>' + userName + '</td>' +
     '<td>' + userId  + '</td>' +
     '<td>' + getDateString(timestamp) + '</td>' + 
     '</tr>');
@@ -38,8 +38,11 @@ function updateFeed() {
       var encounters = JSON.parse(xhr.responseText);
       clearFeed();
       for(var i = 0; i < encounters.length; i++) {
-        var user = user[1]
-        addSignInOutFeedEntry(encounters[i].type == "in", encounters[i].name, encounters[i].id, encounters[i].location.name, encounters[i].time);
+        addSignInOutFeedEntry(encounters[i].type == 'in', 
+          encounters[i].user.name, 
+          encounters[i].user.id, 
+          encounters[i].location.name, 
+          encounters[i].time);
       }
     },
     function(xhr) 
@@ -76,7 +79,7 @@ function sendEvent(id) {
 }
 
 function submitEvent() {
-  var textBox = document.getElementById('student-id-textbox');
+  var textBox = document.getElementById('user-id-textbox');
   sendEvent(textBox.value);
 }
 

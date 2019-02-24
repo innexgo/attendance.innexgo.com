@@ -1,11 +1,12 @@
 "use strict"
 
 function isWhitespace(str) {
-  return /\S/.test(myString);
+  return !!(/\S/.test(str));
 }
 
 function isValidString(str) {
-  return str !== 'undefined' && !isWhitespace(str);
+  return typeof(str) !== 'undefined' && !isWhitespace(str);
+}
 
 function thisUrl(){
   return window.location.protocol  + "//" + window.location.host;

@@ -29,7 +29,7 @@ CREATE TABLE `encounter` (
   `user_id` bigint(20) DEFAULT NULL,
   `type` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -38,7 +38,7 @@ CREATE TABLE `encounter` (
 
 LOCK TABLES `encounter` WRITE;
 /*!40000 ALTER TABLE `encounter` DISABLE KEYS */;
-INSERT INTO `encounter` VALUES (1,'2019-02-18 14:57:04',1,1,'in'),(2,'2019-02-18 14:57:15',1,1,'out'),(3,'2019-02-18 14:59:54',2,1,'in'),(4,'2019-02-18 15:00:00',2,1,'out'),(5,'2019-02-18 15:00:09',1,2,'in'),(6,'2019-02-18 15:00:13',1,2,'out'),(7,'2019-02-18 15:00:25',1,2,'in'),(8,'2019-02-18 15:00:32',1,2,'out'),(9,'2019-02-18 15:00:40',2,2,'in'),(10,'2019-02-18 15:00:44',2,2,'out'),(11,'2019-02-18 16:38:54',1,1,'in'),(12,'2019-02-18 18:59:01',1,1,'in'),(13,'2019-02-18 18:59:06',1,2,'in'),(14,'2019-02-18 18:59:27',1,1,'in'),(15,'2019-02-18 18:59:32',1,1,'in'),(16,'2019-02-18 21:21:55',1,1,'in'),(17,'2019-02-18 21:22:00',1,1,'out');
+INSERT INTO `encounter` VALUES (1,'2019-02-24 07:18:13',1,1,'in'),(2,'2019-02-24 07:18:13',1,1,'in'),(3,'2019-02-24 07:18:13',1,1,'in'),(4,'2019-02-24 07:18:13',1,1,'in'),(5,'2019-02-24 07:18:13',1,1,'in'),(6,'2019-02-24 07:18:13',1,1,'in'),(7,'2019-02-24 07:18:13',1,1,'in'),(8,'2019-02-24 07:18:13',1,1,'in'),(9,'2019-02-24 07:18:13',1,1,'in'),(10,'2019-02-24 09:06:02',1,1,'in'),(11,'2019-02-24 09:06:16',1,1,'in'),(12,'2019-02-24 09:07:17',1,1,'in'),(13,'2019-02-24 09:11:51',1,1,'in'),(14,'2019-02-24 09:12:43',1,1,'out'),(15,'2019-02-24 09:12:48',1,2,'out'),(16,'2019-02-24 09:12:53',1,1,'out');
 /*!40000 ALTER TABLE `encounter` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -103,4 +103,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-02-18 21:25:31
+-- Dump completed on 2019-02-24 10:13:30
