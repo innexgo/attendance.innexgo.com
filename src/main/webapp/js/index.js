@@ -60,7 +60,7 @@ function toggleSignInOrOut() {
 }
 
 //actually sends http request to server
-function newEvent(userId, locationId, type) {
+function newEncounter(userId, locationId, type) {
   var url = thisUrl()+'/encounter/new/?userId='+userId+'&locationId='+locationId+'&type='+type;
   console.log('making request to: ' + url);
   request(url,
@@ -69,18 +69,18 @@ function newEvent(userId, locationId, type) {
 }
 
 
-//submits event to server and then refreshes the screen
-function sendEvent(id) {
+//submits encounter to server and then refreshes the screen
+function sendEncounter(id) {
   var checkBox = document.getElementById('sign-in-or-out-checkbox');
-  newEvent(id, 1, checkBox.checked ? 'out' : 'in');
+  newEncounter(id, 1, checkBox.checked ? 'out' : 'in');
   setTimeout(function() {
     updateFeed();
-  }, 500);
+  }, 50);
 }
 
-function submitEvent() {
+function submitEncounter() {
   var textBox = document.getElementById('user-id-textbox');
-  sendEvent(textBox.value);
+  sendEncounter(textBox.value);
 }
 
 
@@ -97,7 +97,7 @@ function orangeGrayButton(element) {
 $(document).ready(function () {
   //Initialize scanner selector
   $(document).scannerDetection(function(e, data) {
-    sendEvent(e);
+    sendEncounter(e);
   });
 });
 

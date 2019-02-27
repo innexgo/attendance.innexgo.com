@@ -46,13 +46,17 @@ public class InnexoApiController{
 			@RequestParam("locationId")Integer locationId, 
 			@RequestParam("type")String type)
 	{
-		Encounter encounter = new Encounter();
-		encounter.locationId = locationId;
-		encounter.userId = userId;
-		encounter.time = new Timestamp(System.currentTimeMillis());
-		encounter.type = Utils.valString(type);
-		encounterService.add(encounter);
-		return OK;
+		if(locationService.locationExists(locationId) && userService.exists(userId)) {
+			Encounter encounter = new Encounter();
+			encounter.locationId = locationId;
+			encounter.userId = userId;
+			encounter.time = new Timestamp(System.currentTimeMillis());
+			encounter.type = Utils.valString(type);
+			encounterService.add(encounter);
+			return OK;
+		} else {
+			return INTERNAL_SERVER_ERROR;
+		}
 	}
 
 	@RequestMapping(value="user/new/")
@@ -62,14 +66,18 @@ public class InnexoApiController{
 			@RequestParam("password")String password,
 			@RequestParam("groupId")Integer groupId)
 	{
-		User u = new User();
-		u.id = userId;
-		u.name = Utils.valString(name);
-		u.passwordHash = new BCryptPasswordEncoder().encode(password);
-		u.permissionId = 0; //TODO auth
-		u.groupId = groupId;
-		userService.add(u);
-		return OK;
+		if(!userService.exists(userId)) {
+			User u = new User();
+			u.id = userId;
+			u.name = Utils.valString(name);
+			u.passwordHash = new BCryptPasswordEncoder().encode(password);
+			u.permissionId = 0; //TODO auth
+			u.groupId = groupId;
+			userService.add(u);
+			return OK;
+		} else {
+			return INTERNAL_SERVER_ERROR;
+		}
 	}
 
 	@RequestMapping(value="location/new/")
