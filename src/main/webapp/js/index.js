@@ -37,7 +37,8 @@ function updateFeed() {
     function(xhr){
       var encounters = JSON.parse(xhr.responseText);
       clearFeed();
-      for(var i = 0; i < encounters.length; i++) {
+      //go backwards to maintain order
+      for(var i = encounters.length-1; i >= 0; i--) {
         addSignInOutFeedEntry(encounters[i].type == 'in', 
           encounters[i].user.name, 
           encounters[i].user.id, 
