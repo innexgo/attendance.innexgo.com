@@ -26,7 +26,7 @@ function clearFeed()
   document.getElementById('sign-out-feed').innerHTML = 
             '<tr class="dark-gray">' +
               '<td>Name</td>' +
-              '<td>Id</td>' +
+              '<td>ID</td>' +
               '<td>Time</td>' +
             '</tr>';
 }
@@ -51,13 +51,6 @@ function updateFeed() {
       console.log(xhr);
     }
   );
-}
-
-//animates the switch to swap depending on whether it's pressed or not
-function toggleSignInOrOut() {
-  var icon = document.getElementById("sign-in-or-out-icon");
-  var checkBox = document.getElementById("sign-in-or-out-checkbox");
-  icon.innerHTML = checkBox.checked ? '<i class="fa fa-sign-in xxxlarge"></i>' : '<i class="fa fa-sign-out xxxlarge"></i>';
 }
 
 //actually sends http request to server

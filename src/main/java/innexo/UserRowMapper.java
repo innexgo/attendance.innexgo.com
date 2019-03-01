@@ -13,7 +13,6 @@ public class UserRowMapper implements RowMapper<User> {
     u.name = row.getString("name");
     u.passwordHash= row.getString("password_hash");
     u.permissionId = row.getInt("permission_id");
-    u.groupId = row.getInt("group_id");
 	return u;
   }
 }

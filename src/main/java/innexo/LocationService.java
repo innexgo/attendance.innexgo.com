@@ -52,7 +52,7 @@ public class LocationService {
     jdbcTemplate.update(sql, id);
   }
 
-  public boolean locationExists(int id) {
+  public boolean exists(int id) {
     String sql = "SELECT count(*) FROM location WHERE id=?";
     int count = jdbcTemplate.queryForObject(sql, Integer.class, id);
     if(count == 0) {

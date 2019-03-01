@@ -46,7 +46,7 @@ public class InnexoApiController{
 			@RequestParam("locationId")Integer locationId, 
 			@RequestParam("type")String type)
 	{
-		if(locationService.locationExists(locationId) && userService.exists(userId)) {
+		if(locationService.exists(locationId) && userService.exists(userId)) {
 			Encounter encounter = new Encounter();
 			encounter.locationId = locationId;
 			encounter.userId = userId;
@@ -63,8 +63,7 @@ public class InnexoApiController{
 	public ResponseEntity<?> newUser(
 			@RequestParam("userId")Integer userId, 
 			@RequestParam("name")String name,
-			@RequestParam("password")String password,
-			@RequestParam("groupId")Integer groupId)
+			@RequestParam("password")String password)
 	{
 		if(!userService.exists(userId)) {
 			User u = new User();
@@ -72,7 +71,6 @@ public class InnexoApiController{
 			u.name = Utils.valString(name);
 			u.passwordHash = new BCryptPasswordEncoder().encode(password);
 			u.permissionId = 0; //TODO auth
-			u.groupId = groupId;
 			userService.add(u);
 			return OK;
 		} else {
