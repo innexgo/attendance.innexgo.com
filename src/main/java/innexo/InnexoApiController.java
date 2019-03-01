@@ -33,6 +33,15 @@ public class InnexoApiController{
 
 	@Autowired
 	LocationService locationService;
+	
+	@Autowired
+	PermissionService permissionService;
+	
+	@Autowired
+	RequestService requestService;
+	
+	@Autowired
+	TargetService targetService;
 
 	static final ResponseEntity<?> BAD_REQUEST = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 	static final ResponseEntity<?> INTERNAL_SERVER_ERROR = new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -46,7 +55,8 @@ public class InnexoApiController{
 			@RequestParam("locationId")Integer locationId, 
 			@RequestParam("type")String type)
 	{
-		if(locationService.exists(locationId) && userService.exists(userId)) {
+		if(locationId != null && locationId != null && type != null &&
+				locationService.exists(locationId) && userService.exists(userId)) {
 			Encounter encounter = new Encounter();
 			encounter.locationId = locationId;
 			encounter.userId = userId;
@@ -55,7 +65,7 @@ public class InnexoApiController{
 			encounterService.add(encounter);
 			return OK;
 		} else {
-			return INTERNAL_SERVER_ERROR;
+			return BAD_REQUEST ;
 		}
 	}
 
@@ -74,7 +84,7 @@ public class InnexoApiController{
 			userService.add(u);
 			return OK;
 		} else {
-			return INTERNAL_SERVER_ERROR;
+			return BAD_REQUEST;
 		}
 	}
 
@@ -89,7 +99,62 @@ public class InnexoApiController{
 		locationService.add(location);
 		return OK;
 	}
+	
+	
+	@RequestMapping(value="permission/new/")
+	public ResponseEntity<?> newPermission(
+			@RequestParam("isTrustedUser")Boolean isTrustedUser,
+			@RequestParam("isAdministrator")Boolean isAdministrator)
+	{
+		Permission permission = new Permission();
+		permission.isAdministrator = isAdministrator;
+		permission.isTrustedUser = isTrustedUser;
+		permissionService.add(permission);
+		return OK;
+	}
 
+	@RequestMapping(value="request/new/")
+	public ResponseEntity<?> newRequest(
+			@RequestParam("userId")Integer userId,
+			@RequestParam("targetId")Integer targetId,
+			@RequestParam("creatorId")Integer creatorId)
+	{
+		if(userId != null && targetId != null && creatorId != null 
+				&& userService.exists(userId) && userService.exists(creatorId) && targetService.exists(targetId))
+		{
+			Request request = new Request();
+			request.userId = userId;
+			request.targetId = targetId;
+			request.creatorId = creatorId;
+			requestService.add(request);
+			return OK;
+		} else {
+			return BAD_REQUEST;
+		}
+	}
+	
+	@RequestMapping(value="target/new/")
+	public ResponseEntity<?> newTarget(
+			@RequestParam("userId")Integer userId,
+			@RequestParam("targetId")Integer targetId,
+			@RequestParam("creatorId")Integer creatorId)
+	{
+		if(userId != null && targetId != null && creatorId != null 
+				&& userService.exists(userId) && userService.exists(creatorId) && targetService.exists(targetId))
+		{
+			Request request = new Request();
+			request.userId = userId;
+			request.targetId = targetId;
+			request.creatorId = creatorId;
+			requestService.add(request);
+			return OK;
+		} else {
+			return BAD_REQUEST;
+		}
+	}
+	
+	
+	
 	@RequestMapping(value="encounter/delete/")
 	public ResponseEntity<?> deleteEncounter(
 			@RequestParam(value="encounterId")Integer encounterId) {
@@ -110,6 +175,28 @@ public class InnexoApiController{
 		locationService.delete(locationId);
 		return OK;
 	}
+	
+	@RequestMapping(value="permission/delete/")
+	public ResponseEntity<?> deletePermission(@RequestParam(value="permissionId")Integer permissionId)
+	{
+		permissionService.delete(permissionId);
+		return OK;
+	}
+	
+	@RequestMapping(value="target/delete/")
+	public ResponseEntity<?> deleteTarget(@RequestParam(value="targetId")Integer targetId)
+	{
+		targetService.delete(targetId);
+		return OK;
+	}
+	
+	@RequestMapping(value="request/delete/")
+	public ResponseEntity<?> deleteRequest(@RequestParam(value="requestId")Integer requestId)
+	{
+		requestService.delete(requestId);
+		return OK;
+	}
+	
 	@RequestMapping(value="encounter/")
 	public ResponseEntity<?> viewEvent(@RequestParam Map<String,String> allRequestParam)
 	{
@@ -162,6 +249,54 @@ public class InnexoApiController{
 		} else {
 			return new ResponseEntity<>(
 					locationService.getAll(), 
+					HttpStatus.OK
+					);
+		}
+	}
+	
+	@RequestMapping(value="permission/")
+	public ResponseEntity<?> viewPermission(@RequestParam Map<String,String> allRequestParam)
+	{
+		if(allRequestParam.containsKey("permissionId")) {
+			return new ResponseEntity<>(
+					Arrays.asList(permissionService.getById(Integer.parseInt(allRequestParam.get("permissionId")))),
+					HttpStatus.OK
+					);
+		} else {
+			return new ResponseEntity<>(
+					permissionService.getAll(), 
+					HttpStatus.OK
+					);
+		}
+	}
+	
+	@RequestMapping(value="target/")
+	public ResponseEntity<?> viewTarget(@RequestParam Map<String,String> allRequestParam)
+	{
+		if(allRequestParam.containsKey("targetId")) {
+			return new ResponseEntity<>(
+					Arrays.asList(targetService.getById(Integer.parseInt(allRequestParam.get("targetId")))),
+					HttpStatus.OK
+					);
+		} else {
+			return new ResponseEntity<>(
+					targetService.getAll(), 
+					HttpStatus.OK
+					);
+		}
+	}
+	
+	@RequestMapping(value="request/")
+	public ResponseEntity<?> viewRequest(@RequestParam Map<String,String> allRequestParam)
+	{
+		if(allRequestParam.containsKey("requestId")) {
+			return new ResponseEntity<>(
+					Arrays.asList(requestService.getById(Integer.parseInt(allRequestParam.get("requestId")))),
+					HttpStatus.OK
+					);
+		} else {
+			return new ResponseEntity<>(
+					requestService.getAll(), 
 					HttpStatus.OK
 					);
 		}
