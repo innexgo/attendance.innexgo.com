@@ -1,4 +1,4 @@
-'<!DOCTYPE html>
+<!DOCTYPE html>
 
 <html>
   <head>
@@ -6,8 +6,8 @@
     <title>Tutorial Dashboard</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
     <link rel="stylesheet" href="css/main.css">
     <script src="js/common.js"></script>
     <script src="js/history.js"></script>
@@ -18,8 +18,8 @@
     <!--Navigation Bar-->
     <div class="bar top black large" style="z-index:4">
       <button class="bar-item button hide-large hover-none hover-text-light-grey" onclick="w3_open();"><i class="fa fa-bars"></i>  Menu</button>
-      <a href="index.html" class="bar-item left" style="padding-top: 12.5px; text-decoration: none">Tutorial Dashboard</a>
-      <span class="bar-item right"><img src="assets/st_logo.png"></span>
+      <a href="index.html" class="bar-item left" style="padding-top: 12.5px; text-decoration: none">Attendance Dashboard</a>
+      <span class="bar-item right"><img src="assets/innexo_logo.png"></span>
     </div>
 
     <!--Sidebar-->
@@ -37,12 +37,12 @@
       <hr>
       <div class="container">
         <h5>Dashboard</h5>
-      </div>
+      </div>    
       <div class="bar-block">
         <a href="index.html" class="bar-item button padding"><i class="fa fa-bullseye fa-fw"></i>  Overview</a>
         <a href="history.html" class="bar-item button padding blue"><i class="fa fa-history fa-fw"></i>  History</a>
         <a href="requests.html" class="bar-item button padding"><i class="fa fa-bookmark fa-fw"></i>  Requests/Quota</a>
-        <a href="p4roster.html" class="bar-item button padding"><i class="fa fa-users fa-fw"></i>  4th Period Roster</a>
+        <!--<a href="p4roster.html" class="bar-item button padding"><i class="fa fa-users fa-fw"></i>  4th Period Roster</a> -->
       </div>
     </nav>
 
@@ -58,8 +58,8 @@
       </header>
 
       <div class="row-padding margin-bottom" style="padding-bottom: 10px;">
-        <div class="col">
-          <div class="container indigo padding-16">
+        <div class="col" style="background-color: #c1737eff; color: #fff;">
+          <div class="container padding-16" >
             <form action="" target="_blank">
               <div class="quarter">
                 <p class="large"><label><i class="fa fa-calendar-check-o"></i> Date (From)</label><label class="text-red">*</label></p>
@@ -77,7 +77,7 @@
                 <p class="large"><label><i class="fa fa-male"></i> Student Name</label></p>
                 <input id="userName" class="w3-input w3-border input-box" type="text" placeholder="Name" name="userName" style="padding-right: 32px;"> 
               </div>
-              <button id="submitButton" type="button" class="btn col padding-large margin-top deep-orange" onclick="onQueryClick()">Submit</button>
+              <button id="submitButton" type="button" class="btn col padding-large margin-top" style="background-color: #daa520ff;" onclick="onQueryClick()">Submit</button>
             </form>
           </div>
         </div>
