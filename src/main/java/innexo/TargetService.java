@@ -31,11 +31,11 @@ public class TargetService {
 
   public void add(Target target) {
     //Add target
-    String sql = "INSERT INTO target (user_id, location_id, name, min_time, max_time) values (?, ?, ?, ?)";
+    String sql = "INSERT INTO target (user_id, location_id, name, min_time, max_time) values (?, ?, ?, ?, ?)";
     jdbcTemplate.update(sql, target.userId, target.locationId, target.name, target.minTime, target.maxTime);
 
     //Fetch target id
-    sql = "SELECT id FROM target WHERE user_id=? AND location_id=?AND name=? AND min_time=? AND max_time=? ORDER BY id DESC";
+    sql = "SELECT id FROM target WHERE user_id=? AND location_id=? AND name=? AND min_time=? AND max_time=? ORDER BY id DESC";
     List<Integer> id = jdbcTemplate.queryForList(sql, Integer.class, target.userId, target.locationId, target.name, target.minTime, target.maxTime);
 
     //Set target id 
@@ -45,7 +45,7 @@ public class TargetService {
   }
 
   public void update(Target target) {
-    String sql = "UPDATE target SET user_id=?, name=? min_time=?, max_time=? WHERE id=?";
+    String sql = "UPDATE target SET user_id=?, location_id=?, name=? min_time=?, max_time=? WHERE id=?";
     jdbcTemplate.update(sql, target.userId, target.locationId, target.name, target.minTime, target.maxTime, target.id);
   }
 

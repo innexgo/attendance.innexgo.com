@@ -18,7 +18,7 @@ public class RequestService {
 
   public Request getById(int id) {
     String sql =
-        "SELECT id, target_id, creator_id, user_id, authorized, creation_date, authorization_date FROM request WHERE id=?";
+        "SELECT id, target_id, creator_id, user_id, reviewed, authorized, creation_date, authorization_date FROM request WHERE id=?";
     RowMapper<Request> rowMapper = new RequestRowMapper();
     Request request = jdbcTemplate.queryForObject(sql, rowMapper, id);
     return request;
@@ -26,7 +26,7 @@ public class RequestService {
 
   public List<Request> getAll() {
     String sql =
-        "SELECT id, target_id, creator_id, user_id, authorized, creation_date, authorization_date FROM request";
+        "SELECT id, target_id, creator_id, user_id, reviewed,  authorized, creation_date, authorization_date FROM request";
     RowMapper<Request> rowMapper = new RequestRowMapper();
     return this.jdbcTemplate.query(sql, rowMapper);
   }
@@ -34,15 +34,15 @@ public class RequestService {
   public void add(Request request) {
     // Add request
     String sql =
-        "INSERT INTO request (target_id, creator_id, user_id, authorized, creation_date, authorization_date) values (?, ?, ?, ?, ?, ?)";
+        "INSERT INTO request (target_id, creator_id, user_id, reviewed, authorized, creation_date, authorization_date) values (?, ?, ?, ?, ?, ?, ?)";
     jdbcTemplate.update(sql, request.targetId, request.creatorId, request.userId,
-        request.authorized, request.creationDate, request.authorizationDate);
+        request.reviewed, request.authorized, request.creationDate, request.authorizationDate);
 
     // Fetch request id
     sql =
-        "SELECT id FROM request WHERE target_id=? AND creator_id=? AND user_id=? AND authorized=? AND creation_date=? AND authorization_date=? ORDER BY id DESC";
+        "SELECT id FROM request WHERE target_id=? AND creator_id=? AND user_id=? AND reviewed=? AND authorized=? AND creation_date=? AND authorization_date=? ORDER BY id DESC";
     List<Integer> id = jdbcTemplate.queryForList(
-        sql, Integer.class, request.targetId, request.creatorId, request.userId, request.authorized, request.creationDate, request.authorizationDate);
+        sql, Integer.class, request.targetId, request.creatorId, request.userId, request.reviewed, request.authorized, request.creationDate, request.authorizationDate);
 
     // Set request id
     if (!id.isEmpty()) {
@@ -51,9 +51,9 @@ public class RequestService {
   }
 
   public void update(Request request) {
-    String sql = "UPDATE request SET target_id=?, creator_id=?, user_id=? authorized=?, creation_date=?, authorization_date=? WHERE id=?";
+    String sql = "UPDATE request SET target_id=?, creator_id=?, user_id=?, reviewed=?, authorized=?, creation_date=?, authorization_date=? WHERE id=?";
     jdbcTemplate.update(
-        sql, request.targetId, request.creatorId, request.userId, request.authorized, request.creationDate, request.authorizationDate, request.id);
+        sql, request.targetId, request.creatorId, request.userId, request.reviewed, request.authorized, request.creationDate, request.authorizationDate, request.id);
   }
 
   public void delete(int id) {

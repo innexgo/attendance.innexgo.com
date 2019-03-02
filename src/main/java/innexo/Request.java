@@ -4,10 +4,18 @@ import java.sql.Timestamp;
 
 public class Request{
 	public int id;
-	public int targetId;
-	public int creatorId;
-	public int userId;
-	public boolean authorized;
+	int targetId;
+	int creatorId;
+	int userId;
+	public boolean reviewed = false;
+	public Boolean authorized;
 	public Timestamp creationDate;
 	public Timestamp authorizationDate;
+	
+	//For jackson only
+	public Target target;
+	public User creator;
+	public User requester;
+	
+	
 }

@@ -12,6 +12,7 @@ public class RequestRowMapper implements RowMapper<Request> {
     r.targetId = row.getInt("target_id");
     r.creatorId = row.getInt("creator_id");
     r.userId = row.getInt("user_id");
+    r.reviewed = row.getBoolean("reviewed");
     r.authorized = row.getBoolean("authorized");
     r.creationDate = row.getTimestamp("creation_date");
     r.authorizationDate = row.getTimestamp("authorization_date");

@@ -10,6 +10,7 @@ public class Target {
 	public Timestamp minTime;
 	public Timestamp maxTime;
 	
+	// For jackson only
 	public Location location;
 	public User responsibleUser;
 }

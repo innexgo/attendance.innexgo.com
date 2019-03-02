@@ -126,6 +126,8 @@ public class InnexoApiController{
 			request.userId = userId;
 			request.targetId = targetId;
 			request.creatorId = creatorId;
+			request.authorized = null;
+			request.creationDate = Timestamp.from(Instant.now());
 			requestService.add(request);
 			return OK;
 		} else {
@@ -306,4 +308,19 @@ public class InnexoApiController{
 					);
 		}
 	}
+	
+	//Special methods
+	@RequestMapping(value="request/authorize/")
+	public ResponseEntity<?> approveRequest(@RequestParam(value="requestId")Integer requestId, @RequestParam(value="authorized")Boolean authorized)
+	{
+		if(requestService.exists(requestId)) {
+			Request r = requestService.getById(requestId);
+			r.authorizationDate = Timestamp.from(Instant.now());
+			r.authorized = authorized;
+			requestService.update(r);
+			return OK;
+		}
+		return BAD_REQUEST;
+	}
+	
 }
