@@ -9,7 +9,7 @@ public class TargetRowMapper implements RowMapper<Target> {
   public Target mapRow(ResultSet row, int rowNum) throws SQLException {
     Target t = new Target();
     t.id = row.getInt("id");
-    t.organizer = row.getInt("organizer");
+    t.organizerId= row.getInt("organizer_id");
     t.name = row.getString("name");
     return t;
   }

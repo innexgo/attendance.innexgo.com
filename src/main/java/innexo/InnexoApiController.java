@@ -136,17 +136,20 @@ public class InnexoApiController{
 	@RequestMapping(value="target/new/")
 	public ResponseEntity<?> newTarget(
 			@RequestParam("userId")Integer userId,
-			@RequestParam("targetId")Integer targetId,
-			@RequestParam("creatorId")Integer creatorId)
+			@RequestParam("name")String name,
+			@RequestParam("minTime")Long minTime,
+			@RequestParam("minTime")Long maxTime)
 	{
-		if(userId != null && targetId != null && creatorId != null 
-				&& userService.exists(userId) && userService.exists(creatorId) && targetService.exists(targetId))
+
+		if(userId != null && name != null && minTime != null && maxTime != null
+				&& userService.exists(userId))
 		{
-			Request request = new Request();
-			request.userId = userId;
-			request.targetId = targetId;
-			request.creatorId = creatorId;
-			requestService.add(request);
+			Target target = new Target();
+			target.organizerId = userId;
+			target.name = name;
+			target.minTime = Timestamp.from(Instant.ofEpochSecond(minTime));
+			target.maxTime = Timestamp.from(Instant.ofEpochSecond(maxTime));
+			targetService.add(target);
 			return OK;
 		} else {
 			return BAD_REQUEST;

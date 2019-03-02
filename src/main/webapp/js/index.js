@@ -97,9 +97,10 @@ $(document).ready(function () {
 
 
 //update every 5 seconds
-setTimeout(function(){
+setInterval(function(){
   updateFeed();
-}, 5 * 1000);
+  console.log('updating feed');
+}, 500);
 
 //get data at page load
 updateFeed();
