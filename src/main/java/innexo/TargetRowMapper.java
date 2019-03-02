@@ -9,8 +9,11 @@ public class TargetRowMapper implements RowMapper<Target> {
   public Target mapRow(ResultSet row, int rowNum) throws SQLException {
     Target t = new Target();
     t.id = row.getInt("id");
-    t.organizerId= row.getInt("organizer_id");
+    t.userId= row.getInt("user_id");
+    t.locationId= row.getInt("location_id");
     t.name = row.getString("name");
+    t.minTime = row.getTimestamp("min_time");
+    t.maxTime = row.getTimestamp("max_time");
     return t;
   }
 }
