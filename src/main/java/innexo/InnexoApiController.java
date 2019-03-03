@@ -33,13 +33,13 @@ public class InnexoApiController{
 
 	@Autowired
 	LocationService locationService;
-	
+
 	@Autowired
 	PermissionService permissionService;
-	
+
 	@Autowired
 	RequestService requestService;
-	
+
 	@Autowired
 	TargetService targetService;
 
@@ -99,8 +99,8 @@ public class InnexoApiController{
 		locationService.add(location);
 		return OK;
 	}
-	
-	
+
+
 	@RequestMapping(value="permission/new/")
 	public ResponseEntity<?> newPermission(
 			@RequestParam("isTrustedUser")Boolean isTrustedUser,
@@ -134,7 +134,7 @@ public class InnexoApiController{
 			return BAD_REQUEST;
 		}
 	}
-	
+
 	@RequestMapping(value="target/new/")
 	public ResponseEntity<?> newTarget(
 			@RequestParam("userId")Integer userId,
@@ -159,9 +159,9 @@ public class InnexoApiController{
 			return BAD_REQUEST;
 		}
 	}
-	
-	
-	
+
+
+
 	@RequestMapping(value="encounter/delete/")
 	public ResponseEntity<?> deleteEncounter(
 			@RequestParam(value="encounterId")Integer encounterId) {
@@ -182,28 +182,28 @@ public class InnexoApiController{
 		locationService.delete(locationId);
 		return OK;
 	}
-	
+
 	@RequestMapping(value="permission/delete/")
 	public ResponseEntity<?> deletePermission(@RequestParam(value="permissionId")Integer permissionId)
 	{
 		permissionService.delete(permissionId);
 		return OK;
 	}
-	
+
 	@RequestMapping(value="target/delete/")
 	public ResponseEntity<?> deleteTarget(@RequestParam(value="targetId")Integer targetId)
 	{
 		targetService.delete(targetId);
 		return OK;
 	}
-	
+
 	@RequestMapping(value="request/delete/")
 	public ResponseEntity<?> deleteRequest(@RequestParam(value="requestId")Integer requestId)
 	{
 		requestService.delete(requestId);
 		return OK;
 	}
-	
+
 	@RequestMapping(value="encounter/")
 	public ResponseEntity<?> viewEvent(@RequestParam Map<String,String> allRequestParam)
 	{
@@ -219,12 +219,12 @@ public class InnexoApiController{
 				parseTimestamp.apply(allRequestParam.get("maxDate")),
 				Utils.valString(allRequestParam.get("userName")),
 				Utils.valString(allRequestParam.get("type")))
-		.stream()
-		.map((e) -> {
-			e.location = locationService.getById(e.locationId);
-			e.user = userService.getById(e.userId);
-			return e;
-		}).collect(Collectors.toList());
+				.stream()
+				.map((e) -> {
+					e.location = locationService.getById(e.locationId);
+					e.user = userService.getById(e.userId);
+					return e;
+				}).collect(Collectors.toList());
 		return new ResponseEntity<>(els, HttpStatus.OK);
 	}
 
@@ -260,7 +260,7 @@ public class InnexoApiController{
 					);
 		}
 	}
-	
+
 	@RequestMapping(value="permission/")
 	public ResponseEntity<?> viewPermission(@RequestParam Map<String,String> allRequestParam)
 	{
@@ -276,7 +276,7 @@ public class InnexoApiController{
 					);
 		}
 	}
-	
+
 	@RequestMapping(value="target/")
 	public ResponseEntity<?> viewTarget(@RequestParam Map<String,String> allRequestParam)
 	{
@@ -292,23 +292,33 @@ public class InnexoApiController{
 					);
 		}
 	}
-	
+
 	@RequestMapping(value="request/")
 	public ResponseEntity<?> viewRequest(@RequestParam Map<String,String> allRequestParam)
 	{
+		Function <Request, Request> fillSubEntities = (r) -> {
+						r.creator = userService.getById(r.creatorId);
+						r.requester = userService.getById(r.userId);
+						r.target = targetService.getById(r.targetId);
+						r.target.location = locationService.getById(r.target.locationId);
+						r.target.responsibleUser = userService.getById(r.target.userId);
+						return r;
+					};
 		if(allRequestParam.containsKey("requestId")) {
 			return new ResponseEntity<>(
-					Arrays.asList(requestService.getById(Integer.parseInt(allRequestParam.get("requestId")))),
+					Arrays.asList(fillSubEntities.apply(requestService.getById(Integer.parseInt(allRequestParam.get("requestId"))))),
 					HttpStatus.OK
 					);
 		} else {
 			return new ResponseEntity<>(
-					requestService.getAll(), 
-					HttpStatus.OK
-					);
+					requestService.getAll()
+					.stream()
+					.map(fillSubEntities)
+					.collect(Collectors.toList()), 
+					HttpStatus.OK);
 		}
 	}
-	
+
 	//Special methods
 	@RequestMapping(value="request/authorize/")
 	public ResponseEntity<?> approveRequest(@RequestParam(value="requestId")Integer requestId, @RequestParam(value="authorized")Boolean authorized)
@@ -322,5 +332,17 @@ public class InnexoApiController{
 		}
 		return BAD_REQUEST;
 	}
-	
+
+	@RequestMapping(value="request/yours/") 
+	public ResponseEntity<?> yourRequests(@RequestParam(value="userId")Integer userId) {
+		if(userService.exists(userId)) {
+			return new ResponseEntity<>( 
+					requestService.getYours(userId), 
+					HttpStatus.OK
+					);
+		} else {
+			return BAD_REQUEST;
+		}
+	}
+
 }

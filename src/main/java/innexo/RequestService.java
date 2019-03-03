@@ -13,57 +13,64 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 public class RequestService {
 
-  @Autowired 
-  private JdbcTemplate jdbcTemplate;
+	@Autowired 
+	private JdbcTemplate jdbcTemplate;
 
-  public Request getById(int id) {
-    String sql =
-        "SELECT id, target_id, creator_id, user_id, reviewed, authorized, creation_date, authorization_date FROM request WHERE id=?";
-    RowMapper<Request> rowMapper = new RequestRowMapper();
-    Request request = jdbcTemplate.queryForObject(sql, rowMapper, id);
-    return request;
-  }
+	public Request getById(int id) {
+		String sql =
+				"SELECT id, target_id, creator_id, user_id, reviewed, authorized, creation_date, authorization_date FROM request WHERE id=?";
+		RowMapper<Request> rowMapper = new RequestRowMapper();
+		Request request = jdbcTemplate.queryForObject(sql, rowMapper, id);
+		return request;
+	}
 
-  public List<Request> getAll() {
-    String sql =
-        "SELECT id, target_id, creator_id, user_id, reviewed,  authorized, creation_date, authorization_date FROM request";
-    RowMapper<Request> rowMapper = new RequestRowMapper();
-    return this.jdbcTemplate.query(sql, rowMapper);
-  }
+	public List<Request> getAll() {
+		String sql =
+				"SELECT id, target_id, creator_id, user_id, reviewed,  authorized, creation_date, authorization_date FROM request";
+		RowMapper<Request> rowMapper = new RequestRowMapper();
+		return this.jdbcTemplate.query(sql, rowMapper);
+	}
 
-  public void add(Request request) {
-    // Add request
-    String sql =
-        "INSERT INTO request (target_id, creator_id, user_id, reviewed, authorized, creation_date, authorization_date) values (?, ?, ?, ?, ?, ?, ?)";
-    jdbcTemplate.update(sql, request.targetId, request.creatorId, request.userId,
-        request.reviewed, request.authorized, request.creationDate, request.authorizationDate);
+	//TODO only WHERE userId = request.target.userId
+	public List<Request> getYours(Integer userId)  {
+		String sql = "SELECT id, target_id, creator_id, user_id, reviewed, authorized, creation_date, authorization_date FROM request WHERE reviewed=0";
+		RowMapper<Request> rowMapper = new RequestRowMapper();
+		return this.jdbcTemplate.query(sql, rowMapper);
+	}
 
-    // Fetch request id
-    sql =
-        "SELECT id FROM request WHERE target_id=? AND creator_id=? AND user_id=? AND reviewed=? AND authorized=? AND creation_date=? AND authorization_date=? ORDER BY id DESC";
-    List<Integer> id = jdbcTemplate.queryForList(
-        sql, Integer.class, request.targetId, request.creatorId, request.userId, request.reviewed, request.authorized, request.creationDate, request.authorizationDate);
+	public void add(Request request) {
+		// Add request
+		String sql =
+				"INSERT INTO request (target_id, creator_id, user_id, reviewed, authorized, creation_date, authorization_date) values (?, ?, ?, ?, ?, ?, ?)";
+		jdbcTemplate.update(sql, request.targetId, request.creatorId, request.userId,
+				request.reviewed, request.authorized, request.creationDate, request.authorizationDate);
 
-    // Set request id
-    if (!id.isEmpty()) {
-      request.id = id.get(0);
-    }
-  }
+		// Fetch request id
+		sql =
+				"SELECT id FROM request WHERE target_id=? AND creator_id=? AND user_id=? AND reviewed=? AND authorized=? AND creation_date=? AND authorization_date=? ORDER BY id DESC";
+		List<Integer> id = jdbcTemplate.queryForList(
+				sql, Integer.class, request.targetId, request.creatorId, request.userId, request.reviewed, request.authorized, request.creationDate, request.authorizationDate);
 
-  public void update(Request request) {
-    String sql = "UPDATE request SET target_id=?, creator_id=?, user_id=?, reviewed=?, authorized=?, creation_date=?, authorization_date=? WHERE id=?";
-    jdbcTemplate.update(
-        sql, request.targetId, request.creatorId, request.userId, request.reviewed, request.authorized, request.creationDate, request.authorizationDate, request.id);
-  }
+		// Set request id
+		if (!id.isEmpty()) {
+			request.id = id.get(0);
+		}
+	}
 
-  public void delete(int id) {
-    String sql = "DELETE FROM request WHERE id=?";
-    jdbcTemplate.update(sql, id);
-  }
+	public void update(Request request) {
+		String sql = "UPDATE request SET target_id=?, creator_id=?, user_id=?, reviewed=?, authorized=?, creation_date=?, authorization_date=? WHERE id=?";
+		jdbcTemplate.update(
+				sql, request.targetId, request.creatorId, request.userId, request.reviewed, request.authorized, request.creationDate, request.authorizationDate, request.id);
+	}
 
-  public boolean exists(int id) {
-    String sql = "SELECT count(*) FROM request WHERE id=?";
-    int count = jdbcTemplate.queryForObject(sql, Integer.class, id);
-    return count != 0;
-  }
+	public void delete(int id) {
+		String sql = "DELETE FROM request WHERE id=?";
+		jdbcTemplate.update(sql, id);
+	}
+
+	public boolean exists(int id) {
+		String sql = "SELECT count(*) FROM request WHERE id=?";
+		int count = jdbcTemplate.queryForObject(sql, Integer.class, id);
+		return count != 0;
+	}
 }
