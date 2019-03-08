@@ -28,11 +28,13 @@ function clearResultTable()
               '<td>Time</td>'+
             '</tr>';
 }
+
 //gets new data from server and inserts it at the beginning
-function submitQuery(encounterId,userId, locationId, type, minDate, maxDate, count) {
+function submitQuery(encounterId, userId, userName, locationId, type, minDate, maxDate, count) {
   var url = thisUrl() + '/encounter/?' +
     (isNaN(encounterId) ?       '' : '&encounterId='+encounterId) +
     (isNaN(userId) ?            '' : '&userId='+userId) +
+    (!isValidString(userName) ? '' : '&userName='+userName) +
     (isNaN(locationId) ?        '' : '&locationId='+locationId) +
     (!isValidString(type) ?     '' : '&type='+encodeURIComponent(type)) +
     (isNaN(minDate.getTime()) ? '' : '&minDate='+minDate.getTime()/1000) +
@@ -57,6 +59,7 @@ function submitQuery(encounterId,userId, locationId, type, minDate, maxDate, cou
 function onQueryClick() {
   var encounterId = undefined; //TODO add query box
   var userId = document.getElementById('userId').value;
+  var userName = document.getElementById('userName').value;
   var locationId = undefined;//document.getElementById('locationId').value;
   var type = undefined;
   var minDate = new Date(document.getElementById('minDate').value)

@@ -205,7 +205,7 @@ public class InnexoApiController{
 	}
 
 	@RequestMapping(value="encounter/")
-	public ResponseEntity<?> viewEvent(@RequestParam Map<String,String> allRequestParam)
+	public ResponseEntity<?> viewEncounter(@RequestParam Map<String,String> allRequestParam)
 	{
 		Function<String, Integer> parseInteger = (str) -> str == null ? null : Integer.parseInt(str);
 		Function<String, Timestamp> parseTimestamp = (str) -> 
@@ -231,10 +231,14 @@ public class InnexoApiController{
 	@RequestMapping(value="user/")
 	public ResponseEntity<?> viewStudent(@RequestParam Map<String,String> allRequestParam)
 	{
-
 		if(allRequestParam.containsKey("userId")) {
 			return new ResponseEntity<>(
 					Arrays.asList(userService.getById(Integer.parseInt(allRequestParam.get("userId")))),
+					HttpStatus.OK
+					);
+		} else if(allRequestParam.containsKey("name")){
+			return new ResponseEntity<>(
+					userService.getByName(allRequestParam.get("name")),
 					HttpStatus.OK
 					);
 		} else {

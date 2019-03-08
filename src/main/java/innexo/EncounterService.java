@@ -36,13 +36,14 @@ public class EncounterService {
 			Timestamp maxTime, 
 			String userName, 
 			String type) {
-		String sql = "SELECT id, time, location_id, user_id, type FROM encounter WHERE 1=1 " + 
-				(encounterId == null ? "" : " AND id="+encounterId) +
-				(userId == null ?      "" : " AND user_id="+userId) +
-				(locationId == null ?  "" : " AND location_id="+locationId) + 
-				(type == null ?        "" : " AND type=\'"+Utils.valString(type)+"\'") + 
-				(minTime == null ?     "" : " AND time >= FROM_UNIXTIME(" + minTime.toInstant().getEpochSecond() + ")") + 
-				(maxTime == null ?     "" : " AND time <= FROM_UNIXTIME(" + maxTime.toInstant().getEpochSecond() + ")") +
+		String sql = "SELECT e.id, e.time, e.location_id, e.user_id, e.type FROM encounter e JOIN users u ON e.user_id = u.id WHERE 1=1 " + 
+				(encounterId == null ? "" : " AND e.id="+encounterId) +
+				(userId == null ?      "" : " AND e.user_id="+userId) +
+				(userName == null ?    "" : " AND u.name="+userName) +
+				(locationId == null ?  "" : " AND e.location_id="+locationId) + 
+				(type == null ?        "" : " AND e.type=\'"+Utils.valString(type)+"\'") + 
+				(minTime == null ?     "" : " AND e.time >= FROM_UNIXTIME(" + minTime.toInstant().getEpochSecond() + ")") + 
+				(maxTime == null ?     "" : " AND e.time <= FROM_UNIXTIME(" + maxTime.toInstant().getEpochSecond() + ")") +
 			                              " ORDER BY time DESC" +
 				(count == null ?       "" : " LIMIT "+count) +
 				";" ;

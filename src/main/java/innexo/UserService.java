@@ -22,6 +22,14 @@ public class UserService {
     User user = jdbcTemplate.queryForObject(sql, rowMapper, id);
     return user;
   }
+  
+  public List<User> getByName(String name) {
+    String sql = "SELECT id, name, password_hash, permission_id FROM user WHERE name=?";
+    RowMapper<User> rowMapper = new UserRowMapper();
+    List<User> users = jdbcTemplate.query(sql, rowMapper, name);
+    return users;
+  }
+  
   public List<User> getAll() {
     String sql = "SELECT id,  name, password_hash, permission_id FROM user";
     RowMapper<User> rowMapper = new UserRowMapper();
