@@ -58,12 +58,12 @@ function submitQuery(encounterId, userId, userName, locationId, type, minDate, m
 
 function onQueryClick() {
   var encounterId = undefined; //TODO add query box
-  var userId = document.getElementById('userId').value;
+  var userId = parseInt(document.getElementById('userId').value, 10);
   var userName = document.getElementById('userName').value;
   var locationId = undefined;//document.getElementById('locationId').value;
   var type = undefined;
-  var minDate = new Date(document.getElementById('minDate').value)
-  var maxDate = new Date(document.getElementById('maxDate').value)
+  var minDate = new Date(document.getElementById('minDate').value);
+  var maxDate = new Date(document.getElementById('maxDate').value);
   var count = 100;
-  submitQuery(encounterId, userId, locationId, type, minDate, maxDate, count);
+  submitQuery(encounterId, userId, userName, locationId, type, minDate, maxDate, count);
 }

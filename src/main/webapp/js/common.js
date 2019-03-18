@@ -1,7 +1,7 @@
 "use strict"
 
 function isWhitespace(str) {
-  return !!(/\S/.test(str));
+  return !(/\S/.test(str));
 }
 
 function isValidString(str) {

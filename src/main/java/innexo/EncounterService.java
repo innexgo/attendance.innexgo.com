@@ -36,10 +36,10 @@ public class EncounterService {
 			Timestamp maxTime, 
 			String userName, 
 			String type) {
-		String sql = "SELECT e.id, e.time, e.location_id, e.user_id, e.type FROM encounter e JOIN users u ON e.user_id = u.id WHERE 1=1 " + 
+		String sql = "SELECT e.id, e.time, e.location_id, e.user_id, e.type FROM encounter e JOIN user u ON e.user_id = u.id WHERE 1=1 " + 
 				(encounterId == null ? "" : " AND e.id="+encounterId) +
 				(userId == null ?      "" : " AND e.user_id="+userId) +
-				(userName == null ?    "" : " AND u.name="+userName) +
+				(userName == null ?    "" : " AND u.name=\'"+Utils.valString(userName)+"\'") +
 				(locationId == null ?  "" : " AND e.location_id="+locationId) + 
 				(type == null ?        "" : " AND e.type=\'"+Utils.valString(type)+"\'") + 
 				(minTime == null ?     "" : " AND e.time >= FROM_UNIXTIME(" + minTime.toInstant().getEpochSecond() + ")") + 
