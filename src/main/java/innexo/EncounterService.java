@@ -44,7 +44,7 @@ public class EncounterService {
 				(type == null ?        "" : " AND e.type=\'"+Utils.valString(type)+"\'") + 
 				(minTime == null ?     "" : " AND e.time >= FROM_UNIXTIME(" + minTime.toInstant().getEpochSecond() + ")") + 
 				(maxTime == null ?     "" : " AND e.time <= FROM_UNIXTIME(" + maxTime.toInstant().getEpochSecond() + ")") +
-			                              " ORDER BY time DESC" +
+			                                " ORDER BY time DESC" +
 				(count == null ?       "" : " LIMIT "+count) +
 				";" ;
 		RowMapper<Encounter> rowMapper = new EncounterRowMapper();

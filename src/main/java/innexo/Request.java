@@ -7,6 +7,7 @@ public class Request{
 	int targetId;
 	int creatorId;
 	int userId;
+	int authorizerId;
 	public boolean reviewed = false;
 	public Boolean authorized;
 	public Timestamp creationDate;
@@ -15,7 +16,7 @@ public class Request{
 	//For jackson only
 	public Target target;
 	public User creator;
-	public User requester;
+	public User user;
 	
 	
 }

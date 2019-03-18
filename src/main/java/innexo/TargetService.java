@@ -17,7 +17,7 @@ public class TargetService {
   private JdbcTemplate jdbcTemplate;
 
   public Target getById(int id) {
-    String sql = "SELECT id, user_id, location_id, min_time, max_time name FROM target WHERE id=?";
+    String sql = "SELECT id, user_id, location_id, min_time, max_time, name FROM target WHERE id=?";
     RowMapper<Target> rowMapper = new TargetRowMapper();
     Target target = jdbcTemplate.queryForObject(sql, rowMapper, id);
     return target;
@@ -43,7 +43,7 @@ public class TargetService {
       target.id = id.get(0);
     }
   }
-
+  
   public void update(Target target) {
     String sql = "UPDATE target SET user_id=?, location_id=?, name=? min_time=?, max_time=? WHERE id=?";
     jdbcTemplate.update(sql, target.userId, target.locationId, target.name, target.minTime, target.maxTime, target.id);
