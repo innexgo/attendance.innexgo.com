@@ -12,6 +12,7 @@ public class Request{
 	public Boolean authorized;
 	public Timestamp creationDate;
 	public Timestamp authorizationDate;
+	public String reason;
 	
 	//For jackson only
 	public Target target;

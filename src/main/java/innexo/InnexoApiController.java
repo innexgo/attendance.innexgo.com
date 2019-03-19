@@ -50,6 +50,7 @@ public class InnexoApiController{
 
 
   Function<String, Integer> parseInteger = (str) -> str == null ? null : Integer.parseInt(str);
+  Function<String, Boolean> parseBoolean = (str) -> str == null ? null : Boolean.parseBoolean(str);
   Function<String, Timestamp> parseTimestamp = (str) -> str == null ? null : Timestamp.from(Instant.ofEpochSecond(Long.parseLong(str)));
   
   Function<Encounter, Encounter> fillEncounter = (e) -> {
@@ -135,9 +136,10 @@ public class InnexoApiController{
   public ResponseEntity<?> newRequest(
       @RequestParam("targetId")Integer targetId,
       @RequestParam("userId")Integer userId,
-      @RequestParam("creatorId")Integer creatorId)
+      @RequestParam("creatorId")Integer creatorId,
+      @RequestParam("reason")String reason)
   {
-    if(userId != null && targetId != null && creatorId != null 
+    if(userId != null && targetId != null && creatorId != null && reason != null
         && userService.exists(userId) && userService.exists(creatorId) && targetService.exists(targetId))
     {
       Request request = new Request();
@@ -146,6 +148,7 @@ public class InnexoApiController{
       request.creatorId = creatorId;
       request.authorizerId = targetService.getById(targetId).userId; //The authorizer must be the responsible user of the target;
       request.authorized = null;
+      request.reason = reason;
       request.creationDate = Timestamp.from(Instant.now());
       requestService.add(request);
       return OK;
@@ -316,7 +319,8 @@ public class InnexoApiController{
     return new ResponseEntity<>(
         requestService.query( 
             parseInteger.apply(allRequestParam.get("requestId")), 
-            parseInteger.apply(allRequestParam.get("authorizerId")))
+            parseInteger.apply(allRequestParam.get("authorizerId")),
+            parseBoolean.apply(allRequestParam.get("reviewed")))
         .stream()
         .map(fillRequest)
         .collect(Collectors.toList()), 
@@ -325,11 +329,12 @@ public class InnexoApiController{
 
   //Special methods
   @RequestMapping(value="request/authorize/")
-  public ResponseEntity<?> approveRequest(@RequestParam(value="requestId")Integer requestId, @RequestParam(value="authorized")Boolean authorized)
+  public ResponseEntity<?> authorizeRequest(@RequestParam(value="requestId")Integer requestId, @RequestParam(value="authorized")Boolean authorized)
   {
     if(requestService.exists(requestId)) {
       Request r = requestService.getById(requestId);
       r.authorizationDate = Timestamp.from(Instant.now());
+      r.reviewed = true;
       r.authorized = authorized;
       requestService.update(r);
       return OK;

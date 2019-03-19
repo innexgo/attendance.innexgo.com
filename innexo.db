@@ -29,7 +29,7 @@ CREATE TABLE `encounter` (
   `user_id` bigint(20) DEFAULT NULL,
   `type` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -38,7 +38,7 @@ CREATE TABLE `encounter` (
 
 LOCK TABLES `encounter` WRITE;
 /*!40000 ALTER TABLE `encounter` DISABLE KEYS */;
-INSERT INTO `encounter` VALUES (1,'2019-03-01 17:30:22',1,2,'in'),(2,'2019-03-01 17:30:43',1,30090003,'in'),(3,'2019-03-01 20:29:42',1,30090004,'in'),(4,'2019-03-01 20:33:15',1,30090004,'in'),(5,'2019-03-01 20:33:36',1,30090004,'in'),(6,'2019-03-01 20:33:39',1,30090004,'out'),(7,'2019-03-01 20:33:49',1,1,'out'),(8,'2019-03-01 20:34:30',1,30090004,'in'),(9,'2019-03-01 20:36:26',1,30090003,'in'),(10,'2019-03-01 20:36:29',1,30090003,'in'),(11,'2019-03-01 20:36:34',1,30090003,'in'),(12,'2019-03-01 20:38:33',1,30090003,'in'),(13,'2019-03-01 20:47:30',1,2,'out'),(14,'2019-03-01 20:48:08',1,2,'out');
+INSERT INTO `encounter` VALUES (1,'2019-03-02 09:54:07',1,30090002,'in'),(2,'2019-03-02 09:54:12',1,30090004,'in'),(3,'2019-03-02 10:20:47',1,30090002,'in'),(4,'2019-03-02 10:20:47',1,30090002,'in'),(5,'2019-03-02 10:20:50',1,30090004,'in'),(6,'2019-03-02 11:06:41',1,30090004,'in'),(7,'2019-03-02 11:06:49',1,30090004,'in'),(8,'2019-03-02 11:06:51',1,30090004,'in'),(9,'2019-03-02 11:06:52',1,30090004,'in'),(10,'2019-03-02 11:06:52',1,30090004,'in'),(11,'2019-03-02 11:06:53',1,30090004,'in'),(12,'2019-03-02 11:06:53',1,30090004,'in'),(13,'2019-03-02 11:06:59',1,30090002,'in'),(14,'2019-03-02 12:21:27',1,1,'out'),(15,'2019-03-02 12:22:10',1,30090004,'in'),(16,'2019-03-02 12:22:19',1,30090004,'in'),(17,'2019-03-02 12:22:19',1,30090004,'in'),(18,'2019-03-02 13:01:51',1,30090004,'in'),(19,'2019-03-02 13:04:49',1,30090004,'out'),(20,'2019-03-02 13:05:30',1,30090004,'out'),(21,'2019-03-02 13:06:55',1,1,'in'),(22,'2019-03-02 13:06:59',1,2,'in'),(23,'2019-03-02 13:07:02',1,1,'in'),(24,'2019-03-02 13:07:04',1,1,'out'),(25,'2019-03-02 13:07:05',1,1,'out'),(26,'2019-03-02 13:07:08',1,2,'out'),(27,'2019-03-02 13:07:09',1,2,'out'),(28,'2019-03-02 13:07:20',1,30090004,'in'),(29,'2019-03-02 13:07:25',1,30090001,'in'),(30,'2019-03-02 13:07:36',1,30090001,'in'),(31,'2019-03-02 13:07:38',1,30090001,'in'),(32,'2019-03-02 13:08:56',1,30090004,'in'),(33,'2019-03-02 13:08:56',1,30090004,'in'),(34,'2019-03-02 13:09:01',1,2,'in'),(35,'2019-03-02 13:09:01',1,2,'in'),(36,'2019-03-02 13:09:02',1,2,'in'),(37,'2019-03-02 13:09:02',1,2,'in'),(38,'2019-03-02 13:09:02',1,2,'in'),(39,'2019-03-02 13:09:03',1,2,'in'),(40,'2019-03-02 13:19:20',1,30090004,'in'),(41,'2019-03-02 13:19:20',1,30090004,'in'),(42,'2019-03-18 00:30:49',1,1,'in');
 /*!40000 ALTER TABLE `encounter` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -103,12 +103,14 @@ CREATE TABLE `request` (
   `target_id` bigint(20) DEFAULT NULL,
   `creator_id` bigint(20) DEFAULT NULL,
   `user_id` bigint(20) DEFAULT NULL,
+  `authorizer_id` bigint(20) DEFAULT NULL,
   `reviewed` tinyint(1) DEFAULT NULL,
   `authorized` tinyint(1) DEFAULT NULL,
   `creation_date` datetime DEFAULT NULL,
   `authorization_date` datetime DEFAULT NULL,
+  `reason` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -117,7 +119,6 @@ CREATE TABLE `request` (
 
 LOCK TABLES `request` WRITE;
 /*!40000 ALTER TABLE `request` DISABLE KEYS */;
-INSERT INTO `request` VALUES (1,1,2,2,0,1,'2019-03-01 22:43:17','2019-03-01 22:54:52');
 /*!40000 ALTER TABLE `request` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -171,7 +172,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (1,'Bartholomew','$2a$10$6Ak901UZmHHVbNrrIaAg7.e34sOE2ylWIvnja69sRGb5yZFNTxwCe',0),(2,'William','$2a$10$mgjryWHb32qH.GzDTeb.8eNam7cPgZMrjwDOXAgNfoKXr3bwcmkAa',0),(3009001,'Morpheus','$2a$10$gKFZyypEOTS9lIjbttgvluY71XhwSwT6zJD/37u0AfIGVjtIs.a92',0),(3009002,'SudoMan','$2a$10$BknnNO/xFkPuWBE88xrPtej.JYe5kPQwL/Hdf/v99EK.pcHzX7gGu',0),(3009005,'Alpha','$2a$10$c6kkHmgzj6Y7z41xXGqFWerYJB0kVCl0I.ciBkfcbBEPisP.RiF0K',0),(30090003,'Alfred','$2a$10$E1tScslXPfjd2Nw67N9P6.LAM42cXLD8teseAsppL3JgGEgKzDG.m',0),(30090004,'Govind','$2a$10$veAePQpI3KbZlVzdPzCOueVCH3gRfh946nQSYpKbO4Hj32OVtn2Km',0);
+INSERT INTO `user` VALUES (1,'Bartholomew','$2a$10$NLvyDAyoX4XxKx0c5S.suOvEcwr7sPUal9j4V/RE75Fu.RFaMOU9K',0),(2,'William','$2a$10$ku/ThrY5qY9Afpxk5dKjwuBR4XJM8li0YA7/ZT/hEnIimstqLAXtW',0),(30090001,'Richard','$2a$10$YZxbs95J./..29clH2eSsOYhQwArbS2W2jWhbMisonL5UhmOAzhcm',0),(30090002,'Donna','$2a$10$hTs41D0HqC3qlrCVuAttVuTzrJ9zDJumD7DSqXFxscFKrsWOrFCye',0),(30090003,'Daniel','$2a$10$N9IZbbvMxh.FH4SP0ashCOMWONX1QBTcke8ffaxXJlvc5CZFoxvsC',0),(30090004,'Govind','$2a$10$c8UFy1EUurCTS9U/IUH3RuE1H1f5B8DO/./nNP/ZLYeMfWtE05Wr.',0);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -184,4 +185,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-03-01 23:00:39
+-- Dump completed on 2019-03-19  5:47:46

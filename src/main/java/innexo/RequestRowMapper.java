@@ -24,6 +24,7 @@ public class RequestRowMapper implements RowMapper<Request> {
     r.authorized = row.getBoolean("authorized");
     r.creationDate = row.getTimestamp("creation_date");
     r.authorizationDate = row.getTimestamp("authorization_date");
+    r.reason = row.getString("reason");
 
     return r;
   }

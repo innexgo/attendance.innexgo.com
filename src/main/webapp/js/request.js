@@ -8,14 +8,14 @@ function addRequest(request)
   }
   table.insertRow(1).innerHTML=
     '<tr>' + 
-    '<td>' + request.user.name + '</td>' +
+    '<td>' + escapeHtml(request.user.name) + '</td>' +
     '<td>' + request.user.id + '</td>' +
-    '<td>' + request.creationDate + '</td>' +
-    '<td>' + request.target.minTime + '</td>' + 
-    '<td>' + request.reason + '</td>' + 
+    '<td>' + getDateString(request.creationDate) + '</td>' +
+    '<td>' + getDateString(request.target.minTime) + '</td>' + 
+    '<td>' + escapeHtml(request.reason) + '</td>' + 
     '<td>' +
-    '<a onclick="authorizeRequest('+request.id+',true)"  href=""><i class="fa fa-check xlarge" style="text-align: left; color: #228B22;"></i></a>' +
-    '<a onclick="authorizeRequest('+request.id+',false)" href=""><i class="fa fa-times xlarge" style="text-align: right; color: #DC143C;"></i></a>' +
+    '<a type="button" onclick="authorizeRequest('+request.id+',true); return false;"  href=""><i class="fa fa-check xlarge" style="text-align: left; color: #228B22;"></i></a>' +
+    '<a type="button" onclick="authorizeRequest('+request.id+',false); return false;" href=""><i class="fa fa-times xlarge" style="text-align: right; color: #DC143C;"></i></a>' +
     '</td>' +
     '</tr>';
 }
@@ -34,7 +34,7 @@ function clearFeed()
 
 //gets new data from server and inserts it at the beginning
 function updateFeed() {
-  request(thisUrl()+'/request/?authorizerId='+1, 
+  request(thisUrl()+'/request/?reviewed=false&authorizerId='+1, 
     function(xhr){
       var requests = JSON.parse(xhr.responseText);
       clearFeed();

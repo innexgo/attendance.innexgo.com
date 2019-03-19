@@ -12,6 +12,15 @@ function thisUrl(){
   return window.location.protocol  + "//" + window.location.host;
 }
 
+function escapeHtml(unsafe) {
+    return unsafe
+         .replace(/&/g, "&amp;")
+         .replace(/</g, "&lt;")
+         .replace(/>/g, "&gt;")
+         .replace(/"/g, "&quot;")
+         .replace(/'/g, "&#039;");
+ }
+
 function timeSince(date) {
   var seconds = Math.floor((new Date().getTime() - Date.parse(date)) / 1000);
   var interval = Math.floor(seconds / 31536000);
