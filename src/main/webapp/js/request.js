@@ -6,8 +6,19 @@ function addRequest(request)
   if(table.rows.length < 1) {
     clearFeed();
   }
-  table.insertRow(1).innerHTML=
-    '<tr>' + 
+
+  var color = 'dark-gray';
+  if(request.reviewed) {
+    if(request.authorized) {
+      color = 'pale-green';
+    }
+    else if(!request.authorized) {
+      color = 'pale-red';
+    }
+  }
+
+  table.insertRow(1).outerHTML =
+    '<tr class="'+color+'">' + 
     '<td>' + escapeHtml(request.user.name) + '</td>' +
     '<td>' + request.user.id + '</td>' +
     '<td>' + getDateString(request.creationDate) + '</td>' +
@@ -23,18 +34,19 @@ function addRequest(request)
 function clearFeed()
 {
   document.getElementById('request-table').innerHTML = 
-    ' <tr class="dark-gray">'+
+    '<tr class="dark-gray">'+
     '<td>Name</td>'+
     '<td>ID</td>'+
     '<td>Time Requested</td>'+
     '<td>Tutorial Date</td>'+
     '<td>Reason</td>'+
-    '<td>Accept?</td> ';
+    '<td>Accept?</td> ' +
+    '</tr>';
 }
 
 //gets new data from server and inserts it at the beginning
 function updateFeed() {
-  request(thisUrl()+'/request/?reviewed=false&authorizerId='+1, 
+  request(thisUrl()+'/request/?authorizerId='+1, 
     function(xhr){
       var requests = JSON.parse(xhr.responseText);
       clearFeed();
