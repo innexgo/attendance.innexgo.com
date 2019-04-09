@@ -2,7 +2,7 @@
 <html>
   <head>
     <!--Background Information -->
-    <title>Tutorial Dashboard</title>
+    <title>Innexo Login</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="css/signin.css">
     <script src="js/common.js"></script>
     <script src="js/jquery.min.js"></script>
-    <script src="js/request.js"></script>
+    <script src="js/login.js"></script>
   </head>
   <body class="light-grey">
     <!--Navigation Bar-->
@@ -25,17 +25,17 @@
     <!-- !PAGE CONTENT! -->
     <div class="main" style="margin-left:300px;margin-top:43px;">
 
-    <!-- Body -->
-    <div class="body"></div>
-    <div class="grad"></div>
-    <br>
-    <div class="login">
+      <!-- Body -->
+      <div class="body"></div>
+      <div class="grad"></div>
+      <br>
+      <div class="login">
         <span class="xxxlarge center" style="margin-left: 85px;"><img src="assets/innexo_logo.png"></span>
         <span class="xxxlarge center text-white" style="margin-left: 5px;">InNexo</span>
-        <input type="text" placeholder="username" name="user"><br>
-        <input type="password" placeholder="password" name="password"><br>
+        <input id="user-id" type="text" placeholder="user id" name="user"><br>
+        <input id="password" type="password" placeholder="password" name="password"><br>
         <input type="button" value="Login">
-    </div>
-    
+      </div>
+
   </body>
 </html>
