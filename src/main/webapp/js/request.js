@@ -7,7 +7,7 @@ function addRequest(request)
     clearFeed();
   }
 
-  var color = 'dark-gray';
+  var color = 'light-gray';
   if(request.reviewed) {
     if(request.authorized) {
       color = 'pale-green';
