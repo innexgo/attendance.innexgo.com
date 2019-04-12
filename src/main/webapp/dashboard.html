@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <!--Background Information -->
+    <title>Tutorial Dashboard</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/main.css">
+    <script src="js/jquery.min.js"></script>
+    <script src="js/jquery.scannerdetection.js"></script>
+    <script src="js/common.js"></script>
+    <script src="js/index.js"></script>
+  </head>
+
+  <body class="light-grey">
+
+    <!--Navigation Bar-->
+    <div class="bar top black large" style="z-index:4">
+      <button class="bar-item button hide-large hover-none hover-text-light-grey" onclick="w3_open();"><i class="fa fa-bars"></i>  Menu</button>
+      <a href="index.html" class="bar-item left" style="padding-top: 12.5px; text-decoration: none">Attendance Dashboard</a>
+      <span class="bar-item right"><img src="assets/innexo_logo.png"></span>
+    </div>
+
+    <!--Sidebar-->
+    <nav class="sidebar collapse white animate-left" style="z-index:3;width:300px;" id="mySidebar"><br>
+      <div class="container row">
+        <div class="col s4">
+          <img src="assets/test.gif" class="circle margin-right" style="width:46px">
+        </div>
+        <div class="col s8 bar">
+          <span><strong>Mr. Davis</strong></span><br>
+          <span>English 1A</span><br>
+          <span>Room 100</span><br>
+        </div>
+      </div>
+      <hr>
+      <div class="container">
+        <h5>Dashboard</h5>
+      </div>    
+      <div class="bar-block">
+        <a href="dashboard.html" class="bar-item button padding blue"><i class="fa fa-bullseye fa-fw"></i>  Overview</a>
+        <a href="history.html" class="bar-item button padding"><i class="fa fa-history fa-fw"></i>  History</a>
+        <!--<a href="p4roster.html" class="bar-item button padding"><i class="fa fa-users fa-fw"></i>  4th Period Roster</a> -->
+      </div>
+    </nav>
+
+    <!-- Overlay on small screens -->
+    <div class="overlay hide-large animate-opacity" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
+
+    <!-- !PAGE CONTENT! -->
+    <div class="main" style="margin-left:300px;margin-top:43px;">
+
+      <!-- Header -->
+      <header class="container" style="padding-top:22px">
+        <h5><b><i class="fa fa-bullseye"></i> Welcome!</b></h5>
+      </header>
+
+      <div class="row-padding margin-bottom">
+        <div class="half">
+          <div class="container padding-16" style="background-color: #c1737eff; color: white;">
+            <div class="left"><i class="fa fa-bookmark xxxlarge"></i></div>
+            <div class="right">
+            <!--<h3 style="font-size: 30px">0</h3> --!>
+            </div>
+            <div class="clear"></div>
+            <h4><a href="requests.html" style="text-decoration: none;">Requests / Quota</a></h4>
+          </div>
+        </div>
+        <div class="half">
+          <div class="container padding-16" style="background-color: #c1737eff; color: white;">
+            <div class="left"><i class="fa fa-history xxxlarge"></i></div>
+                          <div class="right">
+              <h3 style="font-size: 30px; color: #c1737eff; ">-- / --</h3>
+            </div>
+            <div class="clear"></div>
+            <h4><a href="history.html" style="text-decoration: none;">History</a></h4>
+          </div>
+        </div>
+      <div class="row-padding margin-bottom" style="clear: both">
+        <h5 style="float: left; width: 50%; overflow: scroll; overflow-x: hidden; "><i class="fa fa-sign-in text-red"></i> Sign-Ins</h5>
+        <h5 style="float: right; width: 50%; overflow: scroll; overflow-x: hidden; "><i class="fa fa-sign-out text-blue"></i>  Sign-Outs</h5>
+
+        <div class="half table-list">
+          <table id="sign-in-feed" class="table striped white">
+            <tr class="dark-gray">
+              <td>Name</td>
+              <td>ID</td>
+              <td>Time</td>
+            </tr>
+          </table>
+        </div>
+
+        <div class="half table-list">
+          <table id="sign-out-feed" class="table striped white">
+            <tr class="dark-gray">
+              <td>Name</td>
+              <td>ID</td>
+              <td>Time</td>
+            </tr>
+          </table>
+        </div>
+
+        <form>
+          <div class="row-padding margin-bottom">
+            <h5 class="padding-small">Manual Sign-In/Sign-Out</h5>
+            <div class="half">
+              <div class="container padding-16" style="background-color: #c1737eff; color: white;">
+                <input id="user-id-textbox" class="left input-box round" maxlength="8" size="8" style="font-size: 16px; padding-right: 100px;" value="">
+                <div class="right">
+                  <i class="fa fa-id-card xxxlarge"></i>
+                </div>
+                <div class="clear"></div>
+                <h4>User ID</h4>
+              </div>
+            </div>
+
+            <div class="half">
+              <div class="container padding-16" style="background-color: #c1737eff; color: white;">
+                <h4 style="display: inline">In</h4>
+                <label class="switch" style="margin: 0 15px 0 15px"> 
+                  <input id="sign-in-or-out-checkbox" type="checkbox"> 
+                  <span class="slider"></span>
+                </label>
+                <h4 style="display: inline">Out</h4>
+                  <div class="right">
+                  <i class="fa fa-user-plus xxxlarge"></i>
+                </div>
+                <div class="clear"></div>
+                <h4>Sign-In Or Sign-Out?</h4>
+              </div>
+            </div>
+          </div>
+          <button id="submit-button" type='button' class="btn col padding-large text-white margin-top " onclick="submitEncounter()" style="background-color: #daa520ff;">Submit!</button>
+      </div>
+        </form>
+    </div>
+    </div>
+  </body>
+</html>
