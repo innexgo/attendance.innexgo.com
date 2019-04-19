@@ -24,10 +24,10 @@
 .login input[type=text]{
 	width: 400px;
 	height: 30px;
-	background: transparent;
+	background: white;
 	border: 1px solid rgba(255,255,255,0.6);
 	border-radius: 2px;
-	color: #fff;
+	color: #000;
     font-size: 17px;
 	padding: 4px;
 }
@@ -35,10 +35,10 @@
 .login input[type=password]{
 	width: 400px;
 	height: 30px;
-	background: transparent;
+	background: white;
 	border: 1px solid rgba(255,255,255,0.6);
 	border-radius: 2px;
-	color: #fff;
+	color: #000;
     font-size: 17px;
 	padding: 4px;
 	margin-top: 10px;
