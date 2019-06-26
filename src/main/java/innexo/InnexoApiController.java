@@ -30,8 +30,6 @@ public class InnexoApiController {
 
   @Autowired LocationService locationService;
 
-  @Autowired TargetService targetService;
-
   static final ResponseEntity<?> BAD_REQUEST =
       new ResponseEntity<>(HttpStatus.BAD_REQUEST);
   static final ResponseEntity<?> INTERNAL_SERVER_ERROR =
@@ -103,32 +101,6 @@ public class InnexoApiController {
     return OK;
   }
 
-
-
-  @RequestMapping(value = "target/new/")
-  public ResponseEntity<?>
-  newTarget(@RequestParam("userId") Integer userId,
-            @RequestParam("locationId") Integer locationId,
-            @RequestParam("name") String name,
-            @RequestParam("minTime") Long minTime,
-            @RequestParam("minTime") Long maxTime) {
-
-    if (userId != null && locationId != null && name != null &&
-        minTime != null && maxTime != null && userService.exists(userId) &&
-        locationService.exists(locationId)) {
-      Target target = new Target();
-      target.userId = userId;
-      target.locationId = locationId;
-      target.name = name;
-      target.minTime = Timestamp.from(Instant.ofEpochSecond(minTime));
-      target.maxTime = Timestamp.from(Instant.ofEpochSecond(maxTime));
-      targetService.add(target);
-      return OK;
-    } else {
-      return BAD_REQUEST;
-    }
-  }
-
   @RequestMapping(value = "encounter/delete/")
   public ResponseEntity<?>
   deleteEncounter(@RequestParam(value = "encounterId") Integer encounterId) {
@@ -149,14 +121,6 @@ public class InnexoApiController {
     locationService.delete(locationId);
     return OK;
   }
-
-  @RequestMapping(value = "target/delete/")
-  public ResponseEntity<?>
-  deleteTarget(@RequestParam(value = "targetId") Integer targetId) {
-    targetService.delete(targetId);
-    return OK;
-  }
-
 
   @RequestMapping(value = "encounter/")
   public ResponseEntity<?>
@@ -203,20 +167,6 @@ public class InnexoApiController {
           HttpStatus.OK);
     } else {
       return new ResponseEntity<>(locationService.getAll(), HttpStatus.OK);
-    }
-  }
-
-
-  @RequestMapping(value = "target/")
-  public ResponseEntity<?>
-  viewTarget(@RequestParam Map<String, String> allRequestParam) {
-    if (allRequestParam.containsKey("targetId")) {
-      return new ResponseEntity<>(
-          Arrays.asList(targetService.getById(
-              Integer.parseInt(allRequestParam.get("targetId")))),
-          HttpStatus.OK);
-    } else {
-      return new ResponseEntity<>(targetService.getAll(), HttpStatus.OK);
     }
   }
 }

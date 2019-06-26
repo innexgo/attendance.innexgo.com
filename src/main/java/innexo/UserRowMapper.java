@@ -10,6 +10,7 @@ public class UserRowMapper implements RowMapper<User> {
   public User mapRow(ResultSet row, int rowNum) throws SQLException {
     User u = new User();
     u.id = row.getInt("id");
+    u.managerId = row.getInt("manager_id");
     u.name = row.getString("name");
     u.passwordHash = row.getString("password_hash");
     u.administrator = row.getBoolean("administrator");
