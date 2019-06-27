@@ -6,12 +6,10 @@ public class Utils {
   }
 
   public static String escapeSQLString(String str) {
-    // TODO
-    return str == null ? null : str.replaceAll("[^a-zA-Z0-9]", "");
+    return str.replaceAll("\'", "\'\'");
   }
 
   public static String unEscapeSQLString(String str) {
-    // TODO
-    return str == null ? null : str.replaceAll("[^a-zA-Z0-9]", "");
+    return str.replaceAll("\'\'", "\'");
   }
 }
