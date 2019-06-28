@@ -48,9 +48,11 @@ public class LocationService {
                         location.id);
   }
 
-  public void delete(int id) {
+  public Location delete(int id) {
+    Location location = getById(id);
     String sql = "DELETE FROM location WHERE id=?";
     jdbcTemplate.update(sql, id);
+    return location;
   }
 
   public boolean exists(int id) {

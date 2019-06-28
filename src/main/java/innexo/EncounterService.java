@@ -73,9 +73,11 @@ public class EncounterService {
                         encounter.userId, encounter.type, encounter.id);
   }
 
-  public void delete(int id) {
+  public Encounter delete(int id) {
+    Encounter e = getById(id);
     String sql = "DELETE FROM encounter WHERE id=?";
     jdbcTemplate.update(sql, id);
+    return e;
   }
 
   public boolean exists(int id) {

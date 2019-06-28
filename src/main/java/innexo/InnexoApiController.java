@@ -46,10 +46,15 @@ public class InnexoApiController {
     return e;
   };
 
+  Function<User, User> fillUser = (u) -> u;
+  Function<Location, Location> fillLocation = (l) -> l;
+
+
   @RequestMapping(value = "encounter/new/")
   public ResponseEntity<?> newEncounter(@RequestParam("userId") Integer userId,
-      @RequestParam("locationId") Integer locationId, @RequestParam("type") String type) {
-    if (locationId != null && locationId != null && type != null
+                                        @RequestParam("locationId") Integer locationId, 
+                                        @RequestParam("type") String type) {
+    if (locationId != null && locationId != null && !Utils.isBlank(type) 
         && locationService.exists(locationId) && userService.exists(userId)) {
       Encounter encounter = new Encounter();
       encounter.locationId = locationId;
@@ -57,7 +62,8 @@ public class InnexoApiController {
       encounter.time = new Timestamp(System.currentTimeMillis());
       encounter.type = type;
       encounterService.add(encounter);
-      return OK;
+      // return the filled encounter on success
+      return new ResponseEntity<>(fillEncounter.apply(encounter), HttpStatus.OK);
     } else {
       return BAD_REQUEST;
     }
@@ -65,48 +71,56 @@ public class InnexoApiController {
 
   @RequestMapping(value = "user/new/")
   public ResponseEntity<?> newUser(@RequestParam("userId") Integer userId,
-      @RequestParam("name") String name, @RequestParam("administrator") Boolean administrator,
-      @RequestParam("trustedUser") Boolean trustedUser, @RequestParam("password") String password) {
-    if (!userService.exists(userId)) {
+                                   @RequestParam("managerId") Integer managerId,
+                                   @RequestParam("name") String name, 
+                                   @RequestParam("administrator") Boolean administrator,
+                                   @RequestParam("trustedUser") Boolean trustedUser, 
+                                   @RequestParam("password") String password) {
+    if (userId != null && managerId != null && !Utils.isBlank(name) && !Utils.isBlank(password) 
+        && administrator != null && trustedUser != null && !userService.exists(userId) 
+        && userService.exists(managerId)) {
       User u = new User();
       u.id = userId;
+      u.managerId = managerId;
       u.name = name;
       u.passwordHash = new BCryptPasswordEncoder().encode(password);
-      u.permissionId = 0; // TODO auth
+      u.administrator = administrator;
+      u.trustedUser = trustedUser;
       userService.add(u);
-      return OK;
+      return new ResponseEntity<>(fillUser.apply(u), HttpStatus.OK);
     } else {
       return BAD_REQUEST;
     }
   }
 
   @RequestMapping(value = "location/new/")
-  public ResponseEntity<?> newLocation(
-      @RequestParam("name") String name, @RequestParam("tags") String tags) {
-    Location location = new Location();
-    location.name = name;
-    location.tags = tags;
-    locationService.add(location);
-    return OK;
+  public ResponseEntity<?> newLocation(@RequestParam("name") String name, 
+                                       @RequestParam("tags") String tags) {
+    if (!Utils.isBlank(name) && !Utils.isBlank(tags)) {
+      Location location = new Location();
+      location.name = name;
+      location.tags = tags;
+      locationService.add(location);
+      return new ResponseEntity<>(fillLocation.apply(location), HttpStatus.OK);
+    } else {
+      return BAD_REQUEST;
+    }
   }
 
   @RequestMapping(value = "encounter/delete/")
   public ResponseEntity<?> deleteEncounter(
       @RequestParam(value = "encounterId") Integer encounterId) {
-    encounterService.delete(encounterId);
-    return OK;
+    return new ResponseEntity<>(fillEncounter.apply(encounterService.delete(encounterId)), HttpStatus.OK);
   }
 
   @RequestMapping(value = "user/delete/")
   public ResponseEntity<?> deleteStudent(@RequestParam(value = "userId") Integer userId) {
-    userService.delete(userId);
-    return OK;
+    return new ResponseEntity<>(fillUser.apply(userService.delete(userId)), HttpStatus.OK);
   }
 
   @RequestMapping(value = "location/delete/")
   public ResponseEntity<?> deleteLocation(@RequestParam(value = "locationId") Integer locationId) {
-    locationService.delete(locationId);
-    return OK;
+    return new ResponseEntity<>(fillLocation.apply(locationService.delete(locationId)), HttpStatus.OK);
   }
 
   @RequestMapping(value = "encounter/")

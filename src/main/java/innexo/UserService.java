@@ -56,9 +56,11 @@ public class UserService {
     jdbcTemplate.update(sql, user.id, user.managerId, user.name, user.passwordHash, user.administrator, user.trustedUser, user.id);
   }
 
-  public void delete(int id) {
+  public User delete(int id) {
+    User user = getById(id);
     String sql = "DELETE FROM user WHERE id=?";
     jdbcTemplate.update(sql, id);
+    return user;
   }
 
   public boolean exists(int id) {
