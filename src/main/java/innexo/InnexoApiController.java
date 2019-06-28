@@ -64,7 +64,7 @@ public class InnexoApiController {
       encounter.locationId = locationId;
       encounter.userId = userId;
       encounter.time = new Timestamp(System.currentTimeMillis());
-      encounter.type = Utils.valString(type);
+      encounter.type = Utils.escapeSQLString(type);
       encounterService.add(encounter);
       return OK;
     } else {
@@ -81,7 +81,7 @@ public class InnexoApiController {
     if (!userService.exists(userId)) {
       User u = new User();
       u.id = userId;
-      u.name = Utils.valString(name);
+      u.name = Utils.escapeSQLString(name);
       u.passwordHash = new BCryptPasswordEncoder().encode(password);
       u.permissionId = 0; // TODO auth
       userService.add(u);
@@ -95,8 +95,8 @@ public class InnexoApiController {
   public ResponseEntity<?> newLocation(@RequestParam("name") String name,
                                        @RequestParam("tags") String tags) {
     Location location = new Location();
-    location.name = Utils.valString(name);
-    location.tags = Utils.valString(tags);
+    location.name = Utils.escapeSQLString(name);
+    location.tags = Utils.escapeSQLString(tags);
     locationService.add(location);
     return OK;
   }
@@ -133,8 +133,8 @@ public class InnexoApiController {
                    parseInteger.apply(allRequestParam.get("locationId")),
                    parseTimestamp.apply(allRequestParam.get("minDate")),
                    parseTimestamp.apply(allRequestParam.get("maxDate")),
-                   Utils.valString(allRequestParam.get("userName")),
-                   Utils.valString(allRequestParam.get("type")))
+                   Utils.escapeSQLString(allRequestParam.get("userName")),
+                   Utils.escapeSQLString(allRequestParam.get("type")))
             .stream()
             .map(fillEncounter)
             .collect(Collectors.toList());
