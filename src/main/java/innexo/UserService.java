@@ -37,7 +37,7 @@ public class UserService {
   public void add(User user) {
     // Add user
     String sql =
-        "INSERT INTO user (id, manager_id, name, password_hash, administrator, trusted_user) values (?, ?, ?, ?)";
+        "INSERT INTO user (id, manager_id, name, password_hash, administrator, trusted_user) values (?, ?, ?, ?, ?, ?)";
     jdbcTemplate.update(sql, user.id, user.managerId, user.name, user.passwordHash, user.administrator, user.trustedUser);
 
     // Fetch user id

@@ -52,9 +52,9 @@ public class InnexoApiController {
 
   @RequestMapping(value = "encounter/new/")
   public ResponseEntity<?> newEncounter(@RequestParam("userId") Integer userId,
-                                        @RequestParam("locationId") Integer locationId, 
+                                        @RequestParam("locationId") Integer locationId,
                                         @RequestParam("type") String type) {
-    if (locationId != null && locationId != null && !Utils.isBlank(type) 
+    if (locationId != null && locationId != null && !Utils.isBlank(type)
         && locationService.exists(locationId) && userService.exists(userId)) {
       Encounter encounter = new Encounter();
       encounter.locationId = locationId;
@@ -71,21 +71,22 @@ public class InnexoApiController {
 
   @RequestMapping(value = "user/new/")
   public ResponseEntity<?> newUser(@RequestParam("userId") Integer userId,
-                                   @RequestParam("managerId") Integer managerId,
-                                   @RequestParam("name") String name, 
-                                   @RequestParam("administrator") Boolean administrator,
-                                   @RequestParam("trustedUser") Boolean trustedUser, 
+                                   @RequestParam(value="managerId", defaultValue="-1") Integer managerId,
+                                   @RequestParam("name") String name,
+                                   @RequestParam(value="administrator", defaultValue="false") Boolean administrator,
+                                   @RequestParam(value="trustedUser", defaultValue="false") Boolean trustedUser,
                                    @RequestParam("password") String password) {
-    if (userId != null && managerId != null && !Utils.isBlank(name) && !Utils.isBlank(password) 
-        && administrator != null && trustedUser != null && !userService.exists(userId) 
-        && userService.exists(managerId)) {
+    if (userId != null && managerId != null && !Utils.isBlank(name) && !Utils.isBlank(password)
+        && administrator != null && trustedUser != null && !userService.exists(userId)) {
       User u = new User();
       u.id = userId;
-      u.managerId = managerId;
+      if(managerId != -1 && userService.exists(managerId)) {
+        u.managerId = managerId;
+      }
       u.name = name;
       u.passwordHash = new BCryptPasswordEncoder().encode(password);
       u.administrator = administrator;
-      u.trustedUser = trustedUser;
+      u.trustedUser = !administrator && trustedUser; // false if administrator is enabled
       userService.add(u);
       return new ResponseEntity<>(fillUser.apply(u), HttpStatus.OK);
     } else {
@@ -94,7 +95,7 @@ public class InnexoApiController {
   }
 
   @RequestMapping(value = "location/new/")
-  public ResponseEntity<?> newLocation(@RequestParam("name") String name, 
+  public ResponseEntity<?> newLocation(@RequestParam("name") String name,
                                        @RequestParam("tags") String tags) {
     if (!Utils.isBlank(name) && !Utils.isBlank(tags)) {
       Location location = new Location();
@@ -132,7 +133,7 @@ public class InnexoApiController {
                                   parseInteger.apply(allRequestParam.get("locationId")),
                                   parseTimestamp.apply(allRequestParam.get("minDate")),
                                   parseTimestamp.apply(allRequestParam.get("maxDate")),
-                                  allRequestParam.get("userName"), 
+                                  allRequestParam.get("userName"),
                                   allRequestParam.get("type"))
                               .stream()
                               .map(fillEncounter)
