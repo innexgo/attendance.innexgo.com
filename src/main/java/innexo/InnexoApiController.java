@@ -130,6 +130,7 @@ public class InnexoApiController {
                               .query(parseInteger.apply(allRequestParam.get("count")),
                                   parseInteger.apply(allRequestParam.get("encounterId")),
                                   parseInteger.apply(allRequestParam.get("userId")),
+                                  parseInteger.apply(allRequestParam.get("userManagerId")),
                                   parseInteger.apply(allRequestParam.get("locationId")),
                                   parseTimestamp.apply(allRequestParam.get("minDate")),
                                   parseTimestamp.apply(allRequestParam.get("maxDate")),

@@ -30,13 +30,14 @@ public class EncounterService {
   }
 
   public List<Encounter> query(Integer count, Integer encounterId,
-                               Integer userId, Integer locationId,
-                               Timestamp minTime, Timestamp maxTime,
-                               String userName, String type) {
+                               Integer userId, Integer userManagerId, 
+                               Integer locationId, Timestamp minTime, 
+                               Timestamp maxTime, String userName, String type) {
     String sql =
         "SELECT e.id, e.time, e.location_id, e.user_id, e.type FROM encounter e JOIN user u ON e.user_id = u.id WHERE 1=1 " +
         (encounterId == null ? "" : " AND e.id=" + encounterId) +
         (userId == null ? "" : " AND e.user_id=" + userId) +
+        (userManagerId == null ? "" : " AND u.manager_id=" + userManagerId) +
         (userName == null ? "" : " AND u.name=\'" + Utils.escapeSQLString(userName) + "\'") +
         (locationId == null ? "" : " AND e.location_id=" + locationId) +
         (type == null ? "" : " AND e.type=\'" + Utils.escapeSQLString(type) + "\'") +

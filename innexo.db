@@ -29,7 +29,7 @@ CREATE TABLE `encounter` (
   `user_id` bigint(20) NOT NULL,
   `type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -38,6 +38,7 @@ CREATE TABLE `encounter` (
 
 LOCK TABLES `encounter` WRITE;
 /*!40000 ALTER TABLE `encounter` DISABLE KEYS */;
+INSERT INTO `encounter` VALUES (1,'2019-06-29 13:50:39',1,1,'in'),(2,'2019-06-29 13:50:55',1,30090001,'in'),(3,'2019-06-29 13:51:01',1,30090002,'in'),(4,'2019-06-29 13:51:04',1,30090003,'in'),(5,'2019-06-29 13:51:08',1,30090004,'in'),(6,'2019-06-29 13:51:10',1,30090004,'out'),(7,'2019-06-29 13:51:13',1,30090003,'out'),(8,'2019-06-29 13:51:17',1,30090002,'out'),(9,'2019-06-29 13:51:20',1,30090001,'out'),(10,'2019-06-29 13:51:23',1,1,'out'),(11,'2019-06-29 13:51:28',1,2,'in'),(12,'2019-06-29 13:51:33',1,2,'out');
 /*!40000 ALTER TABLE `encounter` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -103,4 +104,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-06-28 22:37:10
+-- Dump completed on 2019-06-29  7:05:42
