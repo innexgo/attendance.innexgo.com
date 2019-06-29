@@ -2,7 +2,6 @@ package innexo;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -14,7 +13,8 @@ public class UserService {
   @Autowired private JdbcTemplate jdbcTemplate;
 
   public User getById(int id) {
-    String sql = "SELECT id, manager_id, name, password_hash, administrator, trusted_user FROM user WHERE id=?";
+    String sql =
+        "SELECT id, manager_id, name, password_hash, administrator, trusted_user FROM user WHERE id=?";
     RowMapper<User> rowMapper = new UserRowMapper();
     User user = jdbcTemplate.queryForObject(sql, rowMapper, id);
     return user;
@@ -29,7 +29,8 @@ public class UserService {
   }
 
   public List<User> getAll() {
-    String sql = "SELECT id, manager_id, name, password_hash, administrator, trusted_user FROM user";
+    String sql =
+        "SELECT id, manager_id, name, password_hash, administrator, trusted_user FROM user";
     RowMapper<User> rowMapper = new UserRowMapper();
     return this.jdbcTemplate.query(sql, rowMapper);
   }
@@ -38,13 +39,27 @@ public class UserService {
     // Add user
     String sql =
         "INSERT INTO user (id, manager_id, name, password_hash, administrator, trusted_user) values (?, ?, ?, ?, ?, ?)";
-    jdbcTemplate.update(sql, user.id, user.managerId, user.name, user.passwordHash, user.administrator, user.trustedUser);
+    jdbcTemplate.update(
+        sql,
+        user.id,
+        user.managerId,
+        user.name,
+        user.passwordHash,
+        user.administrator,
+        user.trustedUser);
 
     // Fetch user id
     sql =
         "SELECT id FROM user WHERE manager_id=? AND name=? AND password_hash=? AND administrator=? AND trusted_user=?";
-    int id = jdbcTemplate.queryForObject(
-        sql, Integer.class, user.managerId, user.name, user.passwordHash, user.administrator, user.trustedUser);
+    int id =
+        jdbcTemplate.queryForObject(
+            sql,
+            Integer.class,
+            user.managerId,
+            user.name,
+            user.passwordHash,
+            user.administrator,
+            user.trustedUser);
 
     // Set user id
     user.id = id;
@@ -53,7 +68,15 @@ public class UserService {
   public void update(User user) {
     String sql =
         "UPDATE user SET id=?, manager_id=?, name=?, password_hash=?, administrator=?, trusted_user=? WHERE id=?";
-    jdbcTemplate.update(sql, user.id, user.managerId, user.name, user.passwordHash, user.administrator, user.trustedUser, user.id);
+    jdbcTemplate.update(
+        sql,
+        user.id,
+        user.managerId,
+        user.name,
+        user.passwordHash,
+        user.administrator,
+        user.trustedUser,
+        user.id);
   }
 
   public User delete(int id) {

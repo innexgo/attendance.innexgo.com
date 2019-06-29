@@ -1,9 +1,7 @@
-
 package innexo;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -35,8 +33,7 @@ public class LocationService {
 
     // Fetch location id
     sql = "SELECT id FROM location WHERE name=? AND tags=?";
-    int id = jdbcTemplate.queryForObject(sql, Integer.class, location.name,
-                                         location.tags);
+    int id = jdbcTemplate.queryForObject(sql, Integer.class, location.name, location.tags);
 
     // Set location id
     location.id = id;
@@ -44,8 +41,7 @@ public class LocationService {
 
   public void update(Location location) {
     String sql = "UPDATE location SET id=?, name=?, tags=? WHERE id=?";
-    jdbcTemplate.update(sql, location.id, location.name, location.tags,
-                        location.id);
+    jdbcTemplate.update(sql, location.id, location.name, location.tags, location.id);
   }
 
   public Location delete(int id) {

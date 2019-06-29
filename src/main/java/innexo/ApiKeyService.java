@@ -2,7 +2,6 @@ package innexo;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -37,8 +36,14 @@ public class ApiKeyService {
     // Fetch apiKey id
     sql =
         "SELECT id FROM api_key WHERE creator_id=? AND creation_time=? AND expiration_time=? AND key=?";
-    int id = jdbcTemplate.queryForObject(sql, Integer.class, apiKey.creatorId, apiKey.creationTime,
-        apiKey.expirationTime, apiKey.key);
+    int id =
+        jdbcTemplate.queryForObject(
+            sql,
+            Integer.class,
+            apiKey.creatorId,
+            apiKey.creationTime,
+            apiKey.expirationTime,
+            apiKey.key);
 
     // Set apiKey id
     apiKey.id = id;

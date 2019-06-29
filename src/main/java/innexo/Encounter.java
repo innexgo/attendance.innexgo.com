@@ -1,4 +1,5 @@
 package innexo;
+
 import java.sql.Timestamp;
 
 public class Encounter {

@@ -2,24 +2,18 @@ package innexo;
 
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -42,20 +36,24 @@ public class InnexoApiController {
 
   Function<User, User> fillUser = (u) -> u;
   Function<Location, Location> fillLocation = (l) -> l;
-  Function<ApiKey, ApiKey> fillApiKey = (k) -> {
-    k.creator = fillUser.apply(userService.getById(creatorId));
-    return k;
-  };
+  Function<ApiKey, ApiKey> fillApiKey =
+      (k) -> {
+        k.creator = fillUser.apply(userService.getById(creatorId));
+        return k;
+      };
 
-  Function<Encounter, Encounter> fillEncounter = (e) -> {
-    e.location = fillLocation.apply(locationService.getById(e.locationId));
-    e.user = fillUser.apply(userService.getById(e.userId));
-    return e;
-  };
+  Function<Encounter, Encounter> fillEncounter =
+      (e) -> {
+        e.location = fillLocation.apply(locationService.getById(e.locationId));
+        e.user = fillUser.apply(userService.getById(e.userId));
+        return e;
+      };
 
   @RequestMapping(value = "encounter/new/")
-  public ResponseEntity<?> newEncounter(@RequestParam("userId") Integer userId,
-      @RequestParam("locationId") Integer locationId, @RequestParam("type") String type) {
+  public ResponseEntity<?> newEncounter(
+      @RequestParam("userId") Integer userId,
+      @RequestParam("locationId") Integer locationId,
+      @RequestParam("type") String type) {
     if (!Utils.isBlank(type) && locationService.exists(locationId) && userService.exists(userId)) {
       Encounter encounter = new Encounter();
       encounter.locationId = locationId;
@@ -71,7 +69,8 @@ public class InnexoApiController {
   }
 
   @RequestMapping(value = "user/new/")
-  public ResponseEntity<?> newUser(@RequestParam("userId") Integer userId,
+  public ResponseEntity<?> newUser(
+      @RequestParam("userId") Integer userId,
       @RequestParam(value = "managerId", defaultValue = "-1") Integer managerId,
       @RequestParam("name") String name,
       @RequestParam(value = "administrator", defaultValue = "false") Boolean administrator,
@@ -109,7 +108,8 @@ public class InnexoApiController {
   }
 
   @RequestMapping(value = "apiKey/new/")
-  public ResponseEntity<?> newApiKey(@RequestParam("creatorId") Integer creatorId,
+  public ResponseEntity<?> newApiKey(
+      @RequestParam("creatorId") Integer creatorId,
       @RequestParam("expirationTime") Integer expirationTime) {
     if (!Utils.isBlank(name) && !Utils.isBlank(tags)) {
       ApiKey apiKey = new ApiKey();
@@ -149,18 +149,21 @@ public class InnexoApiController {
 
   @RequestMapping(value = "encounter/")
   public ResponseEntity<?> viewEncounter(@RequestParam Map<String, String> allRequestParam) {
-    List<Encounter> els = encounterService
-                              .query(parseInteger.apply(allRequestParam.get("count")),
-                                  parseInteger.apply(allRequestParam.get("encounterId")),
-                                  parseInteger.apply(allRequestParam.get("userId")),
-                                  parseInteger.apply(allRequestParam.get("userManagerId")),
-                                  parseInteger.apply(allRequestParam.get("locationId")),
-                                  parseTimestamp.apply(allRequestParam.get("minDate")),
-                                  parseTimestamp.apply(allRequestParam.get("maxDate")),
-                                  allRequestParam.get("userName"), allRequestParam.get("type"))
-                              .stream()
-                              .map(fillEncounter)
-                              .collect(Collectors.toList());
+    List<Encounter> els =
+        encounterService
+            .query(
+                parseInteger.apply(allRequestParam.get("count")),
+                parseInteger.apply(allRequestParam.get("encounterId")),
+                parseInteger.apply(allRequestParam.get("userId")),
+                parseInteger.apply(allRequestParam.get("userManagerId")),
+                parseInteger.apply(allRequestParam.get("locationId")),
+                parseTimestamp.apply(allRequestParam.get("minDate")),
+                parseTimestamp.apply(allRequestParam.get("maxDate")),
+                allRequestParam.get("userName"),
+                allRequestParam.get("type"))
+            .stream()
+            .map(fillEncounter)
+            .collect(Collectors.toList());
     return new ResponseEntity<>(els, HttpStatus.OK);
   }
 
@@ -181,8 +184,9 @@ public class InnexoApiController {
   @RequestMapping(value = "location/")
   public ResponseEntity<?> viewLocation(@RequestParam Map<String, String> allRequestParam) {
     if (allRequestParam.containsKey("locationId")) {
-      return new ResponseEntity<>(Arrays.asList(locationService.getById(
-                                      Integer.parseInt(allRequestParam.get("locationId")))),
+      return new ResponseEntity<>(
+          Arrays.asList(
+              locationService.getById(Integer.parseInt(allRequestParam.get("locationId")))),
           HttpStatus.OK);
     } else {
       return new ResponseEntity<>(locationService.getAll(), HttpStatus.OK);
@@ -193,22 +197,11 @@ public class InnexoApiController {
   public ResponseEntity<?> viewApiKey(@RequestParam Map<String, String> allRequestParam) {
     Stream stream = null;
     if (allRequestParam.containsKey("apiKeyId")) {
-      stream = Stream.of(
-          apiKeyService.getById(
-            Integer.parseInt(allRequestParam.get("apiKeyId"))
-          )
-        );
+      stream = Stream.of(apiKeyService.getById(Integer.parseInt(allRequestParam.get("apiKeyId"))));
     } else {
-      stream = apiKeyService
-                .getAll()
-                .stream();
+      stream = apiKeyService.getAll().stream();
     }
 
-    return new ResponseEntity<>(
-          s
-          .map(fillApiKey)
-          .collect(Collectors.toList), 
-        HttpStatus.OK
-      );
+    return new ResponseEntity<>(s.map(fillApiKey).collect(Collectors.toList), HttpStatus.OK);
   }
 }
