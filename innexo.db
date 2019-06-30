@@ -16,6 +16,33 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `api_key`
+--
+
+DROP TABLE IF EXISTS `api_key`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `api_key` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `creator_id` bigint(20) NOT NULL,
+  `creation_time` datetime NOT NULL,
+  `expiration_time` datetime NOT NULL,
+  `keydata` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `api_key`
+--
+
+LOCK TABLES `api_key` WRITE;
+/*!40000 ALTER TABLE `api_key` DISABLE KEYS */;
+INSERT INTO `api_key` VALUES (1,1,'2019-06-29 23:23:10','1969-12-31 23:59:59','28a43ab6-2aea-407f-80a6-a68156c33f54'),(2,1,'2019-06-29 23:31:20','1969-12-31 23:59:58','4a716932-b461-493d-b680-52c61eb7ddf2'),(3,1,'2019-06-29 23:50:48','1970-01-01 00:00:00','75b904d7-90a7-4e20-a3a6-a639749f3301'),(4,1,'2019-06-29 23:50:52','1970-01-01 00:00:16','dafee2d0-f17a-4745-ba72-c510e99606d1'),(5,1,'2019-06-29 23:50:58','1970-01-25 20:31:19','e16b2001-c086-4ec8-9ab8-a961fabfd7eb'),(6,1,'2019-06-29 23:51:02','1969-12-31 23:51:05','38bf15fc-aaad-4a3b-ad2d-36ef7a058a3b'),(7,1,'2019-06-29 23:51:06','1970-01-01 00:08:54','4e37d016-ecf2-47a4-829b-5d1451e643fc'),(8,1,'2019-06-29 23:58:04','1976-10-21 12:28:19','fad6cc9b-19e2-4bcf-9c0c-311053f7b907'),(9,1,'2019-06-29 23:58:38','1976-10-21 12:28:19','22c6206e-cd4c-49e9-ad79-ed80a9451801'),(10,1,'2019-06-29 23:58:55','1901-12-13 20:45:52','e1703082-fe52-4963-9ada-fdf2dc798a26'),(11,1,'2019-06-29 23:59:03','2038-01-19 03:14:07','4d21a448-9187-4c3f-bdb4-147455f92c3a');
+/*!40000 ALTER TABLE `api_key` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `encounter`
 --
 
@@ -104,4 +131,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-06-29  7:05:42
+-- Dump completed on 2019-06-29 16:59:27

@@ -14,14 +14,14 @@ public class ApiKeyService {
 
   public ApiKey getById(int id) {
     String sql =
-        "SELECT id, creator_id, creation_time, expiration_time, key FROM api_key WHERE id=?";
+        "SELECT id, creator_id, creation_time, expiration_time, key FROM api_keydata WHERE id=?";
     RowMapper<ApiKey> rowMapper = new ApiKeyRowMapper();
     ApiKey apiKey = jdbcTemplate.queryForObject(sql, rowMapper, id);
     return apiKey;
   }
 
   public List<ApiKey> getAll() {
-    String sql = "SELECT id, creator_id, creation_time, expiration_time, key FROM api_key";
+    String sql = "SELECT id, creator_id, creation_time, expiration_time, keydata FROM api_key";
     RowMapper<ApiKey> rowMapper = new ApiKeyRowMapper();
     return this.jdbcTemplate.query(sql, rowMapper);
   }
@@ -29,13 +29,13 @@ public class ApiKeyService {
   public void add(ApiKey apiKey) {
     // Add API key
     String sql =
-        "INSERT INTO api_key (id, creator_id, creation_time, expiration_time, key) values (?, ?, ?, ?, ?)";
+        "INSERT INTO api_key (id, creator_id, creation_time, expiration_time, keydata) values (?, ?, ?, ?, ?)";
     jdbcTemplate.update(
-        sql, apiKey.id, apiKey.creatorId, apiKey.creationTime, apiKey.expirationTime, apiKey.key);
+        sql, apiKey.id, apiKey.creatorId, apiKey.creationTime, apiKey.expirationTime, apiKey.keydata);
 
     // Fetch apiKey id
     sql =
-        "SELECT id FROM api_key WHERE creator_id=? AND creation_time=? AND expiration_time=? AND key=?";
+        "SELECT id FROM api_key WHERE creator_id=? AND creation_time=? AND expiration_time=? AND keydata=?";
     int id =
         jdbcTemplate.queryForObject(
             sql,
@@ -43,7 +43,7 @@ public class ApiKeyService {
             apiKey.creatorId,
             apiKey.creationTime,
             apiKey.expirationTime,
-            apiKey.key);
+            apiKey.keydata);
 
     // Set apiKey id
     apiKey.id = id;
@@ -53,7 +53,7 @@ public class ApiKeyService {
     String sql =
         "UPDATE api_key SET id=?, creator_id=?, creation_time=?, expiration_time=?, key=? WHERE id=?";
     jdbcTemplate.update(
-        sql, apiKey.id, apiKey.creatorId, apiKey.creationTime, apiKey.expirationTime, apiKey.key);
+        sql, apiKey.id, apiKey.creatorId, apiKey.creationTime, apiKey.expirationTime, apiKey.keydata);
   }
 
   public ApiKey delete(int id) {

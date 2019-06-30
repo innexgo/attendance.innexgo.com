@@ -7,7 +7,7 @@ public class ApiKey {
   int creatorId;
   public Timestamp creationTime;
   public Timestamp expirationTime;
-  public String key;
+  public String keydata;
 
   // Initialized by jackson during serialization
   public User creator;

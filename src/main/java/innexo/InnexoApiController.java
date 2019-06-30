@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.Function;
+import java.util.stream.Stream;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -38,7 +39,7 @@ public class InnexoApiController {
   Function<Location, Location> fillLocation = (l) -> l;
   Function<ApiKey, ApiKey> fillApiKey =
       (k) -> {
-        k.creator = fillUser.apply(userService.getById(creatorId));
+        k.creator = fillUser.apply(userService.getById(k.creatorId));
         return k;
       };
 
@@ -111,12 +112,12 @@ public class InnexoApiController {
   public ResponseEntity<?> newApiKey(
       @RequestParam("creatorId") Integer creatorId,
       @RequestParam("expirationTime") Integer expirationTime) {
-    if (!Utils.isBlank(name) && !Utils.isBlank(tags)) {
+    if (userService.exists(creatorId)) {
       ApiKey apiKey = new ApiKey();
       apiKey.creatorId = creatorId;
       apiKey.creationTime = new Timestamp(System.currentTimeMillis());
-      apiKey.expirationTime = new Timestamp(expirationTime * 1000); // epoch time to milis
-      apiKey.key = UUID.randomUUID().toString(); // quick hacks, please replace
+      apiKey.expirationTime = new Timestamp((long)expirationTime * 1000); // epoch time to milis
+      apiKey.keydata = UUID.randomUUID().toString(); // quick hacks, please replace
       apiKeyService.add(apiKey);
       return new ResponseEntity<>(fillApiKey.apply(apiKey), HttpStatus.OK);
     } else {
@@ -157,8 +158,8 @@ public class InnexoApiController {
                 parseInteger.apply(allRequestParam.get("userId")),
                 parseInteger.apply(allRequestParam.get("userManagerId")),
                 parseInteger.apply(allRequestParam.get("locationId")),
-                parseTimestamp.apply(allRequestParam.get("minDate")),
-                parseTimestamp.apply(allRequestParam.get("maxDate")),
+                parseTimestamp.apply(allRequestParam.get("minTime")),
+                parseTimestamp.apply(allRequestParam.get("maxTime")),
                 allRequestParam.get("userName"),
                 allRequestParam.get("type"))
             .stream()
@@ -183,25 +184,25 @@ public class InnexoApiController {
 
   @RequestMapping(value = "location/")
   public ResponseEntity<?> viewLocation(@RequestParam Map<String, String> allRequestParam) {
+    Stream<Location> stream = null;
     if (allRequestParam.containsKey("locationId")) {
-      return new ResponseEntity<>(
-          Arrays.asList(
-              locationService.getById(Integer.parseInt(allRequestParam.get("locationId")))),
-          HttpStatus.OK);
+      stream = Stream.of(locationService.getById(Integer.parseInt(allRequestParam.get("locationId"))));
     } else {
-      return new ResponseEntity<>(locationService.getAll(), HttpStatus.OK);
+      stream = locationService.getAll().stream();
     }
+
+    return new ResponseEntity<>(stream.map(fillLocation).collect(Collectors.toList()), HttpStatus.OK);
   }
 
   @RequestMapping(value = "apiKey/")
   public ResponseEntity<?> viewApiKey(@RequestParam Map<String, String> allRequestParam) {
-    Stream stream = null;
+    Stream<ApiKey> stream = null;
     if (allRequestParam.containsKey("apiKeyId")) {
       stream = Stream.of(apiKeyService.getById(Integer.parseInt(allRequestParam.get("apiKeyId"))));
     } else {
       stream = apiKeyService.getAll().stream();
     }
 
-    return new ResponseEntity<>(s.map(fillApiKey).collect(Collectors.toList), HttpStatus.OK);
+    return new ResponseEntity<>(stream.map(fillApiKey).collect(Collectors.toList()), HttpStatus.OK);
   }
 }
