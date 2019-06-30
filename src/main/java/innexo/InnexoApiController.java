@@ -69,7 +69,7 @@ public class InnexoApiController {
 
   boolean isTrusted(String key) {
     User user = getUserIfValid(key);
-    return user != null  && (user.trustedUser || user.administrator);
+    return user != null && (user.trustedUser || user.administrator);
   }
 
   @RequestMapping("encounter/new/")
@@ -146,16 +146,19 @@ public class InnexoApiController {
       @RequestParam("expirationTime") Integer expirationTime,
       @RequestParam("password") String password) {
     if (userService.exists(creatorId)) {
-      ApiKey apiKey = new ApiKey();
-      apiKey.creatorId = creatorId;
-      apiKey.creationTime = new Timestamp(System.currentTimeMillis());
-      apiKey.expirationTime = new Timestamp((long) expirationTime * 1000); // epoch time to milis
-      apiKey.keydata = UUID.randomUUID().toString(); // quick hacks, please replace
-      apiKeyService.add(apiKey);
-      return new ResponseEntity<>(fillApiKey.apply(apiKey), HttpStatus.OK);
-    } else {
-      return BAD_REQUEST;
+      User u = userService.getById(creatorId);
+      BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+      if (encoder.matches(password, u.passwordHash)) {
+        ApiKey apiKey = new ApiKey();
+        apiKey.creatorId = creatorId;
+        apiKey.creationTime = new Timestamp(System.currentTimeMillis());
+        apiKey.expirationTime = new Timestamp((long) expirationTime * 1000); // epoch time to milis
+        apiKey.keydata = UUID.randomUUID().toString(); // quick hacks, please replace
+        apiKeyService.add(apiKey);
+        return new ResponseEntity<>(fillApiKey.apply(apiKey), HttpStatus.OK);
+      }
     }
+    return BAD_REQUEST;
   }
 
   @RequestMapping("encounter/delete/")
