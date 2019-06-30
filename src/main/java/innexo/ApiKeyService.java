@@ -14,9 +14,17 @@ public class ApiKeyService {
 
   public ApiKey getById(int id) {
     String sql =
-        "SELECT id, creator_id, creation_time, expiration_time, key FROM api_keydata WHERE id=?";
+        "SELECT id, creator_id, creation_time, expiration_time, keydata FROM api_key WHERE id=?";
     RowMapper<ApiKey> rowMapper = new ApiKeyRowMapper();
     ApiKey apiKey = jdbcTemplate.queryForObject(sql, rowMapper, id);
+    return apiKey;
+  }
+
+  public ApiKey getByKey(String key) {
+    String sql =
+        "SELECT id, creator_id, creation_time, expiration_time, keydata FROM api_key WHERE keydata=?";
+    RowMapper<ApiKey> rowMapper = new ApiKeyRowMapper();
+    ApiKey apiKey = jdbcTemplate.queryForObject(sql, rowMapper, key);
     return apiKey;
   }
 
@@ -31,7 +39,12 @@ public class ApiKeyService {
     String sql =
         "INSERT INTO api_key (id, creator_id, creation_time, expiration_time, keydata) values (?, ?, ?, ?, ?)";
     jdbcTemplate.update(
-        sql, apiKey.id, apiKey.creatorId, apiKey.creationTime, apiKey.expirationTime, apiKey.keydata);
+        sql,
+        apiKey.id,
+        apiKey.creatorId,
+        apiKey.creationTime,
+        apiKey.expirationTime,
+        apiKey.keydata);
 
     // Fetch apiKey id
     sql =
@@ -53,7 +66,12 @@ public class ApiKeyService {
     String sql =
         "UPDATE api_key SET id=?, creator_id=?, creation_time=?, expiration_time=?, key=? WHERE id=?";
     jdbcTemplate.update(
-        sql, apiKey.id, apiKey.creatorId, apiKey.creationTime, apiKey.expirationTime, apiKey.keydata);
+        sql,
+        apiKey.id,
+        apiKey.creatorId,
+        apiKey.creationTime,
+        apiKey.expirationTime,
+        apiKey.keydata);
   }
 
   public ApiKey delete(int id) {
@@ -66,6 +84,16 @@ public class ApiKeyService {
   public boolean exists(int id) {
     String sql = "SELECT count(*) FROM api_key WHERE id=?";
     int count = jdbcTemplate.queryForObject(sql, Integer.class, id);
+    if (count == 0) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  public boolean existsByKey(String key) {
+    String sql = "SELECT count(*) FROM api_key WHERE keydata=?";
+    int count = jdbcTemplate.queryForObject(sql, Integer.class, key);
     if (count == 0) {
       return false;
     } else {

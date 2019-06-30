@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.Function;
-import java.util.stream.Stream;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -50,12 +50,38 @@ public class InnexoApiController {
         return e;
       };
 
-  @RequestMapping(value = "encounter/new/")
+  User getUserIfValid(String key) {
+    if (apiKeyService.existsByKey(key)) {
+      ApiKey apiKey = apiKeyService.getByKey(key);
+      if (apiKey.expirationTime.getTime() > System.currentTimeMillis()) {
+        if (userService.exists(apiKey.creatorId)) {
+          return userService.getById(apiKey.creatorId);
+        }
+      }
+    }
+    return null;
+  }
+
+  boolean isAdministrator(String key) {
+    User user = getUserIfValid(key);
+    return user != null && user.administrator;
+  }
+
+  boolean isTrusted(String key) {
+    User user = getUserIfValid(key);
+    return user != null  && (user.trustedUser || user.administrator);
+  }
+
+  @RequestMapping("encounter/new/")
   public ResponseEntity<?> newEncounter(
       @RequestParam("userId") Integer userId,
       @RequestParam("locationId") Integer locationId,
-      @RequestParam("type") String type) {
-    if (!Utils.isBlank(type) && locationService.exists(locationId) && userService.exists(userId)) {
+      @RequestParam("type") String type,
+      @RequestParam("apiKey") String apiKey) {
+    if (!Utils.isBlank(type)
+        && locationService.exists(locationId)
+        && userService.exists(userId)
+        && isTrusted(apiKey)) {
       Encounter encounter = new Encounter();
       encounter.locationId = locationId;
       encounter.userId = userId;
@@ -69,15 +95,19 @@ public class InnexoApiController {
     }
   }
 
-  @RequestMapping(value = "user/new/")
+  @RequestMapping("user/new/")
   public ResponseEntity<?> newUser(
       @RequestParam("userId") Integer userId,
       @RequestParam(value = "managerId", defaultValue = "-1") Integer managerId,
       @RequestParam("name") String name,
       @RequestParam(value = "administrator", defaultValue = "false") Boolean administrator,
       @RequestParam(value = "trustedUser", defaultValue = "false") Boolean trustedUser,
-      @RequestParam("password") String password) {
-    if (!Utils.isBlank(name) && !Utils.isBlank(password) && !userService.exists(userId)) {
+      @RequestParam("password") String password,
+      @RequestParam("apiKey") String apiKey) {
+    if (!Utils.isBlank(name)
+        && !Utils.isBlank(password)
+        && !userService.exists(userId)
+        && isAdministrator(apiKey)) {
       User u = new User();
       u.id = userId;
       if (managerId != -1 && userService.exists(managerId)) {
@@ -94,10 +124,12 @@ public class InnexoApiController {
     }
   }
 
-  @RequestMapping(value = "location/new/")
+  @RequestMapping("location/new/")
   public ResponseEntity<?> newLocation(
-      @RequestParam("name") String name, @RequestParam("tags") String tags) {
-    if (!Utils.isBlank(name) && !Utils.isBlank(tags)) {
+      @RequestParam("name") String name,
+      @RequestParam("tags") String tags,
+      @RequestParam("apiKey") String apiKey) {
+    if (!Utils.isBlank(name) && !Utils.isBlank(tags) && isAdministrator(apiKey)) {
       Location location = new Location();
       location.name = name;
       location.tags = tags;
@@ -108,15 +140,16 @@ public class InnexoApiController {
     }
   }
 
-  @RequestMapping(value = "apiKey/new/")
+  @RequestMapping("apiKey/new/")
   public ResponseEntity<?> newApiKey(
       @RequestParam("creatorId") Integer creatorId,
-      @RequestParam("expirationTime") Integer expirationTime) {
+      @RequestParam("expirationTime") Integer expirationTime,
+      @RequestParam("password") String password) {
     if (userService.exists(creatorId)) {
       ApiKey apiKey = new ApiKey();
       apiKey.creatorId = creatorId;
       apiKey.creationTime = new Timestamp(System.currentTimeMillis());
-      apiKey.expirationTime = new Timestamp((long)expirationTime * 1000); // epoch time to milis
+      apiKey.expirationTime = new Timestamp((long) expirationTime * 1000); // epoch time to milis
       apiKey.keydata = UUID.randomUUID().toString(); // quick hacks, please replace
       apiKeyService.add(apiKey);
       return new ResponseEntity<>(fillApiKey.apply(apiKey), HttpStatus.OK);
@@ -125,84 +158,123 @@ public class InnexoApiController {
     }
   }
 
-  @RequestMapping(value = "encounter/delete/")
+  @RequestMapping("encounter/delete/")
   public ResponseEntity<?> deleteEncounter(
-      @RequestParam(value = "encounterId") Integer encounterId) {
-    return new ResponseEntity<>(
-        fillEncounter.apply(encounterService.delete(encounterId)), HttpStatus.OK);
+      @RequestParam("encounterId") Integer encounterId, @RequestParam("apiKey") String apiKey) {
+    if (isAdministrator(apiKey)) {
+      return new ResponseEntity<>(
+          fillEncounter.apply(encounterService.delete(encounterId)), HttpStatus.OK);
+    } else {
+      return BAD_REQUEST;
+    }
   }
 
-  @RequestMapping(value = "user/delete/")
-  public ResponseEntity<?> deleteStudent(@RequestParam(value = "userId") Integer userId) {
-    return new ResponseEntity<>(fillUser.apply(userService.delete(userId)), HttpStatus.OK);
+  @RequestMapping("user/delete/")
+  public ResponseEntity<?> deleteStudent(
+      @RequestParam("userId") Integer userId, @RequestParam("apiKey") String apiKey) {
+    if (isAdministrator(apiKey)) {
+      return new ResponseEntity<>(fillUser.apply(userService.delete(userId)), HttpStatus.OK);
+    } else {
+      return BAD_REQUEST;
+    }
   }
 
-  @RequestMapping(value = "location/delete/")
-  public ResponseEntity<?> deleteLocation(@RequestParam(value = "locationId") Integer locationId) {
-    return new ResponseEntity<>(
-        fillLocation.apply(locationService.delete(locationId)), HttpStatus.OK);
+  @RequestMapping("location/delete/")
+  public ResponseEntity<?> deleteLocation(
+      @RequestParam("locationId") Integer locationId, @RequestParam("apiKey") String apiKey) {
+    if (isAdministrator(apiKey)) {
+      return new ResponseEntity<>(
+          fillLocation.apply(locationService.delete(locationId)), HttpStatus.OK);
+    } else {
+      return BAD_REQUEST;
+    }
   }
 
-  @RequestMapping(value = "apiKey/delete/")
-  public ResponseEntity<?> deleteApiKey(@RequestParam(value = "apiKeyId") Integer apiKeyId) {
-    return new ResponseEntity<>(fillApiKey.apply(apiKeyService.delete(apiKeyId)), HttpStatus.OK);
+  @RequestMapping("apiKey/delete/")
+  public ResponseEntity<?> deleteApiKey(
+      @RequestParam("apiKeyId") Integer apiKeyId, @RequestParam("apiKey") String apiKey) {
+    if (isAdministrator(apiKey)) {
+      return new ResponseEntity<>(fillApiKey.apply(apiKeyService.delete(apiKeyId)), HttpStatus.OK);
+    } else {
+      return BAD_REQUEST;
+    }
   }
 
-  @RequestMapping(value = "encounter/")
+  @RequestMapping("encounter/")
   public ResponseEntity<?> viewEncounter(@RequestParam Map<String, String> allRequestParam) {
-    List<Encounter> els =
-        encounterService
-            .query(
-                parseInteger.apply(allRequestParam.get("count")),
-                parseInteger.apply(allRequestParam.get("encounterId")),
-                parseInteger.apply(allRequestParam.get("userId")),
-                parseInteger.apply(allRequestParam.get("userManagerId")),
-                parseInteger.apply(allRequestParam.get("locationId")),
-                parseTimestamp.apply(allRequestParam.get("minTime")),
-                parseTimestamp.apply(allRequestParam.get("maxTime")),
-                allRequestParam.get("userName"),
-                allRequestParam.get("type"))
-            .stream()
-            .map(fillEncounter)
-            .collect(Collectors.toList());
-    return new ResponseEntity<>(els, HttpStatus.OK);
+    if (allRequestParam.containsKey("apiKey") && isTrusted(allRequestParam.get("apiKey"))) {
+      List<Encounter> els =
+          encounterService
+              .query(
+                  parseInteger.apply(allRequestParam.get("count")),
+                  parseInteger.apply(allRequestParam.get("encounterId")),
+                  parseInteger.apply(allRequestParam.get("userId")),
+                  parseInteger.apply(allRequestParam.get("userManagerId")),
+                  parseInteger.apply(allRequestParam.get("locationId")),
+                  parseTimestamp.apply(allRequestParam.get("minTime")),
+                  parseTimestamp.apply(allRequestParam.get("maxTime")),
+                  allRequestParam.get("userName"),
+                  allRequestParam.get("type"))
+              .stream()
+              .map(fillEncounter)
+              .collect(Collectors.toList());
+      return new ResponseEntity<>(els, HttpStatus.OK);
+    } else {
+      return BAD_REQUEST;
+    }
   }
 
-  @RequestMapping(value = "user/")
+  @RequestMapping("user/")
   public ResponseEntity<?> viewStudent(@RequestParam Map<String, String> allRequestParam) {
-    if (allRequestParam.containsKey("userId")) {
-      return new ResponseEntity<>(
-          Arrays.asList(userService.getById(Integer.parseInt(allRequestParam.get("userId")))),
-          HttpStatus.OK);
-    } else if (allRequestParam.containsKey("name")) {
-      return new ResponseEntity<>(
-          userService.getByName(allRequestParam.get("name")), HttpStatus.OK);
+    if (allRequestParam.containsKey("apiKey") && isTrusted(allRequestParam.get("apiKey"))) {
+      if (allRequestParam.containsKey("userId")) {
+        return new ResponseEntity<>(
+            Arrays.asList(userService.getById(Integer.parseInt(allRequestParam.get("userId")))),
+            HttpStatus.OK);
+      } else if (allRequestParam.containsKey("name")) {
+        return new ResponseEntity<>(
+            userService.getByName(allRequestParam.get("name")), HttpStatus.OK);
+      } else {
+        return new ResponseEntity<>(userService.getAll(), HttpStatus.OK);
+      }
     } else {
-      return new ResponseEntity<>(userService.getAll(), HttpStatus.OK);
+      return BAD_REQUEST;
     }
   }
 
-  @RequestMapping(value = "location/")
+  @RequestMapping("location/")
   public ResponseEntity<?> viewLocation(@RequestParam Map<String, String> allRequestParam) {
-    Stream<Location> stream = null;
-    if (allRequestParam.containsKey("locationId")) {
-      stream = Stream.of(locationService.getById(Integer.parseInt(allRequestParam.get("locationId"))));
-    } else {
-      stream = locationService.getAll().stream();
-    }
+    if (allRequestParam.containsKey("apiKey") && isTrusted(allRequestParam.get("apiKey"))) {
+      Stream<Location> stream = null;
+      if (allRequestParam.containsKey("locationId")) {
+        stream =
+            Stream.of(locationService.getById(Integer.parseInt(allRequestParam.get("locationId"))));
+      } else {
+        stream = locationService.getAll().stream();
+      }
 
-    return new ResponseEntity<>(stream.map(fillLocation).collect(Collectors.toList()), HttpStatus.OK);
+      return new ResponseEntity<>(
+          stream.map(fillLocation).collect(Collectors.toList()), HttpStatus.OK);
+    } else {
+      return BAD_REQUEST;
+    }
   }
 
-  @RequestMapping(value = "apiKey/")
+  @RequestMapping("apiKey/")
   public ResponseEntity<?> viewApiKey(@RequestParam Map<String, String> allRequestParam) {
-    Stream<ApiKey> stream = null;
-    if (allRequestParam.containsKey("apiKeyId")) {
-      stream = Stream.of(apiKeyService.getById(Integer.parseInt(allRequestParam.get("apiKeyId"))));
-    } else {
-      stream = apiKeyService.getAll().stream();
-    }
+    if (allRequestParam.containsKey("apiKey") && isTrusted(allRequestParam.get("apiKey"))) {
+      Stream<ApiKey> stream = null;
+      if (allRequestParam.containsKey("apiKeyId")) {
+        stream =
+            Stream.of(apiKeyService.getById(Integer.parseInt(allRequestParam.get("apiKeyId"))));
+      } else {
+        stream = apiKeyService.getAll().stream();
+      }
 
-    return new ResponseEntity<>(stream.map(fillApiKey).collect(Collectors.toList()), HttpStatus.OK);
+      return new ResponseEntity<>(
+          stream.map(fillApiKey).collect(Collectors.toList()), HttpStatus.OK);
+    } else {
+      return BAD_REQUEST;
+    }
   }
 }
