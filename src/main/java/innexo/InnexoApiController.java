@@ -30,6 +30,8 @@ public class InnexoApiController {
   static final ResponseEntity<?> OK = new ResponseEntity<>(HttpStatus.OK);
   static final ResponseEntity<?> NOT_FOUND = new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
+  BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+
   Function<String, Integer> parseInteger = (str) -> str == null ? null : Integer.parseInt(str);
   Function<String, Boolean> parseBoolean = (str) -> str == null ? null : Boolean.parseBoolean(str);
   Function<String, Timestamp> parseTimestamp =
@@ -114,7 +116,7 @@ public class InnexoApiController {
         u.managerId = managerId;
       }
       u.name = name;
-      u.passwordHash = new BCryptPasswordEncoder().encode(password);
+      u.passwordHash = encoder.encode(password);
       u.administrator = administrator;
       u.trustedUser = !administrator && trustedUser; // false if administrator is enabled
       userService.add(u);
@@ -147,7 +149,6 @@ public class InnexoApiController {
       @RequestParam("password") String password) {
     if (userService.exists(creatorId)) {
       User u = userService.getById(creatorId);
-      BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
       if (encoder.matches(password, u.passwordHash)) {
         ApiKey apiKey = new ApiKey();
         apiKey.creatorId = creatorId;
