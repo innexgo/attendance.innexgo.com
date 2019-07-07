@@ -12,7 +12,7 @@ public class ApiKeyRowMapper implements RowMapper<ApiKey> {
     k.creatorId = row.getInt("creator_id");
     k.creationTime = row.getTimestamp("creation_time");
     k.expirationTime = row.getTimestamp("expiration_time");
-    k.keydata = row.getString("keydata");
+    k.keyHash = row.getString("key_hash");
     return k;
   }
 }

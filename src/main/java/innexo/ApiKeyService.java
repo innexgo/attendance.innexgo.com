@@ -14,22 +14,22 @@ public class ApiKeyService {
 
   public ApiKey getById(int id) {
     String sql =
-        "SELECT id, creator_id, creation_time, expiration_time, keydata FROM api_key WHERE id=?";
+        "SELECT id, creator_id, creation_time, expiration_time, key_hash FROM api_key WHERE id=?";
     RowMapper<ApiKey> rowMapper = new ApiKeyRowMapper();
     ApiKey apiKey = jdbcTemplate.queryForObject(sql, rowMapper, id);
     return apiKey;
   }
 
-  public ApiKey getByKey(String key) {
+  public ApiKey getByKeyHash(String keyHash) {
     String sql =
-        "SELECT id, creator_id, creation_time, expiration_time, keydata FROM api_key WHERE keydata=?";
+        "SELECT id, creator_id, creation_time, expiration_time, key_hash FROM api_key WHERE key_hash=?";
     RowMapper<ApiKey> rowMapper = new ApiKeyRowMapper();
-    ApiKey apiKey = jdbcTemplate.queryForObject(sql, rowMapper, key);
+    ApiKey apiKey = jdbcTemplate.queryForObject(sql, rowMapper, keyHash);
     return apiKey;
   }
 
   public List<ApiKey> getAll() {
-    String sql = "SELECT id, creator_id, creation_time, expiration_time, keydata FROM api_key";
+    String sql = "SELECT id, creator_id, creation_time, expiration_time, key_hash FROM api_key";
     RowMapper<ApiKey> rowMapper = new ApiKeyRowMapper();
     return this.jdbcTemplate.query(sql, rowMapper);
   }
@@ -37,18 +37,18 @@ public class ApiKeyService {
   public void add(ApiKey apiKey) {
     // Add API key
     String sql =
-        "INSERT INTO api_key (id, creator_id, creation_time, expiration_time, keydata) values (?, ?, ?, ?, ?)";
+        "INSERT INTO api_key (id, creator_id, creation_time, expiration_time, key_hash) values (?, ?, ?, ?, ?)";
     jdbcTemplate.update(
         sql,
         apiKey.id,
         apiKey.creatorId,
         apiKey.creationTime,
         apiKey.expirationTime,
-        apiKey.keydata);
+        apiKey.keyHash);
 
     // Fetch apiKey id
     sql =
-        "SELECT id FROM api_key WHERE creator_id=? AND creation_time=? AND expiration_time=? AND keydata=?";
+        "SELECT id FROM api_key WHERE creator_id=? AND creation_time=? AND expiration_time=? AND key_hash=?";
     int id =
         jdbcTemplate.queryForObject(
             sql,
@@ -56,7 +56,7 @@ public class ApiKeyService {
             apiKey.creatorId,
             apiKey.creationTime,
             apiKey.expirationTime,
-            apiKey.keydata);
+            apiKey.keyHash);
 
     // Set apiKey id
     apiKey.id = id;
@@ -71,7 +71,7 @@ public class ApiKeyService {
         apiKey.creatorId,
         apiKey.creationTime,
         apiKey.expirationTime,
-        apiKey.keydata);
+        apiKey.keyHash);
   }
 
   public ApiKey delete(int id) {
@@ -91,9 +91,9 @@ public class ApiKeyService {
     }
   }
 
-  public boolean existsByKey(String key) {
-    String sql = "SELECT count(*) FROM api_key WHERE keydata=?";
-    int count = jdbcTemplate.queryForObject(sql, Integer.class, key);
+  public boolean existsByKeyHash(String keyHash) {
+    String sql = "SELECT count(*) FROM api_key WHERE key_hash=?";
+    int count = jdbcTemplate.queryForObject(sql, Integer.class, keyHash);
     if (count == 0) {
       return false;
     } else {
