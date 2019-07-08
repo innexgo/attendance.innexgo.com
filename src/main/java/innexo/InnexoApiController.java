@@ -9,8 +9,6 @@ import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import java.math.BigInteger;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +28,6 @@ public class InnexoApiController {
       new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
   static final ResponseEntity<?> OK = new ResponseEntity<>(HttpStatus.OK);
   static final ResponseEntity<?> NOT_FOUND = new ResponseEntity<>(HttpStatus.NOT_FOUND);
-
 
   Function<String, Integer> parseInteger = (str) -> str == null ? null : Integer.parseInt(str);
   Function<String, Boolean> parseBoolean = (str) -> str == null ? null : Boolean.parseBoolean(str);

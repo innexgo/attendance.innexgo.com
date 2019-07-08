@@ -5,9 +5,7 @@ import java.util.Base64;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-
 public class Utils {
-
 
   // note that we use bcrypt for passwords
   static PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
@@ -24,7 +22,6 @@ public class Utils {
     }
     return null;
   }
-
 
   public static String encodePassword(String password) {
     return passwordEncoder.encode(password);
