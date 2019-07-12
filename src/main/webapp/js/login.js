@@ -24,32 +24,33 @@ function loginattempt() {
   var apiKeyExpirationTime = new Date();
   apiKeyExpirationTime.setMinutes(apiKeyExpirationTime.getMinutes() + 30);
 
-  var url = (thisUrl()
-    + '/apiKey/new/?userName='
-    + encodeURIComponent(userName)
-    + '&password='
-    + encodeURIComponent(password)
-    + '&expirationTime='
-    + encodeURIComponent(epochTime(apiKeyExpirationTime))
-  );
+  var url = thisUrl() +
+    '/apiKey/new/?userName=' + encodeURIComponent(userName) +
+    '&password=' + encodeURIComponent(password) +
+    '&expirationTime=' + epochTime(apiKeyExpirationTime)
 
   request(url,
     // success function
     function(xhr) {
       var apiKey = JSON.parse(xhr.responseText);
       // store info
-      setCookie('apiKey', apiKey.key, 1);
-      setCookie('apiKeyExpirationTime', apiKey.expirationTime, 1);
-      setCookie('userName', apiKey.user.name, 1);
-      setCookie('userId', apiKey.user.id, 1);
+      Cookies.set('apiKey', apiKey.key);
+      Cookies.set('apiKeyExpirationTime', apiKey.expirationTime);
+      Cookies.set('userName', apiKey.user.name);
+      Cookies.set('userId', apiKey.user.id);
       // now jump to next page
       window.location.replace(thisUrl() + "/index.html");
     },
     // failure function
     function(xhr) {
-      console.log("failure!");
+      console.log("authentication failure!");
       giveError("Check your usename and password.");
     }
   );
-
 }
+
+// on load remove any cookies to prevent confusion
+Cookies.remove('apiKey');
+Cookies.remove('apiKeyExpirationTime');
+Cookies.remove('userName');
+Cookies.remove('userId');

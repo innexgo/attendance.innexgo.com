@@ -59,12 +59,14 @@ public class InnexoApiController {
   }
 
   User getUserIfValid(String key) {
-    String hash = Utils.encodeApiKey(key);
-    if (apiKeyService.existsByKeyHash(hash)) {
-      ApiKey apiKey = apiKeyService.getByKeyHash(hash);
-      if (apiKey.expirationTime.getTime() > System.currentTimeMillis()) {
-        if (userService.exists(apiKey.userId)) {
-          return userService.getById(apiKey.userId);
+    if(!Utils.isBlank(key)) {
+      String hash = Utils.encodeApiKey(key);
+      if (apiKeyService.existsByKeyHash(hash)) {
+        ApiKey apiKey = apiKeyService.getByKeyHash(hash);
+        if (apiKey.expirationTime.getTime() > System.currentTimeMillis()) {
+          if (userService.exists(apiKey.userId)) {
+            return userService.getById(apiKey.userId);
+          }
         }
       }
     }
@@ -270,7 +272,8 @@ public class InnexoApiController {
 
   @RequestMapping("encounter/")
   public ResponseEntity<?> viewEncounter(@RequestParam Map<String, String> allRequestParam) {
-    if (allRequestParam.containsKey("apiKey") && isTrusted(allRequestParam.get("apiKey"))) {
+    String apiKey = allRequestParam.get("apiKey");
+    if(!Utils.isBlank(apiKey) && isTrusted(apiKey)) {
       List<Encounter> els =
           encounterService
               .query(

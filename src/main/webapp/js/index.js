@@ -1,5 +1,6 @@
 "use strict"
 
+
 function addSignInOutFeedEntry(isSignIn, userName, userId, placeName, timestamp)
 {
   var table = document.getElementById(isSignIn ? "sign-in-feed" : "sign-out-feed");
@@ -8,22 +9,22 @@ function addSignInOutFeedEntry(isSignIn, userName, userId, placeName, timestamp)
     clearFeed();
   }
   table.insertRow(1).innerHTML=
-    ('<tr>' + 
+    ('<tr>' +
     '<td>' + userName + '</td>' +
     '<td>' + userId  + '</td>' +
-    '<td>' + getDateString(timestamp) + '</td>' + 
+    '<td>' + getDateString(timestamp) + '</td>' +
     '</tr>');
 }
 
 function clearFeed()
 {
-  document.getElementById('sign-in-feed').innerHTML = 
+  document.getElementById('sign-in-feed').innerHTML =
             '<tr class="dark-gray">' +
               '<td>Name</td>' +
               '<td>ID</td>' +
               '<td>Time</td>' +
             '</tr>';
-  document.getElementById('sign-out-feed').innerHTML = 
+  document.getElementById('sign-out-feed').innerHTML =
             '<tr class="dark-gray">' +
               '<td>Name</td>' +
               '<td>ID</td>' +
@@ -33,21 +34,22 @@ function clearFeed()
 
 //gets new data from server and inserts it at the beginning
 function updateFeed() {
-  request(thisUrl()+'/encounter/?count=100', 
+  var url = thisUrl()+'/encounter/?count=100' +
+    '&apiKey='+Cookies.get('apiKey');
+  request(url,
     function(xhr){
       var encounters = JSON.parse(xhr.responseText);
       clearFeed();
       //go backwards to maintain order
       for(var i = encounters.length-1; i >= 0; i--) {
-        addSignInOutFeedEntry(encounters[i].type == 'in', 
-          encounters[i].user.name, 
-          encounters[i].user.id, 
-          encounters[i].location.name, 
+        addSignInOutFeedEntry(encounters[i].type == 'in',
+          encounters[i].user.name,
+          encounters[i].user.id,
+          encounters[i].location.name,
           encounters[i].time);
       }
     },
-    function(xhr) 
-    {
+    function(xhr) {
       console.log(xhr);
     }
   );
@@ -55,10 +57,14 @@ function updateFeed() {
 
 //actually sends http request to server
 function newEncounter(userId, locationId, type) {
-  var url = thisUrl()+'/encounter/new/?userId='+userId+'&locationId='+locationId+'&type='+type;
+  var url = thisUrl()+
+    '/encounter/new/?userId='+ userId+
+    '&locationId='+ locationId+
+    '&type='+type+
+    '&apiKey='+Cookies.get('apiKey');
   console.log('making request to: ' + url);
   request(url,
-    function(xhr){}, 
+    function(xhr){},
     function(xhr){});
 }
 
@@ -96,11 +102,18 @@ $(document).ready(function () {
 });
 
 
-//update every 5 seconds
+//update every second
 setInterval(function(){
   updateFeed();
   console.log('updating feed');
-}, 500);
+}, 1000);
 
+// make sure they're signed in every 10 seconds
+setInterval(function(){
+  ensureSignedIn();
+}, 1000);
+
+//first make sure we're signed in
+ensureSignedIn();
 //get data at page load
 updateFeed();

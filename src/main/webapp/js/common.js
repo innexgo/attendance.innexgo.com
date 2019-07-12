@@ -1,27 +1,7 @@
 "use strict"
 
 
-function setCookie(cname, cvalue, exdays) {
-  var d = new Date();
-  d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
-  var expires = "expires="+d.toUTCString();
-  document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
-}
 
-function getCookie(cname) {
-  var name = cname + "=";
-  var ca = document.cookie.split(';');
-  for(var i = 0; i < ca.length; i++) {
-    var c = ca[i];
-    while (c.charAt(0) == ' ') {
-      c = c.substring(1);
-    }
-    if (c.indexOf(name) == 0) {
-      return c.substring(name.length, c.length);
-    }
-  }
-  return "";
-}
 function isWhitespace(str) {
   return !(/\S/.test(str));
 }
@@ -43,8 +23,8 @@ function escapeHtml(unsafe) {
          .replace(/'/g, "&#039;");
  }
 
-function timeSince(date) {
-  var seconds = Math.floor((new Date().getTime() - Date.parse(date)) / 1000);
+function timeSince(d) {
+  var seconds = Math.floor((Date.now() - Date.parse(d)) / 1000);
   var interval = Math.floor(seconds / 31536000);
 
   if (interval > 1) {
@@ -69,12 +49,12 @@ function timeSince(date) {
   return Math.floor(seconds) + " seconds";
 }
 
-function epochTime(date) {
-  return Math.floor(date.getTime()/1000);
+function epochTime(d) {
+  return Math.floor(d.getTime()/1000);
 }
 
 function getDateString(d) {
-  var date = new Date(Date.parse(d));
+  var date = new Date(Date.parse(d))
   return date.toLocaleTimeString('en-US') + " on " + date.toDateString();
 }
 
@@ -116,4 +96,41 @@ function w3_close() {
   var overlayBg = document.getElementById("myOverlay");
   mySidebar.style.display = "none";
   overlayBg.style.display = "none";
+}
+
+// moves to login page on cookie expiration
+function ensureSignedIn() {
+  // check if sign in cookie exists and is logged in
+  var expiry = Cookies.get('apiKeyExpirationTime');
+  if(expiry == null) {
+    window.location.replace(thisUrl() + "/login.html");
+    return;
+  }
+
+  // now check if the cookie is expired
+  if(expiry < epochTime(new Date())) {
+    alert("Session has expired");
+    window.location.replace(thisUrl() + "/login.html");
+    return;
+  }
+
+  // make test request, on failure delete the cookies 
+  // usually means something went wrong with server
+  var url = thisUrl() + "/location/?apiKey=" + Cookies.get('apiKey');
+  request(url,
+    // on success
+    function(xhr) {
+      console.log("user is signed in");
+    },
+    // on failure
+    function(xhr) {
+      alert("Current session invalid");
+      console.log("user is not signed in");
+      Cookies.remove('apiKey');
+      Cookies.remove('apiKeyExpirationTime');
+      Cookies.remove('userName');
+      Cookies.remove('userId');
+      window.location.replace(thisUrl() + "/login.html");
+    }
+  );
 }
