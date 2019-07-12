@@ -103,10 +103,6 @@ public class EncounterService {
   public boolean exists(int id) {
     String sql = "SELECT count(*) FROM encounter WHERE id=?";
     int count = jdbcTemplate.queryForObject(sql, Integer.class, id);
-    if (count == 0) {
-      return false;
-    } else {
-      return true;
-    }
+    return count == 0;
   }
 }

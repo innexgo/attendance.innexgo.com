@@ -63,6 +63,10 @@ public class UserService {
     user.id = id;
   }
 
+  public void addManager(int userId, int managerId) {
+    String sql = "INSERT INTO user_relationship (id, manager_id, managed"; //TODO obviously incomplete
+  }
+
   public void update(User user) {
     String sql =
         "UPDATE user SET id=?, name=?, password_hash=?, administrator=?, trusted_user=? WHERE id=?";
@@ -78,6 +82,8 @@ public class UserService {
 
   public User delete(int id) {
     User user = getById(id);
+    String deleteRelationshipSql = "DELETE FROM user_relationship WHERE manager_id=? OR managed_id=?";
+    jdbcTemplate.update(sql, id, id);
     String sql = "DELETE FROM user WHERE id=?";
     jdbcTemplate.update(sql, id);
     return user;
@@ -86,10 +92,22 @@ public class UserService {
   public boolean exists(int id) {
     String sql = "SELECT count(*) FROM user WHERE id=?";
     int count = jdbcTemplate.queryForObject(sql, Integer.class, id);
-    if (count == 0) {
-      return false;
-    } else {
-      return true;
-    }
+    return count == 0;
+  }
+
+  public List<User> managers(int id) {
+    String sql =
+        "SELECT u.id, u.name, u.password_hash, u.administrator, u.trusted_user FROM user_relationship r LEFT JOIN user u ON r.manager_id = u.id WHERE r.managed_id=?";
+    RowMapper<User> rowMapper = new UserRowMapper();
+    List<User> users = jdbcTemplate.query(sql, rowMapper, id);
+    return users;
+  }
+
+  public List<User> managedBy(int id) {
+    String sql =
+        "SELECT u.id, u.name, u.password_hash, u.administrator, u.trusted_user FROM user_relationship r LEFT JOIN user u ON r.managed_id = u.id WHERE r.manager_id=?";
+    RowMapper<User> rowMapper = new UserRowMapper();
+    List<User> users = jdbcTemplate.query(sql, rowMapper, id);
+    return users;
   }
 }

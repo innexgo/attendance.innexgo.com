@@ -9,7 +9,4 @@ public class User {
   String passwordHash;
   public boolean administrator;
   public boolean trustedUser;
-
-  // For jackson only
-  public List<User> managers;
 }
