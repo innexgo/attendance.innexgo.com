@@ -54,14 +54,14 @@ public class UserService {
   public void addManager(int userId, int managerId) {
     String sql =
         "INSERT INTO user_relationship (manager_id, managed_id) VALUES (?, ?)"; // TODO obviously
-                                                                                // incomplete
+    // incomplete
     jdbcTemplate.update(sql, managerId, userId);
   }
 
   public void removeManager(int userId, int managerId) {
     String sql =
         "DELETE FROM user_relationship WHERE manager_id=? AND managed_id=?"; // TODO obviously
-                                                                             // incomplete
+    // incomplete
     jdbcTemplate.update(sql, managerId, userId);
   }
 

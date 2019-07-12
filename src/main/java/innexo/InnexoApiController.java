@@ -107,7 +107,7 @@ public class InnexoApiController {
   @RequestMapping("user/new/")
   public ResponseEntity<?> newUser(
       @RequestParam("userId") Integer userId,
-      @RequestParam("name") String name,
+      @RequestParam("userName") String name,
       @RequestParam(value = "administrator", defaultValue = "false") Boolean administrator,
       @RequestParam(value = "trustedUser", defaultValue = "false") Boolean trustedUser,
       @RequestParam("password") String password,
@@ -131,8 +131,8 @@ public class InnexoApiController {
 
   @RequestMapping("location/new/")
   public ResponseEntity<?> newLocation(
-      @RequestParam("name") String name,
-      @RequestParam("tags") String tags,
+      @RequestParam("locationName") String name,
+      @RequestParam("locationTags") String tags,
       @RequestParam("apiKey") String apiKey) {
     if (!Utils.isBlank(name) && !Utils.isBlank(tags) && isAdministrator(apiKey)) {
       Location location = new Location();
@@ -183,6 +183,49 @@ public class InnexoApiController {
     return BAD_REQUEST;
   }
 
+  @RequestMapping("user/update/")
+  public ResponseEntity<?> updateUser(@RequestParam Map<String, String> allRequestParam) {
+    if (allRequestParam.containsKey("apiKey")
+        && isAdministrator(allRequestParam.get("apiKey")) // make sure changer is admin
+        && allRequestParam.containsKey("userId") // make sure user exists
+        && userService.exists(parseInteger(allRequestParam.get("userId")))
+        && (allRequestParam.containsKey("userName")
+            ? !Utils.isBlank(allRequestParam.get("userName"))
+            : true) // if they are trying to set a name, it cannot be blank
+        && (allRequestParam.containsKey("password")
+            ? !Utils.isBlank(allRequestParam.get("password"))
+            : true) // if they are trying to set a password, it cannot be blank
+    ) {
+      User oldUser = userService.getById(parseInteger(allRequestParam.get("userId")));
+      User newUser = new User();
+      newUser.id = oldUser.id;
+      // if it is specified, set the name
+      newUser.name =
+          allRequestParam.containsKey("userName") ? allRequestParam.get("userName") : oldUser.name;
+      // if it is specified, set the password
+      newUser.passwordHash =
+          allRequestParam.containsKey("password")
+              ? Utils.encodePassword(allRequestParam.get("password"))
+              : oldUser.passwordHash;
+      // if it is specified, set the administrator
+      newUser.administrator =
+          allRequestParam.containsKey("administrator")
+              ? parseBoolean(allRequestParam.get("administrator"))
+              : oldUser.administrator;
+      // if it is specified and the user is not already an administrator, set the trustedUser
+      newUser.trustedUser =
+          !newUser.administrator
+              && (allRequestParam.containsKey("trustedUser")
+                  ? parseBoolean(allRequestParam.get("trustedUser"))
+                  : oldUser.trustedUser);
+
+      userService.update(newUser);
+      return new ResponseEntity<>(fillUser(newUser), HttpStatus.OK);
+    } else {
+      return BAD_REQUEST;
+    }
+  }
+
   @RequestMapping("encounter/delete/")
   public ResponseEntity<?> deleteEncounter(
       @RequestParam("encounterId") Integer encounterId, @RequestParam("apiKey") String apiKey) {
@@ -195,7 +238,7 @@ public class InnexoApiController {
   }
 
   @RequestMapping("user/delete/")
-  public ResponseEntity<?> deleteStudent(
+  public ResponseEntity<?> deleteUser(
       @RequestParam("userId") Integer userId, @RequestParam("apiKey") String apiKey) {
     if (isAdministrator(apiKey)) {
       return new ResponseEntity<>(fillUser(userService.delete(userId)), HttpStatus.OK);
