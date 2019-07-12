@@ -31,7 +31,7 @@ function clearResultTable()
 
 //gets new data from server and inserts it at the beginning
 function submitQuery(encounterId, userId, userName, locationId, type, minDate, maxDate, count) {
-  var url = thisUrl() + '/encounter/?' +
+  var url = thisUrl() + '/encounter/?apiKey=' + Cookies.get('apiKey') +
     (isNaN(encounterId) ?       '' : '&encounterId='+encounterId) +
     (isNaN(userId) ?            '' : '&userId='+userId) +
     (!isValidString(userName) ? '' : '&userName='+userName) +
@@ -67,3 +67,10 @@ function onQueryClick() {
   var count = 100;
   submitQuery(encounterId, userId, userName, locationId, type, minDate, maxDate, count);
 }
+
+
+
+// make sure they're signed in every 10 seconds
+setInterval(function(){
+  ensureSignedIn();
+}, 10000);
