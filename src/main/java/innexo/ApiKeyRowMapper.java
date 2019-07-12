@@ -9,7 +9,7 @@ public class ApiKeyRowMapper implements RowMapper<ApiKey> {
   public ApiKey mapRow(ResultSet row, int rowNum) throws SQLException {
     ApiKey k = new ApiKey();
     k.id = row.getInt("id");
-    k.creatorId = row.getInt("creator_id");
+    k.userId = row.getInt("user_id");
     k.creationTime = row.getTimestamp("creation_time");
     k.expirationTime = row.getTimestamp("expiration_time");
     k.keyHash = row.getString("key_hash");

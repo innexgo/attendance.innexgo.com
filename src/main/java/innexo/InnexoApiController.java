@@ -18,10 +18,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class InnexoApiController {
-  @Autowired UserService userService;
-  @Autowired EncounterService encounterService;
-  @Autowired LocationService locationService;
-  @Autowired ApiKeyService apiKeyService;
+  @Autowired static UserService userService;
+  @Autowired static EncounterService encounterService;
+  @Autowired static LocationService locationService;
+  @Autowired static ApiKeyService apiKeyService;
 
   static final ResponseEntity<?> BAD_REQUEST = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
   static final ResponseEntity<?> INTERNAL_SERVER_ERROR =
@@ -29,45 +29,55 @@ public class InnexoApiController {
   static final ResponseEntity<?> OK = new ResponseEntity<>(HttpStatus.OK);
   static final ResponseEntity<?> NOT_FOUND = new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
-  Function<String, Integer> parseInteger = (str) -> str == null ? null : Integer.parseInt(str);
-  Function<String, Boolean> parseBoolean = (str) -> str == null ? null : Boolean.parseBoolean(str);
-  Function<String, Timestamp> parseTimestamp =
-      (str) -> str == null ? null : Timestamp.from(Instant.ofEpochSecond(Long.parseLong(str)));
+  static Integer parseInteger(String str) {
+    return str == null ? null : Integer.parseInt(str);
+  }
+  static Boolean parseBoolean(String str) {
+    return str == null ? null : Boolean.parseBoolean(str);
+  }
 
-  Function<User, User> fillUser = (u) -> u;
-  Function<Location, Location> fillLocation = (l) -> l;
-  Function<ApiKey, ApiKey> fillApiKey =
-      (k) -> {
-        k.creator = fillUser.apply(userService.getById(k.creatorId));
-        return k;
-      };
+  static Timestamp parseTimestamp(String str) {
+    return str == null ? null : Timestamp.from(Instant.ofEpochSecond(Long.parseLong(str)));
+  }
 
-  Function<Encounter, Encounter> fillEncounter =
-      (e) -> {
-        e.location = fillLocation.apply(locationService.getById(e.locationId));
-        e.user = fillUser.apply(userService.getById(e.userId));
-        return e;
-      };
+  static User fillUser(User user) {
+    return user;
+  }
 
-  User getUserIfValid(String key) {
+  static Location fillLocation(Location location) {
+    return location;
+  }
+
+  static ApiKey fillApiKey(ApiKey apiKey) {
+    apiKey.user = fillUser(userService.getById(apiKey.userId));
+    return apiKey;
+  }
+
+  static Encounter fillEncounter(Encounter encounter) {
+    encounter.location = fillLocation(locationService.getById(encounter.locationId));
+    encounter.user = fillUser(userService.getById(encounter.userId));
+    return encounter;
+  }
+
+  static User getUserIfValid(String key) {
     String hash = Utils.encodeApiKey(key);
     if (apiKeyService.existsByKeyHash(hash)) {
       ApiKey apiKey = apiKeyService.getByKeyHash(hash);
       if (apiKey.expirationTime.getTime() > System.currentTimeMillis()) {
-        if (userService.exists(apiKey.creatorId)) {
-          return userService.getById(apiKey.creatorId);
+        if (userService.exists(apiKey.userId)) {
+          return userService.getById(apiKey.userId);
         }
       }
     }
     return null;
   }
 
-  boolean isAdministrator(String key) {
+  static boolean isAdministrator(String key) {
     User user = getUserIfValid(key);
     return user != null && user.administrator;
   }
 
-  boolean isTrusted(String key) {
+  static boolean isTrusted(String key) {
     User user = getUserIfValid(key);
     return user != null && (user.trustedUser || user.administrator);
   }
@@ -89,7 +99,7 @@ public class InnexoApiController {
       encounter.type = type;
       encounterService.add(encounter);
       // return the filled encounter on success
-      return new ResponseEntity<>(fillEncounter.apply(encounter), HttpStatus.OK);
+      return new ResponseEntity<>(fillEncounter(encounter), HttpStatus.OK);
     } else {
       return BAD_REQUEST;
     }
@@ -98,7 +108,6 @@ public class InnexoApiController {
   @RequestMapping("user/new/")
   public ResponseEntity<?> newUser(
       @RequestParam("userId") Integer userId,
-      @RequestParam(value = "managerId", defaultValue = "-1") Integer managerId,
       @RequestParam("name") String name,
       @RequestParam(value = "administrator", defaultValue = "false") Boolean administrator,
       @RequestParam(value = "trustedUser", defaultValue = "false") Boolean trustedUser,
@@ -110,15 +119,12 @@ public class InnexoApiController {
         && isAdministrator(apiKey)) {
       User u = new User();
       u.id = userId;
-      if (managerId != -1 && userService.exists(managerId)) {
-        u.managerId = managerId;
-      }
       u.name = name;
       u.passwordHash = Utils.encodePassword(password);
       u.administrator = administrator;
       u.trustedUser = !administrator && trustedUser; // false if administrator is enabled
       userService.add(u);
-      return new ResponseEntity<>(fillUser.apply(u), HttpStatus.OK);
+      return new ResponseEntity<>(fillUser(u), HttpStatus.OK);
     } else {
       return BAD_REQUEST;
     }
@@ -134,7 +140,7 @@ public class InnexoApiController {
       location.name = name;
       location.tags = tags;
       locationService.add(location);
-      return new ResponseEntity<>(fillLocation.apply(location), HttpStatus.OK);
+      return new ResponseEntity<>(fillLocation(location), HttpStatus.OK);
     } else {
       return BAD_REQUEST;
     }
@@ -142,21 +148,33 @@ public class InnexoApiController {
 
   @RequestMapping("apiKey/new/")
   public ResponseEntity<?> newApiKey(
-      @RequestParam("creatorId") Integer creatorId,
+      @RequestParam(value="userId", defaultValue="-1") Integer userId,
+      @RequestParam(value="userName", defaultValue="") String userName,
       @RequestParam("expirationTime") Integer expirationTime,
       @RequestParam("password") String password) {
-    if (userService.exists(creatorId)) {
-      User u = userService.getById(creatorId);
+    // if they gave a username instead of a userId
+    if(userId == -1 && !Utils.isBlank(userName)) {
+      // get list of users
+      List<User> users = userService.getByName(userName);
+      // if there's someone with the username
+      if(users.size() > 0) {
+        userId = users.get(0).id;
+      }
+    }
+
+    // now actually make user
+    if (userService.exists(userId)) {
+      User u = userService.getById(userId);
       if (Utils.matchesPassword(password, u.passwordHash)) {
         ApiKey apiKey = new ApiKey();
-        apiKey.creatorId = creatorId;
+        apiKey.userId = userId;
         apiKey.creationTime = new Timestamp(System.currentTimeMillis());
         apiKey.expirationTime = new Timestamp((long) expirationTime * 1000); // epoch time to milis
         apiKey.key = UUID.randomUUID().toString(); // quick hacks, please replace
         apiKey.keyHash = Utils.encodeApiKey(apiKey.key);
         System.out.println(apiKey.keyHash);
         apiKeyService.add(apiKey);
-        return new ResponseEntity<>(fillApiKey.apply(apiKey), HttpStatus.OK);
+        return new ResponseEntity<>(fillApiKey(apiKey), HttpStatus.OK);
       }
     }
     return BAD_REQUEST;
@@ -167,7 +185,7 @@ public class InnexoApiController {
       @RequestParam("encounterId") Integer encounterId, @RequestParam("apiKey") String apiKey) {
     if (isAdministrator(apiKey)) {
       return new ResponseEntity<>(
-          fillEncounter.apply(encounterService.delete(encounterId)), HttpStatus.OK);
+          fillEncounter(encounterService.delete(encounterId)), HttpStatus.OK);
     } else {
       return BAD_REQUEST;
     }
@@ -177,7 +195,7 @@ public class InnexoApiController {
   public ResponseEntity<?> deleteStudent(
       @RequestParam("userId") Integer userId, @RequestParam("apiKey") String apiKey) {
     if (isAdministrator(apiKey)) {
-      return new ResponseEntity<>(fillUser.apply(userService.delete(userId)), HttpStatus.OK);
+      return new ResponseEntity<>(fillUser(userService.delete(userId)), HttpStatus.OK);
     } else {
       return BAD_REQUEST;
     }
@@ -188,7 +206,7 @@ public class InnexoApiController {
       @RequestParam("locationId") Integer locationId, @RequestParam("apiKey") String apiKey) {
     if (isAdministrator(apiKey)) {
       return new ResponseEntity<>(
-          fillLocation.apply(locationService.delete(locationId)), HttpStatus.OK);
+          fillLocation(locationService.delete(locationId)), HttpStatus.OK);
     } else {
       return BAD_REQUEST;
     }
@@ -198,7 +216,7 @@ public class InnexoApiController {
   public ResponseEntity<?> deleteApiKey(
       @RequestParam("apiKeyId") Integer apiKeyId, @RequestParam("apiKey") String apiKey) {
     if (isAdministrator(apiKey)) {
-      return new ResponseEntity<>(fillApiKey.apply(apiKeyService.delete(apiKeyId)), HttpStatus.OK);
+      return new ResponseEntity<>(fillApiKey(apiKeyService.delete(apiKeyId)), HttpStatus.OK);
     } else {
       return BAD_REQUEST;
     }
@@ -210,17 +228,16 @@ public class InnexoApiController {
       List<Encounter> els =
           encounterService
               .query(
-                  parseInteger.apply(allRequestParam.get("count")),
-                  parseInteger.apply(allRequestParam.get("encounterId")),
-                  parseInteger.apply(allRequestParam.get("userId")),
-                  parseInteger.apply(allRequestParam.get("userManagerId")),
-                  parseInteger.apply(allRequestParam.get("locationId")),
-                  parseTimestamp.apply(allRequestParam.get("minTime")),
-                  parseTimestamp.apply(allRequestParam.get("maxTime")),
+                  parseInteger(allRequestParam.get("count")),
+                  parseInteger(allRequestParam.get("encounterId")),
+                  parseInteger(allRequestParam.get("userId")),
+                  parseInteger(allRequestParam.get("locationId")),
+                  parseTimestamp(allRequestParam.get("minTime")),
+                  parseTimestamp(allRequestParam.get("maxTime")),
                   allRequestParam.get("userName"),
                   allRequestParam.get("type"))
               .stream()
-              .map(fillEncounter)
+              .map(InnexoApiController::fillEncounter)
               .collect(Collectors.toList());
       return new ResponseEntity<>(els, HttpStatus.OK);
     } else {
@@ -258,7 +275,7 @@ public class InnexoApiController {
       }
 
       return new ResponseEntity<>(
-          stream.map(fillLocation).collect(Collectors.toList()), HttpStatus.OK);
+          stream.map(InnexoApiController::fillLocation).collect(Collectors.toList()), HttpStatus.OK);
     } else {
       return BAD_REQUEST;
     }
@@ -276,7 +293,7 @@ public class InnexoApiController {
       }
 
       return new ResponseEntity<>(
-          stream.map(fillApiKey).collect(Collectors.toList()), HttpStatus.OK);
+          stream.map(InnexoApiController::fillApiKey).collect(Collectors.toList()), HttpStatus.OK);
     } else {
       return BAD_REQUEST;
     }

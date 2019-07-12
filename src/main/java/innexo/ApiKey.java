@@ -4,7 +4,7 @@ import java.sql.Timestamp;
 
 public class ApiKey {
   public int id;
-  int creatorId;
+  int userId;
   public Timestamp creationTime;
   public Timestamp expirationTime;
 
@@ -13,5 +13,5 @@ public class ApiKey {
 
   // Initialized by jackson during serialization, but not persisted
   public String key;
-  public User creator;
+  public User user;
 }
