@@ -59,7 +59,7 @@ public class InnexoApiController {
   }
 
   User getUserIfValid(String key) {
-    if(!Utils.isBlank(key)) {
+    if (!Utils.isBlank(key)) {
       String hash = Utils.encodeApiKey(key);
       if (apiKeyService.existsByKeyHash(hash)) {
         ApiKey apiKey = apiKeyService.getByKeyHash(hash);
@@ -273,7 +273,7 @@ public class InnexoApiController {
   @RequestMapping("encounter/")
   public ResponseEntity<?> viewEncounter(@RequestParam Map<String, String> allRequestParam) {
     String apiKey = allRequestParam.get("apiKey");
-    if(!Utils.isBlank(apiKey) && isTrusted(apiKey)) {
+    if (!Utils.isBlank(apiKey) && isTrusted(apiKey)) {
       List<Encounter> els =
           encounterService
               .query(
@@ -348,5 +348,10 @@ public class InnexoApiController {
     } else {
       return BAD_REQUEST;
     }
+  }
+
+  @RequestMapping("validateTrusted/")
+  public ResponseEntity<?> validateTrusted(@RequestParam("apiKey") String apiKey) {
+    return isTrusted(apiKey) ? OK : BAD_REQUEST;
   }
 }

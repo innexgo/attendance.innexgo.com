@@ -114,6 +114,6 @@ setInterval(function(){
 }, 1000);
 
 //first make sure we're signed in
-ensureSignedIn();
+//ensureSignedIn();
 //get data at page load
 updateFeed();

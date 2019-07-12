@@ -114,9 +114,9 @@ function ensureSignedIn() {
     return;
   }
 
-  // make test request, on failure delete the cookies 
+  // make test request, on failure delete the cookies
   // usually means something went wrong with server
-  var url = thisUrl() + "/location/?apiKey=" + Cookies.get('apiKey');
+  var url = thisUrl() + "/validateTrusted/?apiKey=" + Cookies.get('apiKey');
   request(url,
     // on success
     function(xhr) {
@@ -124,13 +124,12 @@ function ensureSignedIn() {
     },
     // on failure
     function(xhr) {
-      alert("Current session invalid");
-      console.log("user is not signed in");
+      console.log("");
+      alert("Current session invalid, refresh the page.");
       Cookies.remove('apiKey');
       Cookies.remove('apiKeyExpirationTime');
       Cookies.remove('userName');
       Cookies.remove('userId');
-      window.location.replace(thisUrl() + "/login.html");
     }
   );
 }
