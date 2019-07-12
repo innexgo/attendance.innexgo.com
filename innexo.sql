@@ -24,12 +24,12 @@ DROP TABLE IF EXISTS `api_key`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `api_key` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `creator_id` bigint(20) NOT NULL,
+  `user_id` bigint(20) DEFAULT NULL,
   `creation_time` datetime NOT NULL,
   `expiration_time` datetime NOT NULL,
   `key_hash` char(64) COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -38,7 +38,7 @@ CREATE TABLE `api_key` (
 
 LOCK TABLES `api_key` WRITE;
 /*!40000 ALTER TABLE `api_key` DISABLE KEYS */;
-INSERT INTO `api_key` VALUES (1,1,'2019-07-07 18:36:41','2038-01-19 03:14:07','03VOkeBEto1idLaHZERYaNcLWntwXv8-IXae2iUB2Zs='),(2,1,'2019-07-07 18:53:23','2038-01-19 03:14:07','0BbbabuLO8ULqr8yreEv8JZff-j5OANIC8qsTLSA5P8='),(3,1,'2019-07-07 18:53:28','2038-01-19 03:14:07','q4uVyLHx8fQ4ZIkuHdWE0Or4sYFt_YmNmahvyZh4xm0='),(4,1,'2019-07-07 18:53:29','2038-01-19 03:14:07','MEvYsYS4np9ii4M28aa3sCGbaIcoNq8qm22O8jBmFPU='),(5,1,'2019-07-07 18:53:29','2038-01-19 03:14:07','MttTTBOjUEYa3m8EPbUC67EY4XHqMOptQuzIn3peAtY='),(6,1,'2019-07-07 18:53:30','2038-01-19 03:14:07','X6YZlKlez2UtP-bbs5eF3XkOKBik501MR3qeC2dA5pU='),(7,1,'2019-07-07 18:53:31','2038-01-19 03:14:07','YB-Jzo2BQVktpmFyInnXmAW2DFRKsxlkEqAC8wbhm28=');
+INSERT INTO `api_key` VALUES (1,1,'2019-07-07 18:36:41','2038-01-19 03:14:07','03VOkeBEto1idLaHZERYaNcLWntwXv8-IXae2iUB2Zs='),(2,1,'2019-07-07 18:53:23','2038-01-19 03:14:07','0BbbabuLO8ULqr8yreEv8JZff-j5OANIC8qsTLSA5P8='),(3,1,'2019-07-07 18:53:28','2038-01-19 03:14:07','q4uVyLHx8fQ4ZIkuHdWE0Or4sYFt_YmNmahvyZh4xm0='),(4,1,'2019-07-07 18:53:29','2038-01-19 03:14:07','MEvYsYS4np9ii4M28aa3sCGbaIcoNq8qm22O8jBmFPU='),(5,1,'2019-07-07 18:53:29','2038-01-19 03:14:07','MttTTBOjUEYa3m8EPbUC67EY4XHqMOptQuzIn3peAtY='),(6,1,'2019-07-07 18:53:30','2038-01-19 03:14:07','X6YZlKlez2UtP-bbs5eF3XkOKBik501MR3qeC2dA5pU='),(7,1,'2019-07-07 18:53:31','2038-01-19 03:14:07','YB-Jzo2BQVktpmFyInnXmAW2DFRKsxlkEqAC8wbhm28='),(8,1,'2019-07-12 15:26:28','2038-01-19 03:14:07','XA6SULFAud7b2SADlAqN1_twcYGm8CaoegfNniWZDk0='),(9,2,'2019-07-12 16:08:28','2038-01-19 03:14:07','5Dvpu2g6RQNoVvjw7tkmiBZAEjL_o8JG0aWX3yPxyIc='),(10,1,'2019-07-12 17:01:19','2038-01-19 03:14:07','4HliZ_GYd-zoXoVuWBP19fY0FJEPAdFbsKgmJRXqCWw=');
 /*!40000 ALTER TABLE `api_key` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -103,7 +103,6 @@ DROP TABLE IF EXISTS `user`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `user` (
   `id` bigint(20) NOT NULL,
-  `manager_id` bigint(20) DEFAULT NULL,
   `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `password_hash` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `administrator` tinyint(1) NOT NULL,
@@ -118,8 +117,30 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (1,0,'Adam','$2a$10$QP.tNPcWees66yCZ3w03leoj8j16cXcGxvEcxehRCN7XsawCJGv8y',1,0),(2,0,'Bernard','$2a$10$TBVVpPTEYuR.7mkfOZuVAeoKtYroC0hf7WT8fGYbgRU3mPwQe5eVu',0,1),(30090001,2,'Richard','$2a$10$4iR3OYt7Geg7VzpKq9SpleWWDX/KlfT32hB27ugYuZepradOHnqSO',0,0),(30090002,2,'Dona','$2a$10$Ut6GtTU82WziJQKRFwkbJupE1r.ArBNUHAJ6KH0t/pTLIa3CxdYVy',0,0),(30090003,2,'Daniel','$2a$10$V7qPeZvMgyhw4cVLy/KpzuR.RZjKY//CD8OFT6EUUbmbpcMra8lbK',0,0),(30090004,2,'Govind','$2a$10$LHTj9JJdUFQMzre/gQ76p.5Jkzvl9nnb8x3odxvHVJFkQRRpEFR6y',0,0);
+INSERT INTO `user` VALUES (1,'Adam','$2a$10$MEsWOlSnhITVH6aMORWJS.eIdX8YMxUfixlSXJJUvMoP8ETkZ/p0G',1,0),(2,'Bernard','$2a$10$TBVVpPTEYuR.7mkfOZuVAeoKtYroC0hf7WT8fGYbgRU3mPwQe5eVu',0,1),(30090001,'Richard','$2a$10$4iR3OYt7Geg7VzpKq9SpleWWDX/KlfT32hB27ugYuZepradOHnqSO',0,0),(30090002,'Dona','$2a$10$Ut6GtTU82WziJQKRFwkbJupE1r.ArBNUHAJ6KH0t/pTLIa3CxdYVy',0,0),(30090003,'Daniel','$2a$10$V7qPeZvMgyhw4cVLy/KpzuR.RZjKY//CD8OFT6EUUbmbpcMra8lbK',0,0),(30090004,'Govind','$2a$10$LHTj9JJdUFQMzre/gQ76p.5Jkzvl9nnb8x3odxvHVJFkQRRpEFR6y',0,0);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `user_relationship`
+--
+
+DROP TABLE IF EXISTS `user_relationship`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `user_relationship` (
+  `manager_id` bigint(20) NOT NULL,
+  `managed_id` bigint(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `user_relationship`
+--
+
+LOCK TABLES `user_relationship` WRITE;
+/*!40000 ALTER TABLE `user_relationship` DISABLE KEYS */;
+/*!40000 ALTER TABLE `user_relationship` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -131,4 +152,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-07-07 11:55:31
+-- Dump completed on 2019-07-12 10:14:43
