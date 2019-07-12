@@ -1,6 +1,8 @@
 package innexo;
 
 import java.security.MessageDigest;
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.Base64;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -32,7 +34,7 @@ public class Utils {
   }
 
   public static String encodeApiKey(String key) {
-    return base64Encoder.encodeToString(md.digest(key.getBytes()));
+    return key == null ? null : base64Encoder.encodeToString(md.digest(key.getBytes()));
   }
 
   public static boolean matchesApiKey(String key, String hash) {
@@ -49,5 +51,13 @@ public class Utils {
 
   public static String unEscapeSQLString(String str) {
     return str.replaceAll("\'\'", "\'");
+  }
+
+  public static int getEpochSecond(Timestamp t) {
+    return (int) t.toInstant().getEpochSecond();
+  }
+
+  public static Timestamp getTimestamp(int epochSecond) {
+    return Timestamp.from(Instant.ofEpochSecond(epochSecond));
   }
 }

@@ -1,5 +1,6 @@
 package innexo;
 
+import java.sql.Timestamp;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -39,12 +40,7 @@ public class ApiKeyService {
     String sql =
         "INSERT INTO api_key (id, user_id, creation_time, expiration_time, key_hash) values (?, ?, ?, ?, ?)";
     jdbcTemplate.update(
-        sql,
-        apiKey.id,
-        apiKey.userId,
-        apiKey.creationTime,
-        apiKey.expirationTime,
-        apiKey.keyHash);
+        sql, apiKey.id, apiKey.userId, apiKey.creationTime, apiKey.expirationTime, apiKey.keyHash);
 
     // Fetch apiKey id
     sql =
@@ -66,12 +62,7 @@ public class ApiKeyService {
     String sql =
         "UPDATE api_key SET id=?, user_id=?, creation_time=?, expiration_time=?, key=? WHERE id=?";
     jdbcTemplate.update(
-        sql,
-        apiKey.id,
-        apiKey.userId,
-        apiKey.creationTime,
-        apiKey.expirationTime,
-        apiKey.keyHash);
+        sql, apiKey.id, apiKey.userId, apiKey.creationTime, apiKey.expirationTime, apiKey.keyHash);
   }
 
   public ApiKey delete(int id) {
@@ -94,10 +85,32 @@ public class ApiKeyService {
   public boolean existsByKeyHash(String keyHash) {
     String sql = "SELECT count(*) FROM api_key WHERE key_hash=?";
     int count = jdbcTemplate.queryForObject(sql, Integer.class, keyHash);
-    if (count == 0) {
-      return false;
-    } else {
-      return true;
-    }
+    return count != 0;
+  }
+
+  public List<ApiKey> query(
+      Integer id,
+      Integer userId,
+      Timestamp minCreationTime,
+      Timestamp maxCreationTime,
+      String keyHash) {
+    String sql =
+        "SELECT id, user_id, creation_time, expiration_time, key_hash FROM api_key WHERE 1=1"
+            + (id == null ? "" : " AND id=" + id)
+            + (userId == null ? "" : " AND user_id =" + userId)
+            + (minCreationTime == null
+                ? ""
+                : " AND creation_time >= FROM_UNIXTIME("
+                    + Utils.getEpochSecond(minCreationTime)
+                    + ")")
+            + (maxCreationTime == null
+                ? ""
+                : " AND creation_time <= FROM_UNIXTIME("
+                    + Utils.getEpochSecond(maxCreationTime)
+                    + ")")
+            + (keyHash == null ? "" : " AND key_hash = \'" + Utils.escapeSQLString(keyHash) + "\'")
+            + ";";
+    RowMapper<ApiKey> rowMapper = new ApiKeyRowMapper();
+    return this.jdbcTemplate.query(sql, rowMapper);
   }
 }

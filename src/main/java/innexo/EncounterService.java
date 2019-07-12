@@ -46,10 +46,10 @@ public class EncounterService {
             + (type == null ? "" : " AND e.type=\'" + Utils.escapeSQLString(type) + "\'")
             + (minTime == null
                 ? ""
-                : " AND e.time >= FROM_UNIXTIME(" + minTime.toInstant().getEpochSecond() + ")")
+                : " AND e.time >= FROM_UNIXTIME(" + Utils.getEpochSecond(minTime) + ")")
             + (maxTime == null
                 ? ""
-                : " AND e.time <= FROM_UNIXTIME(" + maxTime.toInstant().getEpochSecond() + ")")
+                : " AND e.time <= FROM_UNIXTIME(" + Utils.getEpochSecond(maxTime) + ")")
             + " ORDER BY time DESC"
             + (count == null ? "" : " LIMIT " + count)
             + ";";
@@ -103,6 +103,6 @@ public class EncounterService {
   public boolean exists(int id) {
     String sql = "SELECT count(*) FROM encounter WHERE id=?";
     int count = jdbcTemplate.queryForObject(sql, Integer.class, id);
-    return count == 0;
+    return count != 0;
   }
 }

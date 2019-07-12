@@ -1,6 +1,5 @@
 package innexo;
 
-import java.util.List;
 
 public class User {
   public int id;
