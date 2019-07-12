@@ -37,8 +37,8 @@ function submitQuery(encounterId, userId, userName, locationId, type, minDate, m
     (!isValidString(userName) ? '' : '&userName='+userName) +
     (isNaN(locationId) ?        '' : '&locationId='+locationId) +
     (!isValidString(type) ?     '' : '&type='+encodeURIComponent(type)) +
-    (isNaN(minDate.getTime()) ? '' : '&minDate='+minDate.getTime()/1000) +
-    (isNaN(maxDate.getTime()) ? '' : '&maxDate='+maxDate.getTime()/1000) +
+    (isNaN(minDate.getTime()) ? '' : '&minDate='+epochTime(minDate)) +
+    (isNaN(maxDate.getTime()) ? '' : '&maxDate='+epochTime(maxDate)) +
     (isNaN(count) ?             '' : '&count='+count);
   console.log('making request to: ' + url);
   request(url, 

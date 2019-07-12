@@ -1,7 +1,11 @@
 "use strict"
 
-function setCookie(cname, cval) {
-  document.cookie = cname + "=" + cvalue + "; path=/";
+
+function setCookie(cname, cvalue, exdays) {
+  var d = new Date();
+  d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+  var expires = "expires="+d.toUTCString();
+  document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
 }
 
 function getCookie(cname) {
@@ -18,7 +22,6 @@ function getCookie(cname) {
   }
   return "";
 }
-
 function isWhitespace(str) {
   return !(/\S/.test(str));
 }
@@ -66,6 +69,9 @@ function timeSince(date) {
   return Math.floor(seconds) + " seconds";
 }
 
+function epochTime(date) {
+  return Math.floor(date.getTime()/1000);
+}
 
 function getDateString(d) {
   var date = new Date(Date.parse(d));
@@ -75,11 +81,11 @@ function getDateString(d) {
 
 function request(url, functionOnLoad, functionOnError) {
   var xhr = new XMLHttpRequest();
-  xhr.open('POST', url, true);
+  xhr.open('GET', url, true);
   xhr.onload = function() {
     if (xhr.readyState == 4 && xhr.status == 200) {
       functionOnLoad(xhr);
-    } else if(xhr.readyStat == 4 && xhr.status != 200) {
+    } else if(xhr.readyState == 4 && xhr.status != 200) {
       functionOnError(xhr);
     }
   };

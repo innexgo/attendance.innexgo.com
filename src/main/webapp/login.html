@@ -32,10 +32,10 @@
       <div class="login">
         <span class="xxxlarge center" style="margin-left: 85px;"><img src="assets/innexo_logo.png"></span>
         <span class="xxxlarge center text-white" style="margin-left: 5px;">InNexo</span>
-        <input id="user-id" type="text" placeholder="user id" name="user"><br>
+        <input id="username" type="text" placeholder="username" name="user"><br>
         <input id="password" type="password" placeholder="password" name="password"><br>
-        <input type="button" value="Login">
+        <input id="login-submission-button" type="button" onclick="loginattempt();" value="Login">
+        <p id="error" style="color: red; text-align: center;">test error</p>
       </div>
-
   </body>
 </html>

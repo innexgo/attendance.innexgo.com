@@ -178,8 +178,9 @@ public class InnexoApiController {
         return new ResponseEntity<>(fillApiKey(apiKey), HttpStatus.OK);
       }
       System.out.println("new ApiKey: password does not match");
+    } else {
+      System.out.println("new ApiKey: userId " + userId + " invalid");
     }
-    System.out.println("new ApiKey: userId " + userId + " invalid");
     return BAD_REQUEST;
   }
 
