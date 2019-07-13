@@ -33,16 +33,18 @@ public class EncounterService {
       Integer encounterId,
       Integer userId,
       Integer locationId,
+      Integer managerId,
       Timestamp minTime,
       Timestamp maxTime,
       String userName,
       String type) {
     String sql =
-        "SELECT e.id, e.time, e.location_id, e.user_id, e.type FROM encounter e JOIN user u ON e.user_id = u.id WHERE 1=1 "
+        "SELECT e.id, e.time, e.location_id, e.user_id, e.type FROM encounter e JOIN user u ON e.user_id = u.id RIGHT JOIN user_relationship r ON r.managed_id = u.id WHERE 1=1 "
             + (encounterId == null ? "" : " AND e.id=" + encounterId)
             + (userId == null ? "" : " AND e.user_id=" + userId)
             + (userName == null ? "" : " AND u.name=\'" + Utils.escapeSQLString(userName) + "\'")
             + (locationId == null ? "" : " AND e.location_id=" + locationId)
+            + (managerId == null ? "" : " AND r.manager_id=" + managerId)
             + (type == null ? "" : " AND e.type=\'" + Utils.escapeSQLString(type) + "\'")
             + (minTime == null
                 ? ""

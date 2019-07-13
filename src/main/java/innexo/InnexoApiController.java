@@ -343,6 +343,7 @@ public class InnexoApiController {
                   parseInteger(allRequestParam.get("encounterId")),
                   parseInteger(allRequestParam.get("userId")),
                   parseInteger(allRequestParam.get("locationId")),
+                  parseInteger(allRequestParam.get("managerId")),
                   parseTimestamp(allRequestParam.get("minTime")),
                   parseTimestamp(allRequestParam.get("maxTime")),
                   allRequestParam.get("userName"),

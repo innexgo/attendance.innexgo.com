@@ -35,6 +35,7 @@ function clearFeed()
 //gets new data from server and inserts it at the beginning
 function updateFeed() {
   var url = thisUrl()+'/encounter/?count=100' +
+    '&managerId='+Cookies.getJSON('apiKey').user.id+
     '&apiKey='+Cookies.getJSON('apiKey').key;
   request(url,
     function(xhr){
@@ -117,3 +118,4 @@ setInterval(function(){
 ensureSignedIn();
 //get data at page load
 updateFeed();
+displayUsername();

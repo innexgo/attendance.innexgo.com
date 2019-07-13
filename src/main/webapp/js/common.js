@@ -101,14 +101,14 @@ function w3_close() {
 // moves to login page on cookie expiration
 function ensureSignedIn() {
   // check if sign in cookie exists and is logged in
-  var expiry = Cookies.getJSON('apiKey').expirationTime;
-  if(expiry == null) {
+  var apiKey = Cookies.getJSON('apiKey');
+  if(apiKey == null) {
     window.location.replace(thisUrl() + "/login.html");
     return;
   }
 
   // now check if the cookie is expired
-  if(expiry < epochTime(new Date())) {
+  if(apiKey.expirationTime < epochTime(new Date())) {
     alert("Session has expired");
     window.location.replace(thisUrl() + "/login.html");
     return;
@@ -116,7 +116,7 @@ function ensureSignedIn() {
 
   // make test request, on failure delete the cookies
   // usually means something went wrong with server
-  var url = thisUrl() + "/validateTrusted/?apiKey=" + Cookies.getJSON('apiKey').key;
+  var url = thisUrl() + "/validateTrusted/?apiKey=" + apiKey.key;
   request(url,
     // on success
     function(xhr) {
@@ -129,4 +129,9 @@ function ensureSignedIn() {
       Cookies.remove('apiKey');
     }
   );
+}
+
+function displayUsername() {
+  var username = Cookies.getJSON('apiKey').user.name;
+  document.getElementById('username-display').innerHTML = username;
 }
