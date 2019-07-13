@@ -184,6 +184,13 @@ public class InnexoApiController {
     return BAD_REQUEST;
   }
 
+
+  @RequestMapping("user/manager/new/")
+  public ResponseEntity<?> updateUser(@RequestParam("userId") Integer userId,
+      @RequestParam("managerId") Integer managerId,
+      @RequestParam{
+
+
   @RequestMapping("user/update/")
   public ResponseEntity<?> updateUser(@RequestParam Map<String, String> allRequestParam) {
     if (allRequestParam.containsKey("apiKey")
