@@ -21,7 +21,6 @@ public class InnexoApiController {
   @Autowired LocationService locationService;
   @Autowired ApiKeyService apiKeyService;
 
-
   static final ResponseEntity<?> BAD_REQUEST = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
   static final ResponseEntity<?> INTERNAL_SERVER_ERROR =
       new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -184,21 +183,58 @@ public class InnexoApiController {
     return BAD_REQUEST;
   }
 
-
   @RequestMapping("user/manager/new/")
-  public ResponseEntity<?> updateUser(@RequestParam("userId") Integer userId,
+  public ResponseEntity<?> updateUser(
+      @RequestParam("userId") Integer userId,
       @RequestParam("managerId") Integer managerId,
       @RequestParam("apiKey") String apiKey) {
-    if(!Utils.isBlank(apiKey) && isAdministrator(apiKey) &&
-        userService.existsById(userId) &&
-        userService.existsById(managerId)
-      ) {
+    if (!Utils.isBlank(apiKey)
+        && isAdministrator(apiKey)
+        && userService.exists(userId)
+        && userService.exists(managerId)) {
       userService.addManager(userId, managerId);
       return OK;
     }
     return BAD_REQUEST;
   }
 
+  @RequestMapping("user/manager/delete/")
+  public ResponseEntity<?> deleteUserManager(
+      @RequestParam("userId") Integer userId,
+      @RequestParam("managerId") Integer managerId,
+      @RequestParam("apiKey") String apiKey) {
+    if (!Utils.isBlank(apiKey)
+        && isAdministrator(apiKey)
+        && userService.exists(userId)
+        && userService.exists(managerId)
+        && userService.isManager(userId, managerId)) {
+      userService.removeManager(userId, managerId);
+      return OK;
+    }
+    return BAD_REQUEST;
+  }
+
+  @RequestMapping("user/manager/")
+  public ResponseEntity<?> viewUserManager(
+      @RequestParam("userId") Integer userId, @RequestParam("apiKey") String apiKey) {
+    if (!Utils.isBlank(apiKey) && isTrusted(apiKey) && userService.exists(userId)) {
+      return new ResponseEntity<>(
+          userService.managers(userId).stream().map(x -> fillUser(x)).collect(Collectors.toList()),
+          HttpStatus.OK);
+    }
+    return BAD_REQUEST;
+  }
+
+  @RequestMapping("user/managedBy/")
+  public ResponseEntity<?> viewUserManagedBy(
+      @RequestParam("userId") Integer userId, @RequestParam("apiKey") String apiKey) {
+    if (!Utils.isBlank(apiKey) && isTrusted(apiKey) && userService.exists(userId)) {
+      return new ResponseEntity<>(
+          userService.managedBy(userId).stream().map(x -> fillUser(x)).collect(Collectors.toList()),
+          HttpStatus.OK);
+    }
+    return BAD_REQUEST;
+  }
 
   @RequestMapping("user/update/")
   public ResponseEntity<?> updateUser(@RequestParam Map<String, String> allRequestParam) {
@@ -216,16 +252,16 @@ public class InnexoApiController {
       User user = userService.getById(parseInteger(allRequestParam.get("userId")));
 
       // if it is specified, set the name
-      if(allRequestParam.containsKey("userName")) {
+      if (allRequestParam.containsKey("userName")) {
         user.name = allRequestParam.get("userName");
       }
       // if it is specified, set the password
-      if(allRequestParam.containsKey("password")) {
+      if (allRequestParam.containsKey("password")) {
         user.passwordHash = Utils.encodePassword(allRequestParam.get("password"));
       }
 
       // if it is specified, set the perm level
-      if(allRequestParam.containsKey("permissionLevel")) {
+      if (allRequestParam.containsKey("permissionLevel")) {
         user.permissionLevel = parseInteger(allRequestParam.get("permissionLevel"));
       }
 
@@ -238,21 +274,21 @@ public class InnexoApiController {
 
   // This method updates the password for same user only
   @RequestMapping("user/updatePassword")
-  public ResponseEntity<?> updatePassword(@RequestParam("userId") Integer userId,
+  public ResponseEntity<?> updatePassword(
+      @RequestParam("userId") Integer userId,
       @RequestParam("oldPassword") String oldPassword,
       @RequestParam("newPassword") String newPassword) {
-      if( !Utils.isBlank(oldPassword) &&
-          !Utils.isBlank(newPassword) &&
-          userService.exists(userId) &&
-          Utils.matchesPassword(oldPassword, userService.getById(userId).passwordHash))
-      {
-        User user = userService.getById(userId);
-        user.passwordHash = Utils.encodePassword(newPassword);
-        userService.update(user);
-        return new ResponseEntity<>(fillUser(user), HttpStatus.OK);
-      } else {
-        return BAD_REQUEST;
-      }
+    if (!Utils.isBlank(oldPassword)
+        && !Utils.isBlank(newPassword)
+        && userService.exists(userId)
+        && Utils.matchesPassword(oldPassword, userService.getById(userId).passwordHash)) {
+      User user = userService.getById(userId);
+      user.passwordHash = Utils.encodePassword(newPassword);
+      userService.update(user);
+      return new ResponseEntity<>(fillUser(user), HttpStatus.OK);
+    } else {
+      return BAD_REQUEST;
+    }
   }
 
   @RequestMapping("encounter/delete/")

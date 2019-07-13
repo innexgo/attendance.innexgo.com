@@ -24,8 +24,7 @@ public class UserService {
   }
 
   public List<User> getByName(String name) {
-    String sql =
-        "SELECT id, name, password_hash, permission_level FROM user WHERE name=?";
+    String sql = "SELECT id, name, password_hash, permission_level FROM user WHERE name=?";
     RowMapper<User> rowMapper = new UserRowMapper();
     List<User> users = jdbcTemplate.query(sql, rowMapper, name);
     return users;
@@ -39,14 +38,11 @@ public class UserService {
 
   public void add(User user) {
     // Add user
-    String sql =
-        "INSERT INTO user (id, name, password_hash, permission_level) values (?, ?, ?, ?)";
-    jdbcTemplate.update(
-        sql, user.id, user.name, user.passwordHash, user.permissionLevel);
+    String sql = "INSERT INTO user (id, name, password_hash, permission_level) values (?, ?, ?, ?)";
+    jdbcTemplate.update(sql, user.id, user.name, user.passwordHash, user.permissionLevel);
 
     // Fetch user id
-    sql =
-        "SELECT id FROM user WHERE name=? AND password_hash=? AND permission_level=?";
+    sql = "SELECT id FROM user WHERE name=? AND password_hash=? AND permission_level=?";
     int id =
         jdbcTemplate.queryForObject(
             sql, Integer.class, user.name, user.passwordHash, user.permissionLevel);
@@ -56,22 +52,18 @@ public class UserService {
   }
 
   public void addManager(int userId, int managerId) {
-    String sql =
-        "INSERT INTO user_relationship (manager_id, managed_id) VALUES (?, ?)";
+    String sql = "INSERT INTO user_relationship (manager_id, managed_id) VALUES (?, ?)";
     jdbcTemplate.update(sql, managerId, userId);
   }
 
   public void removeManager(int userId, int managerId) {
-    String sql =
-        "DELETE FROM user_relationship WHERE manager_id=? AND managed_id=?";
+    String sql = "DELETE FROM user_relationship WHERE manager_id=? AND managed_id=?";
     jdbcTemplate.update(sql, managerId, userId);
   }
 
   public void update(User user) {
-    String sql =
-        "UPDATE user SET id=?, name=?, password_hash=?, permission_level=? WHERE id=?";
-    jdbcTemplate.update(
-        sql, user.id, user.name, user.passwordHash, user.permissionLevel, user.id);
+    String sql = "UPDATE user SET id=?, name=?, password_hash=?, permission_level=? WHERE id=?";
+    jdbcTemplate.update(sql, user.id, user.name, user.passwordHash, user.permissionLevel, user.id);
   }
 
   public User delete(int id) {
@@ -104,5 +96,11 @@ public class UserService {
     RowMapper<User> rowMapper = new UserRowMapper();
     List<User> users = jdbcTemplate.query(sql, rowMapper, id);
     return users;
+  }
+
+  boolean isManager(int userId, int managerId) {
+    String sql = "SELECT count(*) FROM user_relationship WHERE manager_id=? AND managed_id=?";
+    int count = jdbcTemplate.queryForObject(sql, Integer.class, managerId, userId);
+    return count != 0;
   }
 }

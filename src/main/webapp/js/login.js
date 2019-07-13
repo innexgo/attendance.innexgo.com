@@ -36,7 +36,12 @@ function loginattempt() {
       // store info
       Cookies.set('apiKey', apiKey);
       // now jump to next page
-      window.location.replace(thisUrl() + "/index.html");
+      if(apiKey.user.permissionLevel < 2) {
+        // TODO make administrator overview
+        window.location.replace(thisUrl() + "/teacheroverview.html");
+      } else{
+        giveError("At the moment, students cannot access an account.");
+      }
     },
     // failure function
     function(xhr) {
