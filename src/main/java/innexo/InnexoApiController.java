@@ -188,7 +188,16 @@ public class InnexoApiController {
   @RequestMapping("user/manager/new/")
   public ResponseEntity<?> updateUser(@RequestParam("userId") Integer userId,
       @RequestParam("managerId") Integer managerId,
-      @RequestParam{
+      @RequestParam("apiKey") String apiKey) {
+    if(!Utils.isBlank(apiKey) && isAdministrator(apiKey) &&
+        userService.existsById(userId) &&
+        userService.existsById(managerId)
+      ) {
+      userService.addManager(userId, managerId);
+      return OK;
+    }
+    return BAD_REQUEST;
+  }
 
 
   @RequestMapping("user/update/")
