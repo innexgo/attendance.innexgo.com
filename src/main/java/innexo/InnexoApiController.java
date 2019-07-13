@@ -21,6 +21,7 @@ public class InnexoApiController {
   @Autowired LocationService locationService;
   @Autowired ApiKeyService apiKeyService;
 
+
   static final ResponseEntity<?> BAD_REQUEST = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
   static final ResponseEntity<?> INTERNAL_SERVER_ERROR =
       new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -59,14 +60,12 @@ public class InnexoApiController {
   }
 
   User getUserIfValid(String key) {
-    if (!Utils.isBlank(key)) {
-      String hash = Utils.encodeApiKey(key);
-      if (apiKeyService.existsByKeyHash(hash)) {
-        ApiKey apiKey = apiKeyService.getByKeyHash(hash);
-        if (apiKey.expirationTime.getTime() > System.currentTimeMillis()) {
-          if (userService.exists(apiKey.userId)) {
-            return userService.getById(apiKey.userId);
-          }
+    String hash = Utils.encodeApiKey(key);
+    if (apiKeyService.existsByKeyHash(hash)) {
+      ApiKey apiKey = apiKeyService.getByKeyHash(hash);
+      if (apiKey.expirationTime.getTime() > System.currentTimeMillis()) {
+        if (userService.exists(apiKey.userId)) {
+          return userService.getById(apiKey.userId);
         }
       }
     }
@@ -75,12 +74,12 @@ public class InnexoApiController {
 
   boolean isAdministrator(String key) {
     User user = getUserIfValid(key);
-    return user != null && user.administrator;
+    return user != null && user.permissionLevel == UserService.ADMINISTRATOR;
   }
 
   boolean isTrusted(String key) {
     User user = getUserIfValid(key);
-    return user != null && (user.trustedUser || user.administrator);
+    return user != null && user.permissionLevel <= UserService.TEACHER;
   }
 
   @RequestMapping("encounter/new/")
@@ -92,6 +91,7 @@ public class InnexoApiController {
     if (!Utils.isBlank(type)
         && locationService.exists(locationId)
         && userService.exists(userId)
+        && !Utils.isBlank(apiKey)
         && isTrusted(apiKey)) {
       Encounter encounter = new Encounter();
       encounter.locationId = locationId;
@@ -110,8 +110,7 @@ public class InnexoApiController {
   public ResponseEntity<?> newUser(
       @RequestParam("userId") Integer userId,
       @RequestParam("userName") String name,
-      @RequestParam(value = "administrator", defaultValue = "false") Boolean administrator,
-      @RequestParam(value = "trustedUser", defaultValue = "false") Boolean trustedUser,
+      @RequestParam(value = "permissionLevel", defaultValue = "3") Integer permissionLevel,
       @RequestParam("password") String password,
       @RequestParam("apiKey") String apiKey) {
     if (!Utils.isBlank(name)
@@ -122,8 +121,7 @@ public class InnexoApiController {
       u.id = userId;
       u.name = name;
       u.passwordHash = Utils.encodePassword(password);
-      u.administrator = administrator;
-      u.trustedUser = !administrator && trustedUser; // false if administrator is enabled
+      u.permissionLevel = permissionLevel;
       userService.add(u);
       return new ResponseEntity<>(fillUser(u), HttpStatus.OK);
     } else {
@@ -199,34 +197,46 @@ public class InnexoApiController {
             ? !Utils.isBlank(allRequestParam.get("password"))
             : true) // if they are trying to set a password, it cannot be blank
     ) {
-      User oldUser = userService.getById(parseInteger(allRequestParam.get("userId")));
-      User newUser = new User();
-      newUser.id = oldUser.id;
-      // if it is specified, set the name
-      newUser.name =
-          allRequestParam.containsKey("userName") ? allRequestParam.get("userName") : oldUser.name;
-      // if it is specified, set the password
-      newUser.passwordHash =
-          allRequestParam.containsKey("password")
-              ? Utils.encodePassword(allRequestParam.get("password"))
-              : oldUser.passwordHash;
-      // if it is specified, set the administrator
-      newUser.administrator =
-          allRequestParam.containsKey("administrator")
-              ? parseBoolean(allRequestParam.get("administrator"))
-              : oldUser.administrator;
-      // if it is specified and the user is not already an administrator, set the trustedUser
-      newUser.trustedUser =
-          !newUser.administrator
-              && (allRequestParam.containsKey("trustedUser")
-                  ? parseBoolean(allRequestParam.get("trustedUser"))
-                  : oldUser.trustedUser);
+      User user = userService.getById(parseInteger(allRequestParam.get("userId")));
 
-      userService.update(newUser);
-      return new ResponseEntity<>(fillUser(newUser), HttpStatus.OK);
+      // if it is specified, set the name
+      if(allRequestParam.containsKey("userName")) {
+        user.name = allRequestParam.get("userName");
+      }
+      // if it is specified, set the password
+      if(allRequestParam.containsKey("password")) {
+        user.passwordHash = Utils.encodePassword(allRequestParam.get("password"));
+      }
+
+      // if it is specified, set the perm level
+      if(allRequestParam.containsKey("permissionLevel")) {
+        user.permissionLevel = parseInteger(allRequestParam.get("permissionLevel"));
+      }
+
+      userService.update(user);
+      return new ResponseEntity<>(fillUser(user), HttpStatus.OK);
     } else {
       return BAD_REQUEST;
     }
+  }
+
+  // This method updates the password for same user only
+  @RequestMapping("user/updatePassword")
+  public ResponseEntity<?> updatePassword(@RequestParam("userId") Integer userId,
+      @RequestParam("oldPassword") String oldPassword,
+      @RequestParam("newPassword") String newPassword) {
+      if( !Utils.isBlank(oldPassword) &&
+          !Utils.isBlank(newPassword) &&
+          userService.exists(userId) &&
+          Utils.matchesPassword(oldPassword, userService.getById(userId).passwordHash))
+      {
+        User user = userService.getById(userId);
+        user.passwordHash = Utils.encodePassword(newPassword);
+        userService.update(user);
+        return new ResponseEntity<>(fillUser(user), HttpStatus.OK);
+      } else {
+        return BAD_REQUEST;
+      }
   }
 
   @RequestMapping("encounter/delete/")

@@ -5,6 +5,5 @@ public class User {
   public String name;
   // not public so they don't get serialized to jackson
   String passwordHash;
-  public boolean administrator;
-  public boolean trustedUser;
+  public int permissionLevel;
 }

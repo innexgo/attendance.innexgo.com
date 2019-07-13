@@ -10,10 +10,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class Utils {
 
   // note that we use bcrypt for passwords
-  static PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-  static MessageDigest md = getDigester();
-  static Base64.Encoder base64Encoder = Base64.getUrlEncoder();
-  static Base64.Decoder base64Decoder = Base64.getUrlDecoder();
+  static final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+  static final MessageDigest md = getDigester();
+  static final Base64.Encoder base64Encoder = Base64.getUrlEncoder();
+  static final Base64.Decoder base64Decoder = Base64.getUrlDecoder();
 
   static MessageDigest getDigester() {
     try {

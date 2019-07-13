@@ -3,24 +3,24 @@
 function addQueryEntry(encounter)
 {
   var table = document.getElementById('result-table');
-  var signInOrSignOutText = encounter.type == 'in' ? 
+  var signInOrSignOutText = encounter.type == 'in' ?
               '<i class="fa fa-sign-in text-red"></i> Signed-In' :
               '<i class="fa fa-sign-out text-blue"></i> Signed-Out';
   if(table.rows.length < 1) {
     clearResultTable();
   }
   table.insertRow(1).innerHTML=
-    ('<tr>' + 
+    ('<tr>' +
     '<td>' + encounter.user.name+ '</td>' +
     '<td>' + signInOrSignOutText + '</td>' +
     '<td>' + encounter.location.name + '</td>' +
-    '<td>' + getDateString(encounter.time) + '</td>' + 
+    '<td>' + getDateString(encounter.time) + '</td>' +
     '</tr>');
 }
 
 function clearResultTable()
 {
-  document.getElementById('result-table').innerHTML = 
+  document.getElementById('result-table').innerHTML =
             '<tr class="dark-gray">'+
               '<td>Name</td>'+
               '<td>In/Out</td>'+
@@ -31,7 +31,7 @@ function clearResultTable()
 
 //gets new data from server and inserts it at the beginning
 function submitQuery(encounterId, userId, userName, locationId, type, minDate, maxDate, count) {
-  var url = thisUrl() + '/encounter/?apiKey=' + Cookies.get('apiKey') +
+  var url = thisUrl() + '/encounter/?apiKey=' + Cookies.getJSON('apiKey').key +
     (isNaN(encounterId) ?       '' : '&encounterId='+encounterId) +
     (isNaN(userId) ?            '' : '&userId='+userId) +
     (!isValidString(userName) ? '' : '&userName='+userName) +
@@ -41,7 +41,7 @@ function submitQuery(encounterId, userId, userName, locationId, type, minDate, m
     (isNaN(maxDate.getTime()) ? '' : '&maxDate='+epochTime(maxDate)) +
     (isNaN(count) ?             '' : '&count='+count);
   console.log('making request to: ' + url);
-  request(url, 
+  request(url,
     function(xhr){
       var encounters = JSON.parse(xhr.responseText);
       clearResultTable();
@@ -49,7 +49,7 @@ function submitQuery(encounterId, userId, userName, locationId, type, minDate, m
         addQueryEntry(encounters[i]);
       }
     },
-    function(xhr) 
+    function(xhr)
     {
       console.log(xhr);
     }
@@ -74,3 +74,4 @@ function onQueryClick() {
 setInterval(function(){
   ensureSignedIn();
 }, 10000);
+ensureSignedIn();

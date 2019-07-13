@@ -34,10 +34,7 @@ function loginattempt() {
     function(xhr) {
       var apiKey = JSON.parse(xhr.responseText);
       // store info
-      Cookies.set('apiKey', apiKey.key);
-      Cookies.set('apiKeyExpirationTime', apiKey.expirationTime);
-      Cookies.set('userName', apiKey.user.name);
-      Cookies.set('userId', apiKey.user.id);
+      Cookies.set('apiKey', apiKey);
       // now jump to next page
       window.location.replace(thisUrl() + "/index.html");
     },
@@ -49,8 +46,4 @@ function loginattempt() {
   );
 }
 
-// on load remove any cookies to prevent confusion
 Cookies.remove('apiKey');
-Cookies.remove('apiKeyExpirationTime');
-Cookies.remove('userName');
-Cookies.remove('userId');

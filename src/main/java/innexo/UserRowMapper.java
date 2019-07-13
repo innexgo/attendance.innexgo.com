@@ -12,8 +12,7 @@ public class UserRowMapper implements RowMapper<User> {
     u.id = row.getInt("id");
     u.name = row.getString("name");
     u.passwordHash = row.getString("password_hash");
-    u.administrator = row.getBoolean("administrator");
-    u.trustedUser = row.getBoolean("trusted_user");
+    u.permissionLevel = row.getInt("permission_level");
     return u;
   }
 }

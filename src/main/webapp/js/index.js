@@ -35,7 +35,7 @@ function clearFeed()
 //gets new data from server and inserts it at the beginning
 function updateFeed() {
   var url = thisUrl()+'/encounter/?count=100' +
-    '&apiKey='+Cookies.get('apiKey');
+    '&apiKey='+Cookies.getJSON('apiKey').key;
   request(url,
     function(xhr){
       var encounters = JSON.parse(xhr.responseText);
@@ -61,7 +61,7 @@ function newEncounter(userId, locationId, type) {
     '/encounter/new/?userId='+ userId+
     '&locationId='+ locationId+
     '&type='+type+
-    '&apiKey='+Cookies.get('apiKey');
+    '&apiKey='+Cookies.getJSON('apiKey').key;
   console.log('making request to: ' + url);
   request(url,
     function(xhr){},

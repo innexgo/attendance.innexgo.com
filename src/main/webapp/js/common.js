@@ -101,7 +101,7 @@ function w3_close() {
 // moves to login page on cookie expiration
 function ensureSignedIn() {
   // check if sign in cookie exists and is logged in
-  var expiry = Cookies.get('apiKeyExpirationTime');
+  var expiry = Cookies.getJSON('apiKey').expirationTime;
   if(expiry == null) {
     window.location.replace(thisUrl() + "/login.html");
     return;
@@ -116,7 +116,7 @@ function ensureSignedIn() {
 
   // make test request, on failure delete the cookies
   // usually means something went wrong with server
-  var url = thisUrl() + "/validateTrusted/?apiKey=" + Cookies.get('apiKey');
+  var url = thisUrl() + "/validateTrusted/?apiKey=" + Cookies.getJSON('apiKey').key;
   request(url,
     // on success
     function(xhr) {
@@ -127,9 +127,6 @@ function ensureSignedIn() {
       console.log("");
       alert("Current session invalid, refresh the page.");
       Cookies.remove('apiKey');
-      Cookies.remove('apiKeyExpirationTime');
-      Cookies.remove('userName');
-      Cookies.remove('userId');
     }
   );
 }
