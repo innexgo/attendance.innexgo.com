@@ -1,62 +1,65 @@
-.grad{
-	position: absolute;
-	top: -20px;
-	left: -20px;
-	right: -40px;
-	bottom: -40px;
-	width: auto;
-	height: auto;
-	background-image: linear-gradient(#daa520ff,#c1737eff);
-	z-index: 1;
-	opacity: 0.7;
+body {
+  font-family: 'Lato', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
-.login{
-	position: absolute;
-	top: calc(50% - 100px);
-	left: calc(50% - 200px);
-	height: 90px;
-	width: 400px;
-	padding: 10px;
-	z-index: 2;
+.grad{
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+  width: auto;
+  height: auto;
+  background-image: linear-gradient(#daa520ff ,#c1737eff);
+  z-index: 1;
+  opacity: 0.7;
 }
 
 .login input[type=text]{
-	width: 400px;
-	height: 30px;
-	background: transparent;
-	border: 1px solid rgba(255,255,255,0.6);
-	border-radius: 2px;
-	color: #fff;
-    font-size: 17px;
-	padding: 4px;
+  width: 25rem;
+  height: 2rem;
+  background: transparent;
+  border: 2px solid rgba(255,255,255,0.6);
+  border-radius: 2px;
+  color: #fff;
+  font-size: 1rem;
+  padding: 0.25rem;
 }
 
 .login input[type=password]{
-	width: 400px;
-	height: 30px;
-	background: transparent;
-	border: 1px solid rgba(255,255,255,0.6);
-	border-radius: 2px;
-	color: #fff;
-    font-size: 17px;
-	padding: 4px;
-	margin-top: 10px;
+  width: 25rem;
+  height: 2rem;
+  background: transparent;
+  border: 2px solid rgba(255,255,255,0.6);
+  border-radius: 2px;
+  color: #fff;
+  font-size: 1rem;
+  padding: 4px;
+  margin-top: 0.25rem;
 }
 
 .login input[type=button]{
-	width: 400px;
-	height: 30px;
-	background: #fff;
-	border: 1px solid #fff;
-	cursor: pointer;
-	border-radius: 2px;
-	color: #a18d6c;
-    font-size: 15px;
-	padding: 6px;
-	margin-top: 10px;
+  width: 25rem;
+  height: 2rem;
+  background: #fff;
+  border: 2px solid #fff;
+  cursor: pointer;
+  border-radius: 2px;
+  color: #a18d6c;
+  font-size: 1rem;
+  padding: 6px;
+  margin-top: 10px;
 }
 
 .login input[type=button]:hover{
-	opacity: 0.8;
+  opacity: 0.6;
+}
+
+.center-screen {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  min-height: 100vh;
 }
