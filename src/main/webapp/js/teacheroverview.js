@@ -96,6 +96,10 @@ function orangeGrayButton(element) {
 }
 
 $(document).ready(function () {
+  // display username
+  displayUsername();
+  //get data at page load
+  updateFeed();
   //Initialize scanner selector
   $(document).scannerDetection(function(e, data) {
     sendEncounter(e);
@@ -116,6 +120,3 @@ setInterval(function(){
 
 //first make sure we're signed in
 ensureSignedIn();
-//get data at page load
-updateFeed();
-displayUsername();
