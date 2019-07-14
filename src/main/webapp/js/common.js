@@ -133,5 +133,5 @@ function ensureSignedIn() {
 
 function displayUsername() {
   var username = Cookies.getJSON('apiKey').user.name;
-  document.getElementById('username-display').innerHTML = username;
+  document.getElementById('username-display').innerHTML = ' ' + username + ' ';
 }
