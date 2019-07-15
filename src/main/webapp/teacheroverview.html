@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="vendor/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
     <link rel="stylesheet" href="vendor/fontawesome-free/css/all.min.css">
+    <link rel="stylesheet" href="css/common.css">
     <script src="vendor/jquery/jquery.min.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.bundle.js"></script>
     <script src="vendor/scannerdetection/jquery.scannerdetection.min.js"></script>
@@ -59,45 +60,40 @@
     </nav>
 
     <div class="container-fluid">
-      <div class="card">
-        <div class="card-header">Recent Activity</div>
-        <div class="card-body">
-          <p class="card-text">Most recent activity from your students</p>
-          <table class="table striped white">
-            <thead>
-              <tr class="bg-dark text-light">
-                <td>Name</td>
-                <td>Action</td>
-                <td>Time</td>
-                <td>Location</td>
-              </tr>
-            </thead>
-            <tbody id="recent-activity-table"></tbody>
-          </table>
-        </div>
-      </div>
+      <div class="row mt-3">
 
-      <div class="card">
-        <div class="card-header">
-          Featured
+        <!-- Recent Activity -->
+        <div class="card col-sm mx-3">
+          <div class="card-header">Recent Activity</div>
+          <div class="card-body">
+            <p class="card-text">Most recent activity from your students</p>
+            <div class="table-height-standard">
+              <table class="table striped white">
+                <thead>
+                  <tr class="bg-dark text-light">
+                    <td>Name</td>
+                    <td>Action</td>
+                    <td>Time</td>
+                    <td>Location</td>
+                  </tr>
+                </thead>
+                <tbody class="table-height-standard" id="recent-activity-table"></tbody>
+              </table>
+            </div>
+          </div>
         </div>
-        <div class="card-body">
-          <h5 class="card-title">Special title treatment</h5>
-          <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-          <a href="#" class="btn btn-primary">Go somewhere</a>
-        </div>
-      </div>
 
+      <!-- Manual Attendance -->
+        <div class="card col-sm mx-3">
+          <div class="card-header">
+            Take Attendance
+          </div>
+          <div class="card-body">
+            <p class="card-text">Take attendance manually or with the help of a USB scanner attached to this computer</p>
+            <a href="#" class="btn btn-primary">Go somewhere</a>
+          </div>
+        </div>
 
-      <div class="card">
-        <div class="card-header">
-          Featured
-        </div>
-        <div class="card-body">
-          <h5 class="card-title">Special title treatment</h5>
-          <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-          <a href="#" class="btn btn-primary">Go somewhere</a>
-        </div>
       </div>
 
 

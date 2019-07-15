@@ -8,7 +8,7 @@ function addSignInOutFeedEntry(encounter)
     ('<tr>' +
     '<td>' + encounter.user.name + '</td>' +
     '<td>' + encounter.type + '</td>' +
-    '<td>' + moment.fromNow(encounter.time) + '</td>' +
+    '<td>' + moment(encounter.time).fromNow() + '</td>' +
     '<td>' + encounter.location.name + '</td>' +
     '</tr>');
 }
@@ -45,7 +45,6 @@ function newEncounter(userId, locationId, type) {
     '&locationId='+ locationId+
     '&type='+type+
     '&apiKey='+Cookies.getJSON('apiKey').key;
-  console.log('making request to: ' + url);
   request(url,
     function(xhr){},
     function(xhr){});
@@ -92,7 +91,6 @@ $(document).ready(function () {
 //update every second
 setInterval(function(){
   updateFeed();
-  console.log('updating feed');
 }, 1000);
 
 // make sure they're signed in every 10 seconds

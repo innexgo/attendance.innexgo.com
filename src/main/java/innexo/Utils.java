@@ -34,7 +34,7 @@ public class Utils {
   }
 
   public static String encodeApiKey(String key) {
-    return key == null ? null : base64Encoder.encodeToString(md.digest(key.getBytes()));
+    return base64Encoder.encodeToString(md.digest(key.getBytes()));
   }
 
   public static boolean matchesApiKey(String key, String hash) {

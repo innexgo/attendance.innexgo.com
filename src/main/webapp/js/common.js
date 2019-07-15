@@ -38,32 +38,33 @@ function request(url, functionOnLoad, functionOnError) {
 
 // moves to login page on cookie expiration
 function ensureSignedIn() {
+  console.log('API');
+  console.log(Cookies.getJSON('apiKey'));
   // check if sign in cookie exists and is logged in
   var apiKey = Cookies.getJSON('apiKey');
   if(apiKey == null) {
-    window.location.replace(thisUrl() + "/login.html");
+    window.location.replace(thisUrl() + '/login.html');
     return;
   }
 
   // now check if the cookie is expired
   if(apiKey.expirationTime < moment().unix()) {
     alert("Session has expired");
-    window.location.replace(thisUrl() + "/login.html");
+    window.location.replace(thisUrl() + '/login.html');
     return;
   }
 
   // make test request, on failure delete the cookies
   // usually means something went wrong with server
-  var url = thisUrl() + "/validateTrusted/?apiKey=" + apiKey.key;
+  var url = thisUrl() + '/validateTrusted/?apiKey=' + apiKey.key;
   request(url,
     // on success
     function(xhr) {
-      console.log("user is signed in");
+      console.log('user is signed in');
     },
     // on failure
     function(xhr) {
-      console.log("");
-      alert("Current session invalid, refresh the page.");
+      alert('Current session invalid, refresh the page.');
       Cookies.remove('apiKey');
     }
   );
