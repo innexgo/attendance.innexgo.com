@@ -11,7 +11,6 @@ public class Utils {
 
   // note that we use bcrypt for passwords
   static final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-  static final MessageDigest md = getDigester();
   static final Base64.Encoder base64Encoder = Base64.getUrlEncoder();
   static final Base64.Decoder base64Decoder = Base64.getUrlDecoder();
 
@@ -20,9 +19,8 @@ public class Utils {
       return MessageDigest.getInstance("SHA-256");
     } catch (Exception e) {
       e.printStackTrace();
-      System.exit(1);
+      return null;
     }
-    return null;
   }
 
   public static String encodePassword(String password) {
@@ -34,7 +32,7 @@ public class Utils {
   }
 
   public static String encodeApiKey(String key) {
-    return base64Encoder.encodeToString(md.digest(key.getBytes()));
+    return base64Encoder.encodeToString(getDigester().digest(key.getBytes()));
   }
 
   public static boolean matchesApiKey(String key, String hash) {

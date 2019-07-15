@@ -415,38 +415,11 @@ public class InnexoApiController {
 
   @RequestMapping("validateTrusted/")
   public ResponseEntity<?> validateTrusted(@RequestParam("apiKey") String apiKey) {
-    if(!Utils.isBlank(apiKey)) {
-      String keyHash = Utils.encodeApiKey(apiKey);
-      System.out.println("validateTrusted: api key <" + apiKey + "> not blank");
-      System.out.println("validateTrusted: api key hash <" + keyHash + "> generated");
-      if(apiKeyService.existsByKeyHash(keyHash)) {
-        ApiKey key = apiKeyService.getByKeyHash(keyHash);
+    return isTrusted(apiKey) ? OK : BAD_REQUEST;
+  }
 
-        if(key.expirationTime.getTime() > System.currentTimeMillis()) {
-          System.out.println("validateTrusted: api key not expired");
-
-          if(userService.exists(key.userId)) {
-            User user = userService.getById(key.userId);
-            System.out.println("validateTrusted: api key registered to user " + user.id);
-
-            if(user.permissionLevel <= UserService.TEACHER) {
-              System.out.println("validateTrusted: user is trusted");
-
-              return OK;
-            } else {
-              System.out.println("validateTrusted: user with perm " + user.permissionLevel + " is not trusted");
-            }
-          } else {
-            System.out.println("validateTrusted: user " + key.userId + " does not exist");
-          }
-        } else {
-          System.out.println("validateTrusted: key is expired");
-        }
-      } else {
-        System.out.println("validateTrusted: key does not exist in table");
-      }
-    }
-    return BAD_REQUEST;
-    //return isTrusted(apiKey) ? OK : BAD_REQUEST;
+  @RequestMapping("validateAdministrator/")
+  public ResponseEntity<?> validateAdministrator(@RequestParam("apiKey") String apiKey) {
+    return isAdministrator(apiKey) ? OK : BAD_REQUEST;
   }
 }
