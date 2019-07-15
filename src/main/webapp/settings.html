@@ -2,7 +2,7 @@
 <html>
   <head>
     <!--Background Information -->
-    <title>Tutorial Dashboard</title>
+    <title>User Settings</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -59,75 +59,59 @@
       </div>
     </nav>
 
-    <div class="container-fluid">
-      <div class="row mt-3">
 
-        <!-- Recent Activity -->
-        <div class="card col-sm mx-3">
-          <div class="card-header">Recent Activity</div>
-          <div class="card-body">
-            <p class="card-text">Most recent activity from your students</p>
-            <div class="table-height-standard">
-              <table class="table striped white">
-                <thead>
-                  <tr class="bg-dark text-light">
-                    <td>Name</td>
-                    <td>Action</td>
-                    <td>Time</td>
-                    <td>Location</td>
-                  </tr>
-                </thead>
-                <tbody class="table-height-standard" id="recent-activity-table"></tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-
-      <!-- Manual Attendance -->
-        <div class="card col-sm mx-3">
+      <!-- Settings -->
+			<div class="container">
+        <div class="card col-xl mx-12">
           <div class="card-header">
-            Take Attendance
+									<h1>	<center>Account Settings</center></h1>
           </div>
-          <div class="card-body">
-            <p class="card-text">Take attendance manually or with the help of a USB scanner attached to this computer</p>
-            <a href="#" class="btn btn-primary">Go somewhere</a>
-          </div>
-        </div>
-
-      </div>
-
-
+					<div class="card-body">	
+									<div class="row">
+									<div class="card col-sm-5" style="background-color: #c1737eff; color: white; margin: 4%">
+													<div class="card-header" style="background-color:white; color:gray; margin-top:8%"><center><h5 class="padding-small">Account Details</h5></center></div>
+<div class="card-body">
       <form>
         <div class="row-padding margin-bottom">
-          <h5 class="padding-small">Manual Sign-In/Sign-Out</h5>
           <div class="half">
-            <div class="container padding-16" style="background-color: #c1737eff; color: white;">
-              <input id="user-id-textbox" class="left input-box round" maxlength="8" size="8" style="font-size: 16px; padding-right: 100px;" value="">
-              <div class="right">
-                <i class="fa fa-id-card xxxlarge"></i>
+            <div class="container padding-16" >
+										<center><input id="user-id-textbox" class="left input-box round" type="password" style="font-size: 16px; padding-right: 5%; margin: 2%;" placeholder="Username"></br></center>
+										<center><input id="user-id-textbox" class="left input-box round" type="password" style="font-size: 16px; padding-right: 5%; margin: 2%;" placeholder="Email"></br></center>
+														<center><input id="user-id-textbox" class="left input-box round" type="password" style="font-size: 16px; padding-right: 5%; margin: 2%;" placeholder="Phone Number"></br></center>
+              
+							<div class="right">
+          <button id="submit-button" type='button' class="btn col padding-large text-white margin-top " onclick=" " style="background-color: #daa520ff; margin:2%">Submit!</button>
               </div>
-              <div class="clear"></div>
-              <h4>User ID</h4>
             </div>
           </div>
-
-          <div class="half">
-            <div class="container padding-16" style="background-color: #c1737eff; color: white;">
-              <h4 style="display: inline">In</h4>
-              <label class="switch" style="margin: 0 15px 0 15px">
-                <input id="sign-in-or-out-checkbox" type="checkbox">
-                <span class="slider"></span>
-              </label>
-              <h4 style="display: inline">Out</h4>
-              <div class="right">
-                <i class="fa fa-user-plus xxxlarge"></i>
-              </div>
-              <div class="clear"></div>
-              <h4>Sign-In Or Sign-Out?</h4>
-            </div>
           </div>
-          <button id="submit-button" type='button' class="btn col padding-large text-white margin-top " onclick="submitEncounter()" style="background-color: #daa520ff;">Submit!</button>
       </form>
+				</div>
         </div>
+
+									<div class="card col-sm-5" style="background-color: #c1737eff; color: white; margin:4%;">
+													<div class="card-header" style="background-color:white; color:gray; margin-top:8%"><center><h5 class="padding-small">Change Password</h5></center></div>
+<div class="card-body">
+      <form>
+        <div class="row-padding margin-bottom">
+          <div class="half">
+            <div class="container padding-16" >
+										<center><input id="user-id-textbox" class="left input-box round" type="password" style="font-size: 16px; padding-right: 5%; margin: 2%;" placeholder="Old Password"></br></center>
+						<center><input id="user-id-textbox" class="left input-box round" type="password" style="font-size: 16px; padding-right: 5%; margin: 2%;" placeholder="New Password"></br></center>
+		<center><input id="user-id-textbox" class="left input-box round" type="password" style="font-size: 16px; padding-right: 5%; margin: 2%;" placeholder="Confirm New Password"></br></center>
+              
+							<div class="right">
+          <button id="submit-button" type='button' class="btn col padding-large text-white margin-top " onclick=" " style="background-color: #daa520ff; margin:2%">Submit!</button>
+              </div>
+            </div>
+          </div>
+          </div>
+      </form>
+				</div>
+        </div>
+									</div>
+				</div>
+				</div>
+				</div>
   </body>
 </html>
