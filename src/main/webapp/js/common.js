@@ -23,42 +23,6 @@ function escapeHtml(unsafe) {
          .replace(/'/g, "&#039;");
  }
 
-function timeSince(d) {
-  var seconds = Math.floor((Date.now() - Date.parse(d)) / 1000);
-  var interval = Math.floor(seconds / 31536000);
-
-  if (interval > 1) {
-    return interval + " years";
-  }
-  interval = Math.floor(seconds / 2592000);
-  if (interval > 1) {
-    return interval + " months";
-  }
-  interval = Math.floor(seconds / 86400);
-  if (interval > 1) {
-    return interval + " days";
-  }
-  interval = Math.floor(seconds / 3600);
-  if (interval > 1) {
-    return interval + " hours";
-  }
-  interval = Math.floor(seconds / 60);
-  if (interval > 1) {
-    return interval + " minutes";
-  }
-  return Math.floor(seconds) + " seconds";
-}
-
-function epochTime(d) {
-  return Math.floor(d.getTime()/1000);
-}
-
-function getDateString(d) {
-  var date = new Date(Date.parse(d))
-  return date.toLocaleTimeString('en-US') + " on " + date.toDateString();
-}
-
-
 function request(url, functionOnLoad, functionOnError) {
   var xhr = new XMLHttpRequest();
   xhr.open('GET', url, true);
@@ -72,32 +36,6 @@ function request(url, functionOnLoad, functionOnError) {
   xhr.send();
 }
 
-//Toggle between showing and hiding the sidebar, and add overlay effect
-function w3_open() {
-
-  //Get the Sidebar
-  var mySidebar = document.getElementById("mySidebar");
-
-  //Get the DIV with overlay effect
-  var overlayBg = document.getElementById("myOverlay");
-
-  if (mySidebar.style.display === 'block') {
-    mySidebar.style.display = 'none';
-    overlayBg.style.display = "none";
-  } else {
-    mySidebar.style.display = 'block';
-    overlayBg.style.display = "block";
-  }
-}
-
-//Close the sidebar with the close button
-function w3_close() {
-  var mySidebar = document.getElementById("mySidebar");
-  var overlayBg = document.getElementById("myOverlay");
-  mySidebar.style.display = "none";
-  overlayBg.style.display = "none";
-}
-
 // moves to login page on cookie expiration
 function ensureSignedIn() {
   // check if sign in cookie exists and is logged in
@@ -108,7 +46,7 @@ function ensureSignedIn() {
   }
 
   // now check if the cookie is expired
-  if(apiKey.expirationTime < epochTime(new Date())) {
+  if(apiKey.expirationTime < moment().unix()) {
     alert("Session has expired");
     window.location.replace(thisUrl() + "/login.html");
     return;

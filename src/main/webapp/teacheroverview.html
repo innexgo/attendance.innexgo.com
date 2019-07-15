@@ -13,12 +13,13 @@
     <script src="vendor/bootstrap/js/bootstrap.bundle.js"></script>
     <script src="vendor/scannerdetection/jquery.scannerdetection.min.js"></script>
     <script src="vendor/js-cookie/js.cookie.js"></script>
+    <script src="vendor/moment/moment.min.js"></script>
     <script src="js/common.js"></script>
     <script src="js/teacheroverview.js"></script>
   </head>
 
-  <!--Navigation-->
   <body class="bg-light">
+    <!--Navigation-->
     <nav class="navbar navbar-expand-md navbar-dark bg-dark text-light">
       <div class="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
         <ul class="navbar-nav mr-auto">
@@ -34,14 +35,13 @@
         </ul>
       </div>
       <div class="mx-auto order-0">
-        <a class="navbar-brand" href="#"><img src="assets/innexo_logo.png">Innexo</a>
+        <a class="navbar-brand" href="#"><img src="assets/innexo_logo.png">   Innexo</a>
       </div>
       <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
         <ul class="navbar-nav ml-auto">
           <li class="nav-item active">
             <div class="dropdown show">
-              <button class="btn btn-secondary dropdown-toggle" type="button"
-                                                                id="user-dropdown"data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <button class="btn btn-secondary dropdown-toggle" type="button" id="user-dropdown"data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <nobr class="fa fa-user"></nobr>
                 <nobr id="username-display"></nobr>
               </button>
@@ -52,98 +52,86 @@
             </div>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">Settings and Preferences</a>
+            <a class="nav-link" href="#">Settings</a>
           </li>
         </ul>
       </div>
     </nav>
 
-    <!-- !PAGE CONTENT! -->
-    <div class="main" style="margin-left:300px;margin-top:43px;">
-
-      <!-- Header -->
-      <header class="container" style="padding-top:22px">
-        <h5><b><i class="fa fa-bullseye"></i> Welcome!</b></h5>
-      </header>
-
-      <div class="row-padding margin-bottom">
-        <div class="half">
-          <div class="container padding-16" style="background-color: #c1737eff; color: white;">
-            <div class="left"><i class="fa fa-bookmark xxxlarge"></i></div>
-            <div class="right">
-            </div>
-            <div class="clear"></div>
-            <h4><a href="requests.html" style="text-decoration: none;">Requests / Quota</a></h4>
-          </div>
-        </div>
-        <div class="half">
-          <div class="container padding-16" style="background-color: #c1737eff; color: white;">
-            <div class="left"><i class="fa fa-history xxxlarge"></i></div>
-            <div class="right">
-              <h3 style="font-size: 30px; color: #c1737eff; ">-- / --</h3>
-            </div>
-            <div class="clear"></div>
-            <h4><a href="history.html" style="text-decoration: none;">History</a></h4>
-          </div>
-        </div>
-        <div class="row-padding margin-bottom" style="clear: both">
-          <h5 style="float: left; width: 50%; overflow: scroll; overflow-x: hidden; "><i class="fa fa-sign-in text-red"></i> Sign-Ins</h5>
-          <h5 style="float: right; width: 50%; overflow: scroll; overflow-x: hidden; "><i class="fa fa-sign-out text-blue"></i>  Sign-Outs</h5>
-
-          <div class="half table-list">
-            <table id="sign-in-feed" class="table striped white">
-              <tr class="dark-gray">
+    <div class="container-fluid">
+      <div class="card">
+        <div class="card-header">Recent Activity</div>
+        <div class="card-body">
+          <p class="card-text">Most recent activity from your students</p>
+          <table class="table striped white">
+            <thead>
+              <tr class="bg-dark text-light">
                 <td>Name</td>
-                <td>ID</td>
+                <td>Action</td>
                 <td>Time</td>
+                <td>Location</td>
               </tr>
-            </table>
-          </div>
-
-          <div class="half table-list">
-            <table id="sign-out-feed" class="table striped white">
-              <tr class="dark-gray">
-                <td>Name</td>
-                <td>ID</td>
-                <td>Time</td>
-              </tr>
-            </table>
-          </div>
-
-          <form>
-            <div class="row-padding margin-bottom">
-              <h5 class="padding-small">Manual Sign-In/Sign-Out</h5>
-              <div class="half">
-                <div class="container padding-16" style="background-color: #c1737eff; color: white;">
-                  <input id="user-id-textbox" class="left input-box round" maxlength="8" size="8" style="font-size: 16px; padding-right: 100px;" value="">
-                  <div class="right">
-                    <i class="fa fa-id-card xxxlarge"></i>
-                  </div>
-                  <div class="clear"></div>
-                  <h4>User ID</h4>
-                </div>
-              </div>
-
-              <div class="half">
-                <div class="container padding-16" style="background-color: #c1737eff; color: white;">
-                  <h4 style="display: inline">In</h4>
-                  <label class="switch" style="margin: 0 15px 0 15px">
-                    <input id="sign-in-or-out-checkbox" type="checkbox">
-                    <span class="slider"></span>
-                  </label>
-                  <h4 style="display: inline">Out</h4>
-                  <div class="right">
-                    <i class="fa fa-user-plus xxxlarge"></i>
-                  </div>
-                  <div class="clear"></div>
-                  <h4>Sign-In Or Sign-Out?</h4>
-                </div>
-              </div>
-            </div>
-            <button id="submit-button" type='button' class="btn col padding-large text-white margin-top " onclick="submitEncounter()" style="background-color: #daa520ff;">Submit!</button>
+            </thead>
+            <tbody id="recent-activity-table"></tbody>
+          </table>
         </div>
-          </form>
       </div>
-    </div>
+
+      <div class="card">
+        <div class="card-header">
+          Featured
+        </div>
+        <div class="card-body">
+          <h5 class="card-title">Special title treatment</h5>
+          <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+          <a href="#" class="btn btn-primary">Go somewhere</a>
+        </div>
+      </div>
+
+
+      <div class="card">
+        <div class="card-header">
+          Featured
+        </div>
+        <div class="card-body">
+          <h5 class="card-title">Special title treatment</h5>
+          <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+          <a href="#" class="btn btn-primary">Go somewhere</a>
+        </div>
+      </div>
+
+
+      <form>
+        <div class="row-padding margin-bottom">
+          <h5 class="padding-small">Manual Sign-In/Sign-Out</h5>
+          <div class="half">
+            <div class="container padding-16" style="background-color: #c1737eff; color: white;">
+              <input id="user-id-textbox" class="left input-box round" maxlength="8" size="8" style="font-size: 16px; padding-right: 100px;" value="">
+              <div class="right">
+                <i class="fa fa-id-card xxxlarge"></i>
+              </div>
+              <div class="clear"></div>
+              <h4>User ID</h4>
+            </div>
+          </div>
+
+          <div class="half">
+            <div class="container padding-16" style="background-color: #c1737eff; color: white;">
+              <h4 style="display: inline">In</h4>
+              <label class="switch" style="margin: 0 15px 0 15px">
+                <input id="sign-in-or-out-checkbox" type="checkbox">
+                <span class="slider"></span>
+              </label>
+              <h4 style="display: inline">Out</h4>
+              <div class="right">
+                <i class="fa fa-user-plus xxxlarge"></i>
+              </div>
+              <div class="clear"></div>
+              <h4>Sign-In Or Sign-Out?</h4>
+            </div>
+          </div>
+          <button id="submit-button" type='button' class="btn col padding-large text-white margin-top " onclick="submitEncounter()" style="background-color: #daa520ff;">Submit!</button>
+      </form>
+        </div>
   </body>
 </html>

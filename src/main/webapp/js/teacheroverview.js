@@ -1,35 +1,21 @@
 "use strict"
 
 
-function addSignInOutFeedEntry(isSignIn, userName, userId, placeName, timestamp)
+function addSignInOutFeedEntry(encounter)
 {
-  var table = document.getElementById(isSignIn ? "sign-in-feed" : "sign-out-feed");
-  var signInOrSignOutText = isSignIn ? 'in to' : 'out of';
-  if(table.rows.length < 1) {
-    clearFeed();
-  }
-  table.insertRow(1).innerHTML=
+  var table = document.getElementById('recent-activity-table');
+  table.insertRow(0).innerHTML=
     ('<tr>' +
-    '<td>' + userName + '</td>' +
-    '<td>' + userId  + '</td>' +
-    '<td>' + getDateString(timestamp) + '</td>' +
+    '<td>' + encounter.user.name + '</td>' +
+    '<td>' + encounter.type + '</td>' +
+    '<td>' + moment.fromNow(encounter.time) + '</td>' +
+    '<td>' + encounter.location.name + '</td>' +
     '</tr>');
 }
 
 function clearFeed()
 {
-  document.getElementById('sign-in-feed').innerHTML =
-            '<tr class="dark-gray">' +
-              '<td>Name</td>' +
-              '<td>ID</td>' +
-              '<td>Time</td>' +
-            '</tr>';
-  document.getElementById('sign-out-feed').innerHTML =
-            '<tr class="dark-gray">' +
-              '<td>Name</td>' +
-              '<td>ID</td>' +
-              '<td>Time</td>' +
-            '</tr>';
+  document.getElementById('recent-activity-table').innerHTML = '';
 }
 
 //gets new data from server and inserts it at the beginning
@@ -43,11 +29,7 @@ function updateFeed() {
       clearFeed();
       //go backwards to maintain order
       for(var i = encounters.length-1; i >= 0; i--) {
-        addSignInOutFeedEntry(encounters[i].type == 'in',
-          encounters[i].user.name,
-          encounters[i].user.id,
-          encounters[i].location.name,
-          encounters[i].time);
+        addSignInOutFeedEntry(encounters[i]);
       }
     },
     function(xhr) {

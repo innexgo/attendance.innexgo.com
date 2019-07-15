@@ -21,13 +21,12 @@ function loginattempt() {
   }
 
   // get date 30 min into the future
-  var apiKeyExpirationTime = new Date();
-  apiKeyExpirationTime.setMinutes(apiKeyExpirationTime.getMinutes() + 30);
+  var apiKeyExpirationTime = moment().add(30, 'minutes').unix();
 
   var url = thisUrl() +
     '/apiKey/new/?userName=' + encodeURIComponent(userName) +
     '&password=' + encodeURIComponent(password) +
-    '&expirationTime=' + epochTime(apiKeyExpirationTime)
+    '&expirationTime=' + encodeURIComponent(apiKeyExpirationTime);
 
   request(url,
     // success function
@@ -38,7 +37,7 @@ function loginattempt() {
       // now jump to next page
       if(apiKey.user.permissionLevel < 2) {
         // TODO make administrator overview
-        window.location.replace(thisUrl() + "/teacheroverview.html");
+        window.location.assign(thisUrl() + "/teacheroverview.html");
       } else{
         giveError("At the moment, students cannot access an account.");
       }
