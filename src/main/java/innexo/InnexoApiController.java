@@ -20,6 +20,7 @@ public class InnexoApiController {
   @Autowired EncounterService encounterService;
   @Autowired LocationService locationService;
   @Autowired ApiKeyService apiKeyService;
+  @Autowired ScheduleService scheduleService;
 
   static final ResponseEntity<?> BAD_REQUEST = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
   static final ResponseEntity<?> INTERNAL_SERVER_ERROR =
@@ -57,6 +58,13 @@ public class InnexoApiController {
     encounter.user = fillUser(userService.getById(encounter.userId));
     return encounter;
   }
+
+  Schedule fillSchedule(Schedule schedule) {
+    schedule.location = fillLocation(locationService.getById(schedule.locationId));
+    schedule.user = fillUser(userService.getById(schedule.userId));
+    return schedule;
+  }
+
 
   User getUserIfValid(String key) {
     String hash = Utils.encodeApiKey(key);
@@ -176,6 +184,23 @@ public class InnexoApiController {
     } else {
     }
     return BAD_REQUEST;
+  }
+
+  @RequestMapping("schedule/new/")
+  public ResponseEntity<?> newSchedule(
+      @RequestParam("userId") Integer userId,
+      @RequestParam("locationId") Integer locationId,
+      @RequestParam("period") Integer period,
+      @RequestParam("apiKey") String apiKey) {
+    if(userService.exists(userId) && locationService.exists(locationId) && isAdministrator(apiKey)) {
+      Schedule schedule = new Schedule();
+      schedule.userId = userId;
+      schedule.locationId = locationId;
+      scheduleService.add(schedule);
+      return new ResponseEntity<>(fillSchedule(schedule), HttpStatus.OK);
+    } else {
+      return BAD_REQUEST;
+    }
   }
 
   @RequestMapping("user/manager/new/")
@@ -317,6 +342,16 @@ public class InnexoApiController {
     }
   }
 
+  @RequestMapping("schedule/delete/")
+  public ResponseEntity<?> deleteSchedule(
+      @RequestParam("scheduleId") Integer scheduleId, @RequestParam("apiKey") String apiKey) {
+    if (isAdministrator(apiKey)) {
+      return new ResponseEntity<>(fillSchedule(scheduleService.delete(scheduleId)), HttpStatus.OK);
+    } else {
+      return BAD_REQUEST;
+    }
+  }
+
   @RequestMapping("apiKey/delete/")
   public ResponseEntity<?> deleteApiKey(
       @RequestParam("apiKeyId") Integer apiKeyId, @RequestParam("apiKey") String apiKey) {
@@ -401,6 +436,25 @@ public class InnexoApiController {
                   Utils.encodeApiKey(allRequestParam.get("apiKeyData")))
               .stream()
               .map(x -> fillApiKey(x))
+              .collect(Collectors.toList());
+      return new ResponseEntity<>(list, HttpStatus.OK);
+    } else {
+      return BAD_REQUEST;
+    }
+  }
+
+  @RequestMapping("schedule/")
+  public ResponseEntity<?> viewSchedule(@RequestParam Map<String, String> allRequestParam) {
+    if (allRequestParam.containsKey("apiKey") && isTrusted(allRequestParam.get("apiKey"))) {
+      List<Schedule> list =
+          scheduleService
+              .query(
+                  parseInteger(allRequestParam.get("scheduleId")),
+                  parseInteger(allRequestParam.get("userId")),
+                  parseInteger(allRequestParam.get("locationId")),
+                  parseInteger(allRequestParam.get("period")))
+              .stream()
+              .map(x -> fillSchedule(x))
               .collect(Collectors.toList());
       return new ResponseEntity<>(list, HttpStatus.OK);
     } else {

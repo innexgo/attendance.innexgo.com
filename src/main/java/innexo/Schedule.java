@@ -1,6 +1,7 @@
 package innexo;
 
 public class Schedule {
+  public int id;
   int userId;
   int locationId;
   public int period;
