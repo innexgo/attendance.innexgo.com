@@ -163,22 +163,17 @@ public class InnexoApiController {
     // now actually make user
     if (userService.exists(userId)) {
       User u = userService.getById(userId);
-      System.out.println("new ApiKey: user exists");
       if (Utils.matchesPassword(password, u.passwordHash)) {
-        System.out.println("new ApiKey: password matches");
         ApiKey apiKey = new ApiKey();
         apiKey.userId = userId;
         apiKey.creationTime = new Timestamp(System.currentTimeMillis());
         apiKey.expirationTime = Utils.getTimestamp(expirationTime);
         apiKey.key = UUID.randomUUID().toString(); // quick hacks, please replace
         apiKey.keyHash = Utils.encodeApiKey(apiKey.key);
-        System.out.println("new ApiKey: key <" + apiKey.keyHash + "> generated for user " + userId);
         apiKeyService.add(apiKey);
         return new ResponseEntity<>(fillApiKey(apiKey), HttpStatus.OK);
       }
-      System.out.println("new ApiKey: password does not match");
     } else {
-      System.out.println("new ApiKey: userId " + userId + " invalid");
     }
     return BAD_REQUEST;
   }
@@ -189,7 +184,7 @@ public class InnexoApiController {
       @RequestParam("managerId") Integer managerId,
       @RequestParam("apiKey") String apiKey) {
     if (!Utils.isBlank(apiKey)
-        && isAdministrator(apiKey)
+        && isTrusted(apiKey)
         && userService.exists(userId)
         && userService.exists(managerId)) {
       userService.addManager(userId, managerId);
@@ -204,7 +199,7 @@ public class InnexoApiController {
       @RequestParam("managerId") Integer managerId,
       @RequestParam("apiKey") String apiKey) {
     if (!Utils.isBlank(apiKey)
-        && isAdministrator(apiKey)
+        && isTrusted(apiKey)
         && userService.exists(userId)
         && userService.exists(managerId)
         && userService.isManager(userId, managerId)) {
