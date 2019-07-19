@@ -38,8 +38,6 @@ function request(url, functionOnLoad, functionOnError) {
 
 // moves to login page on cookie expiration
 function ensureSignedIn() {
-  console.log('API');
-  console.log(Cookies.getJSON('apiKey'));
   // check if sign in cookie exists and is logged in
   var apiKey = Cookies.getJSON('apiKey');
   if(apiKey == null) {
@@ -59,18 +57,11 @@ function ensureSignedIn() {
   var url = thisUrl() + '/validateTrusted/?apiKey=' + apiKey.key;
   request(url,
     // on success
-    function(xhr) {
-      console.log('user is signed in');
-    },
+    function(xhr) {},
     // on failure
     function(xhr) {
       alert('Current session invalid, refresh the page.');
       Cookies.remove('apiKey');
     }
   );
-}
-
-function displayUsername() {
-  var username = Cookies.getJSON('apiKey').user.name;
-  document.getElementById('username-display').innerHTML = ' ' + username + ' ';
 }
