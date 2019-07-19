@@ -6,10 +6,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
+    <!-- CSS References -->
     <link rel="stylesheet" href="vendor/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
     <link rel="stylesheet" href="vendor/fontawesome-free/css/all.min.css">
     <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/teacheroverview.css">
+
+
+    <!-- JS References -->
     <script src="vendor/jquery/jquery.min.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.bundle.js"></script>
     <script src="vendor/scannerdetection/jquery.scannerdetection.min.js"></script>
@@ -20,8 +24,10 @@
   </head>
 
   <body class="bg-light">
-    <!--Navigation-->
+    <!-- Navigation Bar -->
     <nav class="navbar navbar-expand-md navbar-dark bg-dark text-light">
+
+      <!-- Left-Navigation Side -->
       <div class="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
         <ul class="navbar-nav mr-auto">
           <li class="nav-item">
@@ -35,15 +41,20 @@
           </li>
         </ul>
       </div>
+
+      <!--Center Logo-->
       <div class="mx-auto order-0">
         <a class="navbar-brand" href="index.html"><img src="assets/innexo_logo.png">   Innexo</a>
       </div>
+
+
+      <!-- Right-Navigation Side -->
       <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
         <ul class="navbar-nav ml-auto">
           <li class="nav-item active">
             <div class="dropdown show">
               <button class="btn btn-secondary dropdown-toggle" type="button" id="user-dropdown"data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <nobr class="fa fa-user"></nobr>
+                <nobr class="fa fa-cog fa-2x"></nobr>
                 <nobr id="username-display"></nobr>
               </button>
               <div class="dropdown-menu" aria-labelledby="user-dropdown">
