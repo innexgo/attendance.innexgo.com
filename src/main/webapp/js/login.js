@@ -37,7 +37,7 @@ function loginattempt() {
       // now jump to next page
       if(apiKey.user.permissionLevel < 2) {
         // TODO make administrator overview
-        window.location.assign(thisUrl() + "/teacheroverview.html");
+        window.location.assign(thisUrl() + "/overviewdecider.html");
       } else{
         giveError("At the moment, students cannot access an account.");
       }
