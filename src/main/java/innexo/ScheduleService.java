@@ -51,10 +51,10 @@ public class ScheduleService {
 
   public List<Schedule> query(Integer scheduleId, Integer userId, Integer locationId, Integer period) {
     String sql =
-        "SELECT id, user_id, location_id, period FROM schedule WHERE 1=1 "
+        "SELECT id, location_id, user_id, period FROM schedule WHERE 1=1 "
             + (userId == null ? "" : " AND user_id = " + userId)
-            + (locationId == null ? "" : "AND location_id = " + locationId)
-            + (period == null ? "" : "AND period = " + period)
+            + (locationId == null ? "" : " AND location_id = " + locationId)
+            + (period == null ? "" : " AND period = " + period)
             + ";";
     RowMapper<Schedule> rowMapper = new ScheduleRowMapper();
     return this.jdbcTemplate.query(sql, rowMapper);
