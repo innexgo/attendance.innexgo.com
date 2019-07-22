@@ -25,13 +25,32 @@
     <script src="js/sidebar.js"></script>
     <script src="js/history.js"></script>
   </head>
+  <body>
 
+  <nav style="height:100%" id="sidebar" class="sidepanel bg-dark text-light">
+  <nav class="navbar sidebarCollapse">
+    <button type="button" onclick="closeSidebar()" class="btn btn-icon sidebarButton">
+      <i class="fa fa-bars"></i>
+    </button>
+    <h6 style="margin:auto;" id="info-username">Teacher Name</h6>
+  </nav>
+  <a class="sidebar-link" id href="index.html">Home Page</a>
+  <a class="sidebar-link" href="overviewdecider.html">Overview</a>
+  <a class="sidebar-link" href="history.html">History</a>
+</nav>
+  
   <nav class="navbar navbar-expand-md navbar-dark bg-dark text-light">
-    <!--Center Logo-->
-    <div class="mx-auto order-0">
-      <a class="navbar-brand" href="index.html"><img src="assets/innexo_logo.png"> Innexo</a>
+    <div class="order-0">
+      <button type="button" onclick="openSidebar()" class="btn btn-icon sidebarButton">
+        <i class="fa fa-bars"></i>
+      </button>
     </div>
 
+    <!--Center Logo-->
+    <div class="mx-auto order-1">
+      <a class="navbar-brand" href="index.html"><img src="assets/innexo_logo.png"> Innexo</a>
+    </div>
+    
     <!-- Right-Navigation Side -->
     <div class="navbar order-3">
       <ul class="navbar-nav ml-auto">
@@ -50,7 +69,6 @@
       </ul>
     </div>
   </nav>
-
   <div class="container">
     <div class="row" style="padding:0px">
       <div class="card col-sm-5">
@@ -70,14 +88,14 @@
           <div class="form-group row">
           <label for="date-input" class="col-sm-4 col-form-label">From:</label>
           <div class="col-sm-6">
-            <input class="form-control" type="date" id="min-date">
+            <input style="margin-bottom: 5px" class="form-control" type="date" id="min-date">
             <input class="form-control" type="time" value="07:00" id="min-time">
           </div>
           </div>
           <div class="form-group row">
           <label for="date-input" class="col-sm-4 col-form-label">To:</label>
           <div class="col-sm-6">
-            <input class="form-control" type="date" id="max-date">
+            <input style="margin-bottom: 5px" class="form-control" type="date" id="max-date">
             <input class="form-control" type="time" value="15:25" id="max-time">
           </div>
           </div>
@@ -102,10 +120,15 @@
         </div>
     </div>
   </div>
-
+   <div id="overlay" onclick="closeSidebar()"></div>
+</body>
 </html>
 
 <script type="text/javascript">
+
+var apiKey = Cookies.getJSON('apiKey');
+document.getElementById('info-username').innerHTML = "Hi, "+apiKey.user.name;
+
   var minDateField = document.getElementById("min-date");
   var maxDateField = document.getElementById("max-date");
 
@@ -117,6 +140,14 @@
   minDateField.value = calcDate;
   maxDateField.value = calcDate;
 
+  $('.sidebar-link').addClass('list-group-item').addClass('list-group-item-action');
+
+  if (true){
+    $('.sidebar-link').addClass('bg-dark').addClass('text-light');
+  }
+  else {
+    
+  }
   $("#min-date").change(function() {
     checkValidRange("minField", minDateField, maxDateField, "date");
   });

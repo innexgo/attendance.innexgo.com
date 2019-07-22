@@ -1,5 +1,15 @@
 "use strict"
 
+function openSidebar() {
+  document.getElementById("sidebar").style.width = "250px";
+  document.getElementById("overlay").style.display = "block"
+}
+
+function closeSidebar() {
+  document.getElementById("sidebar").style.width = "0";
+  document.getElementById("overlay").style.display = "none";
+} 
+
 function isWhitespace(str) {
   return !(/\S/.test(str));
 }
