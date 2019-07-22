@@ -135,7 +135,7 @@ document.getElementById('info-username').innerHTML = "Hi, "+apiKey.user.name;
   var minTimeField = document.getElementById("min-time");
   var maxTimeField = document.getElementById("max-time");
 
-  var calcDate = curDate();
+  var calcDate = moment().format("YYYY-MM-DD");
 
   minDateField.value = calcDate;
   maxDateField.value = calcDate;

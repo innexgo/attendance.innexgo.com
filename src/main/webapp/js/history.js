@@ -1,6 +1,25 @@
 "use strict"
 
-var calcDate = curDate();
+window.onload = function() {
+  var ID = document.getElementById("ID-input");
+  var name = document.getElementById("name-input");
+
+  name.addEventListener("keydown", function(event) {
+    if (event.keyCode === 13) {
+      event.preventDefault();
+      onQueryClick();
+    }
+  }); 
+
+  ID.addEventListener("keydown", function(event) {
+    if (event.keyCode === 13) {
+      event.preventDefault();
+      onQueryClick();
+    }
+  });
+}
+
+var calcDate = moment().format("YYYY-MM-DD");
 
 function isFilled(value){
   return ((value !== "") && (value !== null));
@@ -38,14 +57,6 @@ function norm(num) {
   return (num);
 }
 
-function curDate() {
-  var date =  new Date();
-  var yrs = date.getFullYear();
-  var mth = norm(date.getMonth() + 1);
-  var day = norm(date.getDate());
-  return (yrs + "-" + mth + "-" + day);
-}
-
 function onQueryClick() {
 var encounterId = undefined; //TODO add query box
 var userId = parseInt(document.getElementById("ID-input").value, 10);
@@ -59,13 +70,7 @@ submitQuery(encounterId, userId, userName, locationId, type, minDate, maxDate, c
 }
 
 function normTimestamp(time){
-  var date = new Date(time);
-  var yrs = date.getFullYear();
-  var mth = norm(date.getMonth() + 1);
-  var day = norm(date.getDate());
-  var hrs = norm(date.getHours());
-  var min = norm(date.getMinutes());
-  return(mth+"/"+day+"/"+yrs+" "+hrs+":"+min);
+  return moment(time).format("MM/DD/YYYY HH:mm");
 }
 
 function addQueryEntry(encounter) {
@@ -104,8 +109,8 @@ function submitQuery(encounterId, userId, userName, locationId, type, minDate, m
     (!isValidString(userName) ? '' : '&userName='+userName) +
     (isNaN(locationId) ?        '' : '&locationId='+locationId) +
     (!isValidString(type) ?     '' : '&type='+encodeURIComponent(type)) +
-    (isNaN(minDate.getTime()) ? '' : '&minDate='+minDate.getTime()) +
-    (isNaN(maxDate.getTime()) ? '' : '&maxDate='+maxDate.getTime()) +
+    (isNaN(moment(minDate).unix()) ? '' : '&minDate='+moment(minDate).unix()) +
+    (isNaN(moment(maxDate).unix()) ? '' : '&maxDate='+moment(maxDate).unix()) +
     (isNaN(count) ?             '' : '&count='+count);
   console.log('making request to: ' + url);
   request(url,
