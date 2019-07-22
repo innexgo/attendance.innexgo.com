@@ -101,3 +101,14 @@ setInterval(function(){
 
 //first make sure we're signed in
 ensureSignedIn();
+
+//when enter key is pressed in the student ID field.
+window.onload = function() {
+  var buttonA = document.getElementById("user-id-textbox");
+
+  buttonA.addEventListener("keydown", function(event) {
+    if (event.keyCode === 13) {
+      submitEncounter()
+    }
+  }); 
+}

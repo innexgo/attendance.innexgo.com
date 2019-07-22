@@ -58,3 +58,27 @@ function loginattempt() {
 }
 
 Cookies.remove('apiKey');
+
+window.onload = function() {
+  var username = document.getElementById("username");
+  var password = document.getElementById("password");
+
+  username.addEventListener("keydown", function(event) {
+    if (event.keyCode === 13) {
+      event.preventDefault();
+      if(!isValidString(password)){
+        loginattempt();
+      }
+      else {
+        password.focus();
+      }
+    }
+  }); 
+
+  password.addEventListener("keydown", function(event) {
+    if (event.keyCode === 13) {
+      event.preventDefault();
+      loginattempt();
+    }
+  });
+}

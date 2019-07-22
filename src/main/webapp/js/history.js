@@ -1,7 +1,97 @@
 "use strict"
 
-function addQueryEntry(encounter)
-{
+var minDateField = document.getElementById("min-date");
+var maxDateField = document.getElementById("max-date");
+
+var minTimeField = document.getElementById("min-time");
+var maxTimeField = document.getElementById("max-time");
+
+function norm(num) {
+  if (String(num).length == 1) {
+    return ("0" + num);
+  }
+  return (num);
+}
+
+function curDate() {
+  n =  new Date();
+  y = n.getFullYear();
+  m = norm(n.getMonth() + 1);
+  d = norm(n.getDate());
+  return (y + "-" + m + "-" + d);
+}
+
+minDateField.value = curDate()
+maxDateField.value = curDate()
+
+$("#min-date").change(function() {
+  checkValidRange("minField", minDateField, maxDateField, "date");
+});
+
+$("#max-date").change(function() {
+  checkValidRange("maxField", minDateField, maxDateField, "date");
+});
+
+$("#min-time").change(function() {
+  if(minDateField.value == maxDateField.value) {
+    checkValidRange("minField", minTimeField, maxTimeField, "time");
+  }
+});
+
+$("#max-time").change(function() {
+  if(minDateField.value == maxDateField.value) {
+    checkValidRange("maxField", minTimeField, maxTimeField, "time");
+  }
+});
+
+function isFilled(value){
+  return ((value !== "") && (value !== null));
+}
+
+function checkValidRange(which, minField, maxField, type){
+  if (isFilled(minField.value) && isFilled(maxField.value)) {
+    if (minField.value > maxField.value) {
+      switch (which) {
+        case "minField":
+          maxField.value = minField.value;
+          break;
+
+        case "maxField":
+          minField.value = maxField.value;
+          break;
+      }
+    }
+      if (type == "date"){
+        if (minField.value == maxField.value) {
+          checkValidRange("maxField", minTimeField, maxTimeField, "time");
+        }
+        }
+      }
+    }
+
+function onQueryClick() {
+var encounterId = undefined; //TODO add query box
+var userId = parseInt(document.getElementById('ID-input').value, 10);
+var userName = document.getElementById('name-input').value;
+var locationId = undefined;//document.getElementById('locationId').value;
+var type = undefined;
+var minDate = new Date(minDateField.value+"T"+minTimeField.value+":00");
+var maxDate = new Date(maxDateField.value+"T"+maxTimeField.value+":00");
+var count = 100;
+submitQuery(encounterId, userId, userName, locationId, type, minDate, maxDate, count);
+}
+
+function normTimestamp(time){
+  var date = new Date(time);
+  var yrs = date.getFullYear();
+  var mth = norm(date.getMonth() + 1);
+  var day = norm(date.getDate());
+  var hrs = norm(date.getHours());
+  var min = norm(date.getMinutes());
+  return(mth+"/"+day+"/"+yrs+" "+hrs+":"+min);
+}
+
+function addQueryEntry(encounter) {
   var table = document.getElementById('result-table');
   var signInOrSignOutText = encounter.type == 'in' ?
               '<i class="fa fa-sign-in text-red"></i> Signed-In' :
@@ -10,16 +100,16 @@ function addQueryEntry(encounter)
     clearResultTable();
   }
   table.insertRow(1).innerHTML=
+    
     ('<tr>' +
     '<td>' + encounter.user.name+ '</td>' +
     '<td>' + signInOrSignOutText + '</td>' +
     '<td>' + encounter.location.name + '</td>' +
-    '<td>' + getDateString(encounter.time) + '</td>' +
+    '<td>' + normTimestamp(encounter.time) + '</td>' +
     '</tr>');
 }
 
-function clearResultTable()
-{
+function clearResultTable() {
   document.getElementById('result-table').innerHTML =
             '<tr class="dark-gray">'+
               '<td>Name</td>'+
@@ -37,8 +127,8 @@ function submitQuery(encounterId, userId, userName, locationId, type, minDate, m
     (!isValidString(userName) ? '' : '&userName='+userName) +
     (isNaN(locationId) ?        '' : '&locationId='+locationId) +
     (!isValidString(type) ?     '' : '&type='+encodeURIComponent(type)) +
-    (isNaN(minDate.getTime()) ? '' : '&minDate='+epochTime(minDate)) +
-    (isNaN(maxDate.getTime()) ? '' : '&maxDate='+epochTime(maxDate)) +
+    (isNaN(minDate.getTime()) ? '' : '&minDate='+minDate.getTime()) +
+    (isNaN(maxDate.getTime()) ? '' : '&maxDate='+maxDate.getTime()) +
     (isNaN(count) ?             '' : '&count='+count);
   console.log('making request to: ' + url);
   request(url,
@@ -56,17 +146,6 @@ function submitQuery(encounterId, userId, userName, locationId, type, minDate, m
   );
 }
 
-function onQueryClick() {
-  var encounterId = undefined; //TODO add query box
-  var userId = parseInt(document.getElementById('userId').value, 10);
-  var userName = document.getElementById('userName').value;
-  var locationId = undefined;//document.getElementById('locationId').value;
-  var type = undefined;
-  var minDate = new Date(document.getElementById('minDate').value);
-  var maxDate = new Date(document.getElementById('maxDate').value);
-  var count = 100;
-  submitQuery(encounterId, userId, userName, locationId, type, minDate, maxDate, count);
-}
 
 
 

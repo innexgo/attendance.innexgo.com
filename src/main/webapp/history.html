@@ -1,100 +1,106 @@
 <!DOCTYPE html>
-
 <html>
   <head>
     <!--Background Information -->
-    <title>Tutorial Dashboard</title>
+    <title>History</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+
+    <!-- CSS References -->
+    <link rel="stylesheet" href="vendor/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="vendor/fontawesome-free/css/all.min.css">
+    <link rel="stylesheet" href="vendor/bootstrap4-toggle/css/bootstrap4-toggle.min.css">
+    <link rel="stylesheet" href="vendor/bootstrap-sidebar/bootstrap-sidebar.css">
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/history.css">
+
+    <!-- JS References -->
     <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.js"></script>
+    <script src="vendor/bootstrap4-toggle/js/bootstrap4-toggle.min.js"></script>
     <script src="vendor/scannerdetection/jquery.scannerdetection.min.js"></script>
     <script src="vendor/js-cookie/js.cookie.js"></script>
+    <script src="vendor/moment/moment.min.js"></script>
     <script src="js/common.js"></script>
+    <script src="js/sidebar.js"></script>
     <script src="js/history.js"></script>
   </head>
 
-  <body class="light-grey">
-
-    <!--Navigation Bar-->
-    <div class="bar top black large" style="z-index:4">
-      <button class="bar-item button hide-large hover-none hover-text-light-grey" onclick="w3_open();"><i class="fa fa-bars"></i>  Menu</button>
-      <a href="teacheroverview.html" class="bar-item left" style="padding-top: 12.5px; text-decoration: none">Attendance Dashboard</a>
-      <span class="bar-item right"><img src="assets/innexo_logo.png"></span>
+  <nav class="navbar navbar-expand-md navbar-dark bg-dark text-light">
+    <!--Center Logo-->
+    <div class="mx-auto order-0">
+      <a class="navbar-brand" href="index.html"><img src="assets/innexo_logo.png"> Innexo</a>
     </div>
 
-    <!--Sidebar-->
-    <nav class="sidebar collapse white animate-left" style="z-index:3;width:300px;" id="mySidebar"><br>
-      <div class="container row">
-        <div class="col s4">
-          <img src="assets/test.gif" class="circle margin-right" style="width:46px">
-        </div>
-        <div class="col s8 bar">
-          <span><strong>Mr. Davis</strong></span><br>
-          <span>English 1A</span><br>
-          <span>Room 100</span><br>
-        </div>
-      </div>
-      <hr>
-      <div class="container">
-        <h5>Dashboard</h5>
-      </div>
-      <div class="bar-block">
-        <a href="teacheroverview.html" class="bar-item button padding"><i class="fa fa-bullseye fa-fw"></i>  Overview</a>
-        <a href="history.html" class="bar-item button padding blue"><i class="fa fa-history fa-fw"></i>  History</a>
-      </div>
-    </nav>
-
-    <!-- Overlay on small screens -->
-    <div class="overlay hide-large animate-opacity" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
-
-    <!-- !PAGE CONTENT! -->
-    <div class="main" style="margin-left:300px;margin-top:43px;">
-
-      <!-- Header -->
-      <header class="container" style="padding-top:22px">
-        <h5><b><i class="fa fa-history"></i> Please use the filters to see your history.</b></h5>
-      </header>
-
-      <div class="row-padding margin-bottom" style="padding-bottom: 10px;">
-        <div class="col" style="background-color: #c1737eff; color: #fff;">
-          <div class="container padding-16" >
-            <form action="" target="_blank">
-              <div class="quarter">
-                <p class="large"><label><i class="fa fa-calendar-check-o"></i> Date (From)</label><label class="text-red">*</label></p>
-                <input id="minDate" class="w3-input w3-border input-box" type="date" placeholder="MM/DD/YYYY" name="minDate" style="padding-right: 32px;" required>
-              </div>
-              <div class="quarter">
-                <p class="large"><label><i class="fa fa-calendar-o"></i> Date (To)</label><label class="text-red">*</label></p>
-                <input id="maxDate" class="w3-input w3-border input-box" type="date" placeholder="MM/DD/YYYY" name="maxDate" style="padding-right: 32px;" required>
-              </div>
-              <div class="quarter">
-                <p class="large"><label><i class="fa fa-id-card medium"></i> Student ID</label></p>
-                <input id="userId" class="w3-input w3-border input-box" type="text" placeholder="ID" name="userId" maxlength="8" size="8" style="padding-right: 100px;" value="">
-              </div>
-              <div class="quarter">
-                <p class="large"><label><i class="fa fa-male"></i> Student Name</label></p>
-                <input id="userName" class="w3-input w3-border input-box" type="text" placeholder="Name" name="userName" style="padding-right: 32px;">
-              </div>
-              <button id="submitButton" type="button" class="btn col padding-large margin-top" style="background-color: #daa520ff;" onclick="onQueryClick();">Submit</button>
-            </form>
+    <!-- Right-Navigation Side -->
+    <div class="navbar order-3">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <!-- Settings Wheel -->
+          <div class="dropdown show">
+            <a class="dropdown-toggle" id="user-dropdown" data-toggle="dropdown">
+              <span class="fa fa-cog"></span>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right">
+              <a class="dropdown-item" href="#">Settings</a>
+              <a class="dropdown-item" href="login.html">Sign Out</a>
+            </div>
           </div>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="row" style="padding:0px">
+      <div class="card col-sm-5">
+        <h5><b><i class="fa fa-search" style="padding-top:20px;padding-bottom:10px;"></i> Search</b></h5><br>
+          <div class="form-group row">
+          <label for="example-text-input" class="col-sm-4 col-form-label">Student Name:</label>
+          <div class="col-sm-6">
+            <input class="form-control" type="text" placeholder="Name" id="name-input">
+          </div>
+          </div>
+          <div class="form-group row">
+          <label for="example-text-input" class="col-sm-4 col-form-label">Student ID:</label>
+          <div class="col-sm-6">
+            <input class="form-control" type="text" placeholder="ID Number" id="ID-input">
+          </div>
+          </div>
+          <div class="form-group row">
+          <label for="date-input" class="col-sm-4 col-form-label">From:</label>
+          <div class="col-sm-6">
+            <input class="form-control" type="date" id="min-date">
+            <input class="form-control" type="time" value="07:00" id="min-time">
+          </div>
+          </div>
+          <div class="form-group row">
+          <label for="date-input" class="col-sm-4 col-form-label">To:</label>
+          <div class="col-sm-6">
+            <input class="form-control" type="date" id="max-date">
+            <input class="form-control" type="time" value="15:25" id="max-time">
+          </div>
+          </div>
+          <input id="query-button" style='padding:0px' type="button" onclick="onQueryClick();" value="Submit">
+          <p></p>
         </div>
 
-        <header class="container" >
-          <h5><b><i class="fa fa-history" style="padding-top:20px;"></i> My History</b></h5>
-        </header>
-        <table id="result-table" class="table striped white">
-          <tr class="dark-gray">
-            <td>Name</td>
-            <td>In/Out</td>
-            <td>Left From</td>
-            <td>Destination</td>
-            <td>Time</td>
-          </tr>
-        </table>
-      </div>
+        <div class="col-sm-1"></div>
+
+        <div class="card col-sm-6">
+          <header class="container">
+            <h5><b><i class="fa fa-history" style="padding-top:20px;"></i> Historical Results</b></h5>
+          </header>
+          <table id="result-table" class="table striped white">
+            <tr class="dark-gray">
+              <td>Name</td>
+              <td>In/Out</td>
+              <td>Location</td>
+              <td>Time</td>
+            </tr>
+          </table>
+        </div>
     </div>
-  </body>
+  </div>
+
 </html>
