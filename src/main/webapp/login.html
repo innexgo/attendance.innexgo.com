@@ -21,9 +21,9 @@
         <div class="center-screen">
           <div class="login text-white">
             <h2 class=""> <img src="assets/innexo_logo.png"> Innexo </h2>
-            <input id="username" type="text" placeholder="username" name="user"><br>
-            <input id="password" type="password" placeholder="password" name="password"><br>
-            <input id="login-submission-button" type="button" onclick="loginattempt();" value="Login">
+            <input id="username" type="text" placeholder="Username" name="user"><br>
+            <input id="password" type="password" placeholder="Password" name="password"><br>
+            <input id="login-submission-button" style='padding:0px' type="button" onclick="loginattempt();" value="Login">
             <p id="error" style="color: red; text-align: center;"></p>
           </div>
         </div>
@@ -33,12 +33,20 @@
 </html>
 
 <script>
-var input = document.getElementById("password");
+var username = document.getElementById("username");
+var password = document.getElementById("password");
 
-input.addEventListener("keyup", function(event) {
+username.addEventListener("keyup", function(event) {
   if (event.keyCode === 13) {
     event.preventDefault();
     document.getElementById("login-submission-button").click();
   }
 }); 
+
+password.addEventListener("keyup", function(event) {
+  if (event.keyCode === 13) {
+    event.preventDefault();
+    document.getElementById("login-submission-button").click();
+  }
+});
 </script>

@@ -2,6 +2,14 @@
 
 //Checks for blank password or user id, or other obvious misconfigurations 
 function validateattempt(userName, password)  {
+  if(userName == "" || userName == null){
+    giveError("Please enter your username")
+    return false
+  }
+  if(password == "" || password == null){
+    giveError("Please enter your password")
+    return false
+  }
   // TODO do some validations, (no JS, SQL, invalid chars)
   return true;
 }
@@ -14,9 +22,8 @@ function loginattempt() {
   var userName = document.getElementById('username').value;
   var password = document.getElementById('password').value;
 
-  if(!validateattempt) {
-    // post error text and fail
-    giveError("Your entry is invalid or contains invalid characters.");
+  if(!validateattempt(userName, password)) {
+    // failed attempt.
     return;
   }
 
@@ -45,7 +52,7 @@ function loginattempt() {
     // failure function
     function(xhr) {
       console.log("authentication failure!");
-      giveError("Check your usename and password.");
+      giveError("Check your username and password.");
     }
   );
 }
