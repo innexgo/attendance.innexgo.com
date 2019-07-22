@@ -36,14 +36,19 @@
 var username = document.getElementById("username");
 var password = document.getElementById("password");
 
-username.addEventListener("keyup", function(event) {
+username.addEventListener("keydown", function(event) {
   if (event.keyCode === 13) {
     event.preventDefault();
-    document.getElementById("login-submission-button").click();
+    if(!isValidString(password)){
+      document.getElementById("login-submission-button").click();
+    }
+    else {
+      password.focus()
+    }
   }
 }); 
 
-password.addEventListener("keyup", function(event) {
+password.addEventListener("keydown", function(event) {
   if (event.keyCode === 13) {
     event.preventDefault();
     document.getElementById("login-submission-button").click();
