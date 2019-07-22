@@ -85,7 +85,7 @@
           <p></p>
         </div>
 
-        <div class="col-sm-1"></div>
+        <p style="width:5%"></p>
 
         <div class="card col-sm-6">
           <header class="container">
@@ -104,3 +104,36 @@
   </div>
 
 </html>
+
+<script type="text/javascript">
+  var minDateField = document.getElementById("min-date");
+  var maxDateField = document.getElementById("max-date");
+
+  var minTimeField = document.getElementById("min-time");
+  var maxTimeField = document.getElementById("max-time");
+
+  var calcDate = curDate();
+
+  minDateField.value = calcDate;
+  maxDateField.value = calcDate;
+
+  $("#min-date").change(function() {
+    checkValidRange("minField", minDateField, maxDateField, "date");
+  });
+
+  $("#max-date").change(function() {
+    checkValidRange("maxField", minDateField, maxDateField, "date");
+  });
+
+  $("#min-time").change(function() {
+    if(minDateField.value == maxDateField.value) {
+      checkValidRange("minField", minTimeField, maxTimeField, "time");
+    }
+  });
+
+  $("#max-time").change(function() {
+    if(minDateField.value == maxDateField.value) {
+      checkValidRange("maxField", minTimeField, maxTimeField, "time");
+    }
+  });
+</script>

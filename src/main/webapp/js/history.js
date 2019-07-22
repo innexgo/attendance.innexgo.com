@@ -1,48 +1,6 @@
 "use strict"
 
-var minDateField = document.getElementById("min-date");
-var maxDateField = document.getElementById("max-date");
-
-var minTimeField = document.getElementById("min-time");
-var maxTimeField = document.getElementById("max-time");
-
-function norm(num) {
-  if (String(num).length == 1) {
-    return ("0" + num);
-  }
-  return (num);
-}
-
-function curDate() {
-  n =  new Date();
-  y = n.getFullYear();
-  m = norm(n.getMonth() + 1);
-  d = norm(n.getDate());
-  return (y + "-" + m + "-" + d);
-}
-
-minDateField.value = curDate()
-maxDateField.value = curDate()
-
-$("#min-date").change(function() {
-  checkValidRange("minField", minDateField, maxDateField, "date");
-});
-
-$("#max-date").change(function() {
-  checkValidRange("maxField", minDateField, maxDateField, "date");
-});
-
-$("#min-time").change(function() {
-  if(minDateField.value == maxDateField.value) {
-    checkValidRange("minField", minTimeField, maxTimeField, "time");
-  }
-});
-
-$("#max-time").change(function() {
-  if(minDateField.value == maxDateField.value) {
-    checkValidRange("maxField", minTimeField, maxTimeField, "time");
-  }
-});
+var calcDate = curDate();
 
 function isFilled(value){
   return ((value !== "") && (value !== null));
@@ -61,22 +19,41 @@ function checkValidRange(which, minField, maxField, type){
           break;
       }
     }
-      if (type == "date"){
-        if (minField.value == maxField.value) {
-          checkValidRange("maxField", minTimeField, maxTimeField, "time");
-        }
-        }
+    if (type == "date"){
+      if ((maxField.value > calcDate) || (minField.value > calcDate)) {
+        maxField.value = calcDate;
+        minField.value = calcDate;
+      }
+      if (minField.value == maxField.value) {
+        checkValidRange("maxField", minTimeField, maxTimeField, "time");
       }
     }
+  }
+}
+
+function norm(num) {
+  if (String(num).length == 1) {
+    return ("0" + num);
+  }
+  return (num);
+}
+
+function curDate() {
+  var date =  new Date();
+  var yrs = date.getFullYear();
+  var mth = norm(date.getMonth() + 1);
+  var day = norm(date.getDate());
+  return (yrs + "-" + mth + "-" + day);
+}
 
 function onQueryClick() {
 var encounterId = undefined; //TODO add query box
-var userId = parseInt(document.getElementById('ID-input').value, 10);
-var userName = document.getElementById('name-input').value;
+var userId = parseInt(document.getElementById("ID-input").value, 10);
+var userName = document.getElementById("name-input").value;
 var locationId = undefined;//document.getElementById('locationId').value;
 var type = undefined;
-var minDate = new Date(minDateField.value+"T"+minTimeField.value+":00");
-var maxDate = new Date(maxDateField.value+"T"+maxTimeField.value+":00");
+var minDate = new Date(document.getElementById("min-date").value+"T"+document.getElementById("min-time").value+":00");
+var maxDate = new Date(document.getElementById("max-date").value+"T"+document.getElementById("max-time").value+":00");
 var count = 100;
 submitQuery(encounterId, userId, userName, locationId, type, minDate, maxDate, count);
 }
@@ -145,9 +122,6 @@ function submitQuery(encounterId, userId, userName, locationId, type, minDate, m
     }
   );
 }
-
-
-
 
 // make sure they're signed in every 10 seconds
 setInterval(function(){
