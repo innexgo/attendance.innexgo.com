@@ -9,7 +9,7 @@ window.onload = function() {
       event.preventDefault();
       onQueryClick();
     }
-  }); 
+  });
 
   ID.addEventListener("keydown", function(event) {
     if (event.keyCode === 13) {
@@ -21,12 +21,9 @@ window.onload = function() {
 
 var calcDate = moment().format("YYYY-MM-DD");
 
-function isFilled(value){
-  return ((value !== "") && (value !== null));
-}
 
 function checkValidRange(which, minField, maxField, type){
-  if (isFilled(minField.value) && isFilled(maxField.value)) {
+  if (!isBlank(minField.value) && !isBlank(maxField.value)) {
     if (minField.value > maxField.value) {
       switch (which) {
         case "minField":
@@ -58,15 +55,15 @@ function norm(num) {
 }
 
 function onQueryClick() {
-var encounterId = undefined; //TODO add query box
-var userId = parseInt(document.getElementById("ID-input").value, 10);
-var userName = document.getElementById("name-input").value;
-var locationId = undefined;//document.getElementById('locationId').value;
-var type = undefined;
-var minDate = new Date(document.getElementById("min-date").value+"T"+document.getElementById("min-time").value+":00");
-var maxDate = new Date(document.getElementById("max-date").value+"T"+document.getElementById("max-time").value+":00");
-var count = 100;
-submitQuery(encounterId, userId, userName, locationId, type, minDate, maxDate, count);
+  var encounterId = undefined; //TODO add query box
+  var userId = parseInt(document.getElementById("ID-input").value, 10);
+  var userName = document.getElementById("name-input").value;
+  var locationId = undefined;//document.getElementById('locationId').value;
+  var type = undefined;
+  var minDate = new Date(document.getElementById("min-date").value+"T"+document.getElementById("min-time").value+":00");
+  var maxDate = new Date(document.getElementById("max-date").value+"T"+document.getElementById("max-time").value+":00");
+  var count = 100;
+  submitQuery(encounterId, userId, userName, locationId, type, minDate, maxDate, count);
 }
 
 function normTimestamp(time){
@@ -76,29 +73,29 @@ function normTimestamp(time){
 function addQueryEntry(encounter) {
   var table = document.getElementById('result-table');
   var signInOrSignOutText = encounter.type == 'in' ?
-              '<i class="fa fa-sign-in text-red"></i> Signed-In' :
-              '<i class="fa fa-sign-out text-blue"></i> Signed-Out';
+    '<i class="fa fa-sign-in text-red"></i> Signed-In' :
+    '<i class="fa fa-sign-out text-blue"></i> Signed-Out';
   if(table.rows.length < 1) {
     clearResultTable();
   }
   table.insertRow(1).innerHTML=
-    
+
     ('<tr>' +
-    '<td>' + encounter.user.name+ '</td>' +
-    '<td>' + signInOrSignOutText + '</td>' +
-    '<td>' + encounter.location.name + '</td>' +
-    '<td>' + normTimestamp(encounter.time) + '</td>' +
-    '</tr>');
+      '<td>' + encounter.user.name+ '</td>' +
+      '<td>' + signInOrSignOutText + '</td>' +
+      '<td>' + encounter.location.name + '</td>' +
+      '<td>' + normTimestamp(encounter.time) + '</td>' +
+      '</tr>');
 }
 
 function clearResultTable() {
   document.getElementById('result-table').innerHTML =
-            '<tr class="dark-gray">'+
-              '<td>Name</td>'+
-              '<td>In/Out</td>'+
-              '<td>Location</td>'+
-              '<td>Time</td>'+
-            '</tr>';
+    '<tr class="dark-gray">'+
+    '<td>Name</td>'+
+    '<td>In/Out</td>'+
+    '<td>Location</td>'+
+    '<td>Time</td>'+
+    '</tr>';
 }
 
 //gets new data from server and inserts it at the beginning
@@ -106,13 +103,12 @@ function submitQuery(encounterId, userId, userName, locationId, type, minDate, m
   var url = thisUrl() + '/encounter/?apiKey=' + Cookies.getJSON('apiKey').key +
     (isNaN(encounterId) ?       '' : '&encounterId='+encounterId) +
     (isNaN(userId) ?            '' : '&userId='+userId) +
-    (!isValidString(userName) ? '' : '&userName='+userName) +
+    (!isBlank(userName) ?       '' : '&userName='+userName) +
     (isNaN(locationId) ?        '' : '&locationId='+locationId) +
-    (!isValidString(type) ?     '' : '&type='+encodeURIComponent(type)) +
+    (!isBlank(type) ?           '' : '&type='+encodeURIComponent(type)) +
     (isNaN(moment(minDate).unix()) ? '' : '&minDate='+moment(minDate).unix()) +
     (isNaN(moment(maxDate).unix()) ? '' : '&maxDate='+moment(maxDate).unix()) +
     (isNaN(count) ?             '' : '&count='+count);
-  console.log('making request to: ' + url);
   request(url,
     function(xhr){
       var encounters = JSON.parse(xhr.responseText);

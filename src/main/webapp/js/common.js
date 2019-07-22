@@ -8,14 +8,11 @@ function openSidebar() {
 function closeSidebar() {
   document.getElementById("sidebar").style.width = "0";
   document.getElementById("overlay").style.display = "none";
-} 
-
-function isWhitespace(str) {
-  return !(/\S/.test(str));
 }
 
-function isValidString(str) {
-  return typeof(str) !== 'undefined' && !isWhitespace(str);
+
+function isBlank(str) {
+  return str == null || /\S/.test(str);
 }
 
 function thisUrl(){

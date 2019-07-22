@@ -2,11 +2,11 @@
 
 //Checks for blank password or user id, or other obvious misconfigurations 
 function validateattempt(userName, password)  {
-  if(userName == "" || userName == null){
+  if(isBlank(userName)){
     giveError("Please enter your username")
     return false
   }
-  if(password == "" || password == null){
+  if(isBlank(password)){
     giveError("Please enter your password")
     return false
   }
@@ -66,14 +66,14 @@ window.onload = function() {
   username.addEventListener("keydown", function(event) {
     if (event.keyCode === 13) {
       event.preventDefault();
-      if(!isValidString(password)){
+      if(!isBlank(password)){
         loginattempt();
       }
       else {
         password.focus();
       }
     }
-  }); 
+  });
 
   password.addEventListener("keydown", function(event) {
     if (event.keyCode === 13) {
