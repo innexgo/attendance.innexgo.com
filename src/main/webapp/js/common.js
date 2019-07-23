@@ -46,8 +46,6 @@ function request(url, functionOnLoad, functionOnError) {
   xhr.send();
 }
 
-
-
 function ordinal_suffix_of(i) {
     var j = i % 10,
         k = i % 100;
@@ -64,9 +62,24 @@ function ordinal_suffix_of(i) {
 }
 
 
-// TODO later need to do request
-function lookupPeriod(date) {
-  return 1
+// TODO later need to actually set
+
+var period_dbg = 1;
+var periodStartTime_dbg = 1;
+function getPeriod(time) {
+  return period_dbg
 }
 
+// TODO debugging only
+function setPeriod(period) {
+  period_dbg = period;
+}
 
+function getPeriodStart(periodNum) {
+  return periodStartTime_dbg;
+}
+
+// TODO debugging only
+function setPeriodStart(periodTime) {
+  periodStartTime_dbg = periodTime;
+}

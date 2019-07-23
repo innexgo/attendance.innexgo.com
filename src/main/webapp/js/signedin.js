@@ -27,10 +27,39 @@ function ensureSignedIn() {
     }
   );
 }
+
+function userInfo() {
+  var apiKey = Cookies.getJSON('apiKey');
+  if(apiKey != null) {
+    var url = thisUrl() +
+      '/schedule/' +
+      '?userId=' + apiKey.user.id +
+      '&period=' + getPeriod(new Date()) +
+      '&apiKey=' + apiKey.key;
+    request(url,
+      //success
+      function(xhr) {
+        var schedule = JSON.parse(xhr.responseText);
+        if(schedule.length == 1) {
+          Cookies.set('schedule', schedule[0])
+        }
+      },
+      //failure
+      function(xhr) {
+        return;
+      }
+    );
+  }
+}
+
+
 // make sure they're signed in every 10 seconds
 setInterval(function(){
   ensureSignedIn();
+  userInfo();
 }, 10000);
 
 //first make sure we're signed in
 ensureSignedIn();
+//add nice cookies
+userInfo();

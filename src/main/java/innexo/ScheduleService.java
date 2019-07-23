@@ -53,16 +53,24 @@ public class ScheduleService {
   }
 
   public List<Schedule> query(
-      Integer scheduleId, Integer userId, Integer locationId, Integer period) {
+      Integer scheduleId,
+      Integer userId,
+      Integer managerId,
+      Integer locationId,
+      Integer period) {
     String sql =
-        "SELECT id, location_id, user_id, period FROM schedule WHERE 1=1 "
-            + (userId == null ? "" : " AND user_id = " + userId)
-            + (locationId == null ? "" : " AND location_id = " + locationId)
-            + (period == null ? "" : " AND period = " + period)
-            + ";";
+      "SELECT s.id, s.location_id, s.user_id, s.period FROM schedule s" +
+      (managerId == null ? "" : " JOIN user_relationship r ON s.user_id = r.managed_id") +
+      " WHERE 1=1 " +
+
+      (userId == null ?     "" : " AND s.user_id = " + userId) +
+      (managerId == null ?  "" : " AND r.manager_id = " + managerId) +
+      (locationId == null ? "" : " AND s.location_id = " + locationId) +
+      (period == null ?     "" : " AND s.period = " + period) +
+      ";";
     RowMapper<Schedule> rowMapper = new ScheduleRowMapper();
     return this.jdbcTemplate.query(sql, rowMapper);
-  }
+      }
 
   public boolean exists(int id) {
     String sql = "SELECT count(*) FROM schedule WHERE id=?";

@@ -447,6 +447,7 @@ public class InnexoApiController {
               .query(
                   parseInteger(allRequestParam.get("scheduleId")),
                   parseInteger(allRequestParam.get("userId")),
+                  parseInteger(allRequestParam.get("managerId")),
                   parseInteger(allRequestParam.get("locationId")),
                   parseInteger(allRequestParam.get("period")))
               .stream()
