@@ -131,8 +131,8 @@ function submitQuery(encounterId, userId, userName, locationId, type, minDate, m
     (isEmpty(userName) ?        '' : '&userName='+userName) +
     (isNaN(locationId) ?        '' : '&locationId='+locationId) +
     (isEmpty(type) ?            '' : '&type='+encodeURIComponent(type)) +
-    (isEmpty(minTime) ?         '' : '&minTime='+moment(minDate).unix()) +
-    (isEmpty(maxTime) ?         '' : '&maxTime='+moment(maxDate).unix()) +
+    (isEmpty(minDate) ?         '' : '&minTime='+moment(minDate).unix()) +
+    (isEmpty(maxDate) ?         '' : '&maxTime='+moment(maxDate).unix()) +
     (isNaN(count) ?             '' : '&count='+count);
   request(url,
     function(xhr){

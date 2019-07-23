@@ -1,16 +1,24 @@
 "use strict"
 
 function openSidebar() {
-  document.getElementById("sidebar").style.width = "250px";
+  document.getElementById("sidebar").style.width = "20%";
   document.getElementById("overlay").style.display = "block"
 }
 
 function closeSidebar() {
-  document.getElementById("sidebar").style.width = "0";
+  document.getElementById("sidebar").style.width = "0%";
   document.getElementById("overlay").style.display = "none";
 }
 
 $(document).ready(function(){
+
+  document.getElementById("sidebar").style.width = "20%";
+  document.getElementById("sidebar").style.zIndex = 1;
+  document.getElementById("sidebar").style.position = "fixed";
+  document.getElementById("sidebar").style.margin = "0px";
+  document.getElementById("overlay").style.display = "none";
+  $('.card-deck').css('margin-left', '20%');
+  $('.sidebar-button').remove()
   var apiKey = Cookies.getJSON('apiKey');
   var schedule = Cookies.getJSON('apiKey');
   var colour = "dark"
