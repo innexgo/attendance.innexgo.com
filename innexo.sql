@@ -29,7 +29,7 @@ CREATE TABLE `api_key` (
   `expiration_time` bigint(20) NOT NULL,
   `key_hash` char(64) COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -38,7 +38,7 @@ CREATE TABLE `api_key` (
 
 LOCK TABLES `api_key` WRITE;
 /*!40000 ALTER TABLE `api_key` DISABLE KEYS */;
-INSERT INTO `api_key` VALUES (1,1,1563893630,2147483647,'HJIlILRCJpDyf4C3MfSCoWjoImT_htTsRbj6JimIp9A=');
+INSERT INTO `api_key` VALUES (1,1,1563893630,2147483647,'HJIlILRCJpDyf4C3MfSCoWjoImT_htTsRbj6JimIp9A='),(2,2,1563895078,1563896877,'i8Um0vSyel83m8xI-JZ8MoC1CCwBbS6fA4wVyqPrPwM='),(3,2,1563897272,1563899072,'zKWfvCAUtx0DFCl76loUebpsuksfGS633rHSjYiM9Yg=');
 /*!40000 ALTER TABLE `api_key` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -56,7 +56,7 @@ CREATE TABLE `encounter` (
   `user_id` bigint(20) NOT NULL,
   `type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -65,6 +65,7 @@ CREATE TABLE `encounter` (
 
 LOCK TABLES `encounter` WRITE;
 /*!40000 ALTER TABLE `encounter` DISABLE KEYS */;
+INSERT INTO `encounter` VALUES (1,1563895820,1,30090004,'in');
 /*!40000 ALTER TABLE `encounter` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -177,4 +178,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-07-23  7:56:16
+-- Dump completed on 2019-07-23  8:55:28
