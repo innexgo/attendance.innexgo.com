@@ -12,7 +12,7 @@ function closeSidebar() {
 
 
 function isBlank(str) {
-  return str == null || /\s/.test(str);
+  return str == null || str=="";
 }
 
 function thisUrl(){
