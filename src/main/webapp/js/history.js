@@ -103,11 +103,11 @@ function submitQuery(encounterId, userId, userName, locationId, type, minDate, m
   var url = thisUrl() + '/encounter/?apiKey=' + Cookies.getJSON('apiKey').key +
     (isNaN(encounterId) ?       '' : '&encounterId='+encounterId) +
     (isNaN(userId) ?            '' : '&userId='+userId) +
-    (!isBlank(userName) ?       '' : '&userName='+userName) +
+    (isBlank(userName) ?        '' : '&userName='+userName) +
     (isNaN(locationId) ?        '' : '&locationId='+locationId) +
-    (!isBlank(type) ?           '' : '&type='+encodeURIComponent(type)) +
-    (isNaN(moment(minDate).unix()) ? '' : '&minDate='+moment(minDate).unix()) +
-    (isNaN(moment(maxDate).unix()) ? '' : '&maxDate='+moment(maxDate).unix()) +
+    (isBlank(type) ?            '' : '&type='+encodeURIComponent(type)) +
+                                     '&minTime='+moment(minDate).unix() +
+                                     '&maxTime='+moment(maxDate).unix() +
     (isNaN(count) ?             '' : '&count='+count);
   request(url,
     function(xhr){
