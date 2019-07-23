@@ -1,18 +1,24 @@
 "use strict"
 
-function openSidebar() {
-  document.getElementById("sidebar").style.width = "250px";
-  document.getElementById("overlay").style.display = "block"
-}
+$(document).ready(function(){
+  var colour = "dark";
+  var palette = document.createElement("link");
+  palette.rel = "stylesheet"
+  palette.type = "text/css"
+  $('.card-title').addClass('text-center')
+  switch(colour){
+    case "dark":
+      palette.href = "../css/palettes/dark.css";
+    break;
+    case "light":
+      palette.href = "../css/palettes/light.css";
+    break;
+  }
+  document.getElementsByTagName('head')[0].appendChild(palette);
+});
 
-function closeSidebar() {
-  document.getElementById("sidebar").style.width = "0";
-  document.getElementById("overlay").style.display = "none";
-}
-
-
-function isBlank(str) {
-  return str == null || str=="";
+function isEmpty(str) {
+    return (!str || 0 === str.length);
 }
 
 function thisUrl(){
@@ -91,3 +97,11 @@ function ordinal_suffix_of(i) {
 function lookupPeriod(date) {
   return 1
 }
+
+// make sure they're signed in every 10 seconds
+setInterval(function(){
+  ensureSignedIn();
+}, 10000);
+
+//first make sure we're signed in
+ensureSignedIn();

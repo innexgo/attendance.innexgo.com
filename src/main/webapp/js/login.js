@@ -2,11 +2,11 @@
 
 //Checks for blank password or user id, or other obvious misconfigurations 
 function validateattempt(userName, password)  {
-  if(isBlank(userName)){
+  if(isEmpty(userName)){
     giveError("Please enter your username")
     return false
   }
-  if(isBlank(password)){
+  if(isEmpty(password)){
     giveError("Please enter your password")
     return false
   }
@@ -66,7 +66,7 @@ window.onload = function() {
   username.addEventListener("keydown", function(event) {
     if (event.keyCode === 13) {
       event.preventDefault();
-      if(!isBlank(password)){
+      if(!isEmpty(password)){
         loginattempt();
       }
       else {

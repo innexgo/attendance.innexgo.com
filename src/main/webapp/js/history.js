@@ -19,11 +19,43 @@ window.onload = function() {
   });
 }
 
+$(document).ready(function(){
+  var minDateField = document.getElementById("min-date");
+  var maxDateField = document.getElementById("max-date");
+
+  var minTimeField = document.getElementById("min-time");
+  var maxTimeField = document.getElementById("max-time");
+
+  var calcDate = moment().format("YYYY-MM-DD");
+
+  minDateField.value = calcDate;
+  maxDateField.value = calcDate;
+    
+  $("#min-date").change(function() {
+    checkValidRange("minField", minDateField, maxDateField, "date");
+  });
+
+  $("#max-date").change(function() {
+    checkValidRange("maxField", minDateField, maxDateField, "date");
+  });
+
+  $("#min-time").change(function() {
+    if(minDateField.value == maxDateField.value) {
+      checkValidRange("minField", minTimeField, maxTimeField, "time");
+    }
+  });
+
+  $("#max-time").change(function() {
+    if(minDateField.value == maxDateField.value) {
+      checkValidRange("maxField", minTimeField, maxTimeField, "time");
+    }
+  });
+});
+
 var calcDate = moment().format("YYYY-MM-DD");
 
-
 function checkValidRange(which, minField, maxField, type){
-  if (!isBlank(minField.value) && !isBlank(maxField.value)) {
+  if (!isEmpty(minField.value) && !isEmpty(maxField.value)) {
     if (minField.value > maxField.value) {
       switch (which) {
         case "minField":
@@ -47,20 +79,13 @@ function checkValidRange(which, minField, maxField, type){
   }
 }
 
-function norm(num) {
-  if (String(num).length == 1) {
-    return ("0" + num);
-  }
-  return (num);
-}
-
 function onQueryClick() {
   var encounterId = undefined; //TODO add query box
   var userId = parseInt(document.getElementById("ID-input").value, 10);
   var userName = document.getElementById("name-input").value;
   var locationId = undefined;//document.getElementById('locationId').value;
   var type = undefined;
-  var minDate = new Date(document.getElementById("min-date").value+"T"+document.getElementById("min-time").value+":00");
+  var minDate = new Date(document.getElementById("min-date").value+"T"+document.getElementById("min-time").value+":00"); //TODO there's gotta be a better way then this
   var maxDate = new Date(document.getElementById("max-date").value+"T"+document.getElementById("max-time").value+":00");
   var count = 100;
   submitQuery(encounterId, userId, userName, locationId, type, minDate, maxDate, count);
@@ -90,7 +115,7 @@ function addQueryEntry(encounter) {
 
 function clearResultTable() {
   document.getElementById('result-table').innerHTML =
-    '<tr class="dark-gray">'+
+    '<tr class="table-header">'+
     '<td>Name</td>'+
     '<td>In/Out</td>'+
     '<td>Location</td>'+
@@ -103,11 +128,11 @@ function submitQuery(encounterId, userId, userName, locationId, type, minDate, m
   var url = thisUrl() + '/encounter/?apiKey=' + Cookies.getJSON('apiKey').key +
     (isNaN(encounterId) ?       '' : '&encounterId='+encounterId) +
     (isNaN(userId) ?            '' : '&userId='+userId) +
-    (!isBlank(userName) ?       '' : '&userName='+userName) +
+    (isEmpty(userName) ?        '' : '&userName='+userName) +
     (isNaN(locationId) ?        '' : '&locationId='+locationId) +
-    (!isBlank(type) ?           '' : '&type='+encodeURIComponent(type)) +
-    (isNaN(moment(minDate).unix()) ? '' : '&minDate='+moment(minDate).unix()) +
-    (isNaN(moment(maxDate).unix()) ? '' : '&maxDate='+moment(maxDate).unix()) +
+    (isEmpty(type) ?            '' : '&type='+encodeURIComponent(type)) +
+    (isEmpty(minTime) ?         '' : '&minTime='+moment(minDate).unix()) +
+    (isEmpty(maxTime) ?         '' : '&maxTime='+moment(maxDate).unix()) +
     (isNaN(count) ?             '' : '&count='+count);
   request(url,
     function(xhr){
@@ -123,9 +148,3 @@ function submitQuery(encounterId, userId, userName, locationId, type, minDate, m
     }
   );
 }
-
-// make sure they're signed in every 10 seconds
-setInterval(function(){
-  ensureSignedIn();
-}, 10000);
-ensureSignedIn();

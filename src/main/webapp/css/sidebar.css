@@ -1,0 +1,47 @@
+.sidebar-light {
+  background-color: #f2f1f2
+}
+
+#sidebar {
+  width: 0;
+  position: fixed;
+  z-index: 20; 
+  top: 0;
+  left: 0;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  transition: 0.35s;
+}
+
+.sidebar-button {
+  background-color: transparent;
+  color:white;
+}
+
+.sidebar-collapse {
+  height: 64px;
+}
+
+.sidebar-button:hover {
+  color:white;
+}
+
+#overlay {
+  position: fixed;
+  display: none;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0,0,0,0.5);
+  z-index: 5; 
+}
+
+.sidebar-bottom {
+  position:absolute;
+  bottom:0;
+  right:0;
+  left:0;
+}
