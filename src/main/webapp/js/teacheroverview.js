@@ -22,7 +22,7 @@ function updateCurrentStatus() {
         '?type=in' +
         '&locationId=' + schedule.location.id +
         '&managerId=' + schedule.user.id +
-        '&minDate=' + getPeriodStart(schedule.period)  + //TODO what if someone signs in early
+        '&minDate=' + getPeriodStart(schedule.period) + //TODO what if someone signs in early
         '&apiKey=' + apiKey.key;
       request(getEncounterListUrl,
         // success
