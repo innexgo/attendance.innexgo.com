@@ -53,7 +53,7 @@ function newEncounter(userId, locationId, type) {
 
 //submits encounter to server and then refreshes the screen
 function sendEncounter(id) {
-  var checkBox = document.getElementById('sign-in-or-out-checkbox');
+  var checkBox = document.getElementById('sign-in-or-out');
   newEncounter(id, 1, checkBox.checked ? 'out' : 'in');
   setTimeout(function() {
     updateFeed();
