@@ -18,6 +18,27 @@ function giveError(errormsg) {
   document.getElementById('error').innerHTML = errormsg;
 }
 
+function isBlank(str) {
+  return str == null || /\s/.test(str) || str == "";
+}
+
+function thisUrl(){
+  return window.location.protocol  + "//" + window.location.host;
+}
+
+function request(url, functionOnLoad, functionOnError) {
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', url, true);
+  xhr.onload = function() {
+    if (xhr.readyState == 4 && xhr.status == 200) {
+      functionOnLoad(xhr);
+    } else if(xhr.readyState == 4 && xhr.status != 200) {
+      functionOnError(xhr);
+    }
+  };
+  xhr.send();
+}
+
 function loginattempt() {
   var userName = document.getElementById('username').value;
   var password = document.getElementById('password').value;
