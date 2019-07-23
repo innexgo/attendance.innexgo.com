@@ -19,8 +19,40 @@ window.onload = function() {
   });
 }
 
-var calcDate = moment().format("YYYY-MM-DD");
+$(document).ready(function(){
+  var minDateField = document.getElementById("min-date");
+  var maxDateField = document.getElementById("max-date");
 
+  var minTimeField = document.getElementById("min-time");
+  var maxTimeField = document.getElementById("max-time");
+
+  var calcDate = moment().format("YYYY-MM-DD");
+
+  minDateField.value = calcDate;
+  maxDateField.value = calcDate;
+    
+  $("#min-date").change(function() {
+    checkValidRange("minField", minDateField, maxDateField, "date");
+  });
+
+  $("#max-date").change(function() {
+    checkValidRange("maxField", minDateField, maxDateField, "date");
+  });
+
+  $("#min-time").change(function() {
+    if(minDateField.value == maxDateField.value) {
+      checkValidRange("minField", minTimeField, maxTimeField, "time");
+    }
+  });
+
+  $("#max-time").change(function() {
+    if(minDateField.value == maxDateField.value) {
+      checkValidRange("maxField", minTimeField, maxTimeField, "time");
+    }
+  });
+});
+
+var calcDate = moment().format("YYYY-MM-DD");
 
 function checkValidRange(which, minField, maxField, type){
   if (!isBlank(minField.value) && !isBlank(maxField.value)) {
@@ -45,13 +77,6 @@ function checkValidRange(which, minField, maxField, type){
       }
     }
   }
-}
-
-function norm(num) {
-  if (String(num).length == 1) {
-    return ("0" + num);
-  }
-  return (num);
 }
 
 function onQueryClick() {

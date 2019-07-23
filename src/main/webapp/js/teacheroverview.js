@@ -78,7 +78,7 @@ function orangeGrayButton(element) {
 
 $(document).ready(function () {
   // display username
-  displayInfo();
+  //displayInfo();
   //get data at page load
   updateFeed();
   //Initialize scanner selector
@@ -90,7 +90,7 @@ $(document).ready(function () {
 
 //update every second
 setInterval(function(){
-  displayInfo();
+  //displayInfo();
   updateFeed();
 }, 1000);
 
