@@ -5,8 +5,8 @@ import java.sql.Timestamp;
 public class ApiKey {
   public int id;
   int userId;
-  public Timestamp creationTime;
-  public Timestamp expirationTime;
+  public int creationTime;
+  public int expirationTime;
 
   // not public
   String keyHash;

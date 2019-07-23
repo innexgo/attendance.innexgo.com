@@ -1,6 +1,5 @@
 package innexo;
 
-import java.sql.Timestamp;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -91,23 +90,15 @@ public class ApiKeyService {
   public List<ApiKey> query(
       Integer id,
       Integer userId,
-      Timestamp minCreationTime,
-      Timestamp maxCreationTime,
+      Integer minCreationTime,
+      Integer maxCreationTime,
       String keyHash) {
     String sql =
         "SELECT id, user_id, creation_time, expiration_time, key_hash FROM api_key WHERE 1=1"
             + (id == null ? "" : " AND id=" + id)
             + (userId == null ? "" : " AND user_id =" + userId)
-            + (minCreationTime == null
-                ? ""
-                : " AND creation_time >= FROM_UNIXTIME("
-                    + Utils.getEpochSecond(minCreationTime)
-                    + ")")
-            + (maxCreationTime == null
-                ? ""
-                : " AND creation_time <= FROM_UNIXTIME("
-                    + Utils.getEpochSecond(maxCreationTime)
-                    + ")")
+            + (minCreationTime == null ? "" : " AND creation_time >= " + minCreationTime)
+            + (maxCreationTime == null ? "" : " AND creation_time <= " + maxCreationTime)
             + (keyHash == null ? "" : " AND key_hash = \'" + Utils.escapeSQLString(keyHash) + "\'")
             + ";";
     RowMapper<ApiKey> rowMapper = new ApiKeyRowMapper();

@@ -10,8 +10,8 @@ public class ApiKeyRowMapper implements RowMapper<ApiKey> {
     ApiKey k = new ApiKey();
     k.id = row.getInt("id");
     k.userId = row.getInt("user_id");
-    k.creationTime = row.getTimestamp("creation_time");
-    k.expirationTime = row.getTimestamp("expiration_time");
+    k.creationTime = row.getInt("creation_time");
+    k.expirationTime = row.getInt("expiration_time");
     k.keyHash = row.getString("key_hash");
     return k;
   }

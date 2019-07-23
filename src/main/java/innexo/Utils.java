@@ -1,11 +1,12 @@
 package innexo;
 
 import java.security.MessageDigest;
-import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.Base64;
+import java.util.Random;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
 
 public class Utils {
 
@@ -39,8 +40,12 @@ public class Utils {
     return hash.equals(encodeApiKey(key));
   }
 
-  public static boolean isBlank(String str) {
-    return str == null || str.trim().equals("");
+  public static String generateKey() {
+    return Long.toHexString(new Random().nextLong());
+  }
+
+  public static boolean isEmpty(String str) {
+    return str == null || str=="";
   }
 
   public static String escapeSQLString(String str) {
@@ -49,13 +54,5 @@ public class Utils {
 
   public static String unEscapeSQLString(String str) {
     return str.replaceAll("\'\'", "\'");
-  }
-
-  public static int getEpochSecond(Timestamp t) {
-    return (int) t.toInstant().getEpochSecond();
-  }
-
-  public static Timestamp getTimestamp(int epochSecond) {
-    return Timestamp.from(Instant.ofEpochSecond(epochSecond));
   }
 }

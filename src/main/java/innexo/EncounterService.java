@@ -1,6 +1,5 @@
 package innexo;
 
-import java.sql.Timestamp;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -34,8 +33,8 @@ public class EncounterService {
       Integer userId,
       Integer locationId,
       Integer managerId,
-      Timestamp minTime,
-      Timestamp maxTime,
+      Integer minTime,
+      Integer maxTime,
       String userName,
       String type) {
     String sql =
@@ -46,12 +45,8 @@ public class EncounterService {
             + (locationId == null ? "" : " AND e.location_id=" + locationId)
             + (managerId == null ? "" : " AND r.manager_id=" + managerId)
             + (type == null ? "" : " AND e.type=\'" + Utils.escapeSQLString(type) + "\'")
-            + (minTime == null
-                ? ""
-                : " AND e.time >= FROM_UNIXTIME(" + Utils.getEpochSecond(minTime) + ")")
-            + (maxTime == null
-                ? ""
-                : " AND e.time <= FROM_UNIXTIME(" + Utils.getEpochSecond(maxTime) + ")")
+            + (minTime == null ? "" : " AND e.time >= " + minTime)
+            + (maxTime == null ? "" : " AND e.time <= " + maxTime)
             + " ORDER BY time DESC"
             + (count == null ? "" : " LIMIT " + count)
             + ";";

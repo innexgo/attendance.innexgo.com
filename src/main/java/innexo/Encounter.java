@@ -4,7 +4,7 @@ import java.sql.Timestamp;
 
 public class Encounter {
   public int id;
-  public Timestamp time;
+  public int time;
   int locationId;
   int userId;
   public String type;

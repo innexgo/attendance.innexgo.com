@@ -1,10 +1,10 @@
 package innexo;
 
-import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.time.Instant;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,10 +34,6 @@ public class InnexoApiController {
 
   Boolean parseBoolean(String str) {
     return str == null ? null : Boolean.parseBoolean(str);
-  }
-
-  Timestamp parseTimestamp(String str) {
-    return str == null ? null : Utils.getTimestamp(parseInteger(str));
   }
 
   User fillUser(User user) {
@@ -70,7 +66,7 @@ public class InnexoApiController {
     String hash = Utils.encodeApiKey(key);
     if (apiKeyService.existsByKeyHash(hash)) {
       ApiKey apiKey = apiKeyService.getByKeyHash(hash);
-      if (apiKey.expirationTime.getTime() > System.currentTimeMillis()) {
+      if (apiKey.expirationTime > Instant.now().getEpochSecond()) {
         if (userService.exists(apiKey.userId)) {
           return userService.getById(apiKey.userId);
         }
@@ -95,15 +91,15 @@ public class InnexoApiController {
       @RequestParam("locationId") Integer locationId,
       @RequestParam("type") String type,
       @RequestParam("apiKey") String apiKey) {
-    if (!Utils.isBlank(type)
+    if (!Utils.isEmpty(type)
         && locationService.exists(locationId)
         && userService.exists(userId)
-        && !Utils.isBlank(apiKey)
+        && !Utils.isEmpty(apiKey)
         && isTrusted(apiKey)) {
       Encounter encounter = new Encounter();
       encounter.locationId = locationId;
       encounter.userId = userId;
-      encounter.time = new Timestamp(System.currentTimeMillis());
+      encounter.time = (int)Instant.now().getEpochSecond();
       encounter.type = type;
       encounterService.add(encounter);
       // return the filled encounter on success
@@ -120,8 +116,8 @@ public class InnexoApiController {
       @RequestParam(value = "permissionLevel", defaultValue = "3") Integer permissionLevel,
       @RequestParam("password") String password,
       @RequestParam("apiKey") String apiKey) {
-    if (!Utils.isBlank(name)
-        && !Utils.isBlank(password)
+    if (!Utils.isEmpty(name)
+        && !Utils.isEmpty(password)
         && !userService.exists(userId)
         && isAdministrator(apiKey)) {
       User u = new User();
@@ -141,7 +137,7 @@ public class InnexoApiController {
       @RequestParam("locationName") String name,
       @RequestParam("locationTags") String tags,
       @RequestParam("apiKey") String apiKey) {
-    if (!Utils.isBlank(name) && !Utils.isBlank(tags) && isAdministrator(apiKey)) {
+    if (!Utils.isEmpty(name) && !Utils.isEmpty(tags) && isAdministrator(apiKey)) {
       Location location = new Location();
       location.name = name;
       location.tags = tags;
@@ -159,7 +155,7 @@ public class InnexoApiController {
       @RequestParam("expirationTime") Integer expirationTime,
       @RequestParam("password") String password) {
     // if they gave a username instead of a userId
-    if (userId == -1 && !Utils.isBlank(userName)) {
+    if (userId == -1 && !Utils.isEmpty(userName)) {
       // get list of users
       List<User> users = userService.getByName(userName);
       // if there's someone with the username
@@ -174,9 +170,9 @@ public class InnexoApiController {
       if (Utils.matchesPassword(password, u.passwordHash)) {
         ApiKey apiKey = new ApiKey();
         apiKey.userId = userId;
-        apiKey.creationTime = new Timestamp(System.currentTimeMillis());
-        apiKey.expirationTime = Utils.getTimestamp(expirationTime);
-        apiKey.key = UUID.randomUUID().toString(); // quick hacks, please replace
+        apiKey.creationTime = (int)Instant.now().getEpochSecond();
+        apiKey.expirationTime = expirationTime;
+        apiKey.key = Utils.generateKey();
         apiKey.keyHash = Utils.encodeApiKey(apiKey.key);
         apiKeyService.add(apiKey);
         return new ResponseEntity<>(fillApiKey(apiKey), HttpStatus.OK);
@@ -208,7 +204,7 @@ public class InnexoApiController {
       @RequestParam("userId") Integer userId,
       @RequestParam("managerId") Integer managerId,
       @RequestParam("apiKey") String apiKey) {
-    if (!Utils.isBlank(apiKey)
+    if (!Utils.isEmpty(apiKey)
         && isTrusted(apiKey)
         && userService.exists(userId)
         && userService.exists(managerId)) {
@@ -223,7 +219,7 @@ public class InnexoApiController {
       @RequestParam("userId") Integer userId,
       @RequestParam("managerId") Integer managerId,
       @RequestParam("apiKey") String apiKey) {
-    if (!Utils.isBlank(apiKey)
+    if (!Utils.isEmpty(apiKey)
         && isTrusted(apiKey)
         && userService.exists(userId)
         && userService.exists(managerId)
@@ -237,7 +233,7 @@ public class InnexoApiController {
   @RequestMapping("user/manager/")
   public ResponseEntity<?> viewUserManager(
       @RequestParam("userId") Integer userId, @RequestParam("apiKey") String apiKey) {
-    if (!Utils.isBlank(apiKey) && isTrusted(apiKey) && userService.exists(userId)) {
+    if (!Utils.isEmpty(apiKey) && isTrusted(apiKey) && userService.exists(userId)) {
       return new ResponseEntity<>(
           userService.managers(userId).stream().map(x -> fillUser(x)).collect(Collectors.toList()),
           HttpStatus.OK);
@@ -248,7 +244,7 @@ public class InnexoApiController {
   @RequestMapping("user/managedBy/")
   public ResponseEntity<?> viewUserManagedBy(
       @RequestParam("userId") Integer userId, @RequestParam("apiKey") String apiKey) {
-    if (!Utils.isBlank(apiKey) && isTrusted(apiKey) && userService.exists(userId)) {
+    if (!Utils.isEmpty(apiKey) && isTrusted(apiKey) && userService.exists(userId)) {
       return new ResponseEntity<>(
           userService.managedBy(userId).stream().map(x -> fillUser(x)).collect(Collectors.toList()),
           HttpStatus.OK);
@@ -263,10 +259,10 @@ public class InnexoApiController {
         && allRequestParam.containsKey("userId") // make sure user exists
         && userService.exists(parseInteger(allRequestParam.get("userId")))
         && (allRequestParam.containsKey("userName")
-            ? !Utils.isBlank(allRequestParam.get("userName"))
+            ? !Utils.isEmpty(allRequestParam.get("userName"))
             : true) // if they are trying to set a name, it cannot be blank
         && (allRequestParam.containsKey("password")
-            ? !Utils.isBlank(allRequestParam.get("password"))
+            ? !Utils.isEmpty(allRequestParam.get("password"))
             : true) // if they are trying to set a password, it cannot be blank
     ) {
       User user = userService.getById(parseInteger(allRequestParam.get("userId")));
@@ -298,8 +294,8 @@ public class InnexoApiController {
       @RequestParam("userId") Integer userId,
       @RequestParam("oldPassword") String oldPassword,
       @RequestParam("newPassword") String newPassword) {
-    if (!Utils.isBlank(oldPassword)
-        && !Utils.isBlank(newPassword)
+    if (!Utils.isEmpty(oldPassword)
+        && !Utils.isEmpty(newPassword)
         && userService.exists(userId)
         && Utils.matchesPassword(oldPassword, userService.getById(userId).passwordHash)) {
       User user = userService.getById(userId);
@@ -365,7 +361,7 @@ public class InnexoApiController {
   @RequestMapping("encounter/")
   public ResponseEntity<?> viewEncounter(@RequestParam Map<String, String> allRequestParam) {
     String apiKey = allRequestParam.get("apiKey");
-    if (!Utils.isBlank(apiKey) && isTrusted(apiKey)) {
+    if (!Utils.isEmpty(apiKey) && isTrusted(apiKey)) {
       List<Encounter> els =
           encounterService
               .query(
@@ -374,8 +370,8 @@ public class InnexoApiController {
                   parseInteger(allRequestParam.get("userId")),
                   parseInteger(allRequestParam.get("locationId")),
                   parseInteger(allRequestParam.get("managerId")),
-                  parseTimestamp(allRequestParam.get("minTime")),
-                  parseTimestamp(allRequestParam.get("maxTime")),
+                  parseInteger(allRequestParam.get("minTime")),
+                  parseInteger(allRequestParam.get("maxTime")),
                   allRequestParam.get("userName"),
                   allRequestParam.get("type"))
               .stream()
@@ -431,8 +427,8 @@ public class InnexoApiController {
               .query(
                   parseInteger(allRequestParam.get("apiKeyId")),
                   parseInteger(allRequestParam.get("userId")),
-                  parseTimestamp(allRequestParam.get("minCreationTime")),
-                  parseTimestamp(allRequestParam.get("maxCreationTime")),
+                  parseInteger(allRequestParam.get("minCreationTime")),
+                  parseInteger(allRequestParam.get("maxCreationTime")),
                   Utils.encodeApiKey(allRequestParam.get("apiKeyData")))
               .stream()
               .map(x -> fillApiKey(x))
