@@ -29,7 +29,7 @@ CREATE TABLE `api_key` (
   `expiration_time` bigint(20) NOT NULL,
   `key_hash` char(64) COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -38,7 +38,7 @@ CREATE TABLE `api_key` (
 
 LOCK TABLES `api_key` WRITE;
 /*!40000 ALTER TABLE `api_key` DISABLE KEYS */;
-INSERT INTO `api_key` VALUES (1,1,1563893630,2147483647,'HJIlILRCJpDyf4C3MfSCoWjoImT_htTsRbj6JimIp9A='),(2,2,1563895078,1563896877,'i8Um0vSyel83m8xI-JZ8MoC1CCwBbS6fA4wVyqPrPwM='),(3,2,1563897272,1563899072,'zKWfvCAUtx0DFCl76loUebpsuksfGS633rHSjYiM9Yg=');
+INSERT INTO `api_key` VALUES (1,1,1563893630,2147483647,'HJIlILRCJpDyf4C3MfSCoWjoImT_htTsRbj6JimIp9A='),(2,2,1563895078,1563896877,'i8Um0vSyel83m8xI-JZ8MoC1CCwBbS6fA4wVyqPrPwM='),(3,2,1563897272,1563899072,'zKWfvCAUtx0DFCl76loUebpsuksfGS633rHSjYiM9Yg='),(4,2,1563900457,1563902256,'knsa-AAQQVkl6lvEtZz_c34uxV42LCqmiWEvDkv8Pgs='),(5,2,1563903364,1563905163,'8I92baBB7ePd6BkgTumjUQt4zFq8wEfXtG5dIcX6et8=');
 /*!40000 ALTER TABLE `api_key` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -81,7 +81,7 @@ CREATE TABLE `location` (
   `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `tags` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -90,7 +90,7 @@ CREATE TABLE `location` (
 
 LOCK TABLES `location` WRITE;
 /*!40000 ALTER TABLE `location` DISABLE KEYS */;
-INSERT INTO `location` VALUES (1,'Main Office','restricted'),(2,'Room 503','classroom');
+INSERT INTO `location` VALUES (1,'Main Office','restricted'),(2,'Room 503','classroom'),(3,'Room 500','classroom'),(4,'Room 501','classroom'),(5,'Room 502','classroom');
 /*!40000 ALTER TABLE `location` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -107,7 +107,7 @@ CREATE TABLE `schedule` (
   `user_id` bigint(20) NOT NULL,
   `period` bigint(20) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -116,7 +116,7 @@ CREATE TABLE `schedule` (
 
 LOCK TABLES `schedule` WRITE;
 /*!40000 ALTER TABLE `schedule` DISABLE KEYS */;
-INSERT INTO `schedule` VALUES (1,1,1,1),(2,1,1,2),(3,2,2,2),(4,1,2,1);
+INSERT INTO `schedule` VALUES (1,2,2,1),(2,3,2,2),(3,3,3,1),(4,2,3,2),(5,2,30090001,1),(6,2,30090002,1),(7,3,30090003,1),(8,3,30090004,1),(11,3,30090001,2),(12,3,30090002,2),(13,2,30090003,2),(14,2,30090004,2);
 /*!40000 ALTER TABLE `schedule` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -165,7 +165,7 @@ CREATE TABLE `user_relationship` (
 
 LOCK TABLES `user_relationship` WRITE;
 /*!40000 ALTER TABLE `user_relationship` DISABLE KEYS */;
-INSERT INTO `user_relationship` VALUES (1,30090004),(2,30090004),(2,30090001),(2,30090002),(2,30090003),(1,30090001),(1,30090002),(1,30090003),(3,30090004);
+INSERT INTO `user_relationship` VALUES (2,30090001),(2,30090002),(2,30090003),(2,30090004),(1,30090004),(1,30090003),(1,30090002),(1,30090001);
 /*!40000 ALTER TABLE `user_relationship` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -178,4 +178,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-07-23  8:55:28
+-- Dump completed on 2019-07-23 11:45:38

@@ -14,9 +14,9 @@ $(document).ready(function(){
   var apiKey = Cookies.getJSON('apiKey');
   var colour = "dark"
   document.getElementById('info-username').innerHTML = ("Hi, "+apiKey.user.name);
-  
+
   $('.sidebar-link').addClass('list-group-item').addClass('list-group-item-action');
-  
+
   switch(colour){
 
     case "dark":
@@ -28,7 +28,7 @@ $(document).ready(function(){
 
       $('.navbar-palette').addClass('text-light').addClass('bg-dark');
     break;
-  
+
     case "light":
       var brandImage = document.createElement('img');
       brandImage.src = "../assets/innexo_logo_dark.png";
