@@ -2,116 +2,63 @@
 <html>
   <head>
     <!--Background Information -->
-    <title>User Settings</title>
+    <title>History</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
+    <!-- CSS References -->
     <link rel="stylesheet" href="vendor/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
     <link rel="stylesheet" href="vendor/fontawesome-free/css/all.min.css">
+    <link rel="stylesheet" href="vendor/bootstrap4-toggle/css/bootstrap4-toggle.min.css">
+    <link rel="stylesheet" href="vendor/bootstrap-sidebar/bootstrap-sidebar.css">
     <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/sidebar.css">
+    <link rel="stylesheet" href="css/settings.css">
+
+    <!-- JS References -->
     <script src="vendor/jquery/jquery.min.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.bundle.js"></script>
+    <script src="vendor/bootstrap4-toggle/js/bootstrap4-toggle.min.js"></script>
     <script src="vendor/scannerdetection/jquery.scannerdetection.min.js"></script>
     <script src="vendor/js-cookie/js.cookie.js"></script>
     <script src="vendor/moment/moment.min.js"></script>
     <script src="js/common.js"></script>
-    <script src="js/teacheroverview.js"></script>
+    <script src="js/sidebar.js"></script>
+    <script src="js/settings.js"></script>
   </head>
+  <body class="palette-level-one">
 
-  <body class="bg-light">
-    <!--Navigation-->
-    <nav class="navbar navbar-expand-md navbar-dark bg-dark text-light">
-      <div class="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
-        <ul class="navbar-nav mr-auto">
-          <li class="nav-item">
-            <a class="nav-link" href="teacheroverview.html">Home</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="overviewdecider.html">Overview</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="history.html">History</a>
-          </li>
-        </ul>
-      </div>
-      <div class="mx-auto order-0">
-        <a class="navbar-brand" href="index.html"><img src="assets/innexo_logo.png">   Innexo</a>
-      </div>
-      <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
-        <ul class="navbar-nav ml-auto">
-          <li class="nav-item active">
-            <div class="dropdown show">
-              <button class="btn btn-secondary dropdown-toggle" type="button" id="user-dropdown"data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <nobr class="fa fa-user"></nobr>
-                <nobr id="username-display"></nobr>
-              </button>
-              <div class="dropdown-menu" aria-labelledby="user-dropdown">
-                <a class="dropdown-item" href="#">My Account</a>
-                <a class="dropdown-item" href="login.html">Log Out</a>
-              </div>
-            </div>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="settings.html">Settings</a>
-          </li>
-        </ul>
+  <!-- Sidebar -->
+    <nav style="height:100%" id="sidebar" class="navbar-palette">
+      <nav class="navbar sidebar-collapse">
+        <button type="button" onclick="closeSidebar()" class="btn btn-icon sidebar-button">
+          <i class="fa fa-bars navbar-palette"></i>
+        </button>
+        <h6 style="margin:auto;" id="info-username">Teacher Name</h6>
+      </nav>
+      <a class="sidebar-link navbar-palette" id href="index.html">Home Page</a>
+      <a class="sidebar-link navbar-palette" href="overviewdecider.html">Overview</a>
+      <a class="sidebar-link navbar-palette" href="#">History</a>
+      <div class="sidebar-bottom">
+        <a class="sidebar-link navbar-palette" href="settings.html"><i class="fa fa-cog"></i> Settings</a>
+        <a class="sidebar-link navbar-palette" href="login.html"><i class="fa fa-sign-out-alt"></i> Sign out</a>
       </div>
     </nav>
+    <!-- Overlay -->
+    <div id="overlay" onclick="closeSidebar()"></div>
+    <!-- Top Navbar -->
+    <nav class="navbar navbar-expand-md navbar-dark navbar-palette">
+      <div class="order-0">
+        <button type="button" onclick="openSidebar()" class="btn btn-icon sidebar-button">
+          <i class="fa fa-bars navbar-palette"></i>
+        </button>
+      </div>
+      <!-- Center Logo -->
+      <div class="mx-auto order-0">
+        <a id="navbar-brand" class="navbar-brand navbar-palette" href="index.html"></a>
+      </div>
+    </nav>
+    <!-- Content -->
 
-
-      <!-- Settings -->
-			<div class="container">
-        <div class="card col-xl mx-12">
-          <div class="card-header">
-									<h1>	<center>Account Settings</center></h1>
-          </div>
-					<div class="card-body">	
-									<div class="row">
-									<div class="card col-sm-5" style="background-color: #c1737eff; color: white; margin: 4%">
-													<div class="card-header" style="background-color:white; color:gray; margin-top:8%"><center><h5 class="padding-small">Account Details</h5></center></div>
-<div class="card-body">
-      <form>
-        <div class="row-padding margin-bottom">
-          <div class="half">
-            <div class="container padding-16" >
-										<center><input id="user-id-textbox" class="left input-box round" type="password" style="font-size: 16px; padding-right: 5%; margin: 2%;" placeholder="Username"></br></center>
-										<center><input id="user-id-textbox" class="left input-box round" type="password" style="font-size: 16px; padding-right: 5%; margin: 2%;" placeholder="Email"></br></center>
-														<center><input id="user-id-textbox" class="left input-box round" type="password" style="font-size: 16px; padding-right: 5%; margin: 2%;" placeholder="Phone Number"></br></center>
-              
-							<div class="right">
-          <button id="submit-button" type='button' class="btn col padding-large text-white margin-top " onclick=" " style="background-color: #daa520ff; margin:2%">Submit!</button>
-              </div>
-            </div>
-          </div>
-          </div>
-      </form>
-				</div>
-        </div>
-
-									<div class="card col-sm-5" style="background-color: #c1737eff; color: white; margin:4%;">
-													<div class="card-header" style="background-color:white; color:gray; margin-top:8%"><center><h5 class="padding-small">Change Password</h5></center></div>
-<div class="card-body">
-      <form>
-        <div class="row-padding margin-bottom">
-          <div class="half">
-            <div class="container padding-16" >
-										<center><input id="user-id-textbox" class="left input-box round" type="password" style="font-size: 16px; padding-right: 5%; margin: 2%;" placeholder="Old Password"></br></center>
-						<center><input id="user-id-textbox" class="left input-box round" type="password" style="font-size: 16px; padding-right: 5%; margin: 2%;" placeholder="New Password"></br></center>
-		<center><input id="user-id-textbox" class="left input-box round" type="password" style="font-size: 16px; padding-right: 5%; margin: 2%;" placeholder="Confirm New Password"></br></center>
-              
-							<div class="right">
-          <button id="submit-button" type='button' class="btn col padding-large text-white margin-top " onclick=" " style="background-color: #daa520ff; margin:2%">Submit!</button>
-              </div>
-            </div>
-          </div>
-          </div>
-      </form>
-				</div>
-        </div>
-									</div>
-				</div>
-				</div>
-				</div>
   </body>
 </html>
