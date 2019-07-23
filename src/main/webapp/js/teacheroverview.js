@@ -87,20 +87,11 @@ $(document).ready(function () {
   });
 });
 
-
 //update every second
 setInterval(function(){
   //displayInfo();
   updateFeed();
 }, 1000);
-
-// make sure they're signed in every 10 seconds
-setInterval(function(){
-  ensureSignedIn();
-}, 10000);
-
-//first make sure we're signed in
-ensureSignedIn();
 
 //when enter key is pressed in the student ID field.
 window.onload = function() {

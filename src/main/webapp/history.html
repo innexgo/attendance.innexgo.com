@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="vendor/bootstrap4-toggle/css/bootstrap4-toggle.min.css">
     <link rel="stylesheet" href="vendor/bootstrap-sidebar/bootstrap-sidebar.css">
     <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/sidebar.css">
     <link rel="stylesheet" href="css/history.css">
 
     <!-- JS References -->
@@ -25,89 +26,92 @@
     <script src="js/sidebar.js"></script>
     <script src="js/history.js"></script>
   </head>
-  <body>
+  <body class="palette-level-one">
 
-  <!--Sidebar-->
-  <nav style="height:100%" id="sidebar" class="sidepanel bg-dark text-light">
-    <nav class="navbar sidebarCollapse">
-      <button type="button" onclick="closeSidebar()" class="btn btn-icon sidebarButton">
-        <i class="fa fa-bars"></i>
-      </button>
-      <h6 style="margin:auto;" id="info-username">Teacher Name</h6>
+  <!-- Sidebar -->
+    <nav style="height:100%" id="sidebar" class="navbar-palette">
+      <nav class="navbar sidebar-collapse">
+        <button type="button" onclick="closeSidebar()" class="btn btn-icon sidebar-button">
+          <i class="fa fa-bars navbar-palette"></i>
+        </button>
+        <h6 style="margin:auto;" id="info-username">Teacher Name</h6>
+      </nav>
+      <a class="sidebar-link navbar-palette" id href="index.html">Home Page</a>
+      <a class="sidebar-link navbar-palette" href="overviewdecider.html">Overview</a>
+      <a class="sidebar-link navbar-palette" href="#">History</a>
+      <div class="sidebar-bottom">
+        <a class="sidebar-link navbar-palette" href="settings.html"><i class="fa fa-cog"></i> Settings</a>
+        <a class="sidebar-link navbar-palette" href="login.html"><i class="fa fa-sign-out-alt"></i> Sign out</a>
+      </div>
     </nav>
-    <a class="sidebar-link" id href="index.html">Home Page</a>
-    <a class="sidebar-link" href="overviewdecider.html">Overview</a>
-    <a class="sidebar-link" href="history.html">History</a>
-    <div class="sidebarBottom">
-      <a class="sidebar-link" href="settings.html"><i class="fa fa-cog"></i> Settings</a>
-      <a class="sidebar-link" href="login.html"><i class="fa fa-sign-out-alt"></i> Sign out</a>
-    </div>
-  </nav>
-  <!--Overlay-->
-  <div id="overlay" onclick="closeSidebar()"></div>
-  <!--Top Navbar-->
-  <nav class="navbar navbar-expand-md navbar-dark bg-dark text-light">
-    <div class="order-0">
-      <button type="button" onclick="openSidebar()" class="btn btn-icon sidebarButton">
-        <i class="fa fa-bars"></i>
-      </button>
-    </div>
-    <!--Center Logo-->
-    <div class="mx-auto order-1">
-      <a class="navbar-brand" href="index.html"><img src="assets/innexo_logo.png"> Innexo</a>
-    </div>
-  </nav>
-
-  <div class="container">
-    <div class="row" style="padding:0px">
-      <div class="card col-sm-5">
-        <h5><b><i class="fa fa-search" style="padding-top:20px;padding-bottom:10px;"></i> Search</b></h5><br>
+    <!-- Overlay -->
+    <div id="overlay" onclick="closeSidebar()"></div>
+    <!-- Top Navbar -->
+    <nav class="navbar navbar-expand-md navbar-dark navbar-palette">
+      <div class="order-0">
+        <button type="button" onclick="openSidebar()" class="btn btn-icon sidebar-button">
+          <i class="fa fa-bars navbar-palette"></i>
+        </button>
+      </div>
+      <!-- Center Logo -->
+      <div class="mx-auto order-0">
+        <a id="navbar-brand" class="navbar-brand navbar-palette" href="index.html"></a>
+      </div>
+    </nav>
+    <!-- Content -->
+    <div class="container">
+      <div style="margin:1em" class="card-deck palette-level-one" style="padding:0px;">
+        <div class="card col-sm-5 palette-level-two">
+          <h5> 
+            <b><i class="fa fa-search" style="padding-top:20px;padding-bottom:10px;"></i> Search</b>
+          </h5>
           <div class="form-group row">
-          <label for="example-text-input" class="col-sm-4 col-form-label">Student Name:</label>
-          <div class="col-sm-6">
-            <input class="form-control" type="text" placeholder="Name" id="name-input">
-          </div>
+            <label for="text-input" class="col-sm-4 col-form-label">Student Name:</label>
+            <div class="col-sm-6">
+              <input class="form-control" type="text" placeholder="Name" id="name-input">
+            </div>
           </div>
           <div class="form-group row">
-          <label for="example-text-input" class="col-sm-4 col-form-label">Student ID:</label>
-          <div class="col-sm-6">
-            <input class="form-control" type="text" placeholder="ID Number" id="ID-input">
-          </div>
-          </div>
-          <div class="form-group row">
-          <label for="date-input" class="col-sm-4 col-form-label">From:</label>
-          <div class="col-sm-6">
-            <input style="margin-bottom: 5px" class="form-control" type="date" id="min-date">
-            <input class="form-control" type="time" value="07:00" id="min-time">
-          </div>
+            <label for="text-input" class="col-sm-4 col-form-label">Student ID:</label>
+            <div class="col-sm-6">
+              <input class="form-control" type="text" placeholder="ID Number" id="ID-input">
+            </div>
           </div>
           <div class="form-group row">
-          <label for="date-input" class="col-sm-4 col-form-label">To:</label>
-          <div class="col-sm-6">
-            <input style="margin-bottom: 5px" class="form-control" type="date" id="max-date">
-            <input class="form-control" type="time" value="15:25" id="max-time">
+            <label for="date-input" class="col-sm-4 col-form-label">From:</label>
+            <div class="col-sm-6">
+              <input style="margin-bottom: 5px" class="form-control" type="date" id="min-date">
+              <input class="form-control" type="time" value="07:00" id="min-time">
+            </div>
           </div>
+          <div class="form-group row">
+            <label for="date-input" class="col-sm-4 col-form-label">To:</label>
+            <div class="col-sm-6">
+              <input style="margin-bottom: 5px" class="form-control" type="date" id="max-date">
+              <input class="form-control" type="time" value="15:25" id="max-time">
+            </div>
           </div>
-          <input id="query-button" style='padding:0px' type="button" onclick="onQueryClick();" value="Submit">
-          <p></p>
+            <input id="query-button" class="input-button btn" style='margin-bottom:1em' type="button" onclick="onQueryClick();" value="Submit">
         </div>
 
-        <p style="width:5%"></p>
-
-        <div class="card col-sm-6">
+        <div class="card col-sm-6 palette-level-two">
           <header class="container">
-            <h5><b><i class="fa fa-history" style="padding-top:20px;"></i> Historical Results</b></h5>
+            <h5 class="card-title">
+              <b><i class="fa fa-history" style="padding-top:20px;"></i> Historical Results</b>
+            </h5>
           </header>
-          <table id="result-table" class="table striped white">
-            <tr class="dark-gray">
+          <table id="result-table" class="table" style="overflow-y: auto;">
+          <thead>
+            <tr class="table-header">
               <td>Name</td>
               <td>In/Out</td>
               <td>Location</td>
               <td>Time</td>
             </tr>
+          </thead>
           </table>
         </div>
+      </div>
     </div>
-  </div>
-</body>
+  </body>
 </html>

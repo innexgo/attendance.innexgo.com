@@ -12,15 +12,32 @@ function closeSidebar() {
 
 $(document).ready(function(){
   var apiKey = Cookies.getJSON('apiKey');
+  var colour = "dark"
   document.getElementById('info-username').innerHTML = ("Hi, "+apiKey.user.name);
   
   $('.sidebar-link').addClass('list-group-item').addClass('list-group-item-action');
+  
+  switch(colour){
 
-  if (true){
-    $('.sidebar-link').addClass('bg-dark').addClass('text-light');
-  }
-  else {
-    
+    case "dark":
+      var brandImage = document.createElement('img');
+      brandImage.src = "../assets/innexo_logo.png";
+
+      document.getElementById('navbar-brand').appendChild(brandImage);
+      document.getElementById('navbar-brand').append(" Innexo");
+
+      $('.navbar-palette').addClass('text-light').addClass('bg-dark');
+    break;
+  
+    case "light":
+      var brandImage = document.createElement('img');
+      brandImage.src = "../assets/innexo_logo_dark.png";
+
+      document.getElementById('navbar-brand').appendChild(brandImage);
+      document.getElementById('navbar-brand').append(" Innexo");
+
+      $('.navbar-palette').addClass('text-dark').addClass('sidebar-light')
+    break;
   }
 });
 

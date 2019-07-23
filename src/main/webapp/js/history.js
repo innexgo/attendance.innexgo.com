@@ -115,7 +115,7 @@ function addQueryEntry(encounter) {
 
 function clearResultTable() {
   document.getElementById('result-table').innerHTML =
-    '<tr class="dark-gray">'+
+    '<tr class="table-header">'+
     '<td>Name</td>'+
     '<td>In/Out</td>'+
     '<td>Location</td>'+
@@ -148,9 +148,3 @@ function submitQuery(encounterId, userId, userName, locationId, type, minDate, m
     }
   );
 }
-
-// make sure they're signed in every 10 seconds
-setInterval(function(){
-  ensureSignedIn();
-}, 10000);
-ensureSignedIn();

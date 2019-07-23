@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="vendor/bootstrap4-toggle/css/bootstrap4-toggle.min.css">
     <link rel="stylesheet" href="vendor/bootstrap-sidebar/bootstrap-sidebar.css">
     <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/sidebar.css">
     <link rel="stylesheet" href="css/teacheroverview.css">
 
     <!-- JS References -->
@@ -26,87 +27,91 @@
     <script src="js/teacheroverview.js"></script>
   </head>
 
-  <body>
-    <!--Sidebar-->
-    <nav style="height:100%" id="sidebar" class="sidepanel bg-dark text-light">
-      <nav class="navbar sidebarCollapse">
-        <button type="button" onclick="closeSidebar()" class="btn btn-icon sidebarButton">
-          <i class="fa fa-bars"></i>
+  <body class="palette-level-one">
+
+  <!-- Sidebar -->
+    <nav style="height:100%" id="sidebar" class="navbar-palette">
+      <nav class="navbar sidebar-collapse">
+        <button type="button" onclick="closeSidebar()" class="btn btn-icon sidebar-button">
+          <i class="fa fa-bars navbar-palette"></i>
         </button>
         <h6 style="margin:auto;" id="info-username">Teacher Name</h6>
       </nav>
-      <a class="sidebar-link" id href="index.html">Home Page</a>
-      <a class="sidebar-link" href="overviewdecider.html">Overview</a>
-      <a class="sidebar-link" href="history.html">History</a>
-      <div class="sidebarBottom">
-        <a class="sidebar-link" href="settings.html"><i class="fa fa-cog"></i> Settings</a>
-        <a class="sidebar-link" href="login.html"><i class="fa fa-sign-out-alt"></i> Sign out</a>
+      <a class="sidebar-link navbar-palette" id href="index.html">Home Page</a>
+      <a class="sidebar-link navbar-palette" href="#">Overview</a>
+      <a class="sidebar-link navbar-palette" href="history.html">History</a>
+      <div class="sidebar-bottom">
+        <a class="sidebar-link navbar-palette" href="settings.html"><i class="fa fa-cog"></i> Settings</a>
+        <a class="sidebar-link navbar-palette" href="login.html"><i class="fa fa-sign-out-alt"></i> Sign out</a>
       </div>
     </nav>
-    <!--Overlay-->
+    <!-- Overlay -->
     <div id="overlay" onclick="closeSidebar()"></div>
-    <!--Top Navbar-->
-    <nav class="navbar navbar-expand-md navbar-dark bg-dark text-light">
+    <!-- Top Navbar -->
+    <nav class="navbar navbar-expand-md navbar-dark navbar-palette">
       <div class="order-0">
-        <button type="button" onclick="openSidebar()" class="btn btn-icon sidebarButton">
-          <i class="fa fa-bars"></i>
+        <button type="button" onclick="openSidebar()" class="btn btn-icon sidebar-button">
+          <i class="fa fa-bars navbar-palette"></i>
         </button>
       </div>
-      <!--Center Logo-->
-      <div class="mx-auto order-1">
-        <a class="navbar-brand" href="index.html"><img src="assets/innexo_logo.png"> Innexo</a>
+      <!-- Center Logo -->
+      <div class="mx-auto order-0">
+        <a id="navbar-brand" class="navbar-brand navbar-palette" href="index.html"></a>
       </div>
     </nav>
+    <!-- Content -->
 
-        <!-- Center Screen -->
-        <div class="container-fluid">
-          <div class="row mt-4 d-flex justify-content-center">
+    <!-- Center Screen -->
+    <div class="container-fluid">
+      <div class="row" style="margin:1em">
 
-            <!-- Recent Activity -->
-            <div class="card col-sm mx-3">
-              <div class="card-header text-center">Recent Activity</div>
-              <div class="card-body">
-                <p class="card-text">Most recent activity from your students</p>
-                <div class="table-height-standard">
-                  <table class="table striped white">
-                    <thead>
-                      <tr class="bg-dark text-light">
-                        <td>Name</td>
-                        <td>Action</td>
-                        <td>Time</td>
-                        <td>Location</td>
-                      </tr>
-                    </thead>
-                    <tbody class="table-height-standard" id="recent-activity-table"></tbody>
-                  </table>
-                </div>
-              </div>
+        <!-- Recent Activity -->
+        <div class="card col-sm mx-3 palette-level-two">
+          <div class="card-body">
+            <div>
+              <h5 class="card-title text-center">Recent Activity</h5>
             </div>
-
-            <!-- Manual Attendance -->
-            <div class="card card-centre col-sm mx-3">
-              <div class="card-header text-center">Take Attendance</div>
-              <div class="card-body">
-                <p class="card-title">Sign in students manually.</p>
-                <div class="input-group mb-3">
-                  <div class="input-group-prepend">
-                    <span class="input-group-text bg-innexocrimson" id="inputGroup-sizing-default">
-                      Student ID
-                    </span>
-                  </div>
-                  <input id="user-id-textbox" type="text" class="form-control" aria-label="Default">
-                </div>
-                <button id="submit-button" type="button" class="btn mt-3 btn-block btn-warning"
-                                                         onclick="submitEncounter()">
-                  Submit
-                </button>
-                <hr>
-                <p class="card-text">
-                  Sign in students with the help of a USB scanner attached to this computer.
-                </p>
-                <input id="direction" type="checkbox" checked data-toggle="toggle" data-on="Scanner Signs In" data-off="Scanner Signs Out" data-onstyle="primary" data-offstyle="danger">
-              </div>
+            <p class="card-text">Most recent activity from your students</p>
+            <div class="table-height-standard">
+              <table class="table striped white">
+                <thead>
+                  <tr class="table-header">
+                    <td>Name</td>
+                    <td>Action</td>
+                    <td>Time</td>
+                    <td>Location</td>
+                  </tr>
+                </thead>
+                <tbody class="table-height-standard" id="recent-activity-table"></tbody>
+              </table>
             </div>
+          </div>
+        </div>
+
+        <!-- Manual Attendance -->
+        <div class="card card-centre col-sm mx-3 palette-level-two">
+          <div class="card-body">
+            <div>
+              <h5 class="card-title text-center">Take Attendance</h5>
+            </div>
+            <p class="card-text">Sign in students manually.</p>
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text bg-innexocrimson" id="inputGroup-sizing-default">
+                  Student ID
+                </span>
+              </div>
+              <input id="user-id-textbox" type="text" class="form-control" aria-label="Default">
+            </div>
+            <button id="submit-button" type="input-button" class="btn mt-3 btn-block btn-warning"
+                                                      onclick="submitEncounter()">
+              Submit
+            </button>
+            <hr>
+            <p class="card-text">
+              Sign in students with the help of a USB scanner attached to this computer.
+            </p>
+            <input id="direction" type="checkbox" checked data-toggle="toggle" data-on="Scanner Signs In" data-off="Scanner Signs Out" data-onstyle="primary" data-offstyle="danger">
           </div>
         </div>
       </div>

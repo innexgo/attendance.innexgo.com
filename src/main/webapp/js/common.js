@@ -1,5 +1,26 @@
 "use strict"
 
+$(document).ready(function(){
+  var colour = "dark";
+  var palette = document.createElement("link");
+  palette.rel = "stylesheet"
+  palette.type = "text/css"
+
+  $('.card-title').addClass('text-center')
+    
+  switch(colour){
+
+    case "dark":
+      palette.href = "../css/palettes/dark.css";
+    break;
+
+    case "light":
+      palette.href = "../css/palettes/light.css";
+    break;
+  }
+  document.getElementsByTagName('head')[0].appendChild(palette);
+});
+
 function isBlank(str) {
   return str == null || /\s/.test(str) || str == "";
 }
@@ -80,3 +101,11 @@ function ordinal_suffix_of(i) {
 function lookupPeriod(date) {
   return 1
 }
+
+// make sure they're signed in every 10 seconds
+setInterval(function(){
+  ensureSignedIn();
+}, 10000);
+
+//first make sure we're signed in
+ensureSignedIn();
