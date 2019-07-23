@@ -60,8 +60,8 @@ public class ScheduleService {
       Integer period) {
     String sql =
       "SELECT s.id, s.location_id, s.user_id, s.period FROM schedule s" +
-      (managerId == null ? "" : "JOIN user_relationship r ON s.user_id = r.managed_id") +
-      "WHERE 1=1 " +
+      (managerId == null ? "" : " JOIN user_relationship r ON s.user_id = r.managed_id") +
+      " WHERE 1=1 " +
 
       (userId == null ?     "" : " AND s.user_id = " + userId) +
       (managerId == null ?  "" : " AND r.manager_id = " + managerId) +

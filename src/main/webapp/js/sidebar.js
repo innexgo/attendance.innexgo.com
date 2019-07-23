@@ -12,6 +12,7 @@ function closeSidebar() {
 
 $(document).ready(function(){
   var apiKey = Cookies.getJSON('apiKey');
+  var schedule = Cookies.getJSON('apiKey');
   var colour = "dark"
   document.getElementById('info-username').innerHTML = ("Hi, "+apiKey.user.name);
 
