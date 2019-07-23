@@ -1,10 +1,9 @@
 package innexo;
 
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
-import java.time.Instant;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,7 +60,6 @@ public class InnexoApiController {
     return schedule;
   }
 
-
   User getUserIfValid(String key) {
     String hash = Utils.encodeApiKey(key);
     if (apiKeyService.existsByKeyHash(hash)) {
@@ -99,7 +97,7 @@ public class InnexoApiController {
       Encounter encounter = new Encounter();
       encounter.locationId = locationId;
       encounter.userId = userId;
-      encounter.time = (int)Instant.now().getEpochSecond();
+      encounter.time = (int) Instant.now().getEpochSecond();
       encounter.type = type;
       encounterService.add(encounter);
       // return the filled encounter on success
@@ -170,7 +168,7 @@ public class InnexoApiController {
       if (Utils.matchesPassword(password, u.passwordHash)) {
         ApiKey apiKey = new ApiKey();
         apiKey.userId = userId;
-        apiKey.creationTime = (int)Instant.now().getEpochSecond();
+        apiKey.creationTime = (int) Instant.now().getEpochSecond();
         apiKey.expirationTime = expirationTime;
         apiKey.key = Utils.generateKey();
         apiKey.keyHash = Utils.encodeApiKey(apiKey.key);
@@ -188,7 +186,9 @@ public class InnexoApiController {
       @RequestParam("locationId") Integer locationId,
       @RequestParam("period") Integer period,
       @RequestParam("apiKey") String apiKey) {
-    if(userService.exists(userId) && locationService.exists(locationId) && isAdministrator(apiKey)) {
+    if (userService.exists(userId)
+        && locationService.exists(locationId)
+        && isAdministrator(apiKey)) {
       Schedule schedule = new Schedule();
       schedule.userId = userId;
       schedule.locationId = locationId;

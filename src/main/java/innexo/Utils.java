@@ -1,12 +1,10 @@
 package innexo;
 
 import java.security.MessageDigest;
-import java.time.Instant;
 import java.util.Base64;
 import java.util.Random;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
 
 public class Utils {
 
@@ -45,7 +43,7 @@ public class Utils {
   }
 
   public static boolean isEmpty(String str) {
-    return str == null || str=="";
+    return str == null || str == "";
   }
 
   public static String escapeSQLString(String str) {

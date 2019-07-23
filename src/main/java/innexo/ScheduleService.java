@@ -33,13 +33,16 @@ public class ScheduleService {
 
     // Fetch schedule id
     sql = "SELECT id FROM schedule WHERE user_id=? AND location_id=? AND period=?";
-    int id = jdbcTemplate.queryForObject(sql, Integer.class, schedule.userId, schedule.locationId, schedule.period);
+    int id =
+        jdbcTemplate.queryForObject(
+            sql, Integer.class, schedule.userId, schedule.locationId, schedule.period);
     schedule.id = id;
   }
 
   public void update(Schedule schedule) {
     String sql = "UPDATE schedule SET id=?, user_id=?, location_id=?, period=? WHERE id=?";
-    jdbcTemplate.update(sql, schedule.id, schedule.userId, schedule.locationId, schedule.period, schedule.id);
+    jdbcTemplate.update(
+        sql, schedule.id, schedule.userId, schedule.locationId, schedule.period, schedule.id);
   }
 
   public Schedule delete(int id) {
@@ -49,7 +52,8 @@ public class ScheduleService {
     return schedule;
   }
 
-  public List<Schedule> query(Integer scheduleId, Integer userId, Integer locationId, Integer period) {
+  public List<Schedule> query(
+      Integer scheduleId, Integer userId, Integer locationId, Integer period) {
     String sql =
         "SELECT id, location_id, user_id, period FROM schedule WHERE 1=1 "
             + (userId == null ? "" : " AND user_id = " + userId)

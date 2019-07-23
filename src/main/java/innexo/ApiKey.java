@@ -1,6 +1,5 @@
 package innexo;
 
-import java.sql.Timestamp;
 
 public class ApiKey {
   public int id;
