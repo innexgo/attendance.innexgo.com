@@ -1,22 +1,5 @@
 "use strict"
 
-$(document).ready(function(){
-  var colour = "dark";
-  var palette = document.createElement("link");
-  palette.rel = "stylesheet"
-  palette.type = "text/css"
-  $('.card-title').addClass('text-center')
-  switch(colour){
-    case "dark":
-      palette.href = "../css/palettes/dark.css";
-    break;
-    case "light":
-      palette.href = "../css/palettes/light.css";
-    break;
-  }
-  document.getElementsByTagName('head')[0].appendChild(palette);
-});
-
 function isEmpty(str) {
     return (!str || 0 === str.length);
 }
@@ -47,35 +30,7 @@ function request(url, functionOnLoad, functionOnError) {
   xhr.send();
 }
 
-// moves to login page on cookie expiration
-function ensureSignedIn() {
-  // check if sign in cookie exists and is logged in
-  var apiKey = Cookies.getJSON('apiKey');
-  if(apiKey == null) {
-    window.location.replace(thisUrl() + '/login.html');
-    return;
-  }
 
-  // now check if the cookie is expired
-  if(apiKey.expirationTime < moment().unix()) {
-    alert("Session has expired");
-    window.location.replace(thisUrl() + '/login.html');
-    return;
-  }
-
-  // make test request, on failure delete the cookies
-  // usually means something went wrong with server
-  var url = thisUrl() + '/validateTrusted/?apiKey=' + apiKey.key;
-  request(url,
-    // on success
-    function(xhr) {},
-    // on failure
-    function(xhr) {
-      alert('Current session invalid, refresh the page.');
-      Cookies.remove('apiKey');
-    }
-  );
-}
 
 function ordinal_suffix_of(i) {
     var j = i % 10,
@@ -98,10 +53,4 @@ function lookupPeriod(date) {
   return 1
 }
 
-// make sure they're signed in every 10 seconds
-setInterval(function(){
-  ensureSignedIn();
-}, 10000);
 
-//first make sure we're signed in
-ensureSignedIn();
