@@ -11,8 +11,10 @@ public class UserRowMapper implements RowMapper<User> {
     User u = new User();
     u.id = row.getInt("id");
     u.name = row.getString("name");
+    u.email = row.getString("email");
     u.passwordHash = row.getString("password_hash");
-    u.permissionLevel = row.getInt("permission_level");
+    u.ring = row.getInt("ring");
+    u.prefstring = row.getString("prefstring");
     return u;
   }
 }

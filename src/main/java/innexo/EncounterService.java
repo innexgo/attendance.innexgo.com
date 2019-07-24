@@ -15,14 +15,14 @@ public class EncounterService {
   @Autowired private JdbcTemplate jdbcTemplate;
 
   public Encounter getById(int id) {
-    String sql = "SELECT id, time, location_id, user_id, type FROM encounter WHERE id=?";
+    String sql = "SELECT id, time, location_id, course_id, student_id, type FROM encounter WHERE id=?";
     RowMapper<Encounter> rowMapper = new BeanPropertyRowMapper<Encounter>(Encounter.class);
     Encounter encounter = jdbcTemplate.queryForObject(sql, rowMapper, id);
     return encounter;
   }
 
   public List<Encounter> getAll() {
-    String sql = "SELECT id, time, location_id, user_id, type FROM encounter";
+    String sql = "SELECT id, time, location_id, course_id, student_id, type FROM encounter";
     RowMapper<Encounter> rowMapper = new EncounterRowMapper();
     return this.jdbcTemplate.query(sql, rowMapper);
   }
@@ -30,30 +30,30 @@ public class EncounterService {
   public List<Encounter> query(
       Integer count,
       Integer encounterId,
-      Integer userId,
+      Integer studentId,
       Integer locationId,
-      Integer managerId,
+      Integer teacherId,
       Integer minTime,
       Integer maxTime,
-      String userName,
+      String studentName,
       String type) {
     String sql =
-      "SELECT e.id, e.time, e.location_id, e.user_id, e.type "
-      + " FROM encounter e"
-      + " JOIN user u ON e.user_id = u.id"
-      + (managerId == null ? "" : " JOIN user_relationship r ON r.managed_id = u.id")
-      + " WHERE 1=1 "
-      + (encounterId == null ? "" : " AND e.id=" + encounterId)
-      + (userId == null ? "" : " AND e.user_id=" + userId)
-      + (userName == null ? "" : " AND u.name=\'" + Utils.escapeSQLString(userName) + "\'")
-      + (locationId == null ? "" : " AND e.location_id=" + locationId)
-      + (managerId == null ? "" : " AND r.manager_id=" + managerId)
-      + (type == null ? "" : " AND e.type=\'" + Utils.escapeSQLString(type) + "\'")
-      + (minTime == null ? "" : " AND e.time >= " + minTime)
-      + (maxTime == null ? "" : " AND e.time <= " + maxTime)
-      + " ORDER BY time DESC"
-      + (count == null ? "" : " LIMIT " + count)
-      + ";";
+      "SELECT e.id, e.time, e.location_id, e.course_id, e.student_id, e.type " +
+      " FROM encounter e" +
+      " JOIN student s ON e.student_id = s.id" +
+      " JOIN course c ON e.course_id = c.id" +
+      " WHERE 1=1 " +
+      (encounterId  == null ? "" : " AND e.id=" + encounterId) +
+      (studentId    == null ? "" : " AND e.student_id=" + studentId) +
+      (locationId   == null ? "" : " AND e.location_id=" + locationId) +
+      (teacherId    == null ? "" : " AND c.teacher_id=" + teacherId) +
+      (type         == null ? "" : " AND e.type=\'" + Utils.escapeSQLString(type) + "\'") +
+      (minTime      == null ? "" : " AND e.time >= " + minTime) +
+      (maxTime      == null ? "" : " AND e.time <= " + maxTime) +
+      (studentName  == null ? "" : " AND s.name=\'" + Utils.escapeSQLString(studentName) + "\'") +
+      " ORDER BY e.time DESC" +
+      (count        == null ? "" : " LIMIT " + count) +
+      ";";
     RowMapper<Encounter> rowMapper = new EncounterRowMapper();
     return this.jdbcTemplate.query(sql, rowMapper);
   }
@@ -61,35 +61,41 @@ public class EncounterService {
   public void add(Encounter encounter) {
     // Add encounter
     String sql =
-        "INSERT INTO encounter (id, time, location_id, user_id, type) values (?, ?, ?, ?, ?)";
+        "INSERT INTO encounter (id, time, location_id, e.course_id, student_id, type) values (?, ?, ?, ?, ?, ?)";
     jdbcTemplate.update(
-        sql, encounter.id, encounter.time, encounter.locationId, encounter.userId, encounter.type);
+        sql, encounter.id, encounter.time, encounter.locationId, encounter.courseId, encounter.studentId, encounter.type);
+
+    RowMapper<Encounter> rowMapper = new EncounterRowMapper();
 
     // Fetch encounter id
     sql =
-        "SELECT id FROM encounter WHERE time=? AND location_id=? AND user_id=? AND type=? ORDER BY id DESC";
-    List<Integer> id =
-        jdbcTemplate.queryForList(
-            sql,
-            Integer.class,
+        "SELECT id, time, location_id, course_id, student_id, type FROM encounter WHERE time=? AND location_id=? AND student_id=? AND type=? ORDER BY id DESC";
+    List<Encounter> encounters =
+        this.jdbcTemplate.query(sql, rowMapper,
             encounter.time,
             encounter.locationId,
-            encounter.userId,
+            encounter.studentId,
             encounter.type);
-
-    if (!id.isEmpty()) {
-      encounter.id = id.get(0);
+    if (!encounters.isEmpty()) {
+      for(int i = 0; i < encounters.size(); i++) {
+        if(encounters.get(i).courseId == encounter.courseId) {
+          encounter.id = encounters.get(i).id;
+        } else {
+          System.out.println("ERROR: encounter went missing");
+        }
+      }
     }
   }
 
   public void update(Encounter encounter) {
-    String sql = "UPDATE encounter SET id=?, time=?, location_id=?, user_id=?, type=? WHERE id=?";
+    String sql = "UPDATE encounter SET id=?, time=?, location_id=?, course_id=? student_id=?, type=? WHERE id=?";
     jdbcTemplate.update(
         sql,
         encounter.id,
         encounter.time,
         encounter.locationId,
-        encounter.userId,
+        encounter.courseId,
+        encounter.studentId,
         encounter.type,
         encounter.id);
   }

@@ -14,35 +14,35 @@ public class ScheduleService {
   @Autowired private JdbcTemplate jdbcTemplate;
 
   public Schedule getById(int id) {
-    String sql = "SELECT id, user_id, location_id, period FROM schedule WHERE id=?";
+    String sql = "SELECT id, student_id, course_id FROM schedule WHERE id=?";
     RowMapper<Schedule> rowMapper = new ScheduleRowMapper();
     Schedule schedule = jdbcTemplate.queryForObject(sql, rowMapper, id);
     return schedule;
   }
 
   public List<Schedule> getAll() {
-    String sql = "SELECT id, user_id, location_id, period FROM schedule";
+    String sql = "SELECT id, student_id, course_id FROM schedule";
     RowMapper<Schedule> rowMapper = new ScheduleRowMapper();
     return this.jdbcTemplate.query(sql, rowMapper);
   }
 
   public void add(Schedule schedule) {
     // Add schedule
-    String sql = "INSERT INTO schedule (id, user_id, location_id, period) values (?, ?, ?, ?)";
-    jdbcTemplate.update(sql, schedule.id, schedule.userId, schedule.locationId, schedule.period);
+    String sql = "INSERT INTO schedule (id, student_id, course_id) values (?, ?, ?)";
+    jdbcTemplate.update(sql, schedule.id, schedule.studentId, schedule.courseId);
 
     // Fetch schedule id
-    sql = "SELECT id FROM schedule WHERE user_id=? AND location_id=? AND period=?";
+    sql = "SELECT id FROM schedule WHERE student_id=? AND course_id=?";
     int id =
         jdbcTemplate.queryForObject(
-            sql, Integer.class, schedule.userId, schedule.locationId, schedule.period);
+            sql, Integer.class, schedule.studentId, schedule.courseId);
     schedule.id = id;
   }
 
   public void update(Schedule schedule) {
-    String sql = "UPDATE schedule SET id=?, user_id=?, location_id=?, period=? WHERE id=?";
+    String sql = "UPDATE schedule SET id=?, student_id=?, course_id=? WHERE id=?";
     jdbcTemplate.update(
-        sql, schedule.id, schedule.userId, schedule.locationId, schedule.period, schedule.id);
+        sql, schedule.id, schedule.studentId, schedule.courseId, schedule.id);
   }
 
   public Schedule delete(int id) {
@@ -54,20 +54,23 @@ public class ScheduleService {
 
   public List<Schedule> query(
       Integer scheduleId,
-      Integer userId,
-      Integer managerId,
+      Integer studentId,
+      Integer courseId,
+      Integer teacherId,
       Integer locationId,
       Integer period) {
     String sql =
-      "SELECT s.id, s.location_id, s.user_id, s.period FROM schedule s" +
-      (managerId == null ? "" : " JOIN user_relationship r ON s.user_id = r.managed_id") +
+      "SELECT s.id, s.course_id, s.student_id, FROM schedule s" +
+      " JOIN course c ON s.course_id = c.id" +
       " WHERE 1=1 " +
-
-      (userId == null ?     "" : " AND s.user_id = " + userId) +
-      (managerId == null ?  "" : " AND r.manager_id = " + managerId) +
-      (locationId == null ? "" : " AND s.location_id = " + locationId) +
-      (period == null ?     "" : " AND s.period = " + period) +
+      (scheduleId == null ? "" : " AND s.id = " + scheduleId) +
+      (studentId  == null ? "" : " AND s.student_id = " + studentId) +
+      (courseId   == null ? "" : " AND s.course_id = " + courseId) +
+      (teacherId  == null ? "" : " AND c.teacher_id = " + teacherId) +
+      (locationId == null ? "" : " AND c.location_id = " + locationId) +
+      (period     == null ? "" : " AND c.period = " + period) +
       ";";
+
     RowMapper<Schedule> rowMapper = new ScheduleRowMapper();
     return this.jdbcTemplate.query(sql, rowMapper);
       }

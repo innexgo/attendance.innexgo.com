@@ -7,12 +7,13 @@ import org.springframework.jdbc.core.RowMapper;
 public class EncounterRowMapper implements RowMapper<Encounter> {
   @Override
   public Encounter mapRow(ResultSet row, int rowNum) throws SQLException {
-    Encounter e = new Encounter();
-    e.id = row.getInt("id");
-    e.time = row.getInt("time");
-    e.locationId = row.getInt("location_id");
-    e.userId = row.getInt("user_id");
-    e.type = row.getString("type");
-    return e;
+    Encounter encounter = new Encounter();
+    encounter.id = row.getInt("id");
+    encounter.time = row.getInt("time");
+    encounter.locationId = row.getInt("location_id");
+    encounter.courseId = row.getInt("course_id");
+    encounter.studentId = row.getInt("student_id");
+    encounter.type = row.getString("type");
+    return encounter;
   }
 }

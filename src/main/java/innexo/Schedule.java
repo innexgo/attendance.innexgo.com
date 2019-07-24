@@ -2,11 +2,10 @@ package innexo;
 
 public class Schedule {
   public int id;
-  int userId;
-  int locationId;
-  public int period;
+  int studentId;
+  int courseId;
 
   // for jackson
-  public User user;
-  public Location location;
+  public Student student;
+  public Course course;
 }
