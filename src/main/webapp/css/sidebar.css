@@ -1,5 +1,11 @@
 .sidebar-light {
-  background-color: #f2f1f2
+  background-color: #f2f1f2;
+  color: #343a40;
+}
+
+.sidebar-dark {
+  background-color: #343a40;
+  color: #cbd3da;
 }
 
 #sidebar {
