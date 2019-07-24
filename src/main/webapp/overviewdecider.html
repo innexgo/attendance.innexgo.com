@@ -1,23 +1,23 @@
 <!DOCTYPE html>
 
 <head>
-    <!--Background Information -->
-    <title>Tutorial Dashboard</title>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- JS Scripts -->
-    <script src="vendor/js-cookie/js.cookie.js"></script>
-    <!-- Transparently forward to next page or log out -->
-    <script>
-      var cookie = Cookies.getJSON('apiKey');
-      if(cookie == null) {
-        window.location.replace('/login.html');
-      } else if(cookie.user.permissionLevel == 0) {
-        window.location.replace('/adminoverview.html');
-      } else if(cookie.user.permissionLevel == 1) {
-        window.location.replace('/teacheroverview.html');
-      } else {
-        window.location.replace('/login.html');
-      }
-    </script>
+  <!--Background Information -->
+  <title>Tutorial Dashboard</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- JS Scripts -->
+  <script src="vendor/js-cookie/js.cookie.js"></script>
+  <!-- Transparently forward to next page or log out -->
+  <script>
+    var cookie = Cookies.getJSON('apiKey');
+    if (cookie == null) {
+      window.location.replace('/login.html');
+    } else if (cookie.user.permissionLevel == 0) {
+      window.location.replace('/adminoverview.html');
+    } else if (cookie.user.permissionLevel == 1) {
+      window.location.replace('/teacheroverview.html');
+    } else {
+      window.location.replace('/login.html');
+    }
+  </script>
 </head>
