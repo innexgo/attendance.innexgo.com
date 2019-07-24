@@ -3,14 +3,23 @@
 }
 
 #sidebar {
-  width: 0;
   position: fixed;
-  z-index: 20; 
   top: 0;
   left: 0;
   overflow-x: hidden;
   overflow-y: hidden;
+}
+
+#sidebar.sidebar-collapsable {
+  width: 0;
+  z-index: 20;
   transition: 0.35s;
+}
+
+#sidebar.sidebar-fixed {
+  width: 20%;
+  z-index: 1;
+  margin: 0%;
 }
 
 .sidebar-button {

@@ -12,19 +12,25 @@ function closeSidebar() {
 
 $(document).ready(function(){
 
-  document.getElementById("sidebar").style.width = "20%";
-  document.getElementById("sidebar").style.zIndex = 1;
-  document.getElementById("sidebar").style.position = "fixed";
-  document.getElementById("sidebar").style.margin = "0px";
-  document.getElementById("overlay").style.display = "none";
-  $('.card-deck').css('margin-left', '20%');
-  $('.sidebar-button').remove()
   var apiKey = Cookies.getJSON('apiKey');
   var schedule = Cookies.getJSON('apiKey');
-  var colour = "dark"
+  var sidebar = "collapsable";
+  var colour = "dark";
   document.getElementById('info-username').innerHTML = ("Hi, "+apiKey.user.name);
 
   $('.sidebar-link').addClass('list-group-item').addClass('list-group-item-action');
+
+  switch(sidebar){
+    case "collapsable":
+      $("#sidebar").addClass("sidebar-collapsable");
+    break;
+
+    case "fixed":
+      $("#sidebar").addClass("sidebar-fixed");
+      $('.card-deck').css('margin-left', '20%');
+      $('.sidebar-button').remove();
+    break;
+  }
 
   switch(colour){
 
