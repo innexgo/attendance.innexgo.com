@@ -22,11 +22,11 @@ $(document).ready(function(){
 
   switch(sidebar){
     case "collapsable":
-      document.getElementById('sidebar').className += " sidebar-collapsable";
+      $("#sidebar").addClass("sidebar-collapsable");
     break;
 
     case "fixed":
-      document.getElementById('sidebar').className += " sidebar-fixed";
+      $("#sidebar").addClass("sidebar-fixed");
       $('.card-deck').css('margin-left', '20%');
       $('.sidebar-button').remove();
     break;
