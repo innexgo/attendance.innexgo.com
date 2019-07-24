@@ -3,6 +3,7 @@ package innexo;
 import java.security.MessageDigest;
 import java.util.Base64;
 import java.util.Random;
+import java.security.NoSuchAlgorithmException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -16,7 +17,7 @@ public class Utils {
   static MessageDigest getDigester() {
     try {
       return MessageDigest.getInstance("SHA-256");
-    } catch (Exception e) {
+    } catch (NoSuchAlgorithmException e) {
       e.printStackTrace();
       return null;
     }
