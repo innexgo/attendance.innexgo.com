@@ -1,4 +1,7 @@
 <!DOCTYPE html>
+
+<html>
+
 <head>
   <!--Background Information -->
   <title>History</title>
@@ -27,20 +30,7 @@
 </head>
 
 <body class="palette-level-one">
-  <!-- Top Navbar -->
-  <nav class="navbar navbar-expand-md navbar-dark navbar-palette">
-    <div class="order-0">
-      <button type="button" onclick="openSidebar()" class="btn btn-icon sidebar-button">
-        <i class="fa fa-bars navbar-palette"></i>
-      </button>
-    </div>
-    <!-- Center Logo -->
-    <div class="mx-auto order-0">
-      <a id="navbar-brand" class="navbar-brand navbar-palette" href="index.html"></a>
-    </div>
-  </nav>
-  <!-- Overlay -->
-  <div id="overlay" onclick="closeSidebar()"></div>
+  
   <!-- Sidebar -->
   <nav style="height:100%" id="sidebar" class="navbar-palette">
     <nav class="navbar sidebar-collapse">
@@ -57,6 +47,23 @@
       <a class="sidebar-link navbar-palette" href="login.html"><i class="fa fa-sign-out-alt"></i> Sign out</a>
     </div>
   </nav>
+
+  <!-- Top Navbar -->
+  <nav class="navbar navbar-expand-md navbar-dark navbar-palette">
+    <div class="order-0">
+      <button type="button" onclick="openSidebar()" class="btn btn-icon sidebar-button">
+        <i class="fa fa-bars navbar-palette"></i>
+      </button>
+    </div>
+
+    <!-- Center Logo -->
+    <div class="mx-auto order-0">
+      <a id="navbar-brand" class="navbar-brand navbar-palette" href="index.html"></a>
+    </div>
+  </nav>
+
+  <!-- Overlay -->
+  <div id="overlay" onclick="closeSidebar()"></div>
 
   <!-- Content -->
   <div class="container">
@@ -115,3 +122,5 @@
     </div>
   </div>
 </body>
+
+</html>
