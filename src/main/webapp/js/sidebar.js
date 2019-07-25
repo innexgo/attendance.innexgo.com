@@ -48,17 +48,16 @@ $(document).ready(function(){
       document.getElementById('navbar-brand').appendChild(brandImage);
       document.getElementById('navbar-brand').append(" Innexo");
 
-      $('.navbar-palette').addClass('text-dark').addClass('sidebar-light')
+      $('.navbar-palette').addClass('text-dark').addClass('sidebar-light');
     break;
   }
 
   switch(displayedInfo){
     case "augmented":
-      
     break;
 
     case "slim":
-      palette.href = "../css/palettes/light.css?version=1";
+      $('.sidebar-item.sidebar-info-list').remove();
     break;
   }
 
