@@ -3,7 +3,7 @@ function currentStatus() {
   var schedule = Cookies.getJSON('schedule');
 
   // get students
-  var getStudentListUrl = thisUrl() + '/schedule/' +
+  var getStudentListUrl = thisUrl() + '/course/' +
     '?locationId=' + schedule.location.id +
     '&period=' + schedule.period +
     '&managerId=' + schedule.user.id +

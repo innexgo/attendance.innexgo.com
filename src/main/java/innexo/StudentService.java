@@ -56,4 +56,10 @@ public class StudentService {
     int count = jdbcTemplate.queryForObject(sql, Integer.class, id);
     return count != 0;
   }
+
+  public List<Student> query(
+      Integer id,
+      String tags,
+      Integer courseId,
+      Integer 
 }

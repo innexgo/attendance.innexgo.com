@@ -12,9 +12,9 @@
       var cookie = Cookies.getJSON('apiKey');
       if(cookie == null) {
         window.location.replace('/login.html');
-      } else if(cookie.user.permissionLevel == 0) {
+      } else if(cookie.user.ring == 0) {
         window.location.replace('/adminoverview.html');
-      } else if(cookie.user.permissionLevel == 1) {
+      } else if(cookie.user.ring == 1) {
         window.location.replace('/teacheroverview.html');
       } else {
         window.location.replace('/login.html');

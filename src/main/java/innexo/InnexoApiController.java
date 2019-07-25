@@ -102,6 +102,7 @@ public class InnexoApiController {
       @RequestParam(value = "email", defaultValue = "") String email,
       @RequestParam("expirationTime") Integer expirationTime,
       @RequestParam("password") String password) {
+
     // if they gave a username instead of a userId
     if (userId == -1 && !Utils.isEmpty(email)) {
 
@@ -263,7 +264,7 @@ public class InnexoApiController {
   @RequestMapping("user/update/")
   public ResponseEntity<?> updateUser(@RequestParam Map<String, String> allRequestParam) {
     if (   // make sure changer is admin
-        isAdministrator(allRequestParam.get("apiKey"))
+        isAdministrator(allRequestParam.getOrDefault("apiKey","invalid"))
            // make sure user exists
         && userService.exists(parseInteger(allRequestParam.getOrDefault("userId","-1")))
            // if they are trying to set a name, it cannot be blank
@@ -275,7 +276,7 @@ public class InnexoApiController {
            // if they are trying to set an email, it cannot be taken already
         && (allRequestParam.containsKey("email") ? !userService.existsByEmail("email") : true)
     ) {
-      User user = userService.getById(parseInteger(allRequestParam.get("id")));
+      User user = userService.getById(parseInteger(allRequestParam.get("userId")));
 
       // if it is specified, set the name
       if (allRequestParam.containsKey("userName")) {

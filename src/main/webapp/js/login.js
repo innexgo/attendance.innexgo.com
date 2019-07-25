@@ -52,7 +52,7 @@ function loginattempt() {
   var apiKeyExpirationTime = moment().add(30, 'minutes').unix();
 
   var url = thisUrl() +
-    '/apiKey/new/?userName=' + encodeURIComponent(userName) +
+    '/apiKey/new/?email=' + encodeURIComponent(userName) +
     '&password=' + encodeURIComponent(password) +
     '&expirationTime=' + encodeURIComponent(apiKeyExpirationTime);
 
@@ -63,12 +63,7 @@ function loginattempt() {
       // store info
       Cookies.set('apiKey', apiKey);
       // now jump to next page
-      if(apiKey.user.permissionLevel < 2) {
-        // TODO make administrator overview
-        window.location.assign(thisUrl() + "/overviewdecider.html");
-      } else{
-        giveError("At the moment, students cannot access an account.");
-      }
+      window.location.assign(thisUrl() + "/overviewdecider.html");
     },
     // failure function
     function(xhr) {

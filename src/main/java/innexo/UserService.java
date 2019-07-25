@@ -59,7 +59,7 @@ public class UserService {
   }
 
   public void update(User user) {
-    String sql = "UPDATE user SET id=?, name=?, email=? password_hash=?, ring=?, prefstring=? WHERE id=?";
+    String sql = "UPDATE user SET id=?, name=?, email=?, password_hash=?, ring=?, prefstring=? WHERE id=?";
     jdbcTemplate.update(sql, user.id, user.name, user.email, user.passwordHash, user.ring, user.prefstring, user.id);
   }
 
