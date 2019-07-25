@@ -29,7 +29,7 @@
   <body class="palette-level-one">
   <!-- Sidebar -->
     <nav style="height:100%" id="sidebar" class="navbar-palette">
-      <nav class="navbar sidebar-collapse">
+      <nav class="navbar sidebar-top">
         <button type="button" onclick="closeSidebar()" class="btn btn-icon sidebar-button">
           <i class="fa fa-bars navbar-palette"></i>
         </button>
@@ -37,24 +37,24 @@
           <h6 id="info-time">Current Time</h6>
         </div>
       </nav>
-      <div class="sidebar-link navbar-palette" style="border:none;display:block;">
+      <div class="sidebar-item sidebar-info-list navbar-palette" style="border:none;display:block;">
         <h6 id="info-name">Teacher Name</h6>
         <h6 id="info-period">Current Period</h6>
         <h6 id="info-location">Current Location</h6>
       </div>
-      <a class="sidebar-link navbar-palette" id href="index.html">Home Page</a>
-      <a class="sidebar-link navbar-palette" href="overviewdecider.html">Overview</a>
-      <a class="sidebar-link navbar-palette" href="#">History</a>
-      <a class="sidebar-link navbar-palette" href="recentactivity.html">Recent Activity</a>
+      <a class="sidebar-item navbar-palette" id href="index.html">Home Page</a>
+      <a class="sidebar-item navbar-palette" href="overviewdecider.html">Overview</a>
+      <a class="sidebar-item navbar-palette" href="#">History</a>
+      <a class="sidebar-item navbar-palette" href="recentactivity.html">Recent Activity</a>
       <div class="sidebar-bottom">
-        <a class="sidebar-link navbar-palette" href="settings.html"><i class="fa fa-cog"></i> Settings</a>
-        <a class="sidebar-link navbar-palette" href="login.html"><i class="fa fa-sign-out-alt"></i> Sign out</a>
+        <a class="sidebar-item navbar-palette" href="settings.html"><i class="fa fa-cog"></i> Settings</a>
+        <a class="sidebar-item navbar-palette" href="login.html"><i class="fa fa-sign-out-alt"></i> Sign out</a>
       </div>
     </nav>
     <!-- Overlay -->
     <div id="overlay" onclick="closeSidebar()"></div>
     <!-- Top Navbar -->
-    <nav class="navbar navbar-expand-md navbar-dark navbar-palette">
+    <nav class="navbar navbar-expand-md navbar-palette">
       <div class="order-0">
         <button type="button" onclick="openSidebar()" class="btn btn-icon sidebar-button">
           <i class="fa fa-bars navbar-palette"></i>
@@ -108,15 +108,15 @@
               <b><i class="fa fa-history" style="padding-top:20px;"></i> Historical Results</b>
             </h5>
           </header>
-          <table id="result-table" class="table" style="overflow-y: auto;">
-          <thead>
-            <tr class="table-header">
-              <td>Name</td>
-              <td>In/Out</td>
-              <td>Location</td>
-              <td>Time</td>
-            </tr>
-          </thead>
+          <table id="result-table" class="table" style="overflow-y:scroll;">
+            <thead>
+              <tr class="table-header">
+                <td>Name</td>
+                <td>In/Out</td>
+                <td>Location</td>
+                <td>Time</td>
+              </tr>
+            </thead>
           </table>
         </div>
       </div>

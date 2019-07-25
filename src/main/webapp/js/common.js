@@ -2,15 +2,16 @@
 
 $(document).ready(function(){
   var colour = "dark";
+  var sidebarStyle = "augmented"
   var palette = document.createElement("link");
   palette.rel = "stylesheet"
   palette.type = "text/css"
   switch(colour){
     case "dark":
-      palette.href = "../css/palettes/dark.css";
+      palette.href = "../css/palettes/dark.css?version=1.1";
     break;
     case "light":
-      palette.href = "../css/palettes/light.css";
+      palette.href = "../css/palettes/light.css?version=1";
     break;
   }
   document.getElementsByTagName('head')[0].appendChild(palette);

@@ -14,8 +14,9 @@ $(document).ready(function(){
 
   var sidebar = "fixed";
   var colour = "dark";
+  var displayedInfo = "augmented"
 
-  $('.sidebar-link').addClass('list-group-item').addClass('list-group-item-action');
+  $('.sidebar-item').addClass('list-group-item').addClass('list-group-item-action');
 
   switch(sidebar){
     case "collapsable":
@@ -30,7 +31,6 @@ $(document).ready(function(){
   }
 
   switch(colour){
-
     case "dark":
       var brandImage = document.createElement('img');
       brandImage.src = "../assets/innexo_logo.png";
@@ -48,9 +48,19 @@ $(document).ready(function(){
       document.getElementById('navbar-brand').appendChild(brandImage);
       document.getElementById('navbar-brand').append(" Innexo");
 
-      $('.navbar-palette').addClass('text-dark').addClass('sidebar-light')
+      $('.navbar-palette').addClass('text-dark').addClass('sidebar-light');
     break;
   }
+
+  switch(displayedInfo){
+    case "augmented":
+    break;
+
+    case "slim":
+      $('.sidebar-item.sidebar-info-list').remove();
+    break;
+  }
+
 });
 
 function displayInfo() {

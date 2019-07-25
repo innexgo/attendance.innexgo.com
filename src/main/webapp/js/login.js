@@ -3,7 +3,7 @@
 //Checks for blank password or user id, or other obvious misconfigurations 
 function validateattempt(userName, password)  {
   if(isEmpty(userName)){
-    giveError("Please enter your username")
+    giveError("Please enter your email")
     return false
   }
   if(isEmpty(password)){
@@ -68,7 +68,7 @@ function loginattempt() {
     // failure function
     function(xhr) {
       console.log("authentication failure!");
-      giveError("Check your username and password.");
+      giveError("Your email or password doesn't match our records.");
     }
   );
 }
@@ -82,7 +82,7 @@ window.onload = function() {
   username.addEventListener("keydown", function(event) {
     if (event.keyCode === 13) {
       event.preventDefault();
-      if(!isEmpty(password)){
+      if(isEmpty(password)){
         loginattempt();
       }
       else {

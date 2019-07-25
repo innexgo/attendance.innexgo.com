@@ -27,8 +27,8 @@
   color:white;
 }
 
-.sidebar-collapse {
-  height: 64px;
+.sidebar-top {
+  height: 4rem;
 }
 
 .sidebar-button:hover {
@@ -53,4 +53,8 @@
   bottom:0;
   right:0;
   left:0;
+}
+
+.sidebar-item:not(.sidebar-info-list) {
+  padding: 0.5rem 1.25rem;
 }
