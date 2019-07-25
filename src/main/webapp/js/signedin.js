@@ -52,7 +52,6 @@ function userInfo() {
   }
 }
 
-
 // make sure they're signed in every 10 seconds
 setInterval(function(){
   ensureSignedIn();

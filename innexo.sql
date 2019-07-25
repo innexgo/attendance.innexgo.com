@@ -29,7 +29,7 @@ CREATE TABLE `api_key` (
   `expiration_time` bigint(20) NOT NULL,
   `key_hash` char(64) COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -38,7 +38,7 @@ CREATE TABLE `api_key` (
 
 LOCK TABLES `api_key` WRITE;
 /*!40000 ALTER TABLE `api_key` DISABLE KEYS */;
-INSERT INTO `api_key` VALUES (1,1,1564028826,2147483647,'W4ebmalH-VJCO8eV-eQSfPNW1Lf-95Z0Qp-43xw4pYU='),(2,2,1564030067,1564031867,'hA6uOQNPkORHi1q62nU4CpqpRqPUUcvxc9qfyhz-e24='),(3,2,1564030069,1564031869,'76PAGzW7fJdeSm5wzLNkRTCZGDfNEqjsvrwSd8Xuxkg='),(4,2,1564030119,1564031919,'RMhg_OhPRm35JzJyYvwfk5gg3J3fSNUclu-6LDYGHo4=');
+INSERT INTO `api_key` VALUES (1,1,1564028826,2147483647,'W4ebmalH-VJCO8eV-eQSfPNW1Lf-95Z0Qp-43xw4pYU='),(2,2,1564030067,1564031867,'hA6uOQNPkORHi1q62nU4CpqpRqPUUcvxc9qfyhz-e24='),(3,2,1564030069,1564031869,'76PAGzW7fJdeSm5wzLNkRTCZGDfNEqjsvrwSd8Xuxkg='),(4,2,1564030119,1564031919,'RMhg_OhPRm35JzJyYvwfk5gg3J3fSNUclu-6LDYGHo4='),(5,2,1564068597,1564070397,'oW_tkfjiYaR4ipKv5Oacgr5xpwZxlXuHJnc_6NWgn9g='),(6,2,1564068995,1564070794,'Aat11GMknAJiVHMJF_36wOOQOXi5ImIBPjQT5FL5-v0='),(7,2,1564072610,1564074410,'Ezk-2wav_EyuS3HyrBrpgwOEbna_bBTBfSNWIpFTiLE=');
 /*!40000 ALTER TABLE `api_key` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -118,6 +118,31 @@ LOCK TABLES `location` WRITE;
 /*!40000 ALTER TABLE `location` DISABLE KEYS */;
 INSERT INTO `location` VALUES (1,'Main Office','restricted'),(2,'Room 503','classroom'),(3,'Room 500','classroom'),(4,'Room 501','classroom'),(5,'Room 502','classroom');
 /*!40000 ALTER TABLE `location` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `period`
+--
+
+DROP TABLE IF EXISTS `period`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `period` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `start_time` bigint(20) NOT NULL,
+  `end_time` bigint(20) NOT NULL,
+  `period` bigint(20) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `period`
+--
+
+LOCK TABLES `period` WRITE;
+/*!40000 ALTER TABLE `period` DISABLE KEYS */;
+/*!40000 ALTER TABLE `period` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -206,4 +231,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-07-24 22:25:56
+-- Dump completed on 2019-07-25 10:46:58

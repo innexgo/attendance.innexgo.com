@@ -20,6 +20,7 @@ public class InnexoApiController {
   @Autowired CourseService courseService;
   @Autowired EncounterService encounterService;
   @Autowired LocationService locationService;
+  @Autowired PeriodService periodService;
   @Autowired ScheduleService scheduleService;
   @Autowired StudentService studentService;
   @Autowired UserService userService;
@@ -57,6 +58,11 @@ public class InnexoApiController {
 
   Location fillLocation(Location location) {
     return location;
+  }
+
+
+  Period fillPeriod(Period period) {
+    return period;
   }
 
   Schedule fillSchedule(Schedule schedule) {
@@ -185,8 +191,8 @@ public class InnexoApiController {
 
   @RequestMapping("location/new/")
   public ResponseEntity<?> newLocation(
-      @RequestParam("locationName") String name,
-      @RequestParam("locationTags") String tags,
+      @RequestParam("startTime") String name,
+      @RequestParam("tags") String tags,
       @RequestParam("apiKey") String apiKey) {
     if (!Utils.isEmpty(name) && !Utils.isEmpty(tags) && isAdministrator(apiKey)) {
       Location location = new Location();
@@ -194,6 +200,24 @@ public class InnexoApiController {
       location.tags = tags;
       locationService.add(location);
       return new ResponseEntity<>(fillLocation(location), HttpStatus.OK);
+    } else {
+      return BAD_REQUEST;
+    }
+  }
+
+  @RequestMapping("period/new/")
+  public ResponseEntity<?> newPeriod(
+      @RequestParam("startTime") Integer startTime,
+      @RequestParam("endTime") Integer endTime,
+      @RequestParam("period") Integer period,
+      @RequestParam("apiKey") String apiKey) {
+    if (isAdministrator(apiKey)) {
+      Period p = new Period();
+      p.startTime = startTime;
+      p.endTime = endTime;
+      p.period = period;
+      periodService.add(p);
+      return new ResponseEntity<>(fillPeriod(p), HttpStatus.OK);
     } else {
       return BAD_REQUEST;
     }
@@ -365,6 +389,16 @@ public class InnexoApiController {
     }
   }
 
+  @RequestMapping("period/delete/")
+  public ResponseEntity<?> deletePeriod(
+      @RequestParam("periodId") Integer periodId, @RequestParam("apiKey") String apiKey) {
+    if (isAdministrator(apiKey)) {
+      return new ResponseEntity<>(fillPeriod(periodService.delete(periodId)), HttpStatus.OK);
+    } else {
+      return BAD_REQUEST;
+    }
+  }
+
   @RequestMapping("schedule/delete/")
   public ResponseEntity<?> deleteSchedule(
       @RequestParam("scheduleId") Integer scheduleId, @RequestParam("apiKey") String apiKey) {
@@ -475,6 +509,28 @@ public class InnexoApiController {
     }
   }
 
+  @RequestMapping("period/")
+  public ResponseEntity<?> viewPeriod(@RequestParam Map<String, String> allRequestParam) {
+    String apiKey = allRequestParam.get("apiKey");
+    if (isTrusted(apiKey)) {
+      List<Period> els =
+          periodService
+              .query(
+                  parseInteger(allRequestParam.get("periodId")),
+                  parseInteger(allRequestParam.get("minTime")),
+                  parseInteger(allRequestParam.get("maxtime")),
+                  parseInteger(allRequestParam.get("period")),
+                  parseInteger(allRequestParam.get("courseId")),
+                  parseInteger(allRequestParam.get("teacherId")))
+              .stream()
+              .map(x -> fillPeriod(x))
+              .collect(Collectors.toList());
+      return new ResponseEntity<>(els, HttpStatus.OK);
+    } else {
+      return BAD_REQUEST;
+    }
+  }
+
   @RequestMapping("schedule/")
   public ResponseEntity<?> viewSchedule(@RequestParam Map<String, String> allRequestParam) {
     if (allRequestParam.containsKey("apiKey") && isTrusted(allRequestParam.get("apiKey"))) {
@@ -533,14 +589,14 @@ public class InnexoApiController {
     }
   }
 
-
-  @RequestMapping("validateTrusted/")
+  @RequestMapping("validate/")
   public ResponseEntity<?> validateTrusted(@RequestParam("apiKey") String apiKey) {
     return isTrusted(apiKey) ? OK : BAD_REQUEST;
   }
 
-  @RequestMapping("validateAdministrator/")
-  public ResponseEntity<?> validateAdministrator(@RequestParam("apiKey") String apiKey) {
-    return isAdministrator(apiKey) ? OK : BAD_REQUEST;
+  @RequestMapping("populatePeriods")
+  public ResponseEntity<?> populatePeriods() {
+
+    return OK;
   }
 }

@@ -55,12 +55,17 @@ $(document).ready(function(){
 
 function displayInfo() {
   var apiKey = Cookies.getJSON('apiKey');
-  var schedule = Cookies.getJSON('schedule');
+  var course = Cookies.getJSON('course');
 
   document.getElementById('info-time').innerHTML = moment().format('dddd, MMMM D');
-  document.getElementById('info-name').innerHTML = schedule.user.name;
-  document.getElementById('info-period').innerHTML = 'Period ' + schedule.period;
-  document.getElementById('info-location').innerHTML = schedule.location.name;
+  document.getElementById('info-name').innerHTML = apiKey.user.name;
+  if(course != null) {
+    document.getElementById('info-period').innerHTML = 'Period ' + course.period;
+    document.getElementById('info-location').innerHTML = course.location.name;
+  } else {
+    document.getElementById('info-period').innerHTML = '';
+    document.getElementById('info-location').innerHTML = '';
+  }
 }
 
 $(document).ready(function() {

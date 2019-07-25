@@ -1,12 +1,10 @@
 function currentStatus() {
   var apiKey = Cookies.getJSON('apiKey');
-  var schedule = Cookies.getJSON('schedule');
+  var course = Cookies.getJSON('course');
 
   // get students
-  var getStudentListUrl = thisUrl() + '/course/' +
-    '?locationId=' + schedule.location.id +
-    '&period=' + schedule.period +
-    '&managerId=' + schedule.user.id +
+  var getStudentListUrl = thisUrl() + '/student/' +
+    '?courseId=' + course.id +
     '&apiKey=' + apiKey.key;
   request(getStudentListUrl,
     function(xhr) {

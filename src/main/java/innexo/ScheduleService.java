@@ -60,7 +60,7 @@ public class ScheduleService {
       Integer locationId,
       Integer period) {
     String sql =
-      "SELECT s.id, s.course_id, s.student_id, FROM schedule s" +
+      "SELECT s.id, s.student_id, s.course_id FROM schedule s" +
       " JOIN course c ON s.course_id = c.id" +
       " WHERE 1=1 " +
       (scheduleId == null ? "" : " AND s.id = " + scheduleId) +
@@ -73,7 +73,7 @@ public class ScheduleService {
 
     RowMapper<Schedule> rowMapper = new ScheduleRowMapper();
     return this.jdbcTemplate.query(sql, rowMapper);
-      }
+  }
 
   public boolean exists(int id) {
     String sql = "SELECT count(*) FROM schedule WHERE id=?";

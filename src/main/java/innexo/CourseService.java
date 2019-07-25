@@ -16,14 +16,14 @@ public class CourseService {
   static final int TEACHER = 1;
 
   public Course getById(int id) {
-    String sql = "SELECT  id, teacher_id, location_id, period, subject FROM course WHERE id=?";
+    String sql = "SELECT id, teacher_id, location_id, period, subject FROM course WHERE id=?";
     RowMapper<Course> rowMapper = new CourseRowMapper();
     Course course = jdbcTemplate.queryForObject(sql, rowMapper, id);
     return course;
   }
 
   public List<Course> getAll() {
-    String sql = "SELECT  id, teacher_id, location_id, period, subject FROM course";
+    String sql = "SELECT id, teacher_id, location_id, period, subject FROM course";
     RowMapper<Course> rowMapper = new CourseRowMapper();
     return this.jdbcTemplate.query(sql, rowMapper);
   }
@@ -59,5 +59,27 @@ public class CourseService {
     String sql = "SELECT count(*) FROM course WHERE id=?";
     int count = jdbcTemplate.queryForObject(sql, Integer.class, id);
     return count != 0;
+  }
+
+  public List<Course> query(
+      Integer id,
+      Integer teacherId,
+      Integer locationId,
+      Integer studentId,
+      String subject) {
+    String sql =
+      "SELECT c.id, c.teacher_id, c.location_id, c.period, c.subject FROM course" +
+      (studentId == null ? "" : " JOIN schedule sc ON c.id = sc.course_id ") +
+      " WHERE 1=1 " +
+
+      (id         == null ? "" : " AND c.id = " + id) +
+      (teacherId  == null ? "" : " AND c.teacherId = " + teacherId) +
+      (locationId == null ? "" : " AND c.locationId = " + locationId) +
+      (studentId  == null ? "" : " AND sc.studentId = " + studentId) +
+      (subject    == null ? "" : " AND c.subject = " + subject) +
+      ";";
+
+    RowMapper<Course> rowMapper = new CourseRowMapper();
+    return this.jdbcTemplate.query(sql, rowMapper);
   }
 }
