@@ -54,7 +54,7 @@
     <!-- Overlay -->
     <div id="overlay" onclick="closeSidebar()"></div>
     <!-- Top Navbar -->
-    <nav class="navbar navbar-expand-md navbar-dark navbar-palette">
+    <nav class="navbar navbar-expand-md navbar-palette">
       <div class="order-0">
         <button type="button" onclick="openSidebar()" class="btn btn-icon sidebar-button">
           <i class="fa fa-bars navbar-palette"></i>
@@ -69,8 +69,70 @@
 
     <div class="container">
       <div style="margin:1em" class="card-deck palette-level-one" style="padding:0px;">
-        <div class="card col-sm-2 palette-level-two">
-          <div><h5 class="card-title text-center" style="margin:0.5em">Settings</h5></div>
+        <div class="card col-sm-10 palette-level-two">
+          <div class="card-header palette-header">
+            <ul class="nav nav-tabs card-header-tabs" style="font-size: 1.15em">
+              <li class="nav-item">
+                <a class="nav-link active" href="#">Settings</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="preferences.html">Preferences</a>
+              </li>
+            </ul>
+          </div>
+          <div class="container" style="margin-left: 0.75rem;">
+            <h5 class="card-title" style="margin-top: 0.75rem;">Change Password</h5>
+            <div class="container" style="margin-left: 0.5em">
+              <div class="form-group row">
+                <label for="text-input" class="col-sm-4 col-form-label">Old password:</label>
+                <div class="col-sm-6">
+                  <input class="form-control" type="text" placeholder="Old Password" id="cur-password-check">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="text-input" class="col-sm-4 col-form-label">New password:</label>
+                <div class="col-sm-6">
+                  <input class="form-control" type="text" placeholder="New Password" id="new-pass-input">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="text-input" class="col-sm-4 col-form-label">Confirm Password:</label>
+                <div class="col-sm-6">
+                  <input class="form-control" type="text" placeholder="Confirm Password" id="confirm-new-pass-input">
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-4"></div>
+                <div class="col-sm-6" style="text-align: right">
+                  <input id="query-button" class="input-button btn" style='margin-bottom:1em; padding: .375rem 1.5rem;' type="button" onclick=";" value="Submit">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="container" style="margin-left: 0.75rem;">
+            <h5 class="card-title" style="margin-top: 0.75rem;">Change Email</h5>
+            <div class="container" style="margin-left: 0.5em">
+              <div class="form-group row">
+                <label for="text-input" class="col-sm-4 col-form-label">New Email:</label>
+                <div class="col-sm-6">
+                  <input class="form-control" type="text" placeholder="New Email" id="new-email-input">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="text-input" class="col-sm-4 col-form-label">Current Password:</label>
+                <div class="col-sm-6">
+                  <input class="form-control" type="text" placeholder="Current Password" id="cur-password-check">
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-4"></div>
+                <div class="col-sm-6" style="text-align: right">
+                  <input id="query-button" class="input-button btn" style='margin-bottom:1em; padding: .375rem 1.5rem;' type="button" onclick=";" value="Submit">
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

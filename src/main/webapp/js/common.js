@@ -7,10 +7,10 @@ $(document).ready(function(){
   palette.type = "text/css"
   switch(colour){
     case "dark":
-      palette.href = "../css/palettes/dark.css";
+      palette.href = "../css/palettes/dark.css?version=2";
     break;
     case "light":
-      palette.href = "../css/palettes/light.css";
+      palette.href = "../css/palettes/light.css?version=1";
     break;
   }
   document.getElementsByTagName('head')[0].appendChild(palette);
