@@ -5,6 +5,13 @@ function submitEncounter(studentId) {
   var course = Cookies.getJSON('course');
   var apiKey = Cookies.getJSON('apiKey');
 
+  if(course == null) {
+    //TODO actually give this error
+    console.log('no class at the moment to sign into');
+    return;
+  }
+
+
   // get the last encounter
   var getLastEncounterUrl = thisUrl() + '/encounter/' +
     '?studentId=' + encodeURIComponent(studentId) +
@@ -17,7 +24,8 @@ function submitEncounter(studentId) {
       var direction = 'in';
       //TODO play sound on correct sign in
 
-      var lastEncounter = JSON.parse(xhr.responseText);
+      var lastEncounter = JSON.parse(xhr.responseText)[0];
+      console.log(lastEncounter);
       // if it's null, there was no last encounter, so the direction is in
       if(lastEncounter == null) {
         direction = 'in';

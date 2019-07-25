@@ -66,16 +66,16 @@ $(document).ready(function(){
 function displayInfo() {
   var apiKey = Cookies.getJSON('apiKey');
   var course = Cookies.getJSON('course');
+  var period = Cookies.getJSON('period');
 
   document.getElementById('info-time').innerHTML = moment().format('dddd, MMMM D');
   document.getElementById('info-name').innerHTML = apiKey.user.name;
-  if(course != null) {
-    document.getElementById('info-period').innerHTML = 'Period ' + course.period;
-    document.getElementById('info-location').innerHTML = course.location.name;
-  } else {
-    document.getElementById('info-period').innerHTML = '';
-    document.getElementById('info-location').innerHTML = '';
-  }
+
+  document.getElementById('info-period').innerHTML =
+    period == null ? '' : 'Period ' + period.period;
+
+  document.getElementById('info-location').innerHTML =
+    course == null ? '' : course.location.name;
 }
 
 $(document).ready(function() {

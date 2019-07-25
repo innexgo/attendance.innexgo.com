@@ -2,6 +2,12 @@
 function recentActivity() {
   var apiKey = Cookies.getJSON('apiKey');
   var course = Cookies.getJSON('course');
+
+  if(apiKey == null || course == null) {
+    console.log('not enough cookies for recentActivity');
+    return;
+  }
+
   var url = thisUrl()+'/encounter/?count=100' +
     '&courseId=' + course.id +
     '&apiKey='+ apiKey.key;

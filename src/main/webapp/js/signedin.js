@@ -31,21 +31,51 @@ function ensureSignedIn() {
 function userInfo() {
   var apiKey = Cookies.getJSON('apiKey');
   if(apiKey != null) {
-    var url = thisUrl() +
-      '/schedule/' +
-      '?userId=' + apiKey.user.id +
-      '&period=' + getPeriod(new Date()) +
-      '&apiKey=' + apiKey.key;
-    request(url,
-      //success
+    var getPeriodUrl = thisUrl() + '/period/' +
+      '?minTime=' + moment().unix() +
+      '&maxTime=' + moment().unix() +
+      '&apiKey='  + apiKey.key;
+
+    request(getPeriodUrl,
       function(xhr) {
-        var schedule = JSON.parse(xhr.responseText);
-        if(schedule.length == 1) {
-          Cookies.set('schedule', schedule[0])
+        var period = JSON.parse(xhr.responseText)[0];
+        // if class has ended, or not yet begun, delete the relevant cookies
+        if(period == null) {
+          Cookies.remove('period');
+          Cookies.remove('course');
+          console.log('school not in session');
+          return;
+        } else {
+          Cookies.set('period', period);
+
+          // now grab the current course
+          var getCourseUrl = thisUrl() +
+            '/course/' +
+            '?teacherId=' + apiKey.user.id +
+            '&period=' + period.period
+            '&apiKey=' + apiKey.key;
+          request(getCourseUrl,
+            //success
+            function(xhr) {
+              var course = JSON.parse(xhr.responseText)[0];
+              if(course != null) {
+                Cookies.set('course', course)
+              } else {
+                console.log('has no class');
+                Cookies.remove('course');
+              }
+            },
+            //failure
+            function(xhr) {
+              console.log('error has no class');
+              return;
+            }
+          );
         }
       },
       //failure
       function(xhr) {
+        console.log('error has no school');
         return;
       }
     );
