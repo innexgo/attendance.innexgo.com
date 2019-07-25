@@ -2,18 +2,29 @@ function currentStatus() {
   var apiKey = Cookies.getJSON('apiKey');
   var course = Cookies.getJSON('course');
 
+
   // get students
   var getStudentListUrl = thisUrl() + '/student/' +
     '?courseId=' + course.id +
     '&apiKey=' + apiKey.key;
   request(getStudentListUrl,
     function(xhr) {
-      // TODO decide how to represent people in a schedule/ who teaches who
-
       // select people who have a student permission
-      var studentschedules = JSON.parse(xhr.responseText);
+      var students = JSON.parse(xhr.responseText);
 
-      // now we request all the encounters which occur at this location since the period started
+      // now we get the min and max time of the current period
+      var getTimeUrl = thisUrl() + '/period/' +
+        '?minTime=' + moment().unix() +
+        '&maxTime=' + moment().unix() +
+        '&apiKey=' + apiKey.key;
+
+      request(getTimeUrl,
+        //success
+        function(xhr) {
+          var periods = JSON.parse(xhr.responseText);
+          if
+
+      // now we request all the encounters where this was the course and happened between 
       var getEncounterListUrl = thisUrl() + '/encounter/' +
         '?type=in' +
         '&locationId=' + schedule.location.id +
