@@ -1,8 +1,9 @@
 //gets new data from server and inserts it at the beginning
 function recentActivity() {
   var apiKey = Cookies.getJSON('apiKey');
+  var course = Cookies.getJSON('course');
   var url = thisUrl()+'/encounter/?count=100' +
-    '&managerId=' + apiKey.user.id +
+    '&courseId=' + course.id +
     '&apiKey='+ apiKey.key;
   request(url,
     function(xhr){

@@ -165,7 +165,7 @@ public class InnexoApiController {
   public ResponseEntity<?> newEncounter(
       @RequestParam("studentId") Integer studentId,
       @RequestParam("locationId") Integer locationId,
-      @RequestParam(value="locationId", defaultValue="-1") Integer courseId,
+      @RequestParam(value="courseId", defaultValue="-1") Integer courseId,
       @RequestParam("type") String type,
       @RequestParam("apiKey") String apiKey) {
     if (!Utils.isEmpty(type)
