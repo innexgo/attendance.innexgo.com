@@ -55,6 +55,6 @@
   left:0;
 }
 
-.sidebar-link {
+.sidebar-item:not(.info-list) {
   padding: 0.5rem 1.25rem;
 }

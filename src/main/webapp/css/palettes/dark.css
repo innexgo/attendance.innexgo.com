@@ -23,3 +23,7 @@ tr.table-header {
 .palette-header {
   background-color: #5f6569;
 }
+
+.palette-border:not(.active) {
+	border: 1px solid #eaeef1;
+}
