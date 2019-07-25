@@ -16,7 +16,7 @@ function ensureSignedIn() {
 
   // make test request, on failure delete the cookies
   // usually means something went wrong with server
-  var url = thisUrl() + '/validateTrusted/?apiKey=' + apiKey.key;
+  var url = thisUrl() + '/validate/?apiKey=' + apiKey.key;
   request(url,
     // on success
     function(xhr) {},
