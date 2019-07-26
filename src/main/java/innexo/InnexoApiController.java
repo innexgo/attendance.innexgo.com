@@ -612,7 +612,7 @@ public class InnexoApiController {
     return isTrusted(apiKey) ? OK : BAD_REQUEST;
   }
 
-  //@RequestMapping("populatePeriods")
+  @RequestMapping("populatePeriods")
   public ResponseEntity<?> populatePeriods() {
     int initialTime = (int)Instant.now().getEpochSecond();
     for(int i = 0; i < 10000; i++) {

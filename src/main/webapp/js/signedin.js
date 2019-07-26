@@ -52,7 +52,7 @@ function userInfo() {
           var getCourseUrl = thisUrl() +
             '/course/' +
             '?teacherId=' + apiKey.user.id +
-            '&period=' + period.period
+            '&period=' + period.period +
             '&apiKey=' + apiKey.key;
           request(getCourseUrl,
             //success
