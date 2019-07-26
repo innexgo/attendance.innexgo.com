@@ -62,6 +62,7 @@ function loginattempt() {
       var apiKey = JSON.parse(xhr.responseText);
       // store info
       Cookies.set('apiKey', apiKey);
+      Cookies.set('prefs', apiKey.user.prefstring)
       // now jump to next page
       window.location.assign(thisUrl() + "/overviewdecider.html");
     },

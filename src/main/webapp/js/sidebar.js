@@ -14,9 +14,10 @@ $(document).ready(function(){
 
   var sidebar = "fixed";
   var colour = "dark";
-  var displayedInfo = "augmented"
+  var displayedInfo = "augmented";
 
-  $('.sidebar-item').addClass('list-group-item').addClass('list-group-item-action');
+  var sidebarItems = $('.sidebar-item').addClass('list-group-item');
+  sidebarItems.not('.sidebar-info-list').addClass('list-group-item-action');
 
   switch(sidebar){
     case "collapsable":
@@ -27,6 +28,7 @@ $(document).ready(function(){
       $("#sidebar").addClass("sidebar-fixed");
       $('.card-deck').css('margin-left', '20%');
       $('.sidebar-button').remove();
+      document.getElementById('overlay').remove();
     break;
   }
 
@@ -50,6 +52,15 @@ $(document).ready(function(){
 
       $('.navbar-palette').addClass('text-dark').addClass('sidebar-light');
     break;
+
+    case "blue":
+      var brandImage = document.createElement('img');
+      brandImage.src = "../assets/innexo_logo.png";
+
+      document.getElementById('navbar-brand').appendChild(brandImage);
+      document.getElementById('navbar-brand').append(" Innexo");
+
+      $('.navbar-palette').addClass('text-light').addClass('sidebar-blue')
   }
 
   switch(displayedInfo){
@@ -57,7 +68,7 @@ $(document).ready(function(){
     break;
 
     case "slim":
-      $('.sidebar-item.sidebar-info-list').remove();
+      $('.sidebar-item.sidebar-info-list').hide();
     break;
   }
 
