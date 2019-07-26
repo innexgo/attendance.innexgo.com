@@ -68,10 +68,13 @@ public class PeriodService {
 
     String sql =
       "SELECT p.id, p.start_time, p.end_time, p.period FROM period p" +
-      " JOIN course c ON c.period = p.period " +
+      (courseId == null || teacherId == null 
+        ? ""
+        : " JOIN course c ON c.period = p.period "
+      ) +
       " WHERE 1=1 " +
       (id        == null ? "" : " AND p.id = " + id) +
-      (minTime   == null ? "" : " AND p.end_time > " + minTime) +
+      (minTime   == null ? "" : " AND p.end_time >= " + minTime) +
       (maxTime   == null ? "" : " AND p.start_time < " + maxTime) +
       (period    == null ? "" : " AND p.period = " + period) +
       (courseId  == null ? "" : " AND c.course_id = " + courseId) +
