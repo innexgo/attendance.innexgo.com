@@ -11,10 +11,10 @@ function closeSidebar() {
 }
 
 $(document).ready(function(){
-
-  var sidebar = "fixed";
-  var colour = "dark";
-  var displayedInfo = "augmented";
+  var prefs = Cookies.getJSON('prefs');
+  var sidebar = prefs.sidebarStyle;
+  var colour = prefs.colourTheme;
+  var sidebarInfo = prefs.sidebarInfo;
 
   var sidebarItems = $('.sidebar-item').addClass('list-group-item');
   sidebarItems.not('.sidebar-info-list').addClass('list-group-item-action');
@@ -63,7 +63,7 @@ $(document).ready(function(){
       $('.navbar-palette').addClass('text-light').addClass('sidebar-blue')
   }
 
-  switch(displayedInfo){
+  switch(sidebarInfo){
     case "augmented":
     break;
 

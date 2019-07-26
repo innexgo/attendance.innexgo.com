@@ -1,3 +1,7 @@
 .palette-level-one {
   background-color: #f8f9fa;
 }
+
+.palette-border:not(.active) {
+	border: 1px solid #868788;
+}

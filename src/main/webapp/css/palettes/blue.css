@@ -1,10 +1,10 @@
 .palette-level-one {
-  background-color: #1a229c;
+  background-color: #4b86b4;
 }
 
 .palette-level-two {
-  background-color: #3646d4;
-  color: #f0f0f0
+  background-color: #adcbe3;
+  color: #303030
 }
 
 a.sidebar-item:hover {
@@ -34,7 +34,7 @@ tr.table-header {
 }
 
 .palette-header {
-  background-color: #70a1c2;
+  background-color: #005b96;
 }
 
 .palette-border:not(.active) {
