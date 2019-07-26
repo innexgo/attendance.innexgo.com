@@ -82,13 +82,17 @@ function userInfo() {
   }
 }
 
-// make sure they're signed in every 10 seconds
-setInterval(function(){
+
+$(document).ready(function(){
   ensureSignedIn();
   userInfo();
-}, 10000);
+  // make sure they're signed in every 10 seconds
+  setInterval(function(){
+    ensureSignedIn();
+    userInfo();
+  }, 10000);
+});
 
-//first make sure we're signed in
-ensureSignedIn();
-//add nice cookies
-userInfo();
+
+
+

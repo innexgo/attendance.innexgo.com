@@ -39,8 +39,10 @@ public class Utils {
     return hash.equals(encodeApiKey(key));
   }
 
+  // create 128 bit key
   public static String generateKey() {
-    return Long.toHexString(new Random().nextLong());
+    return Long.toHexString(new Random().nextLong()) +
+      Long.toHexString(new Random().nextLong());
   }
 
   public static boolean isEmpty(String str) {
