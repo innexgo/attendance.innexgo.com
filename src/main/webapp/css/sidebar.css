@@ -1,5 +1,9 @@
 .sidebar-light {
-  background-color: #f2f1f2
+  background-color: #f2f1f2;
+}
+
+.sidebar-blue {
+  background-color: #08094e;
 }
 
 #sidebar {

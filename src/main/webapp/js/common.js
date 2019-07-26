@@ -2,7 +2,6 @@
 
 $(document).ready(function(){
   var colour = "dark";
-  var sidebarStyle = "augmented"
   var palette = document.createElement("link");
   palette.rel = "stylesheet"
   palette.type = "text/css"
@@ -12,6 +11,9 @@ $(document).ready(function(){
     break;
     case "light":
       palette.href = "../css/palettes/light.css?version=1";
+    break;
+    case "blue":
+      palette.href = "../css/palettes/blue.css?version=1";
     break;
   }
   document.getElementsByTagName('head')[0].appendChild(palette);
