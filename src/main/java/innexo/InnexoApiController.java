@@ -269,7 +269,7 @@ public class InnexoApiController {
     if (!Utils.isEmpty(name)
         && !Utils.isEmpty(password)
         && !Utils.isEmpty(email)
-        && ring <= UserService.TEACHER
+        && ring == UserService.ADMINISTRATOR
         && !userService.existsByEmail(email)
         && isAdministrator(apiKey)) {
       User u = new User();
@@ -471,14 +471,19 @@ public class InnexoApiController {
 
   @RequestMapping("course/")
   public ResponseEntity<?> viewCourse(@RequestParam Map<String, String> allRequestParam) {
-    if (allRequestParam.containsKey("apiKey") && isTrusted(allRequestParam.get("apiKey"))) {
-      if (allRequestParam.containsKey("courseId")) {
-        return new ResponseEntity<>(
-            Arrays.asList(courseService.getById(Integer.parseInt(allRequestParam.get("courseId")))),
-            HttpStatus.OK);
-      } else {
-        return new ResponseEntity<>(courseService.getAll(), HttpStatus.OK);
-      }
+    String apiKey = allRequestParam.get("apiKey");
+    if (!Utils.isEmpty(apiKey) && isTrusted(apiKey)) {
+      List<Course> els =
+          encounterService
+              .query(
+                  parseInteger(allRequestParam.get("courseId")),
+                  parseInteger(allRequestParam.get("teacherId")),
+                  parseInteger(allRequestParam.get("studentId")),
+                  parseInteger(allRequestParam.get("subject")),
+              .stream()
+              .map(x -> fillCourse(x))
+              .collect(Collectors.toList());
+      return new ResponseEntity<>(els, HttpStatus.OK);
     } else {
       return BAD_REQUEST;
     }
