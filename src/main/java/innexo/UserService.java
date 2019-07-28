@@ -101,12 +101,12 @@ public class UserService {
 
   public List<User> query(Integer id, String name, String email, Integer ring) {
     String sql =
-        "SELECT u.id, u.name, u.email, u.ring FROM user u"
+        "SELECT u.id, u.name, u.password_hash, u.email, u.ring, u.prefstring FROM user u"
             + " WHERE 1=1 "
-            + (id == null ? "" : " AND l.id = " + id)
-            + (name == null ? "" : " AND l.name = \'" + Utils.escapeSQLString(name) + "\'")
-            + (email == null ? "" : " AND l.email = \'" + Utils.escapeSQLString(email) + "\'")
-            + (ring == null ? "" : " AND l.ring = " + ring)
+            + (id == null ? "" : " AND u.id = " + id)
+            + (name == null ? "" : " AND u.name = \'" + Utils.escapeSQLString(name) + "\'")
+            + (email == null ? "" : " AND u.email = \'" + Utils.escapeSQLString(email) + "\'")
+            + (ring == null ? "" : " AND u.ring = " + ring)
             + ";";
 
     RowMapper<User> rowMapper = new UserRowMapper();
