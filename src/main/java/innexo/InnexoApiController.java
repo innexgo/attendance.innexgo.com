@@ -474,12 +474,13 @@ public class InnexoApiController {
     String apiKey = allRequestParam.get("apiKey");
     if (!Utils.isEmpty(apiKey) && isTrusted(apiKey)) {
       List<Course> els =
-          encounterService
+          courseService
               .query(
                   parseInteger(allRequestParam.get("courseId")),
                   parseInteger(allRequestParam.get("teacherId")),
+                  parseInteger(allRequestParam.get("locationId")),
                   parseInteger(allRequestParam.get("studentId")),
-                  parseInteger(allRequestParam.get("subject")),
+                  allRequestParam.get("subject"))
               .stream()
               .map(x -> fillCourse(x))
               .collect(Collectors.toList());
