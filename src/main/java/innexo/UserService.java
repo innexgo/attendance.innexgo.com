@@ -29,7 +29,6 @@ public class UserService {
     return users;
   }
 
-
   public User getByEmail(String email) {
     String sql = "SELECT id, name, email, password_hash, ring, prefstring FROM user WHERE email=?";
     RowMapper<User> rowMapper = new UserRowMapper();
@@ -45,22 +44,40 @@ public class UserService {
 
   public void add(User user) {
     // Add user
-    String sql = "INSERT INTO user (id, name, email, password_hash, ring, prefstring ) values (?, ?, ?, ?, ?, ?)";
-    jdbcTemplate.update(sql, user.id, user.name, user.email, user.passwordHash, user.ring, user.prefstring);
+    String sql =
+        "INSERT INTO user (id, name, email, password_hash, ring, prefstring ) values (?, ?, ?, ?, ?, ?)";
+    jdbcTemplate.update(
+        sql, user.id, user.name, user.email, user.passwordHash, user.ring, user.prefstring);
 
     // Fetch user id
-    sql = "SELECT id FROM user WHERE name=? AND email=? AND password_hash=? AND ring=? AND prefstring=?";
+    sql =
+        "SELECT id FROM user WHERE name=? AND email=? AND password_hash=? AND ring=? AND prefstring=?";
     int id =
         jdbcTemplate.queryForObject(
-            sql, Integer.class, user.name, user.email, user.passwordHash, user.ring, user.prefstring);
+            sql,
+            Integer.class,
+            user.name,
+            user.email,
+            user.passwordHash,
+            user.ring,
+            user.prefstring);
 
     // Set user id
     user.id = id;
   }
 
   public void update(User user) {
-    String sql = "UPDATE user SET id=?, name=?, email=?, password_hash=?, ring=?, prefstring=? WHERE id=?";
-    jdbcTemplate.update(sql, user.id, user.name, user.email, user.passwordHash, user.ring, user.prefstring, user.id);
+    String sql =
+        "UPDATE user SET id=?, name=?, email=?, password_hash=?, ring=?, prefstring=? WHERE id=?";
+    jdbcTemplate.update(
+        sql,
+        user.id,
+        user.name,
+        user.email,
+        user.passwordHash,
+        user.ring,
+        user.prefstring,
+        user.id);
   }
 
   public User delete(int id) {
@@ -80,5 +97,19 @@ public class UserService {
     String sql = "SELECT count(*) FROM user WHERE email=?";
     int count = jdbcTemplate.queryForObject(sql, Integer.class, email);
     return count != 0;
+  }
+
+  public List<User> query(Integer id, String name, String email, Integer ring) {
+    String sql =
+        "SELECT u.id, u.name, u.email, u.ring FROM user u"
+            + " WHERE 1=1 "
+            + (id == null ? "" : " AND l.id = " + id)
+            + (name == null ? "" : " AND l.name = \'" + Utils.escapeSQLString(name) + "\'")
+            + (email == null ? "" : " AND l.email = \'" + Utils.escapeSQLString(email) + "\'")
+            + (ring == null ? "" : " AND l.ring = " + ring)
+            + ";";
+
+    RowMapper<User> rowMapper = new UserRowMapper();
+    return this.jdbcTemplate.query(sql, rowMapper);
   }
 }

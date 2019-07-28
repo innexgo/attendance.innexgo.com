@@ -1,6 +1,5 @@
 package innexo;
 
-
 public class ApiKey {
   public int id;
   int userId;

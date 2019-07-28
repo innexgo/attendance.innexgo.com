@@ -33,16 +33,13 @@ public class ScheduleService {
 
     // Fetch schedule id
     sql = "SELECT id FROM schedule WHERE student_id=? AND course_id=?";
-    int id =
-        jdbcTemplate.queryForObject(
-            sql, Integer.class, schedule.studentId, schedule.courseId);
+    int id = jdbcTemplate.queryForObject(sql, Integer.class, schedule.studentId, schedule.courseId);
     schedule.id = id;
   }
 
   public void update(Schedule schedule) {
     String sql = "UPDATE schedule SET id=?, student_id=?, course_id=? WHERE id=?";
-    jdbcTemplate.update(
-        sql, schedule.id, schedule.studentId, schedule.courseId, schedule.id);
+    jdbcTemplate.update(sql, schedule.id, schedule.studentId, schedule.courseId, schedule.id);
   }
 
   public Schedule delete(int id) {
@@ -60,16 +57,16 @@ public class ScheduleService {
       Integer locationId,
       Integer period) {
     String sql =
-      "SELECT s.id, s.student_id, s.course_id FROM schedule s" +
-      " JOIN course c ON s.course_id = c.id" +
-      " WHERE 1=1 " +
-      (scheduleId == null ? "" : " AND s.id = " + scheduleId) +
-      (studentId  == null ? "" : " AND s.student_id = " + studentId) +
-      (courseId   == null ? "" : " AND s.course_id = " + courseId) +
-      (teacherId  == null ? "" : " AND c.teacher_id = " + teacherId) +
-      (locationId == null ? "" : " AND c.location_id = " + locationId) +
-      (period     == null ? "" : " AND c.period = " + period) +
-      ";";
+        "SELECT s.id, s.student_id, s.course_id FROM schedule s"
+            + " JOIN course c ON s.course_id = c.id"
+            + " WHERE 1=1 "
+            + (scheduleId == null ? "" : " AND s.id = " + scheduleId)
+            + (studentId == null ? "" : " AND s.student_id = " + studentId)
+            + (courseId == null ? "" : " AND s.course_id = " + courseId)
+            + (teacherId == null ? "" : " AND c.teacher_id = " + teacherId)
+            + (locationId == null ? "" : " AND c.location_id = " + locationId)
+            + (period == null ? "" : " AND c.period = " + period)
+            + ";";
 
     RowMapper<Schedule> rowMapper = new ScheduleRowMapper();
     return this.jdbcTemplate.query(sql, rowMapper);

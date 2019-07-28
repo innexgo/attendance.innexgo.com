@@ -1,6 +1,5 @@
 package innexo;
 
-
 public class Encounter {
   public int id;
   public int time;
