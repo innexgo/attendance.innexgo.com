@@ -12,9 +12,18 @@ function closeSidebar() {
 
 $(document).ready(function(){
   var prefs = Cookies.getJSON('prefs');
+  var userType = Cookies.getJSON('apiKey').user.ring;
   var sidebar = prefs.sidebarStyle;
   var colour = prefs.colourTheme;
   var sidebarInfo = prefs.sidebarInfo;
+
+  if (userType == 0) {
+    var addtlNavItem = document.createElement('a');
+    addtlNavItem.classList.add('sidebar-item', 'navbar-palette');
+    addtlNavItem.href = 'manageusers.html';
+    addtlNavItem.innerHTML = 'Manage Users';
+    document.getElementById('sidebar-navigation').appendChild(addtlNavItem);
+  };
 
   var sidebarItems = $('.sidebar-item').addClass('list-group-item');
   sidebarItems.not('.sidebar-info-list').addClass('list-group-item-action');
