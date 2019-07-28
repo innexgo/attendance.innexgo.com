@@ -1,3 +1,3 @@
 #!/bin/sh
 
-sudo ./gradlew -Dserver.port=80 bootRun
+sudo java -jar -Dserver.port=80 ./build/libs/innexo-0.0.1-SNAPSHOT.jar
