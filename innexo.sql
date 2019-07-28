@@ -29,7 +29,7 @@ CREATE TABLE `api_key` (
   `expiration_time` bigint(20) NOT NULL,
   `key_hash` char(64) COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -38,7 +38,7 @@ CREATE TABLE `api_key` (
 
 LOCK TABLES `api_key` WRITE;
 /*!40000 ALTER TABLE `api_key` DISABLE KEYS */;
-INSERT INTO `api_key` VALUES (1,1,1564028826,2147483647,'W4ebmalH-VJCO8eV-eQSfPNW1Lf-95Z0Qp-43xw4pYU='),(2,2,1564030067,1564031867,'hA6uOQNPkORHi1q62nU4CpqpRqPUUcvxc9qfyhz-e24='),(3,2,1564030069,1564031869,'76PAGzW7fJdeSm5wzLNkRTCZGDfNEqjsvrwSd8Xuxkg='),(4,2,1564030119,1564031919,'RMhg_OhPRm35JzJyYvwfk5gg3J3fSNUclu-6LDYGHo4='),(5,2,1564068597,1564070397,'oW_tkfjiYaR4ipKv5Oacgr5xpwZxlXuHJnc_6NWgn9g='),(6,2,1564068995,1564070794,'Aat11GMknAJiVHMJF_36wOOQOXi5ImIBPjQT5FL5-v0='),(7,2,1564072610,1564074410,'Ezk-2wav_EyuS3HyrBrpgwOEbna_bBTBfSNWIpFTiLE='),(8,2,1564083406,1564085206,'WqgQV9fv3ILAEWbcIsvTR4ptwXBShsja41hQAlOXA30='),(9,2,1564093983,1564095783,'60Hhc8s-80BKQ9RLeFoeSNXtB7IwHCIA2yHQ7n9adeU='),(10,2,1564151173,1564152972,'7jMTdIZWrKoPWn-ewdKMAJCkRAPQd175_HtD2uQrmvU='),(11,2,1564154187,1564155987,'6RMYVHYJOOD40TxhtwVxritfGYjrIbWzJYTDFVlC0G8='),(12,2,1564156627,1564158427,'tyx6leXaWVDb5DTpETMawqYD7dH8MEA40cC-Sw4XsoU=');
+INSERT INTO `api_key` VALUES (1,1,1564028826,2147483647,'W4ebmalH-VJCO8eV-eQSfPNW1Lf-95Z0Qp-43xw4pYU='),(2,2,1564030067,1564031867,'hA6uOQNPkORHi1q62nU4CpqpRqPUUcvxc9qfyhz-e24='),(3,2,1564030069,1564031869,'76PAGzW7fJdeSm5wzLNkRTCZGDfNEqjsvrwSd8Xuxkg='),(4,2,1564030119,1564031919,'RMhg_OhPRm35JzJyYvwfk5gg3J3fSNUclu-6LDYGHo4='),(5,2,1564068597,1564070397,'oW_tkfjiYaR4ipKv5Oacgr5xpwZxlXuHJnc_6NWgn9g='),(6,2,1564068995,1564070794,'Aat11GMknAJiVHMJF_36wOOQOXi5ImIBPjQT5FL5-v0='),(7,2,1564072610,1564074410,'Ezk-2wav_EyuS3HyrBrpgwOEbna_bBTBfSNWIpFTiLE='),(8,2,1564083406,1564085206,'WqgQV9fv3ILAEWbcIsvTR4ptwXBShsja41hQAlOXA30='),(9,2,1564093983,1564095783,'60Hhc8s-80BKQ9RLeFoeSNXtB7IwHCIA2yHQ7n9adeU='),(10,2,1564151173,1564152972,'7jMTdIZWrKoPWn-ewdKMAJCkRAPQd175_HtD2uQrmvU='),(11,2,1564154187,1564155987,'6RMYVHYJOOD40TxhtwVxritfGYjrIbWzJYTDFVlC0G8='),(12,2,1564156627,1564158427,'tyx6leXaWVDb5DTpETMawqYD7dH8MEA40cC-Sw4XsoU='),(13,2,1564159699,1564161498,'Cfc3dsEf2GuJ-C_olMOomk_UkZNfU7gXTVfg-dVNOso='),(14,2,1564159782,1564161582,'KgoOXP4yOtObXxrhLRcSP77ZH8EO4NtPu12NaT3Cc_s='),(15,2,1564159982,1564161782,'EW6_EP_oF1o31QTTW91dDUf-EoRipc8A7nd5uA2IDxw='),(16,2,1564242961,1564244760,'-5DujZobL9TWpsrzfQ8pACt9NByD_5M4w3u1HJA_tQw='),(17,2,1564276415,1564278215,'YOlssitOlQy6GxuUT_NZfFwIKmvYyVdTu9DlY7AlVrg='),(18,2,1564276488,1564278288,'fWu8rh6cLnrzF-S9xeebxyW5BDtG-zxjE5IngSo9XkY=');
 /*!40000 ALTER TABLE `api_key` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -56,7 +56,7 @@ CREATE TABLE `course` (
   `period` bigint(20) NOT NULL,
   `subject` varchar(31) COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -65,6 +65,7 @@ CREATE TABLE `course` (
 
 LOCK TABLES `course` WRITE;
 /*!40000 ALTER TABLE `course` DISABLE KEYS */;
+INSERT INTO `course` VALUES (1,2,3,1,'history'),(2,3,2,1,'math'),(3,2,2,2,'english'),(4,3,3,2,'chemistry');
 /*!40000 ALTER TABLE `course` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -158,7 +159,7 @@ CREATE TABLE `schedule` (
   `student_id` bigint(20) NOT NULL,
   `course_id` bigint(20) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -167,6 +168,7 @@ CREATE TABLE `schedule` (
 
 LOCK TABLES `schedule` WRITE;
 /*!40000 ALTER TABLE `schedule` DISABLE KEYS */;
+INSERT INTO `schedule` VALUES (1,30090001,1),(2,30090002,1),(3,30090003,2),(4,30090004,2),(5,30090005,2);
 /*!40000 ALTER TABLE `schedule` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -191,6 +193,7 @@ CREATE TABLE `student` (
 
 LOCK TABLES `student` WRITE;
 /*!40000 ALTER TABLE `student` DISABLE KEYS */;
+INSERT INTO `student` VALUES (30090001,'Richard Le',''),(30090002,'Henry Chen',''),(30090003,'Marek Pinto',''),(30090004,'Govind Pimpale',''),(30090005,'Jenny Le','');
 /*!40000 ALTER TABLE `student` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -210,7 +213,7 @@ CREATE TABLE `user` (
   `prefstring` varchar(1023) COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `email` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -219,7 +222,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (1,'Adam Smith','adamsmith@example.com','$2a$10$QP.tNPcWees66yCZ3w03leoj8j16cXcGxvEcxehRCN7XsawCJGv8y',0,''),(2,'Bernard Johnson','bernardjohnson@example.com','$2a$10$7N0TLOnkez33cLQKMTeCV.VyuxfXdYmtO5JEA4gE4penZBqFLGGJ2',1,'');
+INSERT INTO `user` VALUES (1,'Adam Smith','adamsmith@example.com','$2a$10$QP.tNPcWees66yCZ3w03leoj8j16cXcGxvEcxehRCN7XsawCJGv8y',0,''),(2,'Bernard Johnson','bernardjohnson@example.com','$2a$10$7N0TLOnkez33cLQKMTeCV.VyuxfXdYmtO5JEA4gE4penZBqFLGGJ2',1,'{\"colourTheme\":\"dark\",\"sidebarStyle\":\"fixed\",\"sidebarInfo\":\"augmented\"}'),(3,',Clara Brown','clarabrown@example.com','$2a$10$B4BiQbAZeD18ztqa7629oeiLyMEd/om9KGo/S7w/iG8IqLiOKiegu',1,'');
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -232,4 +235,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-07-26  8:59:50
+-- Dump completed on 2019-07-27 18:22:27

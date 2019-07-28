@@ -1,11 +1,9 @@
 package innexo;
 
 import java.time.Instant;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -60,7 +58,6 @@ public class InnexoApiController {
     return location;
   }
 
-
   Period fillPeriod(Period period) {
     return period;
   }
@@ -113,7 +110,7 @@ public class InnexoApiController {
     if (userId == -1 && !Utils.isEmpty(email)) {
 
       // if the email is registered
-      if(userService.existsByEmail(email)) {
+      if (userService.existsByEmail(email)) {
         // get email
         userId = userService.getByEmail(email).id;
       }
@@ -165,7 +162,7 @@ public class InnexoApiController {
   public ResponseEntity<?> newEncounter(
       @RequestParam("studentId") Integer studentId,
       @RequestParam("locationId") Integer locationId,
-      @RequestParam(value="courseId", defaultValue="-1") Integer courseId,
+      @RequestParam(value = "courseId", defaultValue = "-1") Integer courseId,
       @RequestParam("type") String type,
       @RequestParam("apiKey") String apiKey) {
     if (!Utils.isEmpty(type)
@@ -228,9 +225,7 @@ public class InnexoApiController {
       @RequestParam("studentId") Integer studentId,
       @RequestParam("courseId") Integer courseId,
       @RequestParam("apiKey") String apiKey) {
-    if (studentService.exists(studentId)
-        && courseService.exists(courseId)
-        && isTrusted(apiKey)) {
+    if (studentService.exists(studentId) && courseService.exists(courseId) && isTrusted(apiKey)) {
       Schedule schedule = new Schedule();
       schedule.studentId = studentId;
       schedule.courseId = courseId;
@@ -244,10 +239,9 @@ public class InnexoApiController {
   @RequestMapping("student/new/")
   public ResponseEntity<?> newStudent(
       @RequestParam("studentId") Integer id,
-      @RequestParam(value="tags", defaultValue="") String tags,
+      @RequestParam(value = "tags", defaultValue = "") String tags,
       @RequestParam("apiKey") String apiKey) {
-    if (!studentService.exists(id)
-        && isAdministrator(apiKey)) {
+    if (!studentService.exists(id) && isAdministrator(apiKey)) {
       Student student = new Student();
       student.id = id;
       student.tags = tags;
@@ -269,7 +263,7 @@ public class InnexoApiController {
     if (!Utils.isEmpty(name)
         && !Utils.isEmpty(password)
         && !Utils.isEmpty(email)
-        && ring <= UserService.TEACHER
+        && ring == UserService.ADMINISTRATOR
         && !userService.existsByEmail(email)
         && isAdministrator(apiKey)) {
       User u = new User();
@@ -287,19 +281,18 @@ public class InnexoApiController {
 
   @RequestMapping("user/update/")
   public ResponseEntity<?> updateUser(@RequestParam Map<String, String> allRequestParam) {
-    if (   // make sure changer is admin
-        isAdministrator(allRequestParam.getOrDefault("apiKey","invalid"))
-           // make sure user exists
-        && userService.exists(parseInteger(allRequestParam.getOrDefault("userId","-1")))
-           // if they are trying to set a name, it cannot be blank
+    if ( // make sure changer is admin
+    isAdministrator(allRequestParam.getOrDefault("apiKey", "invalid"))
+        // make sure user exists
+        && userService.exists(parseInteger(allRequestParam.getOrDefault("userId", "-1")))
+        // if they are trying to set a name, it cannot be blank
         && !Utils.isEmpty(allRequestParam.getOrDefault("userName", "default"))
-           // if they are trying to set a password, it cannot be blank
+        // if they are trying to set a password, it cannot be blank
         && !Utils.isEmpty(allRequestParam.getOrDefault("password", "default"))
-           // if they are trying to set an email, it cannot be blank
+        // if they are trying to set an email, it cannot be blank
         && !Utils.isEmpty(allRequestParam.getOrDefault("email", "default"))
-           // if they are trying to set an email, it cannot be taken already
-        && (allRequestParam.containsKey("email") ? !userService.existsByEmail("email") : true)
-    ) {
+        // if they are trying to set an email, it cannot be taken already
+        && (allRequestParam.containsKey("email") ? !userService.existsByEmail("email") : true)) {
       User user = userService.getById(parseInteger(allRequestParam.get("userId")));
 
       // if it is specified, set the name
@@ -353,7 +346,7 @@ public class InnexoApiController {
       @RequestParam("userId") Integer userId,
       @RequestParam("prefstring") String prefstring,
       @RequestParam("apiKey") String apiKey) {
-    if(!Utils.isEmpty(apiKey) && userService.exists(userId)) {
+    if (!Utils.isEmpty(apiKey) && userService.exists(userId)) {
       User apiUser = getUserIfValid(apiKey);
       User user = userService.getById(userId);
       if (apiUser != null && apiUser.id == user.id) {
@@ -379,8 +372,7 @@ public class InnexoApiController {
   public ResponseEntity<?> deleteCourse(
       @RequestParam("courseId") Integer courseId, @RequestParam("apiKey") String apiKey) {
     if (isAdministrator(apiKey)) {
-      return new ResponseEntity<>(
-          fillCourse(courseService.delete(courseId)), HttpStatus.OK);
+      return new ResponseEntity<>(fillCourse(courseService.delete(courseId)), HttpStatus.OK);
     } else {
       return BAD_REQUEST;
     }
@@ -447,8 +439,6 @@ public class InnexoApiController {
     }
   }
 
-
-
   @RequestMapping("apiKey/")
   public ResponseEntity<?> viewApiKey(@RequestParam Map<String, String> allRequestParam) {
     if (allRequestParam.containsKey("apiKey") && isTrusted(allRequestParam.get("apiKey"))) {
@@ -459,7 +449,9 @@ public class InnexoApiController {
                   parseInteger(allRequestParam.get("userId")),
                   parseInteger(allRequestParam.get("minCreationTime")),
                   parseInteger(allRequestParam.get("maxCreationTime")),
-                  Utils.encodeApiKey(allRequestParam.get("apiKeyData")))
+                  allRequestParam.containsKey("apiKeyData")
+                      ? Utils.encodeApiKey(allRequestParam.get("apiKeyData"))
+                      : null)
               .stream()
               .map(x -> fillApiKey(x))
               .collect(Collectors.toList());
@@ -471,14 +463,20 @@ public class InnexoApiController {
 
   @RequestMapping("course/")
   public ResponseEntity<?> viewCourse(@RequestParam Map<String, String> allRequestParam) {
-    if (allRequestParam.containsKey("apiKey") && isTrusted(allRequestParam.get("apiKey"))) {
-      if (allRequestParam.containsKey("courseId")) {
-        return new ResponseEntity<>(
-            Arrays.asList(courseService.getById(Integer.parseInt(allRequestParam.get("courseId")))),
-            HttpStatus.OK);
-      } else {
-        return new ResponseEntity<>(courseService.getAll(), HttpStatus.OK);
-      }
+    String apiKey = allRequestParam.get("apiKey");
+    if (!Utils.isEmpty(apiKey) && isTrusted(apiKey)) {
+      List<Course> els =
+          courseService
+              .query(
+                  parseInteger(allRequestParam.get("courseId")),
+                  parseInteger(allRequestParam.get("teacherId")),
+                  parseInteger(allRequestParam.get("locationId")),
+                  parseInteger(allRequestParam.get("studentId")),
+                  allRequestParam.get("subject"))
+              .stream()
+              .map(x -> fillCourse(x))
+              .collect(Collectors.toList());
+      return new ResponseEntity<>(els, HttpStatus.OK);
     } else {
       return BAD_REQUEST;
     }
@@ -512,16 +510,16 @@ public class InnexoApiController {
   @RequestMapping("location/")
   public ResponseEntity<?> viewLocation(@RequestParam Map<String, String> allRequestParam) {
     if (allRequestParam.containsKey("apiKey") && isTrusted(allRequestParam.get("apiKey"))) {
-      Stream<Location> stream = null;
-      if (allRequestParam.containsKey("locationId")) {
-        stream =
-            Stream.of(locationService.getById(Integer.parseInt(allRequestParam.get("locationId"))));
-      } else {
-        stream = locationService.getAll().stream();
-      }
-
-      return new ResponseEntity<>(
-          stream.map(x -> fillLocation(x)).collect(Collectors.toList()), HttpStatus.OK);
+      List<Location> list =
+          locationService
+              .query(
+                  parseInteger(allRequestParam.get("locationId")),
+                  allRequestParam.get("name"),
+                  allRequestParam.get("tags"))
+              .stream()
+              .map(x -> fillLocation(x))
+              .collect(Collectors.toList());
+      return new ResponseEntity<>(list, HttpStatus.OK);
     } else {
       return BAD_REQUEST;
     }
@@ -573,35 +571,36 @@ public class InnexoApiController {
   @RequestMapping("student/")
   public ResponseEntity<?> viewStudent(@RequestParam Map<String, String> allRequestParam) {
     if (allRequestParam.containsKey("apiKey") && isTrusted(allRequestParam.get("apiKey"))) {
-      Stream<Student> stream = null;
-      if (allRequestParam.containsKey("studentId")) {
-        stream =
-            Stream.of(studentService.getById(Integer.parseInt(allRequestParam.get("studentId"))));
-      } else {
-        stream = studentService.getAll().stream();
-      }
-
-      return new ResponseEntity<>(
-          stream.map(x -> fillStudent(x)).collect(Collectors.toList()), HttpStatus.OK);
+      List<Student> list =
+          studentService
+              .query(
+                  parseInteger(allRequestParam.get("studentId")),
+                  allRequestParam.get("name"),
+                  allRequestParam.get("tags"),
+                  parseInteger(allRequestParam.get("courseId")))
+              .stream()
+              .map(x -> fillStudent(x))
+              .collect(Collectors.toList());
+      return new ResponseEntity<>(list, HttpStatus.OK);
     } else {
       return BAD_REQUEST;
     }
   }
 
-
   @RequestMapping("user/")
   public ResponseEntity<?> viewUser(@RequestParam Map<String, String> allRequestParam) {
     if (allRequestParam.containsKey("apiKey") && isTrusted(allRequestParam.get("apiKey"))) {
-      if (allRequestParam.containsKey("userId")) {
-        return new ResponseEntity<>(
-            Arrays.asList(userService.getById(Integer.parseInt(allRequestParam.get("userId")))),
-            HttpStatus.OK);
-      } else if (allRequestParam.containsKey("name")) {
-        return new ResponseEntity<>(
-            userService.getByName(allRequestParam.get("name")), HttpStatus.OK);
-      } else {
-        return new ResponseEntity<>(userService.getAll(), HttpStatus.OK);
-      }
+      List<User> list =
+          userService
+              .query(
+                  parseInteger(allRequestParam.get("userId")),
+                  allRequestParam.get("name"),
+                  allRequestParam.get("email"),
+                  parseInteger(allRequestParam.get("ring")))
+              .stream()
+              .map(x -> fillUser(x))
+              .collect(Collectors.toList());
+      return new ResponseEntity<>(list, HttpStatus.OK);
     } else {
       return BAD_REQUEST;
     }
@@ -614,11 +613,11 @@ public class InnexoApiController {
 
   @RequestMapping("populatePeriods")
   public ResponseEntity<?> populatePeriods() {
-    int initialTime = (int)Instant.now().getEpochSecond();
-    for(int i = 0; i < 10000; i++) {
+    int initialTime = (int) Instant.now().getEpochSecond();
+    for (int i = 0; i < 10000; i++) {
       Period period = new Period();
-      period.startTime = initialTime + i*60;
-      period.endTime = initialTime + (i+1)*60;
+      period.startTime = initialTime + i * 60;
+      period.endTime = initialTime + (i + 1) * 60;
       period.period = i % 3;
       periodService.add(period);
     }

@@ -1,7 +1,7 @@
 function currentStatus() {
   var apiKey = Cookies.getJSON('apiKey');
   var course = Cookies.getJSON('course');
-  var currentPeriod = Cookies.getJSON('period');
+  var period = Cookies.getJSON('period');
 
   //bail if we dont have all of the necessary cookies
   if(apiKey == null || course == null || period == null) {
@@ -18,12 +18,12 @@ function currentStatus() {
       // select people who have a student permission
       var students = JSON.parse(xhr.responseText);
 
-      // now we must get the encounters within this time range and at this course 
+      // now we must get the encounters within this time range and at this course
       var getEncounterListUrl = thisUrl() + '/encounter/' +
         '?type=in' +
         '&courseId=' + course.id +
-        '&minTime' + currentPeriod.startTime +
-        '&maxTime' + currentPeriod.endTime +
+        '&minTime' + period.startTime +
+        '&maxTime' + period.endTime +
         '&apiKey=' + apiKey.key;
       request(getEncounterListUrl,
         // success
@@ -35,13 +35,13 @@ function currentStatus() {
           // now we must compare to check if each one of these works
           var studentencounters = JSON.parse(xhr.responseText);
 
-          for(var i = 0; i < studentschedules.length; i++) {
-            var schedstudent = studentschedules[i];
+          for(var i = 0; i < students.length; i++) {
+            var student = students[i];
             var text = '<span class="fa fa-times"></span>';
             var bgcolor = '#ffcccc';
             var fgcolor = '#ff0000';
             // if we can find it
-            if(studentencounters.filter(e=>e.user.id==schedstudent.user.id).length > 0) {
+            if(studentencounters.filter(e=>e.user.id==student.id).length > 0) {
               text =  '<span class="fa fa-check"></span>'
               bgcolor = '#ccffcc';
               fgcolor = '#00ff00';
@@ -49,8 +49,8 @@ function currentStatus() {
 
             table.insertRow(0).innerHTML=
               ('<tr>' +
-              '<td>' + schedstudent.user.name + '</td>' +
-              '<td>' + schedstudent.user.id + '</td>' +
+              '<td>' + student.name + '</td>' +
+              '<td>' + student.id + '</td>' +
               '<td style="background-color:'+bgcolor+';color:'+fgcolor+'">' + text + '</td>' +
               '</tr>');
           }

@@ -57,20 +57,16 @@ public class StudentService {
     return count != 0;
   }
 
-  public List<Student> query(
-      Integer id,
-      String name,
-      String tags,
-      Integer courseId) {
+  public List<Student> query(Integer id, String name, String tags, Integer courseId) {
     String sql =
-      "SELECT st.id, st.name, st.tags FROM student st" +
-      (courseId == null ? "" : " JOIN schedule sc ON st.id = sc.student_id ") +
-      " WHERE 1=1 " +
-
-      (id       == null ? "" : " AND st.id = " + id) +
-      (name     == null ? "" : " AND st.name = " + name) +
-      (courseId == null ? "" : " AND sc.course_id = " + courseId) +
-      ";";
+        "SELECT st.id, st.name, st.tags FROM student st"
+            + (courseId == null ? "" : " JOIN schedule sc ON st.id = sc.student_id ")
+            + " WHERE 1=1 "
+            + (id == null ? "" : " AND st.id = " + id)
+            + (name == null ? "" : " AND st.name = \'" + name + "\'")
+            + (tags == null ? "" : " AND st.tags = \'" + tags + "\'")
+            + (courseId == null ? "" : " AND sc.course_id = " + courseId)
+            + ";";
 
     RowMapper<Student> rowMapper = new StudentRowMapper();
     return this.jdbcTemplate.query(sql, rowMapper);

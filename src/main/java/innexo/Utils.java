@@ -1,9 +1,9 @@
 package innexo;
 
 import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 import java.util.Random;
-import java.security.NoSuchAlgorithmException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -41,8 +41,7 @@ public class Utils {
 
   // create 128 bit key
   public static String generateKey() {
-    return Long.toHexString(new Random().nextLong()) +
-      Long.toHexString(new Random().nextLong());
+    return Long.toHexString(new Random().nextLong()) + Long.toHexString(new Random().nextLong());
   }
 
   public static boolean isEmpty(String str) {

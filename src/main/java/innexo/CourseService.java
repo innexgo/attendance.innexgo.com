@@ -30,8 +30,10 @@ public class CourseService {
 
   public void add(Course course) {
     // Add course
-    String sql = "INSERT INTO course (id, teacher_id, location_id, period, subject) values (?, ?, ?, ?, ?)";
-    jdbcTemplate.update(sql, course.id, course.teacherId, course.locationId, course.period, course.subject);
+    String sql =
+        "INSERT INTO course (id, teacher_id, location_id, period, subject) values (?, ?, ?, ?, ?)";
+    jdbcTemplate.update(
+        sql, course.id, course.teacherId, course.locationId, course.period, course.subject);
 
     // Fetch course id
     sql = "SELECT id FROM course WHERE teacher_id=? AND location_id=? AND period=? AND subject=?";
@@ -44,8 +46,16 @@ public class CourseService {
   }
 
   public void update(Course course) {
-    String sql = "UPDATE course SET id=?, teacher_id=?, location_id=? period=?, subject=? WHERE id=?";
-    jdbcTemplate.update(sql, course.id, course.teacherId, course.locationId, course.period, course.subject, course.id);
+    String sql =
+        "UPDATE course SET id=?, teacher_id=?, location_id=? period=?, subject=? WHERE id=?";
+    jdbcTemplate.update(
+        sql,
+        course.id,
+        course.teacherId,
+        course.locationId,
+        course.period,
+        course.subject,
+        course.id);
   }
 
   public Course delete(int id) {
@@ -62,22 +72,17 @@ public class CourseService {
   }
 
   public List<Course> query(
-      Integer id,
-      Integer teacherId,
-      Integer locationId,
-      Integer studentId,
-      String subject) {
+      Integer id, Integer teacherId, Integer locationId, Integer studentId, String subject) {
     String sql =
-      "SELECT c.id, c.teacher_id, c.location_id, c.period, c.subject FROM course" +
-      (studentId == null ? "" : " JOIN schedule sc ON c.id = sc.course_id ") +
-      " WHERE 1=1 " +
-
-      (id         == null ? "" : " AND c.id = " + id) +
-      (teacherId  == null ? "" : " AND c.teacherId = " + teacherId) +
-      (locationId == null ? "" : " AND c.locationId = " + locationId) +
-      (studentId  == null ? "" : " AND sc.studentId = " + studentId) +
-      (subject    == null ? "" : " AND c.subject = " + subject) +
-      ";";
+        "SELECT c.id, c.teacher_id, c.location_id, c.period, c.subject FROM course c"
+            + (studentId == null ? "" : " JOIN schedule sc ON c.id = sc.course_id ")
+            + " WHERE 1=1 "
+            + (id == null ? "" : " AND c.id = " + id)
+            + (teacherId == null ? "" : " AND c.teacher_id = " + teacherId)
+            + (locationId == null ? "" : " AND c.location_id = " + locationId)
+            + (studentId == null ? "" : " AND sc.student_id = " + studentId)
+            + (subject == null ? "" : " AND c.subject = \'" + Utils.escapeSQLString(subject) + "\'")
+            + ";";
 
     RowMapper<Course> rowMapper = new CourseRowMapper();
     return this.jdbcTemplate.query(sql, rowMapper);

@@ -15,7 +15,8 @@ public class EncounterService {
   @Autowired private JdbcTemplate jdbcTemplate;
 
   public Encounter getById(int id) {
-    String sql = "SELECT id, time, location_id, course_id, student_id, type FROM encounter WHERE id=?";
+    String sql =
+        "SELECT id, time, location_id, course_id, student_id, type FROM encounter WHERE id=?";
     RowMapper<Encounter> rowMapper = new BeanPropertyRowMapper<Encounter>(Encounter.class);
     Encounter encounter = jdbcTemplate.queryForObject(sql, rowMapper, id);
     return encounter;
@@ -38,22 +39,24 @@ public class EncounterService {
       String studentName,
       String type) {
     String sql =
-      "SELECT e.id, e.time, e.location_id, e.course_id, e.student_id, e.type " +
-      " FROM encounter e" +
-      " JOIN student s ON e.student_id = s.id" +
-      " JOIN course c ON e.course_id = c.id" +
-      " WHERE 1=1 " +
-      (encounterId  == null ? "" : " AND e.id=" + encounterId) +
-      (studentId    == null ? "" : " AND e.student_id=" + studentId) +
-      (locationId   == null ? "" : " AND e.location_id=" + locationId) +
-      (teacherId    == null ? "" : " AND c.teacher_id=" + teacherId) +
-      (type         == null ? "" : " AND e.type=\'" + Utils.escapeSQLString(type) + "\'") +
-      (minTime      == null ? "" : " AND e.time >= " + minTime) +
-      (maxTime      == null ? "" : " AND e.time <= " + maxTime) +
-      (studentName  == null ? "" : " AND s.name=\'" + Utils.escapeSQLString(studentName) + "\'") +
-      " ORDER BY e.time DESC" +
-      (count        == null ? "" : " LIMIT " + count) +
-      ";";
+        "SELECT e.id, e.time, e.location_id, e.course_id, e.student_id, e.type "
+            + " FROM encounter e"
+            + " JOIN student s ON e.student_id = s.id"
+            + " JOIN course c ON e.course_id = c.id"
+            + " WHERE 1=1 "
+            + (encounterId == null ? "" : " AND e.id=" + encounterId)
+            + (studentId == null ? "" : " AND e.student_id=" + studentId)
+            + (locationId == null ? "" : " AND e.location_id=" + locationId)
+            + (teacherId == null ? "" : " AND c.teacher_id=" + teacherId)
+            + (type == null ? "" : " AND e.type=\'" + Utils.escapeSQLString(type) + "\'")
+            + (minTime == null ? "" : " AND e.time >= " + minTime)
+            + (maxTime == null ? "" : " AND e.time <= " + maxTime)
+            + (studentName == null
+                ? ""
+                : " AND s.name=\'" + Utils.escapeSQLString(studentName) + "\'")
+            + " ORDER BY e.time DESC"
+            + (count == null ? "" : " LIMIT " + count)
+            + ";";
     RowMapper<Encounter> rowMapper = new EncounterRowMapper();
     return this.jdbcTemplate.query(sql, rowMapper);
   }
@@ -63,7 +66,13 @@ public class EncounterService {
     String sql =
         "INSERT INTO encounter (id, time, location_id, e.course_id, student_id, type) values (?, ?, ?, ?, ?, ?)";
     jdbcTemplate.update(
-        sql, encounter.id, encounter.time, encounter.locationId, encounter.courseId, encounter.studentId, encounter.type);
+        sql,
+        encounter.id,
+        encounter.time,
+        encounter.locationId,
+        encounter.courseId,
+        encounter.studentId,
+        encounter.type);
 
     RowMapper<Encounter> rowMapper = new EncounterRowMapper();
 
@@ -71,14 +80,16 @@ public class EncounterService {
     sql =
         "SELECT id, time, location_id, course_id, student_id, type FROM encounter WHERE time=? AND location_id=? AND student_id=? AND type=? ORDER BY id DESC";
     List<Encounter> encounters =
-        this.jdbcTemplate.query(sql, rowMapper,
+        this.jdbcTemplate.query(
+            sql,
+            rowMapper,
             encounter.time,
             encounter.locationId,
             encounter.studentId,
             encounter.type);
     if (!encounters.isEmpty()) {
-      for(int i = 0; i < encounters.size(); i++) {
-        if(encounters.get(i).courseId == encounter.courseId) {
+      for (int i = 0; i < encounters.size(); i++) {
+        if (encounters.get(i).courseId == encounter.courseId) {
           encounter.id = encounters.get(i).id;
         } else {
           System.out.println("ERROR: encounter went missing");
@@ -88,7 +99,8 @@ public class EncounterService {
   }
 
   public void update(Encounter encounter) {
-    String sql = "UPDATE encounter SET id=?, time=?, location_id=?, course_id=? student_id=?, type=? WHERE id=?";
+    String sql =
+        "UPDATE encounter SET id=?, time=?, location_id=?, course_id=? student_id=?, type=? WHERE id=?";
     jdbcTemplate.update(
         sql,
         encounter.id,

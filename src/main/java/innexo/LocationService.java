@@ -56,4 +56,17 @@ public class LocationService {
     int count = jdbcTemplate.queryForObject(sql, Integer.class, id);
     return count != 0;
   }
+
+  public List<Location> query(Integer id, String name, String tags) {
+    String sql =
+        "SELECT l.id, l.name, l.tags FROM location l"
+            + " WHERE 1=1 "
+            + (id == null ? "" : " AND l.id = " + id)
+            + (name == null ? "" : " AND l.name = \'" + Utils.escapeSQLString(name) + "\'")
+            + (tags == null ? "" : " AND l.tags = \'" + Utils.escapeSQLString(tags) + "\'")
+            + ";";
+
+    RowMapper<Location> rowMapper = new LocationRowMapper();
+    return this.jdbcTemplate.query(sql, rowMapper);
+  }
 }

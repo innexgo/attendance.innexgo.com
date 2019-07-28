@@ -33,7 +33,9 @@ public class PeriodService {
 
     // Fetch period id
     sql = "SELECT id FROM period WHERE start_time=? AND end_time=? AND period=?";
-    int id = jdbcTemplate.queryForObject(sql, Integer.class, period.startTime, period.endTime, period.period);
+    int id =
+        jdbcTemplate.queryForObject(
+            sql, Integer.class, period.startTime, period.endTime, period.period);
 
     // Set period id
     period.id = id;
@@ -64,22 +66,21 @@ public class PeriodService {
       Integer period,
       Integer courseId, // all periods that have this course
       Integer teacherId // all periods where this teacher teaches a coruse
-    ) {
+      ) {
 
     String sql =
-      "SELECT p.id, p.start_time, p.end_time, p.period FROM period p" +
-      (courseId == null || teacherId == null 
-        ? ""
-        : " JOIN course c ON c.period = p.period "
-      ) +
-      " WHERE 1=1 " +
-      (id        == null ? "" : " AND p.id = " + id) +
-      (minTime   == null ? "" : " AND p.end_time >= " + minTime) +
-      (maxTime   == null ? "" : " AND p.start_time < " + maxTime) +
-      (period    == null ? "" : " AND p.period = " + period) +
-      (courseId  == null ? "" : " AND c.course_id = " + courseId) +
-      (teacherId == null ? "" : " AND c.teacher_id = " + teacherId) +
-      ";";
+        "SELECT p.id, p.start_time, p.end_time, p.period FROM period p"
+            + (courseId == null || teacherId == null
+                ? ""
+                : " JOIN course c ON c.period = p.period ")
+            + " WHERE 1=1 "
+            + (id == null ? "" : " AND p.id = " + id)
+            + (minTime == null ? "" : " AND p.end_time >= " + minTime)
+            + (maxTime == null ? "" : " AND p.start_time < " + maxTime)
+            + (period == null ? "" : " AND p.period = " + period)
+            + (courseId == null ? "" : " AND c.course_id = " + courseId)
+            + (teacherId == null ? "" : " AND c.teacher_id = " + teacherId)
+            + ";";
 
     RowMapper<Period> rowMapper = new PeriodRowMapper();
     return this.jdbcTemplate.query(sql, rowMapper);
