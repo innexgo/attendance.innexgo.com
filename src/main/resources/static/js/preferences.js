@@ -1,23 +1,58 @@
 "use strict"
 
 $(document).ready(function(){
+  const idToPref = {
+    "sidebar-style": "sidebarStyle",
+    "sidebar-info": "sidebarInfo",
+    "colour-theme": "colourTheme",
+  }
+
   var prefs = Cookies.getJSON('prefs');
-  const prefNameToClass = {
-    colourTheme: "colour-theme",
-    sidebarStyle: "sidebar-style",
-    sidebarInfo: "sidebar-info",
-  };
+  var options = $('ul.segmented-buttons li');
+
+  for (var option of options) {
+    var prefName = prefs[
+      idToPref[
+        $(option)
+        .parent()[0]
+        .id]
+      ];
+
+    if (!(isEmpty(option.id))) {
+      if (option.id == prefName) {
+        option.classList.add('selected');
+      }
+    }
+    else {
+      if (option.innerHTML.toLowerCase() == prefName) {
+        option.classList.add('selected');
+      }
+    }
+  }
 
 
-  $('.active:not(.tab)').removeClass('active');
+  $('.segmented-buttons').click(function (event) {
 
-  for (var [prefName, pref] of Object.entries(prefs)) {
-    //Gets the right item, by class of element above and onclick value
-    document.querySelector('.'+prefNameToClass[prefName]
-      +" a[onclick=\"changePref('"+prefName+"', '"+pref+"')"+'"]').classList.add('active');
-  };
+    var innerElements = $('li', this);
+    var selectedElement = innerElements.filter(event.target)[0];
 
-  $('.nav-link:not(.tab):not(.active)').addClass('text-dark').addClass('palette-border');
+    innerElements
+      .removeClass('selected')
+      .filter(event.target)
+      .addClass('selected');
+
+    if (!(isEmpty(selectedElement.id))) {
+      var prefVal = selectedElement.id;
+    }
+    else {
+      var prefVal = selectedElement.innerHTML.toLowerCase();
+    }
+    
+    changePref(
+      idToPref[this.id],
+      prefVal
+    );
+  });
 });
 
 // Sets the preferences cookie and updates the server

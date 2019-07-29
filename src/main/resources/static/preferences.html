@@ -87,20 +87,17 @@
           <div class="container" style="margin-left: 0.75rem;">
             <h5 class="card-title" style="margin-top: 0.75rem;">Sidebar</h5>
             <div class="container" style="margin-left: 0.5em">
-              <ul class="nav nav-pills sidebar-style">
-                <li class="nav-item">
-                  <a class="nav-link active" href="#" onclick="changePref('sidebarStyle', 'fixed')">Fixed</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="#" onclick="changePref('sidebarStyle', 'collapsable')">Collapsable</a>
-                </li>
+              <ul class="segmented-buttons row" id="sidebar-style">
+
+                <li class="nav-link">Fixed</li>
+                <li class="nav-link">Collapsable</li>
+
               </ul>
-              <ul class="nav nav-pills sidebar-info">
-                <li class="nav-item">
-                  <a class="nav-link" href="#" onclick="changePref('sidebarInfo', 'augmented')">Addtl. Info</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="#" onclick="changePref('sidebarInfo', 'slim')">Navigation Buttons Only</a>
+              <ul class="segmented-buttons row" id="sidebar-info">
+                
+                <li class="nav-link" id="augmented">Addtl. Info</li>
+                <li class="nav-link" id="slim">Navigation Buttons Only</li>
+                
                 </li>
               </ul>
             </div>
@@ -109,23 +106,17 @@
           <div class="container" style="margin-left: 0.75rem;">
             <h5 class="card-title" style="margin-top: 0.75rem;">Color</h5>
             <div class="container" style="margin-left: 0.5em">
-              <ul class="nav nav-pills colour-theme">
-                <li class="nav-item">
-                  <a class="nav-link" href="#" onclick="changePref('colourTheme', 'default')">Default</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="#" onclick="changePref('colourTheme', 'dark')">Dark</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="#" onclick="changePref('colourTheme', 'light')">Light</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="#" onclick="changePref('colourTheme', 'blue')">Blue</a>
+              <ul class="segmented-buttons row" id="colour-theme">
+                
+                  <li class="nav-link">Default</li>
+                  <li class="nav-link">Dark</li>
+                  <li class="nav-link">Light</li>
+                  <li class="nav-link">Blue</li>
+
                 </li>
               </ul>
             </div>
           </div>
-
         </div>
       </div>
     </div>
