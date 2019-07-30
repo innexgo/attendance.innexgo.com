@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!--Background Information -->
+    <title>History</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- CSS References -->
+    <link rel="stylesheet" href="vendor/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="vendor/fontawesome-free/css/all.min.css">
+    <link rel="stylesheet" href="vendor/bootstrap4-toggle/css/bootstrap4-toggle.min.css">
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/sidebar.css">
+    <link rel="stylesheet" href="css/settings.css">
+
+    <!-- JS References -->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.js"></script>
+    <script src="vendor/bootstrap4-toggle/js/bootstrap4-toggle.min.js"></script>
+    <script src="vendor/scannerdetection/jquery.scannerdetection.min.js"></script>
+    <script src="vendor/js-cookie/js.cookie.js"></script>
+    <script src="vendor/moment/moment.min.js"></script>
+    <script src="js/common.js"></script>
+    <script src="js/signedin.js"></script>
+    <script src="js/loadprefs.js"></script>
+    <script src="js/sidebar.js"></script>
+    <script src="js/settings.js"></script>
+  </head>
+  <body class="palette-level-one">
+    <!-- Sidebar -->
+    <nav style="height:100%" id="sidebar" class="navbar-palette">
+      <nav class="navbar sidebar-top">
+        <button type="button" onclick="closeSidebar()" class="btn btn-icon sidebar-button">
+          <i class="fa fa-bars navbar-palette"></i>
+        </button>
+        <div style="margin:auto;display:block">
+          <h6 id="info-time">Current Time</h6>
+        </div>
+      </nav>
+      <div class="sidebar-item sidebar-info-list navbar-palette" style="border:none;display:block;">
+        <h6 id="info-name">Teacher Name</h6>
+        <h6 id="info-period">Current Period</h6>
+        <h6 id="info-location">Current Location</h6>
+      </div>
+      <div id="sidebar-navigation">
+        <a class="sidebar-item navbar-palette" href="overviewdecider.html">Overview</a>
+        <a class="sidebar-item navbar-palette" href="history.html">History</a>
+        <a class="sidebar-item navbar-palette" href="recentactivity.html">Recent Activity</a>
+      </div>
+      <div class="sidebar-bottom">
+        <a class="sidebar-item navbar-palette" href="#"><i class="fa fa-cog"></i> Settings</a>
+        <a class="sidebar-item navbar-palette" href="login.html"><i class="fa fa-sign-out-alt"></i> Sign out</a>
+      </div>
+    </nav>
+    <!-- Overlay -->
+    <div id="overlay" onclick="closeSidebar()"></div>
+    <!-- Top Navbar -->
+    <nav class="navbar navbar-expand-md navbar-palette">
+      <div class="order-0">
+        <button type="button" onclick="openSidebar()" class="btn btn-icon sidebar-button">
+          <i class="fa fa-bars navbar-palette"></i>
+        </button>
+      </div>
+      <!-- Center Logo -->
+      <div class="mx-auto order-0">
+        <a id="navbar-brand" class="navbar-brand navbar-palette" href="index.html"></a>
+      </div>
+    </nav>
+    <!-- Content -->
+
+    <div id="not-sidebar" class="container-fluid">
+      <div class="card-deck my-3 px-3">
+        <div class="card card-no-border col-sm mx-3 palette-level-two">
+          <div class="card-header palette-header">
+            <ul class="nav nav-tabs card-header-tabs" style="font-size: 1.15em">
+              <li class="nav-item">
+                <a class="nav-link tab active" href="#">Settings</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link tab" href="preferences.html">Preferences</a>
+              </li>
+            </ul>
+          </div>
+          <div class="container" style="margin-left: 0.75rem;">
+            <h5 class="card-title" style="margin-top: 0.75rem;">Change Password</h5>
+            <div class="container" style="margin-left: 0.5em">
+              <div class="form-group row">
+                <label for="text-input" class="col-sm-4 col-form-label">Old password:</label>
+                <div class="col-sm-7">
+                  <input class="form-control" type="password" placeholder="Old Password" id="cur-password-check">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="text-input" class="col-sm-4 col-form-label">New password:</label>
+                <div class="col-sm-7">
+                  <input class="form-control" type="password" placeholder="New Password" id="new-pass-input">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="text-input" class="col-sm-4 col-form-label">Confirm Password:</label>
+                <div class="col-sm-7">
+                  <input class="form-control" type="password" placeholder="Confirm Password" id="confirm-new-pass-input">
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-4"></div>
+                <div class="col-sm-7" style="text-align: right">
+                  <input id="query-button" class="input-button btn" style='margin-bottom:1em; padding: .375rem 1.5rem;' type="button" onclick=";" value="Submit">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="container" style="margin-left: 0.75rem;">
+            <h5 class="card-title" style="margin-top: 0.75rem;">Change Email</h5>
+            <div class="container" style="margin-left: 0.5em">
+              <div class="form-group row">
+                <label for="text-input" class="col-sm-4 col-form-label">New Email:</label>
+                <div class="col-sm-7">
+                  <input class="form-control" type="text" placeholder="New Email" id="new-email-input">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="text-input" class="col-sm-4 col-form-label">Current Password:</label>
+                <div class="col-sm-7">
+                  <input class="form-control" type="password" placeholder="Current Password" id="cur-password-check">
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-4"></div>
+                <div class="col-sm-7" style="text-align: right">
+                  <input id="query-button" class="input-button btn" style='margin-bottom:1em; padding: .375rem 1.5rem;' type="button" onclick=";" value="Submit">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
