@@ -27,7 +27,7 @@ public class InnexoApiController {
   static final ResponseEntity<?> INTERNAL_SERVER_ERROR =
       new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
   static final ResponseEntity<?> OK = new ResponseEntity<>(HttpStatus.OK);
-  static final ResponseEntity<?> NOT_AUTHORIZED = new ResponseEntity<>(HttpStatus.NOT_AUTHORIZED);
+  static final ResponseEntity<?> UNAUTHORIZED = new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
   static final ResponseEntity<?> NOT_FOUND = new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
   Integer parseInteger(String str) {
@@ -666,7 +666,7 @@ public class InnexoApiController {
 
   @RequestMapping("validate/")
   public ResponseEntity<?> validateTrusted(@RequestParam("apiKey") String apiKey) {
-    return isTrusted(apiKey) ? OK : NOT_AUTHORIZED;
+    return isTrusted(apiKey) ? OK : UNAUTHORIZED;
   }
 
   @RequestMapping("populatePeriods")
