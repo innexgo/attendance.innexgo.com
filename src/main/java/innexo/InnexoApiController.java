@@ -30,11 +30,27 @@ public class InnexoApiController {
   static final ResponseEntity<?> NOT_FOUND = new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
   Integer parseInteger(String str) {
-    return str == null ? null : Integer.parseInt(str);
+    if(str == null) {
+      return null;
+    } else {
+      try {
+        return Integer.parseInt(str);
+      } catch ( NumberFormatException e) {
+        return null;
+      }
+    }
   }
 
   Boolean parseBoolean(String str) {
-    return str == null ? null : Boolean.parseBoolean(str);
+    if(str == null) {
+      return null;
+    } else {
+      try {
+        return Boolean.parseBoolean(str);
+      } catch ( NumberFormatException e) {
+        return null;
+      }
+    }
   }
 
   ApiKey fillApiKey(ApiKey apiKey) {
@@ -51,6 +67,9 @@ public class InnexoApiController {
   Encounter fillEncounter(Encounter encounter) {
     encounter.location = fillLocation(locationService.getById(encounter.locationId));
     encounter.student = fillStudent(studentService.getById(encounter.studentId));
+    encounter.course = encounter.courseId == null
+      ? null
+      : fillCourse(courseService.getById(encounter.courseId));
     return encounter;
   }
 
@@ -239,11 +258,13 @@ public class InnexoApiController {
   @RequestMapping("student/new/")
   public ResponseEntity<?> newStudent(
       @RequestParam("studentId") Integer id,
+      @RequestParam("graduatingYear") Integer graduatingYear,
       @RequestParam(value = "tags", defaultValue = "") String tags,
       @RequestParam("apiKey") String apiKey) {
     if (!studentService.exists(id) && isAdministrator(apiKey)) {
       Student student = new Student();
       student.id = id;
+      student.graduatingYear = graduatingYear;
       student.tags = tags;
       studentService.add(student);
       return new ResponseEntity<>(fillStudent(student), HttpStatus.OK);
@@ -279,6 +300,40 @@ public class InnexoApiController {
     }
   }
 
+  @RequestMapping("student/update")
+  public ResponseEntity<?> updateStudent(@RequestParam Map<String, String> allRequestParam) {
+    if ( // make sure changer is admin
+    isAdministrator(allRequestParam.getOrDefault("apiKey", "invalid"))
+        // make sure student exists
+        && studentService.exists(parseInteger(allRequestParam.getOrDefault("studentId", "-1")))
+        // if they are trying to set a name, it cannot be blank
+        && !Utils.isEmpty(allRequestParam.getOrDefault("studentName", "default"))
+        // if they are setting the graduating year, it must be a valid integer
+        && parseInteger(allRequestParam.getOrDefault("graduatingYear", "0")) != null) {
+      Student student = studentService.getById(parseInteger(allRequestParam.get("studentId")));
+
+      // if it is specified, set the name
+      if (allRequestParam.containsKey("studentName")) {
+        student.name = allRequestParam.get("studentName");
+      }
+
+      // if it is specified, set the tags
+      if (allRequestParam.containsKey("tags")) {
+        student.tags = allRequestParam.get("tags");
+      }
+
+      // if it is specified, set the graduatingYear
+      if (allRequestParam.containsKey("graduatingYear")) {
+        student.graduatingYear = parseInteger(allRequestParam.get("graduatingYear"));
+      }
+
+      studentService.update(student);
+      return new ResponseEntity<>(fillStudent(student), HttpStatus.OK);
+    } else {
+      return BAD_REQUEST;
+    }
+  }
+
   @RequestMapping("user/update/")
   public ResponseEntity<?> updateUser(@RequestParam Map<String, String> allRequestParam) {
     if ( // make sure changer is admin
@@ -292,7 +347,9 @@ public class InnexoApiController {
         // if they are trying to set an email, it cannot be blank
         && !Utils.isEmpty(allRequestParam.getOrDefault("email", "default"))
         // if they are trying to set an email, it cannot be taken already
-        && (allRequestParam.containsKey("email") ? !userService.existsByEmail("email") : true)) {
+        && (allRequestParam.containsKey("email") ? !userService.existsByEmail("email") : true)
+        // if they are trying to set the ring, it must be a valid integer
+        && parseInteger(allRequestParam.getOrDefault("ring", "0")) != null) {
       User user = userService.getById(parseInteger(allRequestParam.get("userId")));
 
       // if it is specified, set the name
@@ -575,6 +632,7 @@ public class InnexoApiController {
           studentService
               .query(
                   parseInteger(allRequestParam.get("studentId")),
+                  parseInteger(allRequestParam.get("graduatingYear")),
                   allRequestParam.get("name"),
                   allRequestParam.get("tags"),
                   parseInteger(allRequestParam.get("courseId")))

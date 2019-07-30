@@ -64,7 +64,7 @@ public class EncounterService {
   public void add(Encounter encounter) {
     // Add encounter
     String sql =
-        "INSERT INTO encounter (id, time, location_id, e.course_id, student_id, type) values (?, ?, ?, ?, ?, ?)";
+        "INSERT INTO encounter (id, time, location_id, course_id, student_id, type) values (?, ?, ?, ?, ?, ?)";
     jdbcTemplate.update(
         sql,
         encounter.id,
@@ -78,13 +78,14 @@ public class EncounterService {
 
     // Fetch encounter id
     sql =
-        "SELECT id, time, location_id, course_id, student_id, type FROM encounter WHERE time=? AND location_id=? AND student_id=? AND type=? ORDER BY id DESC";
+        "SELECT id, time, location_id, course_id, student_id, type FROM encounter WHERE time=? AND location_id=? AND course_id=? AND student_id=? AND type=? ORDER BY id DESC";
     List<Encounter> encounters =
         this.jdbcTemplate.query(
             sql,
             rowMapper,
             encounter.time,
             encounter.locationId,
+            encounter.courseId,
             encounter.studentId,
             encounter.type);
     if (!encounters.isEmpty()) {
