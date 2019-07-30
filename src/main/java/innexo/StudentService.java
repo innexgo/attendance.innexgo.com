@@ -33,7 +33,9 @@ public class StudentService {
 
     // Fetch student id
     sql = "SELECT id FROM student WHERE graduating_year=? AND name=? AND tags=?";
-    int id = jdbcTemplate.queryForObject(sql, Integer.class, student.graduatingYear, student.name, student.tags);
+    int id =
+        jdbcTemplate.queryForObject(
+            sql, Integer.class, student.graduatingYear, student.name, student.tags);
 
     // Set student id
     student.id = id;
@@ -41,7 +43,8 @@ public class StudentService {
 
   public void update(Student student) {
     String sql = "UPDATE student SET id=?, graduating_year=?, name=?, tags=? WHERE id=?";
-    jdbcTemplate.update(sql, student.id, student.graduatingYear, student.name, student.tags, student.id);
+    jdbcTemplate.update(
+        sql, student.id, student.graduatingYear, student.name, student.tags, student.id);
   }
 
   public Student delete(int id) {
@@ -58,11 +61,7 @@ public class StudentService {
   }
 
   public List<Student> query(
-      Integer id,
-      Integer graduatingYear,
-      String name,
-      String tags,
-      Integer courseId) {
+      Integer id, Integer graduatingYear, String name, String tags, Integer courseId) {
     String sql =
         "SELECT st.id, st.graduating_year, st.name, st.tags FROM student st"
             + (courseId == null ? "" : " JOIN schedule sc ON st.id = sc.student_id ")
