@@ -76,31 +76,28 @@
 
     <div class="container">
       <div style="margin:1em; padding:0px;" class="card-deck palette-level-one">
-        <div class="card col-sm-5 palette-level-two">
-          <h5> 
-            <b><i class="fa fa-search" style="padding-top:20px;padding-bottom:10px;"></i> Search</b>
-          </h5>
+        <div class="card palette-level-two" style="padding-left:1rem">
+          
           <div id="student-select">
             <div class="form-group row" id="name-input-div">
-              <label for="text-input" class="col-sm-4 col-form-label">Name:</label>
-              <div class="col-sm-6">
+              <i class="fa fa-search" style="padding-top: 20px;padding-bottom: 10px;font-size: 1.25rem"></i>
+          
+              <label for="name-input" class="col-form-label" style="width:10%">Name:</label>
+              <div style="width:20%">
                 <input class="form-control" type="text" placeholder="Name" id="name-input">
               </div>
-            </div>
-            <div class="form-group row" id="ID-input-div">
-              <label for="text-input" class="col-sm-4 col-form-label">Student ID:</label>
+            
+              <label for="ID-input" class="col-sm-4 col-form-label">Student ID:</label>
               <div class="col-sm-6">
                 <input class="form-control" type="text" placeholder="ID Number" id="ID-input">
               </div>
-            </div>
-            <div class="form-group row" id="ID-input-div">
-              <label for="text-input" class="col-sm-4 col-form-label">In Course:</label>
+            
+              <label for="course-input" class="col-sm-4 col-form-label">In Course:</label>
               <div class="col-sm-6">
                 <input class="form-control" type="text" placeholder="Course Name" id="course-input">
               </div>
-            </div>
-            <div class="form-group row">
-              <label for="date-input" class="col-sm-4 col-form-label">Grade:</label>
+            
+              <label for="grade-input" class="col-sm-4 col-form-label">Grade:</label>
               <div class="col-sm-6">
                 <select class="form-control" id="grade-input">
                   <option selected>Choose...</option>
@@ -113,8 +110,9 @@
             </div>
           </div>
             <input id="query-button" class="input-button btn" style='margin-bottom:1em' type="button" onclick="onQueryClick();" value="Submit">
-        </div>
-  </body>
+        
+      </div>
+    </body>
 
   <script>
   $('#grade-input').on(
