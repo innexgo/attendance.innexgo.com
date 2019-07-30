@@ -27,27 +27,28 @@ public class InnexoApiController {
   static final ResponseEntity<?> INTERNAL_SERVER_ERROR =
       new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
   static final ResponseEntity<?> OK = new ResponseEntity<>(HttpStatus.OK);
+  static final ResponseEntity<?> NOT_AUTHORIZED = new ResponseEntity<>(HttpStatus.NOT_AUTHORIZED);
   static final ResponseEntity<?> NOT_FOUND = new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
   Integer parseInteger(String str) {
-    if(str == null) {
+    if (str == null) {
       return null;
     } else {
       try {
         return Integer.parseInt(str);
-      } catch ( NumberFormatException e) {
+      } catch (NumberFormatException e) {
         return null;
       }
     }
   }
 
   Boolean parseBoolean(String str) {
-    if(str == null) {
+    if (str == null) {
       return null;
     } else {
       try {
         return Boolean.parseBoolean(str);
-      } catch ( NumberFormatException e) {
+      } catch (NumberFormatException e) {
         return null;
       }
     }
@@ -67,9 +68,8 @@ public class InnexoApiController {
   Encounter fillEncounter(Encounter encounter) {
     encounter.location = fillLocation(locationService.getById(encounter.locationId));
     encounter.student = fillStudent(studentService.getById(encounter.studentId));
-    encounter.course = encounter.courseId == null
-      ? null
-      : fillCourse(courseService.getById(encounter.courseId));
+    encounter.course =
+        encounter.courseId == null ? null : fillCourse(courseService.getById(encounter.courseId));
     return encounter;
   }
 
@@ -666,7 +666,7 @@ public class InnexoApiController {
 
   @RequestMapping("validate/")
   public ResponseEntity<?> validateTrusted(@RequestParam("apiKey") String apiKey) {
-    return isTrusted(apiKey) ? OK : BAD_REQUEST;
+    return isTrusted(apiKey) ? OK : NOT_AUTHORIZED;
   }
 
   @RequestMapping("populatePeriods")
