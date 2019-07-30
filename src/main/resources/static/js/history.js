@@ -119,7 +119,6 @@ function submitQuery(encounterId, userId, userName, locationId, type, minDate, m
       // clear table
       var table = document.getElementById('history-table');
       table.innerHTML = '';
-
       var encounters = JSON.parse(xhr.responseText);
       //go backwards to maintain order
       for(var i = encounters.length-1; i >= 0; i--) {

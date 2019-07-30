@@ -263,12 +263,14 @@ public class InnexoApiController {
   public ResponseEntity<?> newStudent(
       @RequestParam("studentId") Integer id,
       @RequestParam("graduatingYear") Integer graduatingYear,
+      @RequestParam("name") String name,
       @RequestParam(value = "tags", defaultValue = "") String tags,
       @RequestParam("apiKey") String apiKey) {
     if (!studentService.exists(id) && isAdministrator(apiKey)) {
       Student student = new Student();
       student.id = id;
       student.graduatingYear = graduatingYear;
+      student.name = name;
       student.tags = tags;
       studentService.add(student);
       return new ResponseEntity<>(fillStudent(student), HttpStatus.OK);
@@ -675,6 +677,7 @@ public class InnexoApiController {
     return isTrusted(apiKey) ? OK : UNAUTHORIZED;
   }
 
+
   @RequestMapping("batchUploadStudent/")
   public ResponseEntity<?> batchUploadStudent(
       @RequestParam("file") MultipartFile file,
@@ -684,8 +687,14 @@ public class InnexoApiController {
         CSVParser parser = CSVFormat.newFormat('\t')
           .parse(
               new InputStreamReader(new ByteArrayInputStream(file.getBytes()), "UTF8"));
+        int currentGraduatingYear  = Utils.getCurrentGraduatingYear();
         for(CSVRecord record : parser) {
-          System.out.println(record.toString());
+          Integer id = parseInteger(record.get(2));
+          Integer graduatingYear = currentGraduatingYear + (12 - parseInteger(record.get(4)));
+          String name = record.get(1) + ' ' + record.get(0);
+          if(id != null && graduatingYear != null && name != null) {
+            newStudent(id, graduatingYear, name, "", apiKey);
+          }
         }
       } catch(Exception e) {
         e.printStackTrace();

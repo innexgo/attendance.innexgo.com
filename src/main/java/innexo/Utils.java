@@ -1,5 +1,8 @@
 package innexo;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
@@ -54,5 +57,15 @@ public class Utils {
 
   public static String unEscapeSQLString(String str) {
     return str.replaceAll("\'\'", "\'");
+  }
+
+  public static int getCurrentGraduatingYear() {
+    LocalDateTime time = LocalDateTime.ofInstant(Instant.now(), ZoneId.of("UTC"));
+    int currentYear = time.getYear();
+    // if its the fall/winter
+    if(time.getMonth().getValue() >= 7) {
+      currentYear++;
+    }
+    return currentYear;
   }
 }
