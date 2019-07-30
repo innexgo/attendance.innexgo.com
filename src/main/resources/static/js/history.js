@@ -30,7 +30,7 @@ $(document).ready(function(){
 
   minDateField.value = calcDate;
   maxDateField.value = calcDate;
-    
+
   $("#min-date").change(function() {
     checkValidRange("minField", minDateField, maxDateField, "date");
   });
@@ -95,36 +95,16 @@ function normTimestamp(time){
   return moment(time).format("MM/DD/YYYY HH:mm");
 }
 
-function addQueryEntry(encounter) {
-  var table = document.getElementById('result-table');
-  var signInOrSignOutText = encounter.type == 'in' ?
-    '<i class="fa fa-sign-in text-red"></i> Signed-In' :
-    '<i class="fa fa-sign-out text-blue"></i> Signed-Out';
-  if(table.rows.length < 1) {
-    clearResultTable();
-  }
-  table.insertRow(1).innerHTML=
-
-    ('<tr>' +
-      '<td>' + encounter.user.name+ '</td>' +
-      '<td>' + signInOrSignOutText + '</td>' +
-      '<td>' + encounter.location.name + '</td>' +
-      '<td>' + normTimestamp(encounter.time) + '</td>' +
-      '</tr>');
-}
-
-function clearResultTable() {
-  document.getElementById('result-table').innerHTML =
-    '<tr class="table-header">'+
-    '<td>Name</td>'+
-    '<td>In/Out</td>'+
-    '<td>Location</td>'+
-    '<td>Time</td>'+
-    '</tr>';
-}
-
 //gets new data from server and inserts it at the beginning
 function submitQuery(encounterId, userId, userName, locationId, type, minDate, maxDate, count) {
+  var apiKey = Cookies.getJSON('apiKey');
+  var course = Cookies.getJSON('course');
+
+  if(apiKey == null || course == null) {
+    console.log('not enough cookies for recentActivity');
+    return;
+  }
+
   var url = thisUrl() + '/encounter/?apiKey=' + Cookies.getJSON('apiKey').key +
     (isNaN(encounterId) ?       '' : '&encounterId='+encounterId) +
     (isNaN(userId) ?            '' : '&userId='+userId) +
@@ -136,14 +116,24 @@ function submitQuery(encounterId, userId, userName, locationId, type, minDate, m
     (isNaN(count) ?             '' : '&count='+count);
   request(url,
     function(xhr){
+      // clear table
+      var table = document.getElementById('history-table');
+      table.innerHTML = '';
+
       var encounters = JSON.parse(xhr.responseText);
-      clearResultTable();
-      for(var i = 0; i < encounters.length; i++) {
-        addQueryEntry(encounters[i]);
+      //go backwards to maintain order
+      for(var i = encounters.length-1; i >= 0; i--) {
+        var encounter = encounters[i];
+        table.insertRow(0).innerHTML=
+          ('<tr>' +
+            '<td>' + encounter.student.name + '</td>' +
+            '<td>' + encounter.type + '</td>' +
+            '<td>' + moment.unix(encounter.time).fromNow() + '</td>' +
+            '<td>' + encounter.location.name + '</td>' +
+            '</tr>');
       }
     },
-    function(xhr)
-    {
+    function(xhr) {
       console.log(xhr);
     }
   );

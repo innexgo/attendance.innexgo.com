@@ -36,8 +36,6 @@ function recentActivity() {
   );
 }
 
-
-
 $(document).ready(function () {
   recentActivity();
   setInterval(recentActivity, 5000);

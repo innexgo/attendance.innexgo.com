@@ -3,13 +3,17 @@ package innexo;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
+import java.io.ByteArrayInputStream;
+import java.io.InputStreamReader;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.apache.commons.csv.*;
 
 @RestController
 public class InnexoApiController {
@@ -664,9 +668,32 @@ public class InnexoApiController {
     }
   }
 
+  // Special Methods
+
   @RequestMapping("validate/")
   public ResponseEntity<?> validateTrusted(@RequestParam("apiKey") String apiKey) {
     return isTrusted(apiKey) ? OK : UNAUTHORIZED;
+  }
+
+  @RequestMapping("batchUploadStudent/")
+  public ResponseEntity<?> batchUploadStudent(
+      @RequestParam("file") MultipartFile file,
+      @RequestParam("apiKey")String apiKey) {
+    if(isAdministrator(apiKey)) {
+      try {
+        CSVParser parser = CSVFormat.newFormat('\t')
+          .parse(
+              new InputStreamReader(new ByteArrayInputStream(file.getBytes()), "UTF8"));
+        for(CSVRecord record : parser) {
+          System.out.println(record.toString());
+        }
+      } catch(Exception e) {
+        e.printStackTrace();
+      }
+      return OK;
+    } else {
+      return UNAUTHORIZED;
+    }
   }
 
   @RequestMapping("populatePeriods")
