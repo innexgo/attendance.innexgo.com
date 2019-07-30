@@ -28,7 +28,7 @@
     <script src="js/loadprefs.js"></script>
   </head>
   <body class="palette-level-one">
-  <!-- Sidebar -->
+    <!-- Sidebar -->
     <nav style="height:100%" id="sidebar" class="navbar-palette">
       <nav class="navbar sidebar-top">
         <button type="button" onclick="closeSidebar()" class="btn btn-icon sidebar-button">
@@ -44,11 +44,10 @@
         <h6 id="info-location">Current Location</h6>
       </div>
       <div id="sidebar-navigation">
-        <a class="sidebar-item navbar-palette" id href="index.html">Home Page</a>
-        <a class="sidebar-item navbar-palette" href="#">Overview</a>
-        <a class="sidebar-item navbar-palette" href="history.html">History</a>
+        <a class="sidebar-item navbar-palette" href="overviewdecider.html">Overview</a>
+        <a class="sidebar-item navbar-palette" href="#">History</a>
         <a class="sidebar-item navbar-palette" href="recentactivity.html">Recent Activity</a>
-      </div>      
+      </div>
       <div class="sidebar-bottom">
         <a class="sidebar-item navbar-palette" href="settings.html"><i class="fa fa-cog"></i> Settings</a>
         <a class="sidebar-item navbar-palette" href="login.html"><i class="fa fa-sign-out-alt"></i> Sign out</a>
@@ -69,58 +68,73 @@
       </div>
     </nav>
     <!-- Content -->
-    
-    <div class="container">
-      <div style="margin:1em; padding:0px;" class="card-deck palette-level-one">
-        <div class="card col-sm-5 palette-level-two">
-          <h5> 
-            <b><i class="fa fa-search" style="padding-top:20px;padding-bottom:10px;"></i> Search</b>
-          </h5>
-          <div class="form-group row">
-            <label for="text-input" class="col-sm-4 col-form-label">Name:</label>
-            <div class="col-sm-6">
-              <input class="form-control" type="text" placeholder="Name" id="name-input">
-            </div>
-          </div>
-          <div class="form-group row">
-            <label for="text-input" class="col-sm-4 col-form-label">Student ID:</label>
-            <div class="col-sm-6">
-              <input class="form-control" type="text" placeholder="ID Number" id="ID-input">
-            </div>
-          </div>
-          <div class="form-group row">
-            <label for="date-input" class="col-sm-4 col-form-label">From:</label>
-            <div class="col-sm-6">
-              <input style="margin-bottom: 5px" class="form-control" type="date" id="min-date">
-              <input class="form-control" type="time" value="07:00" id="min-time">
-            </div>
-          </div>
-          <div class="form-group row">
-            <label for="date-input" class="col-sm-4 col-form-label">To:</label>
-            <div class="col-sm-6">
-              <input style="margin-bottom: 5px" class="form-control" type="date" id="max-date">
-              <input class="form-control" type="time" value="15:25" id="max-time">
-            </div>
-          </div>
-            <input id="query-button" class="input-button btn" style='margin-bottom:1em' type="button" onclick="onQueryClick();" value="Submit">
-        </div>
 
-        <div class="card col-sm-6 palette-level-two">
-          <header class="container">
-            <h5 class="card-title">
-              <b><i class="fa fa-history" style="padding-top:20px;"></i> Historical Results</b>
-            </h5>
-          </header>
-          <table id="result-table" class="table" style="overflow-y:scroll;">
-            <thead>
-              <tr class="table-header">
-                <td>Name</td>
-                <td>In/Out</td>
-                <td>Location</td>
-                <td>Time</td>
-              </tr>
-            </thead>
-          </table>
+    <div class="container-fluid">
+      <div id="notsidebar">
+        <div class="px-3">
+          <div class="card-deck notsidebar my-3">
+            <!-- Search -->
+            <div class="card col-sm mx-3 palette-level-two">
+              <div class="card-body">
+                <h5 class="card-title text-center">
+                  <span class="fa fa-search"></span>
+                  Search
+                </h5>
+                <div class="form-group row">
+                  <label for="text-input" class="col-sm-4 col-form-label">Name:</label>
+                  <div class="col-sm-6">
+                    <input class="form-control" type="text" placeholder="Name" id="name-input">
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label for="text-input" class="col-sm-4 col-form-label">Student ID:</label>
+                  <div class="col-sm-6">
+                    <input class="form-control" type="text" placeholder="ID Number" id="ID-input">
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label for="date-input" class="col-sm-4 col-form-label">From:</label>
+                  <div class="col-sm-6">
+                    <input style="margin-bottom: 5px" class="form-control" type="date" id="min-date">
+                    <input class="form-control" type="time" value="07:00" id="min-time">
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label for="date-input" class="col-sm-4 col-form-label">To:</label>
+                  <div class="col-sm-6">
+                    <input style="margin-bottom: 5px" class="form-control" type="date" id="max-date">
+                    <input class="form-control" type="time" value="15:25" id="max-time">
+                  </div>
+                </div>
+                <input id="query-button" class="input-button btn" style='margin-bottom:1em' type="button" onclick="onQueryClick();" value="Submit">
+              </div>
+            </div>
+          </div>
+
+          <div class="card-deck my-3">
+            <!-- Table -->
+            <div class="card col-sm-12 mx-3 palette-level-two">
+              <div class="card-body">
+                <h5 class="card-title text-center">
+                  <span class="fa fa-search"></span>
+                  Search
+                </h5>
+                <div class="table-height-standard">
+                  <table class="table striped white">
+                    <thead>
+                      <tr class="table-header">
+                        <td>Name</td>
+                        <td>Action</td>
+                        <td>Time</td>
+                        <td>Location</td>
+                      </tr>
+                    </thead>
+                    <tbody class="table-height-standard" id="recent-activity-table"></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

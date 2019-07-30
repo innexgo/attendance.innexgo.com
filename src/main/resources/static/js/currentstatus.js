@@ -41,7 +41,7 @@ function currentStatus() {
             var bgcolor = '#ffcccc';
             var fgcolor = '#ff0000';
             // if we can find it
-            if(studentencounters.filter(e=>e.user.id==student.id).length > 0) {
+            if(studentencounters.filter(e => e.student.id==student.id).length > 0) {
               text =  '<span class="fa fa-check"></span>'
               bgcolor = '#ccffcc';
               fgcolor = '#00ff00';

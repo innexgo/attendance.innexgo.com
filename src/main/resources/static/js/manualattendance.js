@@ -37,7 +37,7 @@ function submitEncounter(studentId) {
         } else {
           if(lastEncounter.direction == 'in') {
             // infer a sign out at the last location
-            var addOldSignOut = thisUrl()+'/encounter/new/' +
+            var addOldSignOutUrl = thisUrl()+'/encounter/new/' +
               '?studentId=' + studentId +
               '&locationId=' + lastEncounter.location.id +
               (lastEncounter.course == null
@@ -45,7 +45,7 @@ function submitEncounter(studentId) {
                 : '&courseId=' + lastEncounter.course.id) +
               '&type=in' +
               '&apiKey='+apiKey.key;
-            request(url,
+            request(addOldSignOutUrl,
               function(xhr){},
               function(xhr){});
             // direction = in
@@ -62,7 +62,7 @@ function submitEncounter(studentId) {
         '&courseId=' + course.id +
         '&type=' + direction +
         '&apiKey=' + apiKey.key;
-      request(url,
+      request(addEncounterUrl,
         function(xhr){},
         function(xhr){});
     },

@@ -67,6 +67,9 @@ public class InnexoApiController {
   Encounter fillEncounter(Encounter encounter) {
     encounter.location = fillLocation(locationService.getById(encounter.locationId));
     encounter.student = fillStudent(studentService.getById(encounter.studentId));
+    encounter.course = encounter.courseId == null
+      ? null
+      : fillCourse(courseService.getById(encounter.courseId));
     return encounter;
   }
 

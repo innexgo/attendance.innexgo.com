@@ -35,7 +35,7 @@ $(document).ready(function(){
 
     case "fixed":
       $("#sidebar").addClass("sidebar-fixed");
-      $('.card-deck').css('margin-left', '20%');
+      $('#notsidebar').css('padding-left', '20%');
       $('.sidebar-button').remove();
       document.getElementById('overlay').remove();
     break;

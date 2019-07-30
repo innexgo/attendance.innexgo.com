@@ -23,7 +23,7 @@ function recentActivity() {
         var encounter = encounters[i];
         table.insertRow(0).innerHTML=
           ('<tr>' +
-            '<td>' + encounter.user.name + '</td>' +
+            '<td>' + encounter.student.name + '</td>' +
             '<td>' + encounter.type + '</td>' +
             '<td>' + moment.unix(encounter.time).fromNow() + '</td>' +
             '<td>' + encounter.location.name + '</td>' +
