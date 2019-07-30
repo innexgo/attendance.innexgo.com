@@ -35,7 +35,7 @@ $(document).ready(function(){
 
     case "fixed":
       $("#sidebar").addClass("sidebar-fixed");
-      $('#notsidebar').css('padding-left', '20%');
+      $('#not-sidebar').css('padding-left', '20%');
       $('.sidebar-button').remove();
       document.getElementById('overlay').remove();
     break;
