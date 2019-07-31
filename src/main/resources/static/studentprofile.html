@@ -9,16 +9,14 @@
     <!-- CSS References -->
     <link rel="stylesheet" href="vendor/bootstrap/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="vendor/fontawesome-free/css/all.min.css"/>
-    <link rel="stylesheet" href="vendor/bootstrap4-toggle/css/bootstrap4-toggle.min.css"/>
     <link rel="stylesheet" href="css/common.css"/>
     <link rel="stylesheet" href="css/sidebar.css"/>
     <link rel="stylesheet" href="vendor/chart/css/Chart.min.css"/>
-    
+
 
     <!-- JS References -->
     <script src="vendor/jquery/jquery.min.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.bundle.js"></script>
-    <script src="vendor/bootstrap4-toggle/js/bootstrap4-toggle.min.js"></script>
     <script src="vendor/scannerdetection/jquery.scannerdetection.min.js"></script>
     <script src="vendor/js-cookie/js.cookie.js"></script>
     <script src="vendor/moment/moment.min.js"></script>
@@ -69,14 +67,50 @@
         <a id="navbar-brand" class="navbar-brand navbar-palette" href="index.html"></a>
       </div>
     </nav>
-    <!-- Content -->
 
+
+    <!-- Content -->
     <div id="not-sidebar" class="container-fluid">
-      <div class="card-deck my-3 px-3">
-        <div class="card card-no-border palette-level-two">
-          <canvas id="chart-one" height="50%" width="50%"></canvas>
+      <div class="row my-3 px-3">
+
+        <!-- Student Stats -->
+        <div class="card col-sm mx-3 card-no-border palette-level-two">
+          <div class="card-body">
+            <div>
+              <h5 id="studentprofile-name" class="card-title text-center">Current Student</h5>
+            </div>
+            <div class="card-text">
+              <h6>
+                <table>
+                  <tr>
+                    <td>ID: </td>
+                    <td id="studentprofile-id"></td>
+                    <td>Total Tardies</td>
+                    <td id="studentprofile-total-tardies"></td>
+                  </tr>
+                  <tr>
+                    <td>Tags: </td>
+                    <td id="studentprofile-tags"></td>
+                    <td>Total Absences</td>
+                    <td id="studentprofile-total-absences"></td>
+                  </tr>
+                </table>
+              </h6>
+              <hr>
+              <table class="table">
+                <thead>
+                  <tr>
+                    <td>Class</td>
+                    <td>Teacher</td>
+                    <td>Location</td>
+                  </tr>
+                </thead>
+                <tbody id="studentprofile-
+            </div>
+          </div>
         </div>
-        <div class="card card-no-border palette-level-two">
+
+        <div class="card col-sm card-no-border palette-level-two">
           <canvas id="chart-two" height="50%" width="50%"></canvas>
         </div>
       </div>
