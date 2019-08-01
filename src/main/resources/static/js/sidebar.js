@@ -18,12 +18,12 @@ $(document).ready(function(){
   var sidebarInfo = prefs.sidebarInfo;
 
   if (userType == 0) {
-    var addtlNavItem = document.createElement('a');
-    addtlNavItem.classList.add('sidebar-item', 'navbar-palette');
-    addtlNavItem.href = 'manageusers.html';
-    addtlNavItem.innerHTML = 'Manage Users';
-    document.getElementById('sidebar-navigation').appendChild(addtlNavItem);
-  };
+    document.getElementById('my-overview').href = 'adminoverview.html';
+    document.getElementById('my-managestudent').href = 'adminmanagestudent.html';
+  } else {
+    document.getElementById('my-overview').href = 'overview.html';
+    document.getElementById('my-managestudent').href = 'managestudent.html';
+  }
 
   var sidebarItems = $('.sidebar-item').addClass('list-group-item');
   sidebarItems.not('.sidebar-info-list').addClass('list-group-item-action');
