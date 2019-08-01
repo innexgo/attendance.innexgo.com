@@ -49,7 +49,7 @@ function loginattempt() {
   }
 
   // get date 30 min into the future
-  var apiKeyExpirationTime = moment().add(30, 'minutes').unix();
+  var apiKeyExpirationTime = moment().add(30, 'hours').unix();
 
   var url = thisUrl() +
     '/apiKey/new/?email=' + encodeURIComponent(userName) +

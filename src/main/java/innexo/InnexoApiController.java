@@ -248,7 +248,12 @@ public class InnexoApiController {
       @RequestParam("studentId") Integer studentId,
       @RequestParam("courseId") Integer courseId,
       @RequestParam("apiKey") String apiKey) {
-    if (studentService.exists(studentId) && courseService.exists(courseId) && isTrusted(apiKey)) {
+    if (isTrusted(apiKey) &&
+        studentService.exists(studentId) &&
+        courseService.exists(courseId) &&
+        scheduleService.query(null, studentId, null, null, null,
+          courseService.getById(courseId).period).size() == 0)
+    {
       Schedule schedule = new Schedule();
       schedule.studentId = studentId;
       schedule.courseId = courseId;
@@ -705,13 +710,39 @@ public class InnexoApiController {
     }
   }
 
+  @RequestMapping("batchSetSchedule/")
+  public ResponseEntity<?> batchSetCourse(
+      @RequestParam("courseId") Integer courseId,
+      @RequestParam("file") MultipartFile file,
+      @RequestParam("apiKey") String apiKey) {
+    if(isTrusted(apiKey)) {
+      try {
+        CSVParser parser = CSVFormat.newFormat('\t')
+          .parse(
+              new InputStreamReader(new ByteArrayInputStream(file.getBytes()), "UTF8"));
+        int currentGraduatingYear  = Utils.getCurrentGraduatingYear();
+        for(CSVRecord record : parser) {
+          Integer id = parseInteger(record.get(2));
+          if(id != null) {
+            newSchedule(id, courseId, apiKey);
+          }
+        }
+      } catch(Exception e) {
+        e.printStackTrace();
+      }
+      return OK;
+    } else {
+      return UNAUTHORIZED;
+    }
+  }
+
   @RequestMapping("populatePeriods")
   public ResponseEntity<?> populatePeriods() {
     int initialTime = (int) Instant.now().getEpochSecond();
     for (int i = 0; i < 10000; i++) {
       Period period = new Period();
-      period.startTime = initialTime + i * 60;
-      period.endTime = initialTime + (i + 1) * 60;
+      period.startTime = initialTime + i * 20;
+      period.endTime = initialTime + ((i + 1) * 20);
       period.period = i % 3;
       periodService.add(period);
     }

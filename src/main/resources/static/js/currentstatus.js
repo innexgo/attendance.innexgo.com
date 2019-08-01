@@ -3,9 +3,12 @@ function currentStatus() {
   var course = Cookies.getJSON('course');
   var period = Cookies.getJSON('period');
 
+  var table = document.getElementById('current-status-table');
+
   //bail if we dont have all of the necessary cookies
   if(apiKey == null || course == null || period == null) {
     console.log('lack necessary cookies to calculate current status');
+    table.innerHTML='';
     return;
   }
 
@@ -22,13 +25,12 @@ function currentStatus() {
       var getEncounterListUrl = thisUrl() + '/encounter/' +
         '?type=in' +
         '&courseId=' + course.id +
-        '&minTime' + period.startTime +
-        '&maxTime' + period.endTime +
+        '&minTime=' + period.startTime +
+        '&maxTime=' + period.endTime +
         '&apiKey=' + apiKey.key;
       request(getEncounterListUrl,
         // success
         function(xhr) {
-          var table = document.getElementById('current-status-table');
           //blank table
           table.innerHTML='';
 
