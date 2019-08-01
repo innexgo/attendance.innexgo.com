@@ -2,7 +2,7 @@
 <html>
   <head>
     <!--Background Information -->
-    <title>Tutorial Dashboard</title>
+    <title>Recent Activity</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -24,7 +24,7 @@
     <script src="js/signedin.js"></script>
     <script src="js/loadprefs.js"></script>
     <script src="js/sidebar.js"></script>
-    <script src="js/teachermanageschedule.js"></script>
+    <script src="js/recentactivity.js"></script>
   </head>
 
   <body class="palette-level-one">
@@ -69,45 +69,35 @@
         <a id="navbar-brand" class="navbar-brand navbar-palette" href="index.html"></a>
       </div>
     </nav>
-
     <!-- Content -->
+
+    <!-- Center Screen -->
     <div id="not-sidebar" class="container-fluid">
-      <div class="px-3 my-3">
-        <div class="card-deck">
-
-          <!-- Upload Batch -->
-          <div class="card col-sm-4 palette-level-two">
-            <div class="card-body">
-              <div>
-                <h5 class="card-title text-center">Upload Student Batch</h5>
-              </div>
-              <p class="card-text">Please upload a CSV file containing students exported from SchoolLoop.</p>
-              <input id="manage-file" type="file"></input>
-              <button id="manage-submit" type="input-button" onclick="onQueryClick();" class="btn mt-3 btn-block btn-warning">
-                Submit
-              </button>
+      <div class="card-deck px-3 my-3">
+        <!-- Recent Activity -->
+        <div class="card col-sm mx-3 palette-level-two">
+          <div class="card-body">
+            <div>
+              <h5 class="card-title text-center">Recent Activity</h5>
             </div>
-          </div>
-
-          <!-- View Classes -->
-          <div class="card col-sm mx-3 palette-level-two">
-            <div class="card-body">
-              <div>
-                <h5 class="card-title text-center">View Courses</h5>
-              </div>
-              <p class="card-text">View students in your courses</p>
-              <table class="table">
+            <p class="card-text">Most recent activity from your students</p>
+            <div class="table-height-standard">
+              <table class="table striped white">
                 <thead>
                   <tr class="table-header">
                     <td>Name</td>
-                    <td>Grade</td>
+                    <td>Action</td>
+                    <td>Time</td>
+                    <td>Location</td>
                   </tr>
                 </thead>
-                <tbody id="teachermanageschedule-table"></tbody>
+                <tbody class="table-height-standard" id="recent-activity-table"></tbody>
               </table>
             </div>
           </div>
         </div>
+
       </div>
+    </div>
   </body>
 </html>

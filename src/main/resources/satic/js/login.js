@@ -62,9 +62,13 @@ function loginattempt() {
       var apiKey = JSON.parse(xhr.responseText);
       // store info
       Cookies.set('apiKey', apiKey);
-      doPrefstring(Cookies.get('prefs'));
       // now jump to next page
-      window.location.assign(thisUrl() + "/overviewdecider.html");
+      if(apiKey.user.ring == 0) {
+        window.location.assign(thisUrl() + "/adminoverview.html");
+      } else {
+        window.location.assign(thisUrl() + "/overview.html");
+      }
+
     },
     // failure function
     function(xhr) {
@@ -72,34 +76,6 @@ function loginattempt() {
       giveError("Your email or password doesn't match our records.");
     }
   );
-}
-
-function doPrefstring(input) {
-  try {
-    var input = JSON.parse(input);
-  }
-  catch (TypeError) {
-    var input = {};
-  }
-  if(!input.hasOwnProperty('colourTheme')){
-    input.colourTheme = "dark";
-  }
-  if(!input.hasOwnProperty('sidebarStyle')){
-    input.sidebarStyle = "fixed";
-  }
-  if(!input.hasOwnProperty('sidebarInfo')) {
-    input.sidebarInfo = "augmented";
-  }
-
-  var apiKey = Cookies.getJSON('apiKey')
-
-  var url = thisUrl() +
-    '/user/updatePrefs/?apiKey=' + encodeURIComponent(apiKey.key) +
-    '&prefstring=' + encodeURIComponent(JSON.stringify(input)) +
-    '&userId=' + encodeURIComponent(apiKey.user.id);
-
-  request(url);
-  Cookies.set('prefs', input);
 }
 
 Cookies.remove('apiKey');
