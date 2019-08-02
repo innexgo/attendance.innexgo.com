@@ -1,7 +1,7 @@
 "use strict"
 
 //gets new data from server and inserts it at the beginning
-function onQueryClick() {
+function batchUploadStudent() {
   var apiKey = Cookies.getJSON('apiKey');
 
   if(apiKey == null) {

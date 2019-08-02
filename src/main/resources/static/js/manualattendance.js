@@ -1,7 +1,7 @@
 
 
 function submitEncounter(studentId) {
-  var checkBox = document.getElementById('manual-direction-toggle');
+  var checkBox = document.getElementById('manual-type-toggle');
   var course = Cookies.getJSON('course');
   var apiKey = Cookies.getJSON('apiKey');
 
@@ -21,21 +21,21 @@ function submitEncounter(studentId) {
   request(getLastEncounterUrl,
     //success
     function(xhr) {
-      var direction = 'in';
+      var type = 'in';
       //TODO play sound on correct sign in
 
       var lastEncounter = JSON.parse(xhr.responseText)[0];
       console.log(lastEncounter);
-      // if it's null, there was no last encounter, so the direction is in
+      // if it's null, there was no last encounter, so the type is in
       if(lastEncounter == null) {
-        direction = 'in';
+        type = 'in';
       } else {
         //if the last encounter was at the same place
         if(lastEncounter.location.id == course.location.id) {
           // whatever the opposite was
-          direction = lastEncounter.direction == 'in' ? 'out' : 'in';
+          type = lastEncounter.type == 'in' ? 'out' : 'in';
         } else {
-          if(lastEncounter.direction == 'in') {
+          if(lastEncounter.type == 'in') {
             // infer a sign out at the last location
             var addOldSignOutUrl = thisUrl()+'/encounter/new/' +
               '?studentId=' + studentId +
@@ -48,10 +48,10 @@ function submitEncounter(studentId) {
             request(addOldSignOutUrl,
               function(xhr){},
               function(xhr){});
-            // direction = in
-            direction = 'in';
+            // type = in
+            type = 'in';
           } else {
-            direction = 'in';
+            type = 'in';
           }
         }
       }
@@ -60,7 +60,7 @@ function submitEncounter(studentId) {
         '?studentId=' + studentId +
         '&locationId=' + course.location.id +
         '&courseId=' + course.id +
-        '&type=' + direction +
+        '&type=' + type +
         '&apiKey=' + apiKey.key;
       request(addEncounterUrl,
         function(xhr){},

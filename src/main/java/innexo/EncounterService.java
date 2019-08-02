@@ -48,12 +48,12 @@ public class EncounterService {
             + (studentId == null ? "" : " AND e.student_id=" + studentId)
             + (locationId == null ? "" : " AND e.location_id=" + locationId)
             + (teacherId == null ? "" : " AND c.teacher_id=" + teacherId)
-            + (type == null ? "" : " AND e.type=\'" + Utils.escapeSQLString(type) + "\'")
+            + (type == null ? "" : " AND e.type= " + Utils.escape(type))
             + (minTime == null ? "" : " AND e.time >= " + minTime)
             + (maxTime == null ? "" : " AND e.time <= " + maxTime)
             + (studentName == null
                 ? ""
-                : " AND s.name=\'" + Utils.escapeSQLString(studentName) + "\'")
+                : " AND s.name=" + Utils.escape(studentName))
             + " ORDER BY e.time DESC"
             + (count == null ? "" : " LIMIT " + count)
             + ";";

@@ -51,6 +51,10 @@ public class Utils {
     return str == null || str == "";
   }
 
+  public static String escape(String str) {
+    return "\'" + escapeSQLString(str) + "\'";
+  }
+
   public static String escapeSQLString(String str) {
     return str.replaceAll("\'", "\'\'");
   }

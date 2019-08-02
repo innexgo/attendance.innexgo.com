@@ -99,7 +99,7 @@ public class ApiKeyService {
             + (userId == null ? "" : " AND user_id =" + userId)
             + (minCreationTime == null ? "" : " AND creation_time >= " + minCreationTime)
             + (maxCreationTime == null ? "" : " AND creation_time <= " + maxCreationTime)
-            + (keyHash == null ? "" : " AND key_hash = \'" + Utils.escapeSQLString(keyHash) + "\'")
+            + (keyHash == null ? "" : " AND key_hash = " + Utils.escape(keyHash))
             + ";";
     RowMapper<ApiKey> rowMapper = new ApiKeyRowMapper();
     return this.jdbcTemplate.query(sql, rowMapper);

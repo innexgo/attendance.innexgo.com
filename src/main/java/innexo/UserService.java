@@ -104,8 +104,8 @@ public class UserService {
         "SELECT u.id, u.name, u.password_hash, u.email, u.ring, u.prefstring FROM user u"
             + " WHERE 1=1 "
             + (id == null ? "" : " AND u.id = " + id)
-            + (name == null ? "" : " AND u.name = \'" + Utils.escapeSQLString(name) + "\'")
-            + (email == null ? "" : " AND u.email = \'" + Utils.escapeSQLString(email) + "\'")
+            + (name == null ? "" : " AND u.name = " + Utils.escape(name))
+            + (email == null ? "" : " AND u.email = " + Utils.escape(email))
             + (ring == null ? "" : " AND u.ring = " + ring)
             + ";";
 

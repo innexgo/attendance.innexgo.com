@@ -68,8 +68,8 @@ public class StudentService {
             + " WHERE 1=1 "
             + (id == null ? "" : " AND st.id = " + id)
             + (graduatingYear == null ? "" : " AND st.graduating_year = " + graduatingYear)
-            + (name == null ? "" : " AND st.name = \'" + name + "\'")
-            + (tags == null ? "" : " AND st.tags = \'" + tags + "\'")
+            + (name == null ? "" : " AND st.name = " + Utils.escape(name))
+            + (tags == null ? "" : " AND st.tags = " + Utils.escape(tags))
             + (courseId == null ? "" : " AND sc.course_id = " + courseId)
             + ";";
 

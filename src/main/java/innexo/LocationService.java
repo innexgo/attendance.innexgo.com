@@ -62,8 +62,8 @@ public class LocationService {
         "SELECT l.id, l.name, l.tags FROM location l"
             + " WHERE 1=1 "
             + (id == null ? "" : " AND l.id = " + id)
-            + (name == null ? "" : " AND l.name = \'" + Utils.escapeSQLString(name) + "\'")
-            + (tags == null ? "" : " AND l.tags = \'" + Utils.escapeSQLString(tags) + "\'")
+            + (name == null ? "" : " AND l.name = " + Utils.escape(name))
+            + (tags == null ? "" : " AND l.tags = " + Utils.escape(tags))
             + ";";
 
     RowMapper<Location> rowMapper = new LocationRowMapper();

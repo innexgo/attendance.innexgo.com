@@ -18,10 +18,6 @@ function giveError(errormsg) {
   document.getElementById('error').innerHTML = errormsg;
 }
 
-function isBlank(str) {
-  return str == null || /\s/.test(str) || str == "";
-}
-
 function thisUrl(){
   return window.location.protocol  + "//" + window.location.host;
 }
@@ -62,6 +58,7 @@ function loginattempt() {
       var apiKey = JSON.parse(xhr.responseText);
       // store info
       Cookies.set('apiKey', apiKey);
+      Cookies.set('prefs', apiKey.user.prefstring);
       // now jump to next page
       if(apiKey.user.ring == 0) {
         window.location.assign(thisUrl() + "/adminoverview.html");
