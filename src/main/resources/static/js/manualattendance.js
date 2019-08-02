@@ -56,6 +56,13 @@ function submitEncounter(studentId) {
         }
       }
 
+      var audio;
+      if(type == 'in') {
+        audio = new Audio('assets/beepup.wav');
+      } else {
+        audio = new Audio('assets/beepdown.wav');
+      }
+
       var addEncounterUrl = thisUrl() + '/encounter/new/' +
         '?studentId=' + studentId +
         '&locationId=' + course.location.id +
@@ -63,8 +70,10 @@ function submitEncounter(studentId) {
         '&type=' + type +
         '&apiKey=' + apiKey.key;
       request(addEncounterUrl,
-        function(xhr){},
-        function(xhr){});
+        function(xhr){
+          audio.play();
+        },
+        function(xhr){ });
     },
     //failure
     function(xhr) {
