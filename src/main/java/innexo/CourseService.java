@@ -16,14 +16,14 @@ public class CourseService {
   static final int TEACHER = 1;
 
   public Course getById(int id) {
-    String sql = "SELECT id, teacher_id, location_id, period, subject FROM course WHERE id=?";
+    String sql = "SELECT id, teacher_id, location_id, period, subject, year FROM course WHERE id=?";
     RowMapper<Course> rowMapper = new CourseRowMapper();
     Course course = jdbcTemplate.queryForObject(sql, rowMapper, id);
     return course;
   }
 
   public List<Course> getAll() {
-    String sql = "SELECT id, teacher_id, location_id, period, subject FROM course";
+    String sql = "SELECT id, teacher_id, location_id, period, subject, year FROM course";
     RowMapper<Course> rowMapper = new CourseRowMapper();
     return this.jdbcTemplate.query(sql, rowMapper);
   }
@@ -31,12 +31,12 @@ public class CourseService {
   public void add(Course course) {
     // Add course
     String sql =
-        "INSERT INTO course (id, teacher_id, location_id, period, subject) values (?, ?, ?, ?, ?)";
+        "INSERT INTO course (id, teacher_id, location_id, period, subject, year) values (?, ?, ?, ?, ?, ?)";
     jdbcTemplate.update(
         sql, course.id, course.teacherId, course.locationId, course.period, course.subject);
 
     // Fetch course id
-    sql = "SELECT id FROM course WHERE teacher_id=? AND location_id=? AND period=? AND subject=?";
+    sql = "SELECT id FROM course WHERE teacher_id=? AND location_id=? AND period=? AND subject=? AND year=?";
     int id =
         jdbcTemplate.queryForObject(
             sql, Integer.class, course.teacherId, course.locationId, course.period, course.subject);
@@ -47,7 +47,7 @@ public class CourseService {
 
   public void update(Course course) {
     String sql =
-        "UPDATE course SET id=?, teacher_id=?, location_id=? period=?, subject=? WHERE id=?";
+        "UPDATE course SET id=?, teacher_id=?, location_id=? period=?, subject=?, year=? WHERE id=?";
     jdbcTemplate.update(
         sql,
         course.id,
@@ -55,6 +55,7 @@ public class CourseService {
         course.locationId,
         course.period,
         course.subject,
+        course.year,
         course.id);
   }
 
@@ -72,7 +73,7 @@ public class CourseService {
   }
 
   public List<Course> query(
-      Integer id, Integer teacherId, Integer locationId, Integer studentId, String subject) {
+      Integer id, Integer teacherId, Integer locationId, Integer studentId, String subject, Integer year) {
     String sql =
         "SELECT c.id, c.teacher_id, c.location_id, c.period, c.subject FROM course c"
             + (studentId == null ? "" : " JOIN schedule sc ON c.id = sc.course_id ")
@@ -80,6 +81,7 @@ public class CourseService {
             + (id == null ? "" : " AND c.id = " + id)
             + (teacherId == null ? "" : " AND c.teacher_id = " + teacherId)
             + (locationId == null ? "" : " AND c.location_id = " + locationId)
+            + (year == null ? " AND c.year="+Utils.getCurrentGraduatingYear() : " AND c.year = " + year)
             + (studentId == null ? "" : " AND sc.student_id = " + studentId)
             + (subject == null ? "" : " AND c.subject = " + Utils.escape(subject))
             + ";";
