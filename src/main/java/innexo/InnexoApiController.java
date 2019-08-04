@@ -741,8 +741,8 @@ public class InnexoApiController {
     int initialTime = (int) Instant.now().getEpochSecond();
     for (int i = 0; i < 10000; i++) {
       Period period = new Period();
-      period.startTime = initialTime + i * 20;
-      period.endTime = initialTime + ((i + 1) * 20);
+      period.startTime = initialTime + i * 200;
+      period.endTime = initialTime + ((i + 1) * 200);
       period.period = i % 3;
       periodService.add(period);
     }
