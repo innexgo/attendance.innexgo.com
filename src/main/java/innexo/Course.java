@@ -6,6 +6,7 @@ public class Course {
   int locationId;
   public int period;
   public String subject;
+  public int year;
 
   // for jackson
   public User teacher;

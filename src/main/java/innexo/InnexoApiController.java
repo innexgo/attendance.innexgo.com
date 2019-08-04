@@ -173,6 +173,7 @@ public class InnexoApiController {
       course.locationId = locationId;
       course.period = period;
       course.subject = subject;
+      course.year = Utils.getCurrentGraduatingYear();
       courseService.add(course);
       // return the filled course on success
       return new ResponseEntity<>(fillCourse(course), HttpStatus.OK);
@@ -540,7 +541,8 @@ public class InnexoApiController {
                   parseInteger(allRequestParam.get("teacherId")),
                   parseInteger(allRequestParam.get("locationId")),
                   parseInteger(allRequestParam.get("studentId")),
-                  allRequestParam.get("subject"))
+                  allRequestParam.get("subject"),
+                  parseInteger(allRequestParam.get("year")))
               .stream()
               .map(x -> fillCourse(x))
               .collect(Collectors.toList());
