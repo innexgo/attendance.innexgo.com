@@ -65,7 +65,11 @@ public class SessionService {
       Integer courseId,
       Integer locationId,
       Integer studentId,
-      Integer time) {
+      Integer time,
+      Integer inTimeBegin,
+      Integer inTimeEnd,
+      Integer outTimeBegin,
+      Integer outTimeEnd) {
     String sql =
       "SELECT ses.id, ses.in_encounter_id, ses.out_encounter_id, ses.course_id FROM session ses"
       + " JOIN encounter inen ON ses.in_encounter_id = inen.id"
@@ -78,8 +82,11 @@ public class SessionService {
       + (courseId == null ? "" : " AND ses.course_id = " + courseId)
       + (studentId == null ? "" : " AND inen.student_id = " + studentId)
       + (locationId == null ? "" : " AND inen.location_id = " + locationId)
-      + (inPeriodId == null ? "" : " AND outen.location_id = " + locationId)
       + (time == null ? "" : " AND time BETWEEN inen.time AND outen.time")
+      + (inTimeBegin == null ? "" : " AND inen.time >= " + inTimeBegin)
+      + (inTimeEnd == null ? "" : " AND inen.time <= " + inTimeEnd)
+      + (outTimeBegin == null ? "" : " AND outen.time >= " + outTimeBegin)
+      + (outTimeEnd == null ? "" : " AND outen.time <= " + outTimeEnd)
       + ";";
 
     RowMapper<Session> rowMapper = new SessionRowMapper();

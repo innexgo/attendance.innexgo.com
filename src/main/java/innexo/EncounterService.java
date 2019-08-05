@@ -71,23 +71,9 @@ public class EncounterService {
 
     // Fetch encounter id
     sql =
-        "SELECT id, time, location_id, student_id FROM encounter WHERE time=? AND location_id=? AND student_id=? ORDER BY id DESC";
-    List<Encounter> encounters =
-        this.jdbcTemplate.query(
-            sql,
-            rowMapper,
-            encounter.time,
-            encounter.courseId,
-            encounter.studentId);
-    if (!encounters.isEmpty()) {
-      for (int i = 0; i < encounters.size(); i++) {
-        if (encounters.get(i).courseId == encounter.courseId) {
-          encounter.id = encounters.get(i).id;
-        } else {
-          System.out.println("ERROR: encounter went missing");
-        }
-      }
-    }
+        "SELECT id WHERE time=? AND location_id=? AND student_id=? ORDER BY id DESC";
+    int id = jdbcTemplate.queryForObject(sql, Integer.class, encounter.time, encounter.locationId, encounter.studentId);
+    encounter.id = id;
   }
 
   public void update(Encounter encounter) {
@@ -109,7 +95,7 @@ public class EncounterService {
     return e;
   }
 
-  public boolean exists(int id) {
+  public boolean existsById(int id) {
     String sql = "SELECT count(*) FROM encounter WHERE id=?";
     int count = jdbcTemplate.queryForObject(sql, Integer.class, id);
     return count != 0;

@@ -15,44 +15,36 @@ public class StudentCacheService {
   @Autowired private JdbcTemplate jdbcTemplate;
 
   public StudentCache getById(int id) {
-    String sql = "SELECT id, current_status, last_location_id FROM student_cache WHERE id=?";
+    String sql = "SELECT id, current_status, last_location_id, last_location_time FROM student_cache WHERE id=?";
     RowMapper<StudentCache> rowMapper = new StudentCacheRowMapper();
     StudentCache StudentCache = jdbcTemplate.queryForObject(sql, rowMapper, id);
     return StudentCache;
   }
 
   public List<StudentCache> getAll() {
-    String sql = "SELECT id, current_status, last_location_id FROM StudentCache";
+    String sql = "SELECT id, current_status, last_location_id, last_location_time FROM student_cache";
     RowMapper<StudentCache> rowMapper = new StudentCacheRowMapper();
     return this.jdbcTemplate.query(sql, rowMapper);
   }
 
-  public void add(StudentCache StudentCache) {
+  public void add(StudentCache studentCache) {
     // Add StudentCache
-    String sql = "INSERT INTO student_cache (id, current_status, last_location_id) values (?, ?, ?)";
-    jdbcTemplate.update(sql, StudentCache.id, StudentCache.currentStatus, StudentCache.lastLocationId);
-
-    // Fetch StudentCache id
-    sql = "SELECT id FROM student_cache WHERE current_status=? AND name=?";
-    int id =
-        jdbcTemplate.queryForObject(
-            sql, Integer.class, StudentCache.currentStatus, StudentCache.lastLocationId);
-
-    // Set StudentCache id
-    StudentCache.id = id;
+    String sql = "INSERT INTO student_cache (id, current_status, last_location_id, last_location_time) values (?, ?, ?, ?)";
+    jdbcTemplate.update(sql, studentCache.id, studentCache.currentStatus, studentCache.lastLocationId, studentCache.lastLocationTime);
+    // note that student cache does not have auto_increment, so we dont have to do a search to refind it
   }
 
-  public void update(StudentCache StudentCache) {
-    String sql = "UPDATE student_cache SET id=?, current_status=?, lastLocationId=? WHERE id=?";
+  public void update(StudentCache studentCache) {
+    String sql = "UPDATE student_cache SET id=?, current_status=?, last_location_id=?, last_location_time=? WHERE id=?";
     jdbcTemplate.update(
-        sql, StudentCache.id, StudentCache.currentStatus, StudentCache.lastLocationId, StudentCache.id);
+        sql, studentCache.id, studentCache.currentStatus, studentCache.lastLocationId, studentCache.lastLocationTime, studentCache.id);
   }
 
   public StudentCache delete(int id) {
-    StudentCache StudentCache = getById(id);
+    StudentCache studentCache = getById(id);
     String sql = "DELETE FROM student_cache WHERE id=?";
     jdbcTemplate.update(sql, id);
-    return StudentCache;
+    return studentCache;
   }
 
   public boolean exists(int id) {
