@@ -15,8 +15,7 @@ public class EncounterService {
   @Autowired private JdbcTemplate jdbcTemplate;
 
   public Encounter getById(int id) {
-    String sql =
-        "SELECT id, time, location_id, student_id FROM encounter WHERE id=?";
+    String sql = "SELECT id, time, location_id, student_id FROM encounter WHERE id=?";
     RowMapper<Encounter> rowMapper = new BeanPropertyRowMapper<Encounter>(Encounter.class);
     Encounter encounter = jdbcTemplate.queryForObject(sql, rowMapper, id);
     return encounter;
@@ -46,9 +45,7 @@ public class EncounterService {
             + (locationId == null ? "" : " AND e.location_id=" + locationId)
             + (minTime == null ? "" : " AND e.time >= " + minTime)
             + (maxTime == null ? "" : " AND e.time <= " + maxTime)
-            + (studentName == null
-                ? ""
-                : " AND s.name=" + Utils.escape(studentName))
+            + (studentName == null ? "" : " AND s.name=" + Utils.escape(studentName))
             + " ORDER BY e.time DESC"
             + (count == null ? "" : " LIMIT " + count)
             + ";";
@@ -58,34 +55,24 @@ public class EncounterService {
 
   public void add(Encounter encounter) {
     // Add encounter
-    String sql =
-        "INSERT INTO encounter (id, time, location_id, student_id) values (?, ?, ?, ?)";
+    String sql = "INSERT INTO encounter (id, time, location_id, student_id) values (?, ?, ?, ?)";
     jdbcTemplate.update(
-        sql,
-        encounter.id,
-        encounter.time,
-        encounter.locationId,
-        encounter.studentId);
+        sql, encounter.id, encounter.time, encounter.locationId, encounter.studentId);
 
     RowMapper<Encounter> rowMapper = new EncounterRowMapper();
 
     // Fetch encounter id
-    sql =
-        "SELECT id WHERE time=? AND location_id=? AND student_id=? ORDER BY id DESC";
-    int id = jdbcTemplate.queryForObject(sql, Integer.class, encounter.time, encounter.locationId, encounter.studentId);
+    sql = "SELECT id WHERE time=? AND location_id=? AND student_id=? ORDER BY id DESC";
+    int id =
+        jdbcTemplate.queryForObject(
+            sql, Integer.class, encounter.time, encounter.locationId, encounter.studentId);
     encounter.id = id;
   }
 
   public void update(Encounter encounter) {
-    String sql =
-        "UPDATE encounter SET id=?, time=?, location_id=?, student_id=? WHERE id=?";
+    String sql = "UPDATE encounter SET id=?, time=?, location_id=?, student_id=? WHERE id=?";
     jdbcTemplate.update(
-        sql,
-        encounter.id,
-        encounter.time,
-        encounter.locationId,
-        encounter.studentId,
-        encounter.id);
+        sql, encounter.id, encounter.time, encounter.locationId, encounter.studentId, encounter.id);
   }
 
   public Encounter delete(int id) {

@@ -28,20 +28,31 @@ public class SessionService {
 
   public void add(Session session) {
     // Add session
-    String sql = "INSERT INTO session (id, in_encounter_id, out_encounter_id, course_id) values (?, ?, ?, ?)";
-    jdbcTemplate.update(sql, session.id, session.inEncounterId, session.outEncounterId, session.courseId);
+    String sql =
+        "INSERT INTO session (id, in_encounter_id, out_encounter_id, course_id) values (?, ?, ?, ?)";
+    jdbcTemplate.update(
+        sql, session.id, session.inEncounterId, session.outEncounterId, session.courseId);
 
     // Fetch session id
     sql = "SELECT id FROM session WHERE in_encounter_id=? AND out_encounter_id=? AND course_id=?";
-    int id = jdbcTemplate.queryForObject(sql, Integer.class, session.inEncounterId, session.outEncounterId, session.courseId);
+    int id =
+        jdbcTemplate.queryForObject(
+            sql, Integer.class, session.inEncounterId, session.outEncounterId, session.courseId);
 
     // Set session id
     session.id = id;
   }
 
   public void update(Session session) {
-    String sql = "UPDATE session SET id=?, in_encounter_id=?, out_encounter_id=?, course_id=? WHERE id=?";
-    jdbcTemplate.update(sql, session.id, session.inEncounterId, session.outEncounterId, session.courseId, session.id);
+    String sql =
+        "UPDATE session SET id=?, in_encounter_id=?, out_encounter_id=?, course_id=? WHERE id=?";
+    jdbcTemplate.update(
+        sql,
+        session.id,
+        session.inEncounterId,
+        session.outEncounterId,
+        session.courseId,
+        session.id);
   }
 
   public Session delete(int id) {
@@ -71,23 +82,29 @@ public class SessionService {
       Integer outTimeBegin,
       Integer outTimeEnd) {
     String sql =
-      "SELECT ses.id, ses.in_encounter_id, ses.out_encounter_id, ses.course_id FROM session ses"
-      + " JOIN encounter inen ON ses.in_encounter_id = inen.id"
-      + " JOIN encounter outen ON ses.out_encounter_id = outen.id"
-      + " WHERE 1=1 "
-      + (id == null ? "" : " AND ses.id = " + id)
-      + (inEncounterId == null ? "" : " AND ses.in_encounter_id = " + inEncounterId)
-      + (outEncounterId == null ? "" : " AND ses.out_encounter_id = " + outEncounterId)
-      + (anyEncounterId == null ? "" : " AND (ses.in_encounter_id =" + anyEncounterId + " OR ses.out_encounter_id = " + anyEncounterId + ")")
-      + (courseId == null ? "" : " AND ses.course_id = " + courseId)
-      + (studentId == null ? "" : " AND inen.student_id = " + studentId)
-      + (locationId == null ? "" : " AND inen.location_id = " + locationId)
-      + (time == null ? "" : " AND time BETWEEN inen.time AND outen.time")
-      + (inTimeBegin == null ? "" : " AND inen.time >= " + inTimeBegin)
-      + (inTimeEnd == null ? "" : " AND inen.time <= " + inTimeEnd)
-      + (outTimeBegin == null ? "" : " AND outen.time >= " + outTimeBegin)
-      + (outTimeEnd == null ? "" : " AND outen.time <= " + outTimeEnd)
-      + ";";
+        "SELECT ses.id, ses.in_encounter_id, ses.out_encounter_id, ses.course_id FROM session ses"
+            + " JOIN encounter inen ON ses.in_encounter_id = inen.id"
+            + " JOIN encounter outen ON ses.out_encounter_id = outen.id"
+            + " WHERE 1=1 "
+            + (id == null ? "" : " AND ses.id = " + id)
+            + (inEncounterId == null ? "" : " AND ses.in_encounter_id = " + inEncounterId)
+            + (outEncounterId == null ? "" : " AND ses.out_encounter_id = " + outEncounterId)
+            + (anyEncounterId == null
+                ? ""
+                : " AND (ses.in_encounter_id ="
+                    + anyEncounterId
+                    + " OR ses.out_encounter_id = "
+                    + anyEncounterId
+                    + ")")
+            + (courseId == null ? "" : " AND ses.course_id = " + courseId)
+            + (studentId == null ? "" : " AND inen.student_id = " + studentId)
+            + (locationId == null ? "" : " AND inen.location_id = " + locationId)
+            + (time == null ? "" : " AND time BETWEEN inen.time AND outen.time")
+            + (inTimeBegin == null ? "" : " AND inen.time >= " + inTimeBegin)
+            + (inTimeEnd == null ? "" : " AND inen.time <= " + inTimeEnd)
+            + (outTimeBegin == null ? "" : " AND outen.time >= " + outTimeBegin)
+            + (outTimeEnd == null ? "" : " AND outen.time <= " + outTimeEnd)
+            + ";";
 
     RowMapper<Session> rowMapper = new SessionRowMapper();
     return this.jdbcTemplate.query(sql, rowMapper);

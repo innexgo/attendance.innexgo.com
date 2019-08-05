@@ -1,10 +1,10 @@
 package innexo;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 import java.util.Random;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -67,7 +67,7 @@ public class Utils {
     LocalDateTime time = LocalDateTime.ofInstant(Instant.now(), ZoneId.of("UTC"));
     int currentYear = time.getYear();
     // if its the fall/winter
-    if(time.getMonth().getValue() >= 7) {
+    if (time.getMonth().getValue() >= 7) {
       currentYear++;
     }
     return currentYear;

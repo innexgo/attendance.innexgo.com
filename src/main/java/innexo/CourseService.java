@@ -36,7 +36,8 @@ public class CourseService {
         sql, course.id, course.teacherId, course.locationId, course.period, course.subject);
 
     // Fetch course id
-    sql = "SELECT id FROM course WHERE teacher_id=? AND location_id=? AND period=? AND subject=? AND year=?";
+    sql =
+        "SELECT id FROM course WHERE teacher_id=? AND location_id=? AND period=? AND subject=? AND year=?";
     int id =
         jdbcTemplate.queryForObject(
             sql, Integer.class, course.teacherId, course.locationId, course.period, course.subject);
@@ -73,7 +74,12 @@ public class CourseService {
   }
 
   public List<Course> query(
-      Integer id, Integer teacherId, Integer locationId, Integer studentId, String subject, Integer year) {
+      Integer id,
+      Integer teacherId,
+      Integer locationId,
+      Integer studentId,
+      String subject,
+      Integer year) {
     String sql =
         "SELECT c.id, c.teacher_id, c.location_id, c.period, c.subject FROM course c"
             + (studentId == null ? "" : " JOIN schedule sc ON c.id = sc.course_id ")
@@ -81,8 +87,9 @@ public class CourseService {
             + (id == null ? "" : " AND c.id = " + id)
             + (teacherId == null ? "" : " AND c.teacher_id = " + teacherId)
             + (locationId == null ? "" : " AND c.location_id = " + locationId)
-            + (year == null ? " AND c.year = " + Utils.getCurrentGraduatingYear()
-                            : " AND c.year = " + year)
+            + (year == null
+                ? " AND c.year = " + Utils.getCurrentGraduatingYear()
+                : " AND c.year = " + year)
             + (studentId == null ? "" : " AND sc.student_id = " + studentId)
             + (subject == null ? "" : " AND c.subject = " + Utils.escape(subject))
             + ";";
