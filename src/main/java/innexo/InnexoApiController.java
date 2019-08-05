@@ -743,11 +743,36 @@ public class InnexoApiController {
     int initialTime = (int) Instant.now().getEpochSecond();
     for (int i = 0; i < 10000; i++) {
       Period period = new Period();
-      period.startTime = initialTime + i * 200;
-      period.endTime = initialTime + ((i + 1) * 200);
+      period.startTime = initialTime + i * 20;
+      period.endTime = initialTime + ((i + 1) * 20);
       period.period = i % 3;
       periodService.add(period);
     }
     return OK;
+  }
+
+  @RequestMapping("getCurrentStatus")
+  public ResponseEntity<?> getCurrentStatus(
+    @RequestParam("courseId") Integer courseId,
+    @RequestParam("periodId") Integer periodId){
+
+    List<Student> studentList = 
+      studentService.query(null, null, null, null, courseId);
+
+    List<Encounter> encounterList = 
+      encounterService.query(null, null, null, null, null, periodService.getById(periodId).startTime, periodService.getById(periodId).endTime, null, null);
+    
+    List<> list;
+    
+    for(int i = 0; i < studentList.size(); i++){
+      for(int c = 0; c < encounterList.size(); c++){
+        if(studentList.get(i).id == encounterList.get(c).studentId){
+          list.add();
+        }else{
+          list.add();
+        }
+      }
+    }
+    return new ResponseEntity<>(list, HttpStatus.OK);
   }
 }
