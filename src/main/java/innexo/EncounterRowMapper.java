@@ -11,9 +11,7 @@ public class EncounterRowMapper implements RowMapper<Encounter> {
     encounter.id = row.getInt("id");
     encounter.time = row.getInt("time");
     encounter.locationId = row.getInt("location_id");
-    encounter.courseId = row.getInt("course_id");
     encounter.studentId = row.getInt("student_id");
-    encounter.type = row.getString("type");
     return encounter;
   }
 }

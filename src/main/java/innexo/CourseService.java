@@ -81,7 +81,8 @@ public class CourseService {
             + (id == null ? "" : " AND c.id = " + id)
             + (teacherId == null ? "" : " AND c.teacher_id = " + teacherId)
             + (locationId == null ? "" : " AND c.location_id = " + locationId)
-            + (year == null ? " AND c.year="+Utils.getCurrentGraduatingYear() : " AND c.year = " + year)
+            + (year == null ? " AND c.year = " + Utils.getCurrentGraduatingYear()
+                            : " AND c.year = " + year)
             + (studentId == null ? "" : " AND sc.student_id = " + studentId)
             + (subject == null ? "" : " AND c.subject = " + Utils.escape(subject))
             + ";";
