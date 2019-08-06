@@ -3,8 +3,9 @@ var beepdown = new Audio('assets/beepdown.wav');
 
 function submitEncounter(studentId) {
   var checkBox = document.getElementById('manual-type-toggle');
-  var course = Cookies.getJSON('course');
   var apiKey = Cookies.getJSON('apiKey');
+  var period = Cookies.getJSON('period');
+  var course = Cookies.getJSON('courses').filter(c => c.period == period.period)[0];
 
   if(course == null) {
     //TODO actually give this error

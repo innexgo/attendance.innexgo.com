@@ -97,18 +97,26 @@
               <div>
                 <h5 class="card-title text-center">View Courses</h5>
               </div>
-              <p class="card-text">View students in your courses</p>
+              <div class="card-text">
+                <span>Select Period</span>
+                <select id="managestudent-select-course" onchange="updateClassList()"> </select>
+              </div>
               <table class="table">
                 <thead>
                   <tr class="table-header">
                     <td>Name</td>
-                    <td>Grade</td>
+                    <td>Id</td>
+                    <td>Graduating Year</td>
+                    <td>Tags</td>
                   </tr>
                 </thead>
                 <tbody id="managestudent-teacher-viewclass-table"></tbody>
               </table>
             </div>
           </div>
+
+
+
         </div>
       </div>
   </body>

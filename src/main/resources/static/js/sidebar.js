@@ -1,13 +1,13 @@
 "use strict"
 
 function openSidebar() {
-  document.getElementById("sidebar").style.width = "20%";
-  document.getElementById("overlay").style.display = "block"
+  document.getElementById('sidebar').style.width = '20%';
+  document.getElementById('overlay').style.display = 'block'
 }
 
 function closeSidebar() {
-  document.getElementById("sidebar").style.width = "0%";
-  document.getElementById("overlay").style.display = "none";
+  document.getElementById('sidebar').style.width = '0%';
+  document.getElementById('overlay').style.display = 'none';
 }
 
 $(document).ready(function(){
@@ -29,12 +29,12 @@ $(document).ready(function(){
   sidebarItems.not('.sidebar-info-list').addClass('list-group-item-action');
 
   switch(sidebar){
-    case "collapsable":
-      $("#sidebar").addClass("sidebar-collapsable");
+    case 'collapsable':
+      $('#sidebar').addClass('sidebar-collapsable');
     break;
 
-    case "fixed":
-      $("#sidebar").addClass("sidebar-fixed");
+    case 'fixed':
+      $('#sidebar').addClass('sidebar-fixed');
       $('#not-sidebar').css('padding-left', '20%');
       $('.sidebar-button').remove();
       document.getElementById('overlay').remove();
@@ -42,41 +42,41 @@ $(document).ready(function(){
   }
 
   switch(colour){
-    case "dark":
+    case 'dark':
       var brandImage = document.createElement('img');
-      brandImage.src = "../assets/innexo_logo.png";
+      brandImage.src = '../assets/innexo_logo.png';
 
       document.getElementById('navbar-brand').appendChild(brandImage);
-      document.getElementById('navbar-brand').append(" Innexo");
+      document.getElementById('navbar-brand').append(' Innexo');
 
       $('.navbar-palette').addClass('text-light').addClass('bg-dark');
     break;
 
-    case "light":
+    case 'light':
       var brandImage = document.createElement('img');
-      brandImage.src = "../assets/innexo_logo_dark.png";
+      brandImage.src = '../assets/innexo_logo_dark.png';
 
       document.getElementById('navbar-brand').appendChild(brandImage);
-      document.getElementById('navbar-brand').append(" Innexo");
+      document.getElementById('navbar-brand').append(' Innexo');
 
       $('.navbar-palette').addClass('text-dark').addClass('sidebar-light');
     break;
 
-    case "blue":
+    case 'blue':
       var brandImage = document.createElement('img');
-      brandImage.src = "../assets/innexo_logo.png";
+      brandImage.src = '../assets/innexo_logo.png';
 
       document.getElementById('navbar-brand').appendChild(brandImage);
-      document.getElementById('navbar-brand').append(" Innexo");
+      document.getElementById('navbar-brand').append(' Innexo');
 
       $('.navbar-palette').addClass('text-light').addClass('sidebar-blue')
   }
 
   switch(sidebarInfo){
-    case "augmented":
+    case 'augmented':
     break;
 
-    case "slim":
+    case 'slim':
       $('.sidebar-item.sidebar-info-list').hide();
     break;
   }
@@ -85,8 +85,8 @@ $(document).ready(function(){
 
 function displayInfo() {
   var apiKey = Cookies.getJSON('apiKey');
-  var course = Cookies.getJSON('course');
   var period = Cookies.getJSON('period');
+  var course = Cookies.getJSON('courses').filter(c => c.period == period.period)[0];
 
   document.getElementById('info-time').innerHTML = moment().format('dddd, MMMM D');
   document.getElementById('info-name').innerHTML = apiKey.user.name;

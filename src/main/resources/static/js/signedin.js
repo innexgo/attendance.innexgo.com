@@ -9,7 +9,7 @@ function ensureSignedIn() {
 
   // now check if the cookie is expired
   if(apiKey.expirationTime < moment().unix()) {
-    alert("Session has expired");
+    alert('Session has expired');
     window.location.replace(thisUrl() + '/login.html');
     return;
   }
@@ -42,35 +42,10 @@ function userInfo() {
         // if class has ended, or not yet begun, delete the relevant cookies
         if(period == null) {
           Cookies.remove('period');
-          Cookies.remove('course');
           console.log('school not in session');
           return;
         } else {
           Cookies.set('period', period);
-
-          // now grab the current course
-          var getCourseUrl = thisUrl() +
-            '/course/' +
-            '?teacherId=' + apiKey.user.id +
-            '&period=' + period.period +
-            '&apiKey=' + apiKey.key;
-          request(getCourseUrl,
-            //success
-            function(xhr) {
-              var course = JSON.parse(xhr.responseText)[0];
-              if(course != null) {
-                Cookies.set('course', course)
-              } else {
-                console.log('has no class');
-                Cookies.remove('course');
-              }
-            },
-            //failure
-            function(xhr) {
-              console.log('error has no class');
-              return;
-            }
-          );
         }
       },
       //failure
@@ -82,7 +57,6 @@ function userInfo() {
   }
 }
 
-
 $(document).ready(function(){
   ensureSignedIn();
   userInfo();
@@ -92,7 +66,3 @@ $(document).ready(function(){
     userInfo();
   }, 1000);
 });
-
-
-
-
