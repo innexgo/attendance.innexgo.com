@@ -61,11 +61,7 @@ public class StudentService {
   }
 
   public List<Student> query(
-      Integer id,
-      Integer graduatingYear,
-      String name,
-      String tags,
-      Integer courseId) {
+      Integer id, Integer graduatingYear, String name, String tags, Integer courseId) {
     String sql =
         "SELECT st.id, st.graduating_year, st.name, st.tags FROM student st"
             + (courseId == null ? "" : " JOIN schedule sc ON st.id = sc.student_id ")

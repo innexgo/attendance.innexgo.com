@@ -14,7 +14,8 @@ public class SessionService {
   @Autowired private JdbcTemplate jdbcTemplate;
 
   public Session getById(int id) {
-    String sql = "SELECT id, in_encounter_id, out_encounter_id, course_id, complete FROM session WHERE id=?";
+    String sql =
+        "SELECT id, in_encounter_id, out_encounter_id, course_id, complete FROM session WHERE id=?";
     RowMapper<Session> rowMapper = new SessionRowMapper();
     Session session = jdbcTemplate.queryForObject(sql, rowMapper, id);
     return session;
@@ -31,13 +32,24 @@ public class SessionService {
     String sql =
         "INSERT INTO session (id, in_encounter_id, out_encounter_id, course_id, complete) values (?, ?, ?, ?, ?)";
     jdbcTemplate.update(
-        sql, session.id, session.inEncounterId, session.outEncounterId, session.courseId);
+        sql,
+        session.id,
+        session.inEncounterId,
+        session.outEncounterId,
+        session.courseId,
+        session.complete);
 
     // Fetch session id
-    sql = "SELECT id FROM session WHERE in_encounter_id=? AND out_encounter_id=? AND course_id=? AND complete=?";
+    sql =
+        "SELECT id FROM session WHERE in_encounter_id=? AND out_encounter_id=? AND course_id=? AND complete=?";
     int id =
         jdbcTemplate.queryForObject(
-            sql, Integer.class, session.inEncounterId, session.outEncounterId, session.courseId, session.complete);
+            sql,
+            Integer.class,
+            session.inEncounterId,
+            session.outEncounterId,
+            session.courseId,
+            session.complete);
 
     // Set session id
     session.id = id;
@@ -83,10 +95,15 @@ public class SessionService {
       Integer inTimeEnd,
       Integer outTimeBegin,
       Integer outTimeEnd) {
+
+    boolean outEncounterUnused =
+        outEncounterId == null && outTimeBegin == null && outTimeEnd == null && time == null;
+
     String sql =
-        "SELECT ses.id, ses.in_encounter_id, ses.out_encounter_id, ses.course_id FROM session ses"
+        "SELECT ses.id, ses.in_encounter_id, ses.out_encounter_id, ses.course_id, ses.complete"
+            + " FROM session ses"
             + " JOIN encounter inen ON ses.in_encounter_id = inen.id"
-            + " JOIN encounter outen ON ses.out_encounter_id = outen.id"
+            + (outEncounterUnused ? "" : " JOIN encounter outen ON ses.out_encounter_id = outen.id")
             + " WHERE 1=1 "
             + (id == null ? "" : " AND ses.id = " + id)
             + (inEncounterId == null ? "" : " AND ses.in_encounter_id = " + inEncounterId)
@@ -102,7 +119,7 @@ public class SessionService {
             + (complete == null ? "" : " AND ses.complete = " + complete)
             + (studentId == null ? "" : " AND inen.student_id = " + studentId)
             + (locationId == null ? "" : " AND inen.location_id = " + locationId)
-            + (time == null ? "" : " AND time BETWEEN inen.time AND outen.time")
+            + (time == null ? "" : " AND " + time + " BETWEEN inen.time AND outen.time")
             + (inTimeBegin == null ? "" : " AND inen.time >= " + inTimeBegin)
             + (inTimeEnd == null ? "" : " AND inen.time <= " + inTimeEnd)
             + (outTimeBegin == null ? "" : " AND outen.time >= " + outTimeBegin)
