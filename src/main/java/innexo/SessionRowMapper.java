@@ -12,6 +12,7 @@ public class SessionRowMapper implements RowMapper<Session> {
     session.inEncounterId = row.getInt("in_encounter_id");
     session.outEncounterId = row.getInt("out_encounter_id");
     session.courseId = row.getInt("course_id");
+    session.complete = row.getBoolean("complete");
     return session;
   }
 }

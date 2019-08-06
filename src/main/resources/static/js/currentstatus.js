@@ -13,55 +13,45 @@ function currentStatus() {
   }
 
   // get students
-  var getStudentListUrl = thisUrl() + '/student/' +
+  var url = thisUrl() + '/getCurrentStatus/' +
     '?courseId=' + course.id +
+    '&periodId=' + period.id +
     '&apiKey=' + apiKey.key;
-  request(getStudentListUrl,
+  request(url,
     function(xhr) {
-      // select people who have a student permission
-      var students = JSON.parse(xhr.responseText);
+      var statuses = JSON.parse(xhr.responseText);
 
-      // now we must get the encounters within this time range and at this course
-      var getEncounterListUrl = thisUrl() + '/encounter/' +
-        '?type=in' +
-        '&courseId=' + course.id +
-        '&minTime=' + period.startTime +
-        '&maxTime=' + period.endTime +
-        '&apiKey=' + apiKey.key;
-      request(getEncounterListUrl,
-        // success
-        function(xhr) {
-          //blank table
-          table.innerHTML='';
+      //blank table
+      table.innerHTML='';
 
-          // now we must compare to check if each one of these works
-          var studentencounters = JSON.parse(xhr.responseText);
-
-          for(var i = 0; i < students.length; i++) {
-            var student = students[i];
-            var text = '<span class="fa fa-times"></span>';
-            var bgcolor = '#ffcccc';
-            var fgcolor = '#ff0000';
-            // if we can find it
-            if(studentencounters.filter(e => e.student.id==student.id).length > 0) {
-              text =  '<span class="fa fa-check"></span>'
-              bgcolor = '#ccffcc';
-              fgcolor = '#00ff00';
-            }
-
-            table.insertRow(0).innerHTML=
-              ('<tr>' +
-              '<td>' + student.name + '</td>' +
-              '<td>' + student.id + '</td>' +
-              '<td style="background-color:'+bgcolor+';color:'+fgcolor+'">' + text + '</td>' +
-              '</tr>');
-          }
-        },
-        //failure
-        function(xhr) {
-          return;
+      for(var i = 0; i < statuses.length; i++) {
+        var status = statuses[i].status;
+        var student = statuses[i].student;
+        var text = '<span class="fa fa-times"></span>';
+        var bgcolor = '#ffcccc';
+        var fgcolor = '#ff0000';
+        // if we can find it
+        if(status == 'present') {
+          text =  '<span class="fa fa-check"></span>'
+          bgcolor = '#ccffcc';
+          fgcolor = '#00ff00';
+        } else if (status == 'tardy') {
+          text =  '<span class="fa fa-check"></span>'
+          bgcolor = '#ffffcc';
+          fgcolor = '#ffff00';
+        } else if (status == 'absent') {
+          text =  '<span class="fa fa-times"></span>'
+          bgcolor = '#ffcccc';
+          fgcolor = '#ff0000';
         }
-      );
+
+        table.insertRow(0).innerHTML=
+          ('<tr>' +
+            '<td>' + student.name + '</td>' +
+            '<td>' + student.id + '</td>' +
+            '<td style="background-color:'+bgcolor+';color:'+fgcolor+'">' + text + '</td>' +
+            '</tr>');
+      }
     },
     //failure
     function(xhr) {

@@ -2,7 +2,6 @@ package innexo;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -16,7 +15,7 @@ public class EncounterService {
 
   public Encounter getById(int id) {
     String sql = "SELECT id, time, location_id, student_id FROM encounter WHERE id=?";
-    RowMapper<Encounter> rowMapper = new BeanPropertyRowMapper<Encounter>(Encounter.class);
+    RowMapper<Encounter> rowMapper = new EncounterRowMapper();
     Encounter encounter = jdbcTemplate.queryForObject(sql, rowMapper, id);
     return encounter;
   }
@@ -36,7 +35,7 @@ public class EncounterService {
       Integer maxTime,
       String studentName) {
     String sql =
-        "SELECT e.id, e.time, e.location_id, e.course_id, e.student_id, e.type "
+        "SELECT e.id, e.time, e.location_id, e.student_id "
             + " FROM encounter e"
             + " JOIN student s ON e.student_id = s.id"
             + " WHERE 1=1 "
@@ -55,14 +54,14 @@ public class EncounterService {
 
   public void add(Encounter encounter) {
     // Add encounter
-    String sql = "INSERT INTO encounter (id, time, location_id, student_id) values (?, ?, ?, ?)";
+    String sql = "INSERT INTO encounter(id, time, location_id, student_id) values (?, ?, ?, ?)";
     jdbcTemplate.update(
         sql, encounter.id, encounter.time, encounter.locationId, encounter.studentId);
 
     RowMapper<Encounter> rowMapper = new EncounterRowMapper();
 
     // Fetch encounter id
-    sql = "SELECT id WHERE time=? AND location_id=? AND student_id=? ORDER BY id DESC";
+    sql = "SELECT id FROM encounter WHERE time=? AND location_id=? AND student_id=?";
     int id =
         jdbcTemplate.queryForObject(
             sql, Integer.class, encounter.time, encounter.locationId, encounter.studentId);

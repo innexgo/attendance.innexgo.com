@@ -14,7 +14,7 @@ public class PeriodService {
   @Autowired private JdbcTemplate jdbcTemplate;
 
   public Period getById(int id) {
-    String sql = "SELECT id, start_time, end_time FROM period WHERE id=?";
+    String sql = "SELECT id, start_time, end_time, period FROM period WHERE id=?";
     RowMapper<Period> rowMapper = new PeriodRowMapper();
     Period period = jdbcTemplate.queryForObject(sql, rowMapper, id);
     return period;

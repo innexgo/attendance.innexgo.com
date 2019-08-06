@@ -90,7 +90,7 @@ $(document).ready(function(){
   setInterval(function(){
     ensureSignedIn();
     userInfo();
-  }, 10000);
+  }, 1000);
 });
 
 

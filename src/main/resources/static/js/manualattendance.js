@@ -1,4 +1,5 @@
-
+var beepup = new Audio('assets/beepup.wav');
+var beepdown = new Audio('assets/beepdown.wav');
 
 function submitEncounter(studentId) {
   var checkBox = document.getElementById('manual-type-toggle');
@@ -11,75 +12,38 @@ function submitEncounter(studentId) {
     return;
   }
 
+  var addEncounterUrl = thisUrl() + '/encounter/new/' +
+    '?studentId=' + studentId +
+    '&locationId=' + course.location.id +
+    '&courseId=' + course.id +
+    '&apiKey=' + apiKey.key;
 
-  // get the last encounter
-  var getLastEncounterUrl = thisUrl() + '/encounter/' +
-    '?studentId=' + encodeURIComponent(studentId) +
-    '&count=1' +
-    '&apiKey='+Cookies.getJSON('apiKey').key;
-
-  request(getLastEncounterUrl,
+  request(addEncounterUrl,
     //success
     function(xhr) {
-      var type = 'in';
-      //TODO play sound on correct sign in
+      var encounter = JSON.parse(xhr.responseText);
 
-      var lastEncounter = JSON.parse(xhr.responseText)[0];
-      console.log(lastEncounter);
-      // if it's null, there was no last encounter, so the type is in
-      if(lastEncounter == null) {
-        type = 'in';
-      } else {
-        //if the last encounter was at the same place
-        if(lastEncounter.location.id == course.location.id) {
-          // whatever the opposite was
-          type = lastEncounter.type == 'in' ? 'out' : 'in';
-        } else {
-          if(lastEncounter.type == 'in') {
-            // infer a sign out at the last location
-            var addOldSignOutUrl = thisUrl()+'/encounter/new/' +
-              '?studentId=' + studentId +
-              '&locationId=' + lastEncounter.location.id +
-              (lastEncounter.course == null
-                ? ''
-                : '&courseId=' + lastEncounter.course.id) +
-              '&type=in' +
-              '&apiKey='+apiKey.key;
-            request(addOldSignOutUrl,
-              function(xhr){},
-              function(xhr){});
-            // type = in
-            type = 'in';
-          } else {
-            type = 'in';
-          }
-        }
-      }
+      //now check if it was a sign in or a sign out
 
-      var audio;
-      if(type == 'in') {
-        audio = new Audio('assets/beepup.wav');
-      } else {
-        audio = new Audio('assets/beepdown.wav');
-      }
-
-      var addEncounterUrl = thisUrl() + '/encounter/new/' +
-        '?studentId=' + studentId +
-        '&locationId=' + course.location.id +
-        '&courseId=' + course.id +
-        '&type=' + type +
+      var getSessionUrl = thisUrl() + '/session/' +
+        '?outEncounterId=' + encounter.id +
         '&apiKey=' + apiKey.key;
-      request(addEncounterUrl,
-        function(xhr){
-          audio.play();
+
+      request(getSessionUrl,
+        //success
+        function(xhr) {
+          var sessionList = JSON.parse(xhr.responseText);
+          if(sessionList.length != 0) {
+            beepup.play();
+          } else {
+            beepdown.play();
+          }
         },
-        function(xhr){ });
+        //failure
+        function(xhr) {}
+      );
     },
-    //failure
-    function(xhr) {
-      //TODO explain error
-      return;
-    }
+    function(xhr) {}
   );
 }
 

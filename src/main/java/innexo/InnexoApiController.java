@@ -90,6 +90,15 @@ public class InnexoApiController {
     return schedule;
   }
 
+  Session fillSession(Session session) {
+    session.inEncounter = fillEncounter(encounterService.getById(session.inEncounterId));
+    if (session.outEncounterId != 0) {
+      session.outEncounter = fillEncounter(encounterService.getById(session.outEncounterId));
+    }
+    session.course = fillCourse(courseService.getById(session.courseId));
+    return session;
+  }
+
   Student fillStudent(Student student) {
     return student;
   }
@@ -186,24 +195,57 @@ public class InnexoApiController {
       @RequestParam("studentId") Integer studentId,
       @RequestParam("locationId") Integer locationId,
       @RequestParam(value = "courseId", defaultValue = "-1") Integer courseId,
-      @RequestParam("type") String type,
       @RequestParam("apiKey") String apiKey) {
-    if (!Utils.isEmpty(type)
-        && locationService.existsById(locationId)
-        && studentService.exists(studentId)
-        && (courseId == -1 ? true : courseService.existsById(courseId))
-        && !Utils.isEmpty(apiKey)
-        && isTrusted(apiKey)) {
-      Encounter encounter = new Encounter();
-      encounter.locationId = locationId;
-      encounter.studentId = studentId;
-      encounter.studentId = studentId;
-      encounter.time = (int) Instant.now().getEpochSecond();
-      encounterService.add(encounter);
-      // return the filled encounter on success
-      return new ResponseEntity<>(fillEncounter(encounter), HttpStatus.OK);
+    if (isTrusted(apiKey)) {
+      if (locationService.existsById(locationId)
+          && studentService.exists(studentId)
+          && (courseId == -1 ? true : courseService.existsById(courseId))) {
+        Encounter encounter = new Encounter();
+        encounter.locationId = locationId;
+        encounter.studentId = studentId;
+        encounter.time = (int) Instant.now().getEpochSecond();
+        encounterService.add(encounter);
+
+        if (courseId != -1) {
+          // search for open session with this student
+          List<Session> openSessions =
+              sessionService.query(
+                  null, // id
+                  null, // in encounter id
+                  null, // out encounter id
+                  null, // any encounter id
+                  courseId, // course id
+                  false, // complete
+                  null, // location id
+                  studentId, // student id
+                  null, // time
+                  null, // in time begin
+                  null, // in time end
+                  null, // out time begin
+                  null // out time end
+                  );
+          if (openSessions.size() > 0) {
+            // complete session
+            Session session = openSessions.get(0);
+            session.outEncounterId = encounter.id;
+            session.complete = true;
+            sessionService.update(session);
+          } else {
+            // make new open session
+            Session session = new Session();
+            session.courseId = courseId;
+            session.complete = false;
+            session.inEncounterId = encounter.id;
+            sessionService.add(session);
+          }
+        }
+        // return the filled encounter on success
+        return new ResponseEntity<>(fillEncounter(encounter), HttpStatus.OK);
+      } else {
+        return BAD_REQUEST;
+      }
     } else {
-      return BAD_REQUEST;
+      return UNAUTHORIZED;
     }
   }
 
@@ -389,7 +431,7 @@ public class InnexoApiController {
   }
 
   // This method updates the password for same user only
-  @RequestMapping("user/updatePassword")
+  @RequestMapping("user/updatePassword/")
   public ResponseEntity<?> updatePassword(
       @RequestParam("userId") Integer userId,
       @RequestParam("oldPassword") String oldPassword,
@@ -408,7 +450,7 @@ public class InnexoApiController {
   }
 
   // This method updates the prefstring for same user only
-  @RequestMapping("user/updatePrefs")
+  @RequestMapping("user/updatePrefs/")
   public ResponseEntity<?> updatePrefs(
       @RequestParam("userId") Integer userId,
       @RequestParam("prefstring") String prefstring,
@@ -440,17 +482,6 @@ public class InnexoApiController {
       @RequestParam("courseId") Integer courseId, @RequestParam("apiKey") String apiKey) {
     if (isAdministrator(apiKey)) {
       return new ResponseEntity<>(fillCourse(courseService.delete(courseId)), HttpStatus.OK);
-    } else {
-      return BAD_REQUEST;
-    }
-  }
-
-  @RequestMapping("encounter/delete/")
-  public ResponseEntity<?> deleteEncounter(
-      @RequestParam("encounterId") Integer encounterId, @RequestParam("apiKey") String apiKey) {
-    if (isAdministrator(apiKey)) {
-      return new ResponseEntity<>(
-          fillEncounter(encounterService.delete(encounterId)), HttpStatus.OK);
     } else {
       return BAD_REQUEST;
     }
@@ -540,7 +571,9 @@ public class InnexoApiController {
                   parseInteger(allRequestParam.get("locationId")),
                   parseInteger(allRequestParam.get("studentId")),
                   allRequestParam.get("subject"),
-                  parseInteger(allRequestParam.get("year")))
+                  parseInteger(
+                      allRequestParam.getOrDefault(
+                          "year", Integer.toString(Utils.getCurrentGraduatingYear()))))
               .stream()
               .map(x -> fillCourse(x))
               .collect(Collectors.toList());
@@ -634,6 +667,34 @@ public class InnexoApiController {
     }
   }
 
+  @RequestMapping("session/")
+  public ResponseEntity<?> viewSession(@RequestParam Map<String, String> allRequestParam) {
+    if (allRequestParam.containsKey("apiKey") && isTrusted(allRequestParam.get("apiKey"))) {
+      List<Session> list =
+          sessionService
+              .query(
+                  parseInteger(allRequestParam.get("id")),
+                  parseInteger(allRequestParam.get("inEncounterId")),
+                  parseInteger(allRequestParam.get("outEncounterId")),
+                  parseInteger(allRequestParam.get("anyEncounterId")),
+                  parseInteger(allRequestParam.get("courseId")),
+                  parseBoolean(allRequestParam.get("complete")),
+                  parseInteger(allRequestParam.get("locationId")),
+                  parseInteger(allRequestParam.get("studentId")),
+                  parseInteger(allRequestParam.get("time")),
+                  parseInteger(allRequestParam.get("inTimeBegin")),
+                  parseInteger(allRequestParam.get("inTimeEnd")),
+                  parseInteger(allRequestParam.get("outTimeBegin")),
+                  parseInteger(allRequestParam.get("outTimeEnd")))
+              .stream()
+              .map(x -> fillSession(x))
+              .collect(Collectors.toList());
+      return new ResponseEntity<>(list, HttpStatus.OK);
+    } else {
+      return BAD_REQUEST;
+    }
+  }
+
   @RequestMapping("student/")
   public ResponseEntity<?> viewStudent(@RequestParam Map<String, String> allRequestParam) {
     if (allRequestParam.containsKey("apiKey") && isTrusted(allRequestParam.get("apiKey"))) {
@@ -644,11 +705,7 @@ public class InnexoApiController {
                   parseInteger(allRequestParam.get("graduatingYear")),
                   allRequestParam.get("name"),
                   allRequestParam.get("tags"),
-                  parseInteger(allRequestParam.get("courseId")),
-                  allRequestParam.get("currentStatus"),
-                  parseInteger(allRequestParam.get("lastLocationId")),
-                  parseInteger(allRequestParam.get("lastLocationTimeMin")),
-                  parseInteger(allRequestParam.get("lastLocationTimeMax")))
+                  parseInteger(allRequestParam.get("courseId")))
               .stream()
               .map(x -> fillStudent(x))
               .collect(Collectors.toList());
@@ -772,11 +829,7 @@ public class InnexoApiController {
                       null, // graduatingYear
                       null, // name
                       null, // tags
-                      courseId, // courseId
-                      null, // current status
-                      null, // last location id
-                      null, // last location time min
-                      null // last location time max
+                      courseId // courseId
                       )
                   .stream()
                   .map(
@@ -791,6 +844,7 @@ public class InnexoApiController {
                                                 null, // out encounter id
                                                 null, // any encounter id
                                                 courseId, // course id
+                                                null, // complete
                                                 null, // location id
                                                 s.id, // student id
                                                 period.startTime, // time
@@ -809,6 +863,7 @@ public class InnexoApiController {
                                                     null, // out encounter id
                                                     null, // any encounter id
                                                     courseId, // course id
+                                                    null, // complete
                                                     null, // location id
                                                     s.id, // student id
                                                     null, // time
