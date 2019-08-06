@@ -65,14 +65,9 @@ public class StudentService {
       Integer graduatingYear,
       String name,
       String tags,
-      Integer courseId,
-      String currentStatus,
-      Integer lastLocationId,
-      Integer lastLocationTimeMin,
-      Integer lastLocationTimeMax) {
+      Integer courseId) {
     String sql =
         "SELECT st.id, st.graduating_year, st.name, st.tags FROM student st"
-            + " JOIN student_cache stc ON st.id = stc.id"
             + (courseId == null ? "" : " JOIN schedule sc ON st.id = sc.student_id ")
             + " WHERE 1=1 "
             + (id == null ? "" : " AND st.id = " + id)
@@ -80,14 +75,6 @@ public class StudentService {
             + (name == null ? "" : " AND st.name = " + Utils.escape(name))
             + (tags == null ? "" : " AND st.tags = " + Utils.escape(tags))
             + (courseId == null ? "" : " AND sc.course_id = " + courseId)
-            + (currentStatus == null ? "" : " AND stc.current_status = " + currentStatus)
-            + (lastLocationId == null ? "" : " AND stc.last_location_id = " + lastLocationId)
-            + (lastLocationTimeMin == null
-                ? ""
-                : " AND stc.last_location_time >= " + lastLocationTimeMin)
-            + (lastLocationTimeMax == null
-                ? ""
-                : " AND stc.last_location_time <= " + lastLocationTimeMax)
             + ";";
 
     RowMapper<Student> rowMapper = new StudentRowMapper();

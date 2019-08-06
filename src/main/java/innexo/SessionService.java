@@ -14,14 +14,14 @@ public class SessionService {
   @Autowired private JdbcTemplate jdbcTemplate;
 
   public Session getById(int id) {
-    String sql = "SELECT id, in_encounter_id, out_encounter_id, course_id FROM session WHERE id=?";
+    String sql = "SELECT id, in_encounter_id, out_encounter_id, course_id, complete FROM session WHERE id=?";
     RowMapper<Session> rowMapper = new SessionRowMapper();
     Session session = jdbcTemplate.queryForObject(sql, rowMapper, id);
     return session;
   }
 
   public List<Session> getAll() {
-    String sql = "SELECT id, in_encounter_id, out_encounter_id, course_id FROM session";
+    String sql = "SELECT id, in_encounter_id, out_encounter_id, course_id, complete FROM session";
     RowMapper<Session> rowMapper = new SessionRowMapper();
     return this.jdbcTemplate.query(sql, rowMapper);
   }
@@ -29,15 +29,15 @@ public class SessionService {
   public void add(Session session) {
     // Add session
     String sql =
-        "INSERT INTO session (id, in_encounter_id, out_encounter_id, course_id) values (?, ?, ?, ?)";
+        "INSERT INTO session (id, in_encounter_id, out_encounter_id, course_id, complete) values (?, ?, ?, ?, ?)";
     jdbcTemplate.update(
         sql, session.id, session.inEncounterId, session.outEncounterId, session.courseId);
 
     // Fetch session id
-    sql = "SELECT id FROM session WHERE in_encounter_id=? AND out_encounter_id=? AND course_id=?";
+    sql = "SELECT id FROM session WHERE in_encounter_id=? AND out_encounter_id=? AND course_id=? AND complete=?";
     int id =
         jdbcTemplate.queryForObject(
-            sql, Integer.class, session.inEncounterId, session.outEncounterId, session.courseId);
+            sql, Integer.class, session.inEncounterId, session.outEncounterId, session.courseId, session.complete);
 
     // Set session id
     session.id = id;
@@ -45,13 +45,14 @@ public class SessionService {
 
   public void update(Session session) {
     String sql =
-        "UPDATE session SET id=?, in_encounter_id=?, out_encounter_id=?, course_id=? WHERE id=?";
+        "UPDATE session SET id=?, in_encounter_id=?, out_encounter_id=?, course_id=?, complete=? WHERE id=?";
     jdbcTemplate.update(
         sql,
         session.id,
         session.inEncounterId,
         session.outEncounterId,
         session.courseId,
+        session.complete,
         session.id);
   }
 
@@ -74,6 +75,7 @@ public class SessionService {
       Integer outEncounterId,
       Integer anyEncounterId,
       Integer courseId,
+      Boolean complete,
       Integer locationId,
       Integer studentId,
       Integer time,
@@ -97,6 +99,7 @@ public class SessionService {
                     + anyEncounterId
                     + ")")
             + (courseId == null ? "" : " AND ses.course_id = " + courseId)
+            + (complete == null ? "" : " AND ses.complete = " + complete)
             + (studentId == null ? "" : " AND inen.student_id = " + studentId)
             + (locationId == null ? "" : " AND inen.location_id = " + locationId)
             + (time == null ? "" : " AND time BETWEEN inen.time AND outen.time")
