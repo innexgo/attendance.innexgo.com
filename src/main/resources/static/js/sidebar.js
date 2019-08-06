@@ -100,5 +100,5 @@ function displayInfo() {
 
 $(document).ready(function() {
   displayInfo();
-  setInterval(displayInfo, 10000);
+  setInterval(displayInfo, 1000);
 })
