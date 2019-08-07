@@ -2,7 +2,6 @@ package innexo;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStreamReader;
-import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -35,12 +34,26 @@ public class InnexoApiController {
   static final ResponseEntity<?> UNAUTHORIZED = new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
   static final ResponseEntity<?> NOT_FOUND = new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
+
+
   Integer parseInteger(String str) {
     if (str == null) {
       return null;
     } else {
       try {
         return Integer.parseInt(str);
+      } catch (NumberFormatException e) {
+        return null;
+      }
+    }
+  }
+
+  Long parseLong(String str) {
+    if (str == null) {
+      return null;
+    } else {
+      try {
+        return Long.parseLong(str);
       } catch (NumberFormatException e) {
         return null;
       }
@@ -111,7 +124,7 @@ public class InnexoApiController {
     String hash = Utils.encodeApiKey(key);
     if (apiKeyService.existsByKeyHash(hash)) {
       ApiKey apiKey = apiKeyService.getByKeyHash(hash);
-      if (apiKey.expirationTime > Instant.now().getEpochSecond()) {
+      if (apiKey.expirationTime > System.currentTimeMillis()) {
         if (userService.exists(apiKey.userId)) {
           return userService.getById(apiKey.userId);
         }
@@ -134,7 +147,7 @@ public class InnexoApiController {
   public ResponseEntity<?> newApiKey(
       @RequestParam(value = "userId", defaultValue = "-1") Integer userId,
       @RequestParam(value = "email", defaultValue = "") String email,
-      @RequestParam("expirationTime") Integer expirationTime,
+      @RequestParam("expirationTime") Long expirationTime,
       @RequestParam("password") String password) {
 
     // if they gave a username instead of a userId
@@ -153,7 +166,7 @@ public class InnexoApiController {
       if (Utils.matchesPassword(password, u.passwordHash)) {
         ApiKey apiKey = new ApiKey();
         apiKey.userId = userId;
-        apiKey.creationTime = (int) Instant.now().getEpochSecond();
+        apiKey.creationTime = System.currentTimeMillis();
         apiKey.expirationTime = expirationTime;
         apiKey.key = Utils.generateKey();
         apiKey.keyHash = Utils.encodeApiKey(apiKey.key);
@@ -203,7 +216,7 @@ public class InnexoApiController {
         Encounter encounter = new Encounter();
         encounter.locationId = locationId;
         encounter.studentId = studentId;
-        encounter.time = (int) Instant.now().getEpochSecond();
+        encounter.time = System.currentTimeMillis();
         encounterService.add(encounter);
 
         if (courseId != -1) {
@@ -267,8 +280,8 @@ public class InnexoApiController {
 
   @RequestMapping("period/new/")
   public ResponseEntity<?> newPeriod(
-      @RequestParam("startTime") Integer startTime,
-      @RequestParam("endTime") Integer endTime,
+      @RequestParam("startTime") Long startTime,
+      @RequestParam("endTime") Long endTime,
       @RequestParam("period") Integer period,
       @RequestParam("apiKey") String apiKey) {
     if (isAdministrator(apiKey)) {
@@ -545,8 +558,8 @@ public class InnexoApiController {
               .query(
                   parseInteger(allRequestParam.get("apiKeyId")),
                   parseInteger(allRequestParam.get("userId")),
-                  parseInteger(allRequestParam.get("minCreationTime")),
-                  parseInteger(allRequestParam.get("maxCreationTime")),
+                  parseLong(allRequestParam.get("minCreationTime")),
+                  parseLong(allRequestParam.get("maxCreationTime")),
                   allRequestParam.containsKey("apiKeyData")
                       ? Utils.encodeApiKey(allRequestParam.get("apiKeyData"))
                       : null)
@@ -594,8 +607,8 @@ public class InnexoApiController {
                   parseInteger(allRequestParam.get("encounterId")),
                   parseInteger(allRequestParam.get("studentId")),
                   parseInteger(allRequestParam.get("locationId")),
-                  parseInteger(allRequestParam.get("minTime")),
-                  parseInteger(allRequestParam.get("maxTime")),
+                  parseLong(allRequestParam.get("minTime")),
+                  parseLong(allRequestParam.get("maxTime")),
                   allRequestParam.get("studentName"))
               .stream()
               .map(x -> fillEncounter(x))
@@ -632,8 +645,8 @@ public class InnexoApiController {
           periodService
               .query(
                   parseInteger(allRequestParam.get("periodId")),
-                  parseInteger(allRequestParam.get("minTime")),
-                  parseInteger(allRequestParam.get("maxtime")),
+                  parseLong(allRequestParam.get("minTime")),
+                  parseLong(allRequestParam.get("maxTime")),
                   parseInteger(allRequestParam.get("period")),
                   parseInteger(allRequestParam.get("courseId")),
                   parseInteger(allRequestParam.get("teacherId")))
@@ -681,11 +694,11 @@ public class InnexoApiController {
                   parseBoolean(allRequestParam.get("complete")),
                   parseInteger(allRequestParam.get("locationId")),
                   parseInteger(allRequestParam.get("studentId")),
-                  parseInteger(allRequestParam.get("time")),
-                  parseInteger(allRequestParam.get("inTimeBegin")),
-                  parseInteger(allRequestParam.get("inTimeEnd")),
-                  parseInteger(allRequestParam.get("outTimeBegin")),
-                  parseInteger(allRequestParam.get("outTimeEnd")))
+                  parseLong(allRequestParam.get("time")),
+                  parseLong(allRequestParam.get("inTimeBegin")),
+                  parseLong(allRequestParam.get("inTimeEnd")),
+                  parseLong(allRequestParam.get("outTimeBegin")),
+                  parseLong(allRequestParam.get("outTimeEnd")))
               .stream()
               .map(x -> fillSession(x))
               .collect(Collectors.toList());
@@ -793,19 +806,6 @@ public class InnexoApiController {
     }
   }
 
-  @RequestMapping("populatePeriods")
-  public ResponseEntity<?> populatePeriods() {
-    int initialTime = (int) Instant.now().getEpochSecond();
-    for (int i = 0; i < 10000; i++) {
-      Period period = new Period();
-      period.startTime = initialTime + i * 20;
-      period.endTime = initialTime + ((i + 1) * 20);
-      period.period = i % 3;
-      periodService.add(period);
-    }
-    return OK;
-  }
-
   @RequestMapping("getCurrentStatus/")
   public ResponseEntity<?> getCurrentStatus(
       @RequestParam("courseId") Integer courseId,
@@ -885,5 +885,18 @@ public class InnexoApiController {
     } else {
       return UNAUTHORIZED;
     }
+  }
+
+  @RequestMapping("populatePeriods")
+  public ResponseEntity<?> populatePeriods() {
+    long initialTime = System.currentTimeMillis();
+    for (int i = 0; i < 1000; i++) {
+      Period period = new Period();
+      period.startTime = initialTime + i * 60_000;
+      period.endTime = (long) (initialTime + ((i + 0.7) * 60_100));
+      period.period = i % 2 + 1;
+      periodService.add(period);
+    }
+    return OK;
   }
 }

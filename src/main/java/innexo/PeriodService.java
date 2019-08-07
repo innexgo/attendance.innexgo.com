@@ -61,8 +61,8 @@ public class PeriodService {
 
   public List<Period> query(
       Integer id,
-      Integer minTime, // selects periods that end after this date
-      Integer maxTime, // select periods that start before this date
+      Long minTime, // selects periods that end after this date
+      Long maxTime, // select periods that start before this date
       Integer period,
       Integer courseId, // all periods that have this course
       Integer teacherId // all periods where this teacher teaches a coruse

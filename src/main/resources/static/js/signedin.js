@@ -32,8 +32,8 @@ function userInfo() {
   var apiKey = Cookies.getJSON('apiKey');
   if(apiKey != null) {
     var getPeriodUrl = thisUrl() + '/period/' +
-      '?minTime=' + moment().unix() +
-      '&maxTime=' + moment().unix() +
+      '?minTime=' + moment().valueOf() +
+      '&maxTime=' + moment().valueOf() +
       '&apiKey='  + apiKey.key;
 
     request(getPeriodUrl,
@@ -42,7 +42,7 @@ function userInfo() {
         // if class has ended, or not yet begun, delete the relevant cookies
         if(period == null) {
           Cookies.remove('period');
-          console.log('school not in session');
+          console.log('could not determine period: school not in session');
           return;
         } else {
           Cookies.set('period', period);

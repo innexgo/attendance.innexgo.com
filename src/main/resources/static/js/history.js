@@ -111,8 +111,8 @@ function submitQuery(encounterId, userId, userName, locationId, type, minDate, m
     (isEmpty(userName) ?        '' : '&userName='+userName) +
     (isNaN(locationId) ?        '' : '&locationId='+locationId) +
     (isEmpty(type) ?            '' : '&type='+encodeURIComponent(type)) +
-    (isEmpty(minDate) ?         '' : '&minTime='+moment(minDate).unix()) +
-    (isEmpty(maxDate) ?         '' : '&maxTime='+moment(maxDate).unix()) +
+    (isEmpty(minDate) ?         '' : '&minTime='+moment(minDate).valueOf()) +
+    (isEmpty(maxDate) ?         '' : '&maxTime='+moment(maxDate).valueOf()) +
     (isNaN(count) ?             '' : '&count='+count);
   request(url,
     function(xhr){
@@ -127,7 +127,7 @@ function submitQuery(encounterId, userId, userName, locationId, type, minDate, m
           ('<tr>' +
             '<td>' + encounter.student.name + '</td>' +
             '<td>' + encounter.type + '</td>' +
-            '<td>' + moment.unix(encounter.time).fromNow() + '</td>' +
+            '<td>' + moment(encounter.time).fromNow() + '</td>' +
             '<td>' + encounter.location.name + '</td>' +
             '</tr>');
       }

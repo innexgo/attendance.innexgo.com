@@ -90,11 +90,11 @@ public class SessionService {
       Boolean complete,
       Integer locationId,
       Integer studentId,
-      Integer time,
-      Integer inTimeBegin,
-      Integer inTimeEnd,
-      Integer outTimeBegin,
-      Integer outTimeEnd) {
+      Long time,
+      Long inTimeBegin,
+      Long inTimeEnd,
+      Long outTimeBegin,
+      Long outTimeEnd) {
 
     boolean outEncounterUnused =
         outEncounterId == null && outTimeBegin == null && outTimeEnd == null && time == null;

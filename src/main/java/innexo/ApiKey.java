@@ -3,8 +3,8 @@ package innexo;
 public class ApiKey {
   public int id;
   int userId;
-  public int creationTime;
-  public int expirationTime;
+  public long creationTime;
+  public long expirationTime;
 
   // not public
   String keyHash;

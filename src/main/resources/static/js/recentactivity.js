@@ -24,7 +24,7 @@ function recentActivity() {
         table.insertRow(0).innerHTML=
           ('<tr>' +
             '<td>' + encounter.student.name + '</td>' +
-            '<td>' + moment.unix(encounter.time).fromNow() + '</td>' +
+            '<td>' + moment(encounter.time).fromNow() + '</td>' +
             '<td>' + encounter.location.name + '</td>' +
             '</tr>');
       }

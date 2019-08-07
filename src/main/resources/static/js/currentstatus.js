@@ -1,7 +1,7 @@
 function currentStatus() {
   var apiKey = Cookies.getJSON('apiKey');
   var period = Cookies.getJSON('period');
-  var course = Cookies.getJSON('courses').filter(c => c.period == period.period)[0];
+  var course = period == null ? null : Cookies.getJSON('courses').filter(c => c.period == period.period)[0];
 
   var table = document.getElementById('current-status-table');
 

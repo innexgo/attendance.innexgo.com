@@ -31,8 +31,8 @@ public class EncounterService {
       Integer encounterId,
       Integer studentId,
       Integer locationId,
-      Integer minTime,
-      Integer maxTime,
+      Long minTime,
+      Long maxTime,
       String studentName) {
     String sql =
         "SELECT e.id, e.time, e.location_id, e.student_id "

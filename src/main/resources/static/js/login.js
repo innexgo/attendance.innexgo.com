@@ -18,23 +18,6 @@ function giveError(errormsg) {
   document.getElementById('error').innerHTML = errormsg;
 }
 
-function thisUrl(){
-  return window.location.protocol  + '//' + window.location.host;
-}
-
-function request(url, functionOnLoad, functionOnError) {
-  var xhr = new XMLHttpRequest();
-  xhr.open('GET', url, true);
-  xhr.onload = function() {
-    if (xhr.readyState == 4 && xhr.status == 200) {
-      functionOnLoad(xhr);
-    } else if(xhr.readyState == 4 && xhr.status != 200) {
-      functionOnError(xhr);
-    }
-  };
-  xhr.send();
-}
-
 function loginattempt() {
   var userName = document.getElementById('username').value;
   var password = document.getElementById('password').value;
@@ -45,7 +28,7 @@ function loginattempt() {
   }
 
   // get date 30 min into the future
-  var apiKeyExpirationTime = moment().add(30, 'hours').unix();
+  var apiKeyExpirationTime = moment().add(30, 'hours').valueOf();
 
   request(thisUrl() + '/apiKey/new/' +
     '?email=' + encodeURIComponent(userName) +

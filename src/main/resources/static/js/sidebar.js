@@ -86,7 +86,8 @@ $(document).ready(function(){
 function displayInfo() {
   var apiKey = Cookies.getJSON('apiKey');
   var period = Cookies.getJSON('period');
-  var course = Cookies.getJSON('courses').filter(c => c.period == period.period)[0];
+  var course = period == null ? null : Cookies.getJSON('courses').filter(c => c.period == period.period)[0];
+
 
   document.getElementById('info-time').innerHTML = moment().format('dddd, MMMM D');
   document.getElementById('info-name').innerHTML = apiKey.user.name;

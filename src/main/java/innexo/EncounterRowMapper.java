@@ -9,7 +9,7 @@ public class EncounterRowMapper implements RowMapper<Encounter> {
   public Encounter mapRow(ResultSet row, int rowNum) throws SQLException {
     Encounter encounter = new Encounter();
     encounter.id = row.getInt("id");
-    encounter.time = row.getInt("time");
+    encounter.time = row.getLong("time");
     encounter.locationId = row.getInt("location_id");
     encounter.studentId = row.getInt("student_id");
     return encounter;
