@@ -5,8 +5,8 @@ public class Irregularity {
   int studentId;
   int courseId;
   int periodId;
-  public boolean tardy;
-  public Integer secondsLate;
+  public int type;
+  public int timeMissing;
 
   // for jackson
   public Student student;

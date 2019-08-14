@@ -806,7 +806,10 @@ public class InnexoApiController {
     }
   }
 
-  @RequestMapping("getCurrentStatus/")
+
+  /* SPECIAL METHODS */
+
+  @RequestMapping("getCourseStatus/")
   public ResponseEntity<?> getCurrentStatus(
       @RequestParam("courseId") Integer courseId,
       @RequestParam("periodId") Integer periodId,
@@ -887,13 +890,15 @@ public class InnexoApiController {
     }
   }
 
+
+
   @RequestMapping("populatePeriods")
   public ResponseEntity<?> populatePeriods() {
     long initialTime = System.currentTimeMillis();
     for (int i = 0; i < 1000; i++) {
       Period period = new Period();
       period.startTime = initialTime + i * 60_000;
-      period.endTime = (long) (initialTime + ((i + 0.7) * 60_100));
+      period.endTime = (long) (initialTime + ((i + 0.7) * 60_000));
       period.period = i % 2 + 1;
       periodService.add(period);
     }
