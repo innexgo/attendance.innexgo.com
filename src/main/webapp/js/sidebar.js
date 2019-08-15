@@ -44,30 +44,30 @@ $(document).ready(function(){
   switch(colour){
     case 'dark':
       var brandImage = document.createElement('img');
-      brandImage.src = '../assets/innexo_logo.png';
+      brandImage.src = '../assets/innexgo_logo.png';
 
       document.getElementById('navbar-brand').appendChild(brandImage);
-      document.getElementById('navbar-brand').append(' Innexo');
+      document.getElementById('navbar-brand').append(' Innexgo');
 
       $('.navbar-palette').addClass('text-light').addClass('bg-dark');
     break;
 
     case 'light':
       var brandImage = document.createElement('img');
-      brandImage.src = '../assets/innexo_logo_dark.png';
+      brandImage.src = '../assets/innexgo_logo_dark.png';
 
       document.getElementById('navbar-brand').appendChild(brandImage);
-      document.getElementById('navbar-brand').append(' Innexo');
+      document.getElementById('navbar-brand').append(' Innexgo');
 
       $('.navbar-palette').addClass('text-dark').addClass('sidebar-light');
     break;
 
     case 'blue':
       var brandImage = document.createElement('img');
-      brandImage.src = '../assets/innexo_logo.png';
+      brandImage.src = '../assets/innexgo_logo.png';
 
       document.getElementById('navbar-brand').appendChild(brandImage);
-      document.getElementById('navbar-brand').append(' Innexo');
+      document.getElementById('navbar-brand').append(' Innexgo');
 
       $('.navbar-palette').addClass('text-light').addClass('sidebar-blue')
   }
