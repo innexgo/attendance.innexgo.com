@@ -20,6 +20,7 @@ public class ApiController {
   @Autowired ApiKeyService apiKeyService;
   @Autowired CourseService courseService;
   @Autowired EncounterService encounterService;
+  @Autowired IrregularityService irregularityService;
   @Autowired LocationService locationService;
   @Autowired PeriodService periodService;
   @Autowired ScheduleService scheduleService;
@@ -33,8 +34,6 @@ public class ApiController {
   static final ResponseEntity<?> OK = new ResponseEntity<>(HttpStatus.OK);
   static final ResponseEntity<?> UNAUTHORIZED = new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
   static final ResponseEntity<?> NOT_FOUND = new ResponseEntity<>(HttpStatus.NOT_FOUND);
-
-
 
   Integer parseInteger(String str) {
     if (str == null) {
@@ -87,6 +86,13 @@ public class ApiController {
     encounter.location = fillLocation(locationService.getById(encounter.locationId));
     encounter.student = fillStudent(studentService.getById(encounter.studentId));
     return encounter;
+  }
+
+  Irregularity fillIrregularity(Irregularity irregularity) {
+    irregularity.course = fillCourse(courseService.getById(irregularity.courseId));
+    irregularity.period = fillPeriod(periodService.getById(irregularity.periodId));
+    irregularity.student = fillStudent(studentService.getById(irregularity.studentId));
+    return irregularity;
   }
 
   Location fillLocation(Location location) {
@@ -172,8 +178,9 @@ public class ApiController {
         apiKey.keyHash = Utils.encodeApiKey(apiKey.key);
         apiKeyService.add(apiKey);
         return new ResponseEntity<>(fillApiKey(apiKey), HttpStatus.OK);
+      } else {
+        return UNAUTHORIZED;
       }
-    } else {
     }
     return BAD_REQUEST;
   }
@@ -806,7 +813,6 @@ public class ApiController {
     }
   }
 
-
   /* SPECIAL METHODS */
 
   @RequestMapping("getCourseStatus/")
@@ -889,8 +895,6 @@ public class ApiController {
       return UNAUTHORIZED;
     }
   }
-
-
 
   @RequestMapping("populatePeriods")
   public ResponseEntity<?> populatePeriods() {

@@ -12,7 +12,7 @@ public class IrregularityRowMapper implements RowMapper<Irregularity> {
     irregularity.studentId = row.getInt("student_id");
     irregularity.courseId = row.getInt("course_id");
     irregularity.periodId = row.getInt("period_id");
-    irregularity.type = row.getInt("type");
+    irregularity.type = row.getString("type");
     irregularity.timeMissing = row.getInt("time_missing");
     return irregularity;
   }

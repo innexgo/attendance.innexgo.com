@@ -88,11 +88,7 @@ public class ApiKeyService {
   }
 
   public List<ApiKey> query(
-      Integer id,
-      Integer userId,
-      Long minCreationTime,
-      Long maxCreationTime,
-      String keyHash) {
+      Integer id, Integer userId, Long minCreationTime, Long maxCreationTime, String keyHash) {
     String sql =
         "SELECT id, user_id, creation_time, expiration_time, key_hash FROM api_key WHERE 1=1"
             + (id == null ? "" : " AND id=" + id)
