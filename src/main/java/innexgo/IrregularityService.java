@@ -97,14 +97,18 @@ public class IrregularityService {
       Long time,
       Long timeMissing,
       Integer teacherId) {
-    String sql =
-        "SELECT u.id, u.student_id, u.course_id, u.period_id, u.type, u.time, u.time_missing FROM irregularity u"
-            + " WHERE 1=1 "
-            + (id == null ? "" : " AND u.id = " + id)
-            + (name == null ? "" : " AND u.name = " + Utils.escape(name))
-            + (email == null ? "" : " AND u.email = " + Utils.escape(email))
-            + (ring == null ? "" : " AND u.ring = " + ring)
-            + ";";
+    String sql = "SELECT irr.id, irr.student_id, irr.course_id, irr.period_id, irr.type, irr.time, irr.time_missing"
+       + " FROM irregularity irr"
+       + (teacherId == null ? "" : " JOIN course crs ON crs.id = irr.course_id")
+        + " WHERE 1=1 "
+        + (id == null ? "" : " AND irr.id = " + id)
+        + (studentId == null ? "" : " AND irr.student_id = " + studentId)
+        + (courseId == null ? "" : " AND irr.course_id = " + courseId)
+        + (periodId == null ? "" : " AND irr.period_id = " + periodId)
+        + (teacherId == null ? "" : " AND crs.teacher_id = " + teacherId)
+        + (type == null ? "" : " AND irr.type = " + Utils.escape(type))
+        + (type == null ? "" : " AND irr.type = " + Utils.escape(type))
+        + ";";
 
     RowMapper<Irregularity> rowMapper = new IrregularityRowMapper();
     return this.jdbcTemplate.query(sql, rowMapper);
