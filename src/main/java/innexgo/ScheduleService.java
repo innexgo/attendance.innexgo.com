@@ -72,7 +72,7 @@ public class ScheduleService {
     return this.jdbcTemplate.query(sql, rowMapper);
   }
 
-  public boolean exists(int id) {
+  public boolean existsById(int id) {
     String sql = "SELECT count(*) FROM schedule WHERE id=?";
     int count = jdbcTemplate.queryForObject(sql, Integer.class, id);
     return count != 0;

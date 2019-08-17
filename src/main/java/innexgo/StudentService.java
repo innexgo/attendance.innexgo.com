@@ -54,7 +54,7 @@ public class StudentService {
     return student;
   }
 
-  public boolean exists(int id) {
+  public boolean existsById(int id) {
     String sql = "SELECT count(*) FROM student WHERE id=?";
     int count = jdbcTemplate.queryForObject(sql, Integer.class, id);
     return count != 0;

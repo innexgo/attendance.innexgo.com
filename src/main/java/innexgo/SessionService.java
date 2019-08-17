@@ -75,7 +75,7 @@ public class SessionService {
     return session;
   }
 
-  public boolean exists(int id) {
+  public boolean existsById(int id) {
     String sql = "SELECT count(*) FROM session WHERE id=?";
     int count = jdbcTemplate.queryForObject(sql, Integer.class, id);
     return count != 0;

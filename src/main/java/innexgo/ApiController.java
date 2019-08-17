@@ -131,7 +131,7 @@ public class ApiController {
     if (apiKeyService.existsByKeyHash(hash)) {
       ApiKey apiKey = apiKeyService.getByKeyHash(hash);
       if (apiKey.expirationTime > System.currentTimeMillis()) {
-        if (userService.exists(apiKey.userId)) {
+        if (userService.existsById(apiKey.userId)) {
           return userService.getById(apiKey.userId);
         }
       }
@@ -167,7 +167,7 @@ public class ApiController {
     }
 
     // now actually make apiKey
-    if (userService.exists(userId)) {
+    if (userService.existsById(userId)) {
       User u = userService.getById(userId);
       if (Utils.matchesPassword(password, u.passwordHash)) {
         ApiKey apiKey = new ApiKey();
@@ -194,7 +194,7 @@ public class ApiController {
       @RequestParam("apiKey") String apiKey) {
     if (!Utils.isEmpty(subject)
         && locationService.existsById(locationId)
-        && userService.exists(teacherId)
+        && userService.existsById(teacherId)
         && isAdministrator(apiKey)) {
       Course course = new Course();
       course.teacherId = teacherId;
@@ -218,7 +218,7 @@ public class ApiController {
       @RequestParam("apiKey") String apiKey) {
     if (isTrusted(apiKey)) {
       if (locationService.existsById(locationId)
-          && studentService.exists(studentId)
+          && studentService.existsById(studentId)
           && (courseId == -1 ? true : courseService.existsById(courseId))) {
         Encounter encounter = new Encounter();
         encounter.locationId = locationId;
@@ -309,7 +309,7 @@ public class ApiController {
       @RequestParam("courseId") Integer courseId,
       @RequestParam("apiKey") String apiKey) {
     if (isTrusted(apiKey)
-        && studentService.exists(studentId)
+        && studentService.existsById(studentId)
         && courseService.existsById(courseId)
         && scheduleService
                 .query(null, studentId, null, null, null, courseService.getById(courseId).period)
@@ -332,7 +332,7 @@ public class ApiController {
       @RequestParam("name") String name,
       @RequestParam(value = "tags", defaultValue = "") String tags,
       @RequestParam("apiKey") String apiKey) {
-    if (!studentService.exists(id) && isAdministrator(apiKey)) {
+    if (!studentService.existsById(id) && isAdministrator(apiKey)) {
       Student student = new Student();
       student.id = id;
       student.graduatingYear = graduatingYear;
@@ -377,7 +377,7 @@ public class ApiController {
     if ( // make sure changer is admin
     isAdministrator(allRequestParam.getOrDefault("apiKey", "invalid"))
         // make sure student exists
-        && studentService.exists(parseInteger(allRequestParam.getOrDefault("studentId", "-1")))
+        && studentService.existsById(parseInteger(allRequestParam.getOrDefault("studentId", "-1")))
         // if they are trying to set a name, it cannot be blank
         && !Utils.isEmpty(allRequestParam.getOrDefault("studentName", "default"))
         // if they are setting the graduating year, it must be a valid integer
@@ -411,7 +411,7 @@ public class ApiController {
     if ( // make sure changer is admin
     isAdministrator(allRequestParam.getOrDefault("apiKey", "invalid"))
         // make sure user exists
-        && userService.exists(parseInteger(allRequestParam.getOrDefault("userId", "-1")))
+        && userService.existsById(parseInteger(allRequestParam.getOrDefault("userId", "-1")))
         // if they are trying to set a name, it cannot be blank
         && !Utils.isEmpty(allRequestParam.getOrDefault("userName", "default"))
         // if they are trying to set a password, it cannot be blank
@@ -458,7 +458,7 @@ public class ApiController {
       @RequestParam("newPassword") String newPassword) {
     if (!Utils.isEmpty(oldPassword)
         && !Utils.isEmpty(newPassword)
-        && userService.exists(userId)
+        && userService.existsById(userId)
         && Utils.matchesPassword(oldPassword, userService.getById(userId).passwordHash)) {
       User user = userService.getById(userId);
       user.passwordHash = Utils.encodePassword(newPassword);
@@ -475,7 +475,7 @@ public class ApiController {
       @RequestParam("userId") Integer userId,
       @RequestParam("prefstring") String prefstring,
       @RequestParam("apiKey") String apiKey) {
-    if (!Utils.isEmpty(apiKey) && userService.exists(userId)) {
+    if (!Utils.isEmpty(apiKey) && userService.existsById(userId)) {
       User apiUser = getUserIfValid(apiKey);
       User user = userService.getById(userId);
       if (apiUser != null && apiUser.id == user.id) {
@@ -489,71 +489,121 @@ public class ApiController {
 
   @RequestMapping("apiKey/delete/")
   public ResponseEntity<?> deleteApiKey(
-      @RequestParam("apiKeyId") Integer apiKeyId, @RequestParam("apiKey") String apiKey) {
+      @RequestParam("apiKeyId") Integer apiKeyId,
+      @RequestParam("apiKey") String apiKey) {
     if (isAdministrator(apiKey)) {
-      return new ResponseEntity<>(fillApiKey(apiKeyService.delete(apiKeyId)), HttpStatus.OK);
+      if(apiKeyService.existsById(apiKeyId)) {
+        return new ResponseEntity<>(fillApiKey(apiKeyService.delete(apiKeyId)), HttpStatus.OK);
+      } else {
+        return BAD_REQUEST;
+      }
     } else {
-      return BAD_REQUEST;
+      return UNAUTHORIZED;
     }
   }
 
   @RequestMapping("course/delete/")
   public ResponseEntity<?> deleteCourse(
-      @RequestParam("courseId") Integer courseId, @RequestParam("apiKey") String apiKey) {
+      @RequestParam("courseId") Integer courseId,
+      @RequestParam("apiKey") String apiKey) {
     if (isAdministrator(apiKey)) {
-      return new ResponseEntity<>(fillCourse(courseService.delete(courseId)), HttpStatus.OK);
+      if(courseService.existsById(courseId)) {
+        return new ResponseEntity<>(fillCourse(courseService.delete(courseId)), HttpStatus.OK);
+      } else {
+        return BAD_REQUEST;
+      }
     } else {
-      return BAD_REQUEST;
+      return UNAUTHORIZED;
+    }
+  }
+
+  @RequestMapping("irregularity/delete/")
+  public ResponseEntity<?> deleteIrregularity(
+      @RequestParam("irregularityId") Integer irregularityId,
+      @RequestParam("apiKey") String apiKey) {
+    if (isAdministrator(apiKey)) {
+      if(irregularityService.existsById(irregularityId)) {
+        return new ResponseEntity<>(fillIrregularity(irregularityService.delete(irregularityId)), HttpStatus.OK);
+      } else {
+        return BAD_REQUEST;
+      }
+    } else {
+      return UNAUTHORIZED;
     }
   }
 
   @RequestMapping("location/delete/")
   public ResponseEntity<?> deleteLocation(
-      @RequestParam("locationId") Integer locationId, @RequestParam("apiKey") String apiKey) {
+      @RequestParam("locationId") Integer locationId,
+      @RequestParam("apiKey") String apiKey) {
     if (isAdministrator(apiKey)) {
-      return new ResponseEntity<>(fillLocation(locationService.delete(locationId)), HttpStatus.OK);
+      if(locationService.existsById(locationId)) {
+        return new ResponseEntity<>(fillLocation(locationService.delete(locationId)), HttpStatus.OK);
+      } else {
+        return BAD_REQUEST;
+      }
     } else {
-      return BAD_REQUEST;
+      return UNAUTHORIZED;
     }
   }
 
   @RequestMapping("period/delete/")
   public ResponseEntity<?> deletePeriod(
-      @RequestParam("periodId") Integer periodId, @RequestParam("apiKey") String apiKey) {
+      @RequestParam("periodId") Integer periodId,
+      @RequestParam("apiKey") String apiKey) {
     if (isAdministrator(apiKey)) {
-      return new ResponseEntity<>(fillPeriod(periodService.delete(periodId)), HttpStatus.OK);
+      if(periodService.existsById(periodId)) {
+        return new ResponseEntity<>(fillPeriod(periodService.delete(periodId)), HttpStatus.OK);
+      } else {
+        return BAD_REQUEST;
+      }
     } else {
-      return BAD_REQUEST;
+      return UNAUTHORIZED;
     }
   }
 
   @RequestMapping("schedule/delete/")
   public ResponseEntity<?> deleteSchedule(
-      @RequestParam("scheduleId") Integer scheduleId, @RequestParam("apiKey") String apiKey) {
-    if (isTrusted(apiKey)) {
-      return new ResponseEntity<>(fillSchedule(scheduleService.delete(scheduleId)), HttpStatus.OK);
+      @RequestParam("scheduleId") Integer scheduleId,
+      @RequestParam("apiKey") String apiKey) {
+    if (isAdministrator(apiKey)) {
+      if(scheduleService.existsById(scheduleId)) {
+        return new ResponseEntity<>(fillSchedule(scheduleService.delete(scheduleId)), HttpStatus.OK);
+      } else {
+        return BAD_REQUEST;
+      }
     } else {
-      return BAD_REQUEST;
+      return UNAUTHORIZED;
     }
   }
 
   @RequestMapping("student/delete/")
   public ResponseEntity<?> deleteStudent(
-      @RequestParam("studentId") Integer studentId, @RequestParam("apiKey") String apiKey) {
+      @RequestParam("studentId") Integer studentId,
+      @RequestParam("apiKey") String apiKey) {
     if (isAdministrator(apiKey)) {
-      return new ResponseEntity<>(fillStudent(studentService.delete(studentId)), HttpStatus.OK);
+      if(studentService.existsById(studentId)) {
+        return new ResponseEntity<>(fillStudent(studentService.delete(studentId)), HttpStatus.OK);
+      } else {
+        return BAD_REQUEST;
+      }
     } else {
-      return BAD_REQUEST;
+      return UNAUTHORIZED;
     }
   }
 
   @RequestMapping("user/delete/")
   public ResponseEntity<?> deleteUser(
-      @RequestParam("userId") Integer userId, @RequestParam("apiKey") String apiKey) {
+      @RequestParam("userId") Integer userId,
+      @RequestParam("apiKey") String apiKey) {
     if (isAdministrator(apiKey)) {
-      return new ResponseEntity<>(fillUser(userService.delete(userId)), HttpStatus.OK);
+      if(userService.existsById(userId)) {
+        return new ResponseEntity<>(fillUser(userService.delete(userId)), HttpStatus.OK);
+      } else {
+        return BAD_REQUEST;
+      }
     } else {
-      return BAD_REQUEST;
+      return UNAUTHORIZED;
     }
   }
 
@@ -575,7 +625,7 @@ public class ApiController {
               .collect(Collectors.toList());
       return new ResponseEntity<>(list, HttpStatus.OK);
     } else {
-      return BAD_REQUEST;
+      return UNAUTHORIZED;
     }
   }
 
@@ -599,7 +649,7 @@ public class ApiController {
               .collect(Collectors.toList());
       return new ResponseEntity<>(els, HttpStatus.OK);
     } else {
-      return BAD_REQUEST;
+      return UNAUTHORIZED;
     }
   }
 
@@ -622,9 +672,34 @@ public class ApiController {
               .collect(Collectors.toList());
       return new ResponseEntity<>(els, HttpStatus.OK);
     } else {
-      return BAD_REQUEST;
+      return UNAUTHORIZED;
     }
   }
+
+  @RequestMapping("irregularity/")
+  public ResponseEntity<?> viewIrregularity(@RequestParam Map<String, String> allRequestParam) {
+    String apiKey = allRequestParam.get("apiKey");
+    if (!Utils.isEmpty(apiKey) && isTrusted(apiKey)) {
+      List<Irregularity> els =
+          irregularityService
+              .query(
+                  parseInteger(allRequestParam.get("irregularityId")),
+                  parseInteger(allRequestParam.get("studentId")),
+                  parseInteger(allRequestParam.get("courseId")),
+                  parseInteger(allRequestParam.get("periodId")),
+                  parseInteger(allRequestParam.get("teacherId")),
+                  allRequestParam.get("type"),
+                  parseLong(allRequestParam.get("time")),
+                  parseLong(allRequestParam.get("timeMissing")))
+              .stream()
+              .map(x -> fillIrregularity(x))
+              .collect(Collectors.toList());
+      return new ResponseEntity<>(els, HttpStatus.OK);
+    } else {
+      return UNAUTHORIZED;
+    }
+  }
+
 
   @RequestMapping("location/")
   public ResponseEntity<?> viewLocation(@RequestParam Map<String, String> allRequestParam) {

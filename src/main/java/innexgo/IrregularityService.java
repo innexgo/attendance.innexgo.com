@@ -82,7 +82,7 @@ public class IrregularityService {
     return irregularity;
   }
 
-  public boolean exists(int id) {
+  public boolean existsById(int id) {
     String sql = "SELECT count(*) FROM irregularity WHERE id=?";
     int count = jdbcTemplate.queryForObject(sql, Integer.class, id);
     return count != 0;
@@ -93,10 +93,10 @@ public class IrregularityService {
       Integer studentId,
       Integer courseId,
       Integer periodId,
+      Integer teacherId,
       String type,
       Long time,
-      Long timeMissing,
-      Integer teacherId) {
+      Long timeMissing) {
     String sql = "SELECT irr.id, irr.student_id, irr.course_id, irr.period_id, irr.type, irr.time, irr.time_missing"
        + " FROM irregularity irr"
        + (teacherId == null ? "" : " JOIN course crs ON crs.id = irr.course_id")
@@ -107,7 +107,8 @@ public class IrregularityService {
         + (periodId == null ? "" : " AND irr.period_id = " + periodId)
         + (teacherId == null ? "" : " AND crs.teacher_id = " + teacherId)
         + (type == null ? "" : " AND irr.type = " + Utils.escape(type))
-        + (type == null ? "" : " AND irr.type = " + Utils.escape(type))
+        + (time == null ? "" : " AND irr.time = " + time)
+        + (timeMissing == null ? "" : " AND irr.time_missing = " + timeMissing)
         + ";";
 
     RowMapper<Irregularity> rowMapper = new IrregularityRowMapper();

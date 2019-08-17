@@ -71,7 +71,7 @@ public class ApiKeyService {
     return apiKey;
   }
 
-  public boolean exists(int id) {
+  public boolean existsById(int id) {
     String sql = "SELECT count(*) FROM api_key WHERE id=?";
     int count = jdbcTemplate.queryForObject(sql, Integer.class, id);
     if (count == 0) {
