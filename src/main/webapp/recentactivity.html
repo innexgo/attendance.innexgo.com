@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!--Background Information -->
+    <title>Recent Activity</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- CSS References -->
+    <link rel="stylesheet" href="vendor/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="vendor/fontawesome-free/css/all.min.css">
+    <link rel="stylesheet" href="vendor/bootstrap4-toggle/css/bootstrap4-toggle.min.css">
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/sidebar.css">
+
+    <!-- JS References -->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.js"></script>
+    <script src="vendor/bootstrap4-toggle/js/bootstrap4-toggle.min.js"></script>
+    <script src="vendor/scannerdetection/jquery.scannerdetection.min.js"></script>
+    <script src="vendor/js-cookie/js.cookie.js"></script>
+    <script src="vendor/moment/moment.min.js"></script>
+    <script src="js/common.js"></script>
+    <script src="js/signedin.js"></script>
+    <script src="js/loadprefs.js"></script>
+    <script src="js/sidebar.js"></script>
+    <script src="js/recentactivity.js"></script>
+  </head>
+
+  <body class="palette-level-one">
+
+    <!-- Sidebar -->
+    <nav style="height:100%" id="sidebar" class="navbar-palette">
+      <nav class="navbar sidebar-top">
+        <button type="button" onclick="closeSidebar()" class="btn btn-icon sidebar-button">
+          <i class="fa fa-bars navbar-palette"></i>
+        </button>
+        <div style="margin:auto;display:block">
+          <h6 id="info-time">Current Time</h6>
+        </div>
+      </nav>
+      <div class="sidebar-item sidebar-info-list navbar-palette" style="border:none;display:block;">
+        <h6 id="info-name">Teacher Name</h6>
+        <h6 id="info-period">Current Period</h6>
+        <h6 id="info-location">Current Location</h6>
+      </div>
+      <div id="sidebar-navigation">
+        <a class="sidebar-item navbar-palette" href="#" id="my-overview">Overview</a>
+        <a class="sidebar-item navbar-palette" href="history.html">History</a>
+        <a class="sidebar-item navbar-palette" href="recentactivity.html">Recent Activity</a>
+        <a class="sidebar-item navbar-palette" href="#" id="my-managestudent">Manage Students</a>
+        <a class="sidebar-item navbar-palette" href="#" id="reports">Reports</a>
+      </div>
+      <div class="sidebar-bottom">
+        <a class="sidebar-item navbar-palette" href="settings.html"><i class="fa fa-cog"></i> Settings</a>
+        <a class="sidebar-item navbar-palette" href="login.html"><i class="fa fa-sign-out-alt"></i> Sign out</a>
+      </div>
+    </nav>
+    <!-- Overlay -->
+    <div id="overlay" onclick="closeSidebar()"></div>
+    <!-- Top Navbar -->
+    <nav class="navbar navbar-expand-md navbar-palette">
+      <div class="order-0">
+        <button type="button" onclick="openSidebar()" class="btn btn-icon sidebar-button">
+          <i class="fa fa-bars navbar-palette"></i>
+        </button>
+      </div>
+      <!-- Center Logo -->
+      <div class="mx-auto order-0">
+        <a id="navbar-brand" class="navbar-brand navbar-palette" href="index.html"></a>
+      </div>
+    </nav>
+    <!-- Content -->
+
+    <!-- Center Screen -->
+    <div id="not-sidebar" class="container-fluid">
+      <div class="card-deck px-3 my-3">
+				<!-- Filters -->
+				<div class="card col-sm mx-3 palette-level-two">
+								<div class="card-body">
+												<h5 class="card-title text-center">Filters</h5>
+												<div class="row">
+																<div class="col-4">
+																				<form>
+																								<div class="input-group mb-3">
+																												<div class="input-group-prepend">
+																																<span class="input-group-text">Name:&nbsp;&nbsp;</span>
+																												 </div>
+																												<input type="text" class="form-control" placeholder="Student Name">
+																								 </div>
+																								<div class="input-group mb-3">
+																												<div class="input-group-prepend">
+																																<span class="input-group-text">ID:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+																												 </div>
+																												<input type="text" class="form-control" placeholder="Student ID">
+																								 </div>
+																								<div class="input-group mb-3">
+																												<div class="input-group-prepend">
+																																<span class="input-group-text">Period:</span>
+																												 </div>
+																												<input type="text" class="form-control" placeholder="Period">
+																								 </div>
+																				</form>
+																</div>
+																<div class="col-4">
+																				<form>
+																								<div class="input-group mb-3">
+																												<div class="input-group-prepend">
+																																<span class="input-group-text">Teacher:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+																												 </div>
+																												 <input type="text" class="form-control" placeholder="Teacher Name">
+																								 </div>
+																								<div class="input-group mb-3">
+																												<div class="input-group-prepend">
+																																<span class="input-group-text">Building Number:</span>
+																												 </div>
+																												 <input type="text" class="form-control" placeholder="Building Number">
+																								 </div>
+																								<div class="input-group mb-3">
+																												<div class="input-group-prepend">
+																																<span class="input-group-text">Room Number:&nbsp;&nbsp;&nbsp;&nbsp;</span>
+																												 </div>
+																												<input type="text" class="form-control" placeholder="Room Number">
+																								 </div>
+																				</form>
+																</div>
+																<div class="col-4">
+																<form>
+																				<div class="input-group mb-3">
+																								<div class="input-group-prepend">
+																												<span class="input-group-text">From:</span>
+																								</div>
+																								<input type="date" class="form-control">
+																								<div class="input-group-append">
+																												<input type="time" class="form-control" value="07:15">
+																								</div>
+																								</div>
+																				<div class="input-group mb-3">
+																								<div class="input-group-prepend">
+																												<span class="input-group-text">To:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+																								</div>
+																								<input type="date" class="form-control">
+																								<div class="input-group-append">
+																												<input type="time" class="form-control" value="15:10">
+																								</div>
+																				</div>
+																				<input type="submit" value="Update"></input>
+
+																</form>
+																</div>
+												</div>
+								</div>
+				</div>
+			</div>
+        <!-- Recent Activity -->
+				<div class="card-deck px-3 my-3">
+				<div class="card col-sm mx-3 palette-level-two">
+          <div class="card-body">
+            <div>
+              <h5 class="card-title text-center">Recent Activity</h5>
+            </div>
+            <div class="table-height-standard">
+              <table class="table table-striped table-bordered table-hover">
+                <thead class="thead-dark">
+                  <tr class="table-header">
+                    <td>Name</td>
+                    <td>Time In</td>
+										<td>Time Out</td>
+                    <td>Location</td>
+                  </tr>
+                </thead>
+                <tbody class="table-height-standard" id="recent-activity-table"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </body>
+</html>
