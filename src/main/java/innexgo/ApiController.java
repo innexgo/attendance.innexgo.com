@@ -1,5 +1,6 @@
 package innexgo;
 
+import java.time.*;
 import java.io.ByteArrayInputStream;
 import java.io.InputStreamReader;
 import java.util.List;
@@ -973,14 +974,72 @@ public class ApiController {
 
   @RequestMapping("populatePeriods")
   public ResponseEntity<?> populatePeriods() {
-    long initialTime = System.currentTimeMillis();
-    for (int i = 0; i < 1000; i++) {
-      Period period = new Period();
-      period.startTime = initialTime + i * 60_000;
-      period.endTime = (long) (initialTime + ((i + 0.7) * 60_000));
-      period.period = i % 2 + 1;
-      periodService.add(period);
+    LocalDateTime monday = ZonedDateTime.now(ZoneId.of("America/Los_Angeles"))
+      .toLocalDate()
+      .with(DayOfWeek.MONDAY);
+
+    // collab
+    for (int week = 0; week < 1000; week++) {
+      // p 1
+      Period p1 = new Period();
+      p1.period = 1;
+      p1.startTime = monday.plusWeeks(week).plusHours(7).plusMinutes(15).toEpochMillis();
+      p1.startTime = monday.plusWeeks(week).plusHours(7).plusMinutes(55).toEpochMillis();
+      periodService.add(p1);
+
+      // p 2
+      Period p2 = new Period();
+      p2.period = 2;
+      p2.startTime = monday.plusWeeks(week).plusHours(8).plusMinutes(0).toEpochMillis();
+      p2.startTime = monday.plusWeeks(week).plusHours(8).plusMinutes(40).toEpochMillis();
+      periodService.add(p2);
+
+      // p 3
+      Period p3 = new Period();
+      p3.period = 3;
+      p3.startTime = monday.plusWeeks(week).plusHours(8).plusMinutes(45).toEpochMillis();
+      p3.startTime = monday.plusWeeks(week).plusHours(8).plusMinutes(25).toEpochMillis();
+      periodService.add(p3);
+
+      // p 4
+      Period p4 = new Period();
+      p4.period = 4;
+      p4.startTime = monday.plusWeeks(week).plusHours(9).plusMinutes(45).toEpochMillis();
+      p4.startTime = monday.plusWeeks(week).plusHours(10).plusMinutes(25).toEpochMillis();
+      periodService.add(p4);
+
+      // tutorial
+      Period tutorial = new Period();
+      tutorial.period = 0;
+      tutorial.startTime = monday.plusWeeks(week).plusHours(10).plusMinutes(25).toEpochMillis();
+      tutorial.startTime = monday.plusWeeks(week).plusHours(10).plusMinutes(55).toEpochMillis();
+      periodService.add(tutorial);
+
+      // p 5
+      Period p5 = new Period();
+      p5.period = 5;
+      p5.startTime = monday.plusWeeks(week).plusHours(11).plusMinutes(00).toEpochMillis();
+      p5.startTime = monday.plusWeeks(week).plusHours(11).plusMinutes(40).toEpochMillis();
+      periodService.add(p5);
+
+      // p 6
+      Period p6 = new Period();
+      p6.period = 6;
+      p6.startTime = monday.plusWeeks(week).plusHours(12).plusMinutes(15).toEpochMillis();
+      p6.startTime = monday.plusWeeks(week).plusHours(12).plusMinutes(55).toEpochMillis();
+      periodService.add(p6);
+
+      // p 7
+      Period p7 = new Period();
+      p7.period = 7;
+      p7.startTime = monday.plusWeeks(week).plusHours(13).plusMinutes(00).toEpochMillis();
+      p7.startTime = monday.plusWeeks(week).plusHours(13).plusMinutes(40).toEpochMillis();
+      periodService.add(p7);
     }
     return OK;
   }
+
+
+  long getTime(LocalDateTime date, int hours, int minutes) {
+    date.plusHours(hours).plusMinutes(minutes).
 }
