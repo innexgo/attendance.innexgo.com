@@ -974,72 +974,69 @@ public class ApiController {
 
   @RequestMapping("populatePeriods")
   public ResponseEntity<?> populatePeriods() {
-    LocalDateTime monday = ZonedDateTime.now(ZoneId.of("America/Los_Angeles"))
+    LocalDate sunday = ZonedDateTime.now(ZoneId.of("America/Los_Angeles"))
       .toLocalDate()
-      .with(DayOfWeek.MONDAY);
+      .with(DayOfWeek.SUNDAY);
 
-    // collab
+    // get weekdays
+    LocalDate monday = sunday.plusDays(1);
+    LocalDate tuesday = sunday.plusDays(2);
+    LocalDate wednesday = sunday.plusDays(3);
+    LocalDate thursday = sunday.plusDays(4);
+    LocalDate friday = sunday.plusDays(5);
+
+
     for (int week = 0; week < 1000; week++) {
-      // p 1
-      Period p1 = new Period();
-      p1.period = 1;
-      p1.startTime = monday.plusWeeks(week).plusHours(7).plusMinutes(15).toEpochMillis();
-      p1.startTime = monday.plusWeeks(week).plusHours(7).plusMinutes(55).toEpochMillis();
-      periodService.add(p1);
+      // collab
+      LocalDate thisMonday = monday.plusWeeks(week);
+      addPeriod(thisMonday, 1, "6:00", "7:15", "7:55");
+      addPeriod(thisMonday, 2, "7:55", "8:00", "8:40");
+      addPeriod(thisMonday, 3, "8:40", "8:45", "9:25");
+      addPeriod(thisMonday, 4, "9:25", "9:45", "10:25");
+      addPeriod(thisMonday, 0, "10:25", "10:25", "10:55");
+      addPeriod(thisMonday, 5, "10:55", "11:00", "11:40");
+      addPeriod(thisMonday, 6, "11:40", "12:15", "12:55");
+      addPeriod(thisMonday, 7, "12:55", "1:00", "1:40");
 
-      // p 2
-      Period p2 = new Period();
-      p2.period = 2;
-      p2.startTime = monday.plusWeeks(week).plusHours(8).plusMinutes(0).toEpochMillis();
-      p2.startTime = monday.plusWeeks(week).plusHours(8).plusMinutes(40).toEpochMillis();
-      periodService.add(p2);
+      // S Day
+      LocalDate thisTuesday = tuesday.plusWeeks(week);
+      addPeriod(thisTuesday, 1, "6:00", "7:15", "8:55");
+      addPeriod(thisTuesday, 3, "8:55", "9:15", "10:55");
+      addPeriod(thisTuesday, 5, "10:55", "11:15", "12:55");
+      addPeriod(thisTuesday, 7, "12:55", "1:30", "3:10");
 
-      // p 3
-      Period p3 = new Period();
-      p3.period = 3;
-      p3.startTime = monday.plusWeeks(week).plusHours(8).plusMinutes(45).toEpochMillis();
-      p3.startTime = monday.plusWeeks(week).plusHours(8).plusMinutes(25).toEpochMillis();
-      periodService.add(p3);
+      LocalDate thisThursday = thursday.plusWeeks(week);
+      addPeriod(thisThursday, 1, "6:00", "7:15", "8:55");
+      addPeriod(thisThursday, 3, "8:55", "9:15", "10:55");
+      addPeriod(thisThursday, 5, "10:55", "11:15", "12:55");
+      addPeriod(thisThursday, 7, "12:55", "1:30", "3:10");
 
-      // p 4
-      Period p4 = new Period();
-      p4.period = 4;
-      p4.startTime = monday.plusWeeks(week).plusHours(9).plusMinutes(45).toEpochMillis();
-      p4.startTime = monday.plusWeeks(week).plusHours(10).plusMinutes(25).toEpochMillis();
-      periodService.add(p4);
+      // T Day
+      LocalDate thisWednesday = wednesday.plusWeeks(week);
+      addPeriod(thisWednesday, 2, "6:00", "8:00", "9:40");
+      addPeriod(thisWednesday, 4, "9:40", "10:00", "11:40");
+      addPeriod(thisWednesday, 0, "11:40", "11:40", "12:30");
+      addPeriod(thisWednesday, 6, "12:30", "1:05", "2:45");
 
-      // tutorial
-      Period tutorial = new Period();
-      tutorial.period = 0;
-      tutorial.startTime = monday.plusWeeks(week).plusHours(10).plusMinutes(25).toEpochMillis();
-      tutorial.startTime = monday.plusWeeks(week).plusHours(10).plusMinutes(55).toEpochMillis();
-      periodService.add(tutorial);
-
-      // p 5
-      Period p5 = new Period();
-      p5.period = 5;
-      p5.startTime = monday.plusWeeks(week).plusHours(11).plusMinutes(00).toEpochMillis();
-      p5.startTime = monday.plusWeeks(week).plusHours(11).plusMinutes(40).toEpochMillis();
-      periodService.add(p5);
-
-      // p 6
-      Period p6 = new Period();
-      p6.period = 6;
-      p6.startTime = monday.plusWeeks(week).plusHours(12).plusMinutes(15).toEpochMillis();
-      p6.startTime = monday.plusWeeks(week).plusHours(12).plusMinutes(55).toEpochMillis();
-      periodService.add(p6);
-
-      // p 7
-      Period p7 = new Period();
-      p7.period = 7;
-      p7.startTime = monday.plusWeeks(week).plusHours(13).plusMinutes(00).toEpochMillis();
-      p7.startTime = monday.plusWeeks(week).plusHours(13).plusMinutes(40).toEpochMillis();
-      periodService.add(p7);
+      LocalDate thisFriday = friday.plusWeeks(week);
+      addPeriod(thisFriday, 2, "6:00", "8:00", "9:40");
+      addPeriod(thisFriday, 4, "9:40", "10:00", "11:40");
+      addPeriod(thisFriday, 0, "11:40", "11:40", "12:30");
+      addPeriod(thisFriday, 6, "12:30", "1:05", "2:45");
     }
     return OK;
   }
 
 
-  long getTime(LocalDateTime date, int hours, int minutes) {
-    date.plusHours(hours).plusMinutes(minutes).
+  void addPeriod(LocalDate day, int p, String minTime, String startTime, String endTime) {
+      String[] startComponents = startTime.split(":");
+      String[] endComponents = endTime.split(":");
+      Period period = new Period();
+      period.period = p;
+      period.startTime = day.atTime(parseInteger(startComponents[0]), parseInteger(startComponents[0])).toEpochMilli();
+      period.endTime = day.atTime(parseInteger(endComponents[0]), parseInteger(endComponents[0])).toEpochMilli();
+      periodService.add(period);
+  }
+
+
 }
