@@ -1,0 +1,23 @@
+.table-height-standard {
+  height: 24rem;
+  overflow: scroll;
+}
+
+div.card-title {
+  margin-bottom: 1em;
+}
+
+a, a:hover {
+  color: #fff;
+  text-decoration: none;
+}
+
+.card-noborder {
+  padding-left: 0px;
+  padding-right: 0px;
+  border-right-width: 0px;
+  border-top-width: 0px;
+  border-left-width: 0px;
+  border-bottom-width: 0px;
+}
+
