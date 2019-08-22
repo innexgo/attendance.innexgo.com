@@ -716,7 +716,7 @@ public class ApiController {
               .collect(Collectors.toList());
       return new ResponseEntity<>(list, HttpStatus.OK);
     } else {
-      return BAD_REQUEST;
+      return UNAUTHORIZED;
     }
   }
 
@@ -738,7 +738,7 @@ public class ApiController {
               .collect(Collectors.toList());
       return new ResponseEntity<>(els, HttpStatus.OK);
     } else {
-      return BAD_REQUEST;
+      return UNAUTHORIZED;
     }
   }
 
@@ -759,7 +759,7 @@ public class ApiController {
               .collect(Collectors.toList());
       return new ResponseEntity<>(list, HttpStatus.OK);
     } else {
-      return BAD_REQUEST;
+      return UNAUTHORIZED;
     }
   }
 
@@ -787,7 +787,7 @@ public class ApiController {
               .collect(Collectors.toList());
       return new ResponseEntity<>(list, HttpStatus.OK);
     } else {
-      return BAD_REQUEST;
+      return UNAUTHORIZED;
     }
   }
 
@@ -807,7 +807,7 @@ public class ApiController {
               .collect(Collectors.toList());
       return new ResponseEntity<>(list, HttpStatus.OK);
     } else {
-      return BAD_REQUEST;
+      return UNAUTHORIZED;
     }
   }
 
@@ -826,7 +826,7 @@ public class ApiController {
               .collect(Collectors.toList());
       return new ResponseEntity<>(list, HttpStatus.OK);
     } else {
-      return BAD_REQUEST;
+      return UNAUTHORIZED;
     }
   }
 
