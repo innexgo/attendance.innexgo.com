@@ -974,7 +974,7 @@ public class ApiController {
 
   @RequestMapping("populatePeriods")
   public ResponseEntity<?> populatePeriods() {
-    LocalDate sunday = ZonedDateTime.now(ZoneId.of("America/Los_Angeles"))
+    LocalDate sunday = ZonedDateTime.now(Utils.TIMEZONE)
       .toLocalDate()
       .with(DayOfWeek.SUNDAY);
 
@@ -1033,8 +1033,14 @@ public class ApiController {
       String[] endComponents = endTime.split(":");
       Period period = new Period();
       period.period = p;
-      period.startTime = day.atTime(parseInteger(startComponents[0]), parseInteger(startComponents[0])).toEpochMilli();
-      period.endTime = day.atTime(parseInteger(endComponents[0]), parseInteger(endComponents[0])).toEpochMilli();
+      period.startTime = day.atTime(parseInteger(startComponents[0]), parseInteger(startComponents[0]))
+        .atZone(Utils.TIMEZONE)
+        .toInstant()
+        .toEpochMilli();
+      period.endTime = day.atTime(parseInteger(endComponents[0]), parseInteger(endComponents[0]))
+        .atZone(Utils.TIMEZONE)
+        .toInstant()
+        .toEpochMilli();
       periodService.add(period);
   }
 
