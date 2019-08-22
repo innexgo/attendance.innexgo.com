@@ -986,7 +986,7 @@ public class ApiController {
     LocalDate friday = sunday.plusDays(5);
 
 
-    for (int week = 0; week < 1000; week++) {
+    for (int week = 0; week < 10; week++) {
       // collab
       LocalDate thisMonday = monday.plusWeeks(week);
       addPeriod(thisMonday, 1, "6:00", "7:15", "7:55");
@@ -1033,11 +1033,13 @@ public class ApiController {
       String[] endComponents = endTime.split(":");
       Period period = new Period();
       period.period = p;
-      period.startTime = day.atTime(parseInteger(startComponents[0]), parseInteger(startComponents[0]))
+      period.startTime = day
+        .atTime(parseInteger(startComponents[0]), parseInteger(startComponents[1]))
         .atZone(Utils.TIMEZONE)
         .toInstant()
         .toEpochMilli();
-      period.endTime = day.atTime(parseInteger(endComponents[0]), parseInteger(endComponents[0]))
+      period.endTime = day
+        .atTime(parseInteger(endComponents[0]), parseInteger(endComponents[1]))
         .atZone(Utils.TIMEZONE)
         .toInstant()
         .toEpochMilli();
