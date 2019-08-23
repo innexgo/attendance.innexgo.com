@@ -141,11 +141,17 @@ public class ApiController {
   }
 
   boolean isAdministrator(String key) {
+    if(key == null) {
+      return false;
+    }
     User user = getUserIfValid(key);
     return user != null && (user.ring == UserService.ADMINISTRATOR);
   }
 
   boolean isTrusted(String key) {
+    if(key == null) {
+      return false;
+    }
     User user = getUserIfValid(key);
     return user != null && (user.ring <= UserService.TEACHER);
   }
@@ -633,7 +639,8 @@ public class ApiController {
   @RequestMapping("course/")
   public ResponseEntity<?> viewCourse(@RequestParam Map<String, String> allRequestParam) {
     String apiKey = allRequestParam.get("apiKey");
-    if (!Utils.isEmpty(apiKey) && isTrusted(apiKey)) {
+    if (isTrusted(apiKey)) {
+
       List<Course> els =
           courseService
               .query(
@@ -657,7 +664,7 @@ public class ApiController {
   @RequestMapping("encounter/")
   public ResponseEntity<?> viewEncounter(@RequestParam Map<String, String> allRequestParam) {
     String apiKey = allRequestParam.get("apiKey");
-    if (!Utils.isEmpty(apiKey) && isTrusted(apiKey)) {
+    if (isTrusted(apiKey)) {
       List<Encounter> els =
           encounterService
               .query(
@@ -680,7 +687,7 @@ public class ApiController {
   @RequestMapping("irregularity/")
   public ResponseEntity<?> viewIrregularity(@RequestParam Map<String, String> allRequestParam) {
     String apiKey = allRequestParam.get("apiKey");
-    if (!Utils.isEmpty(apiKey) && isTrusted(apiKey)) {
+    if (isTrusted(apiKey)) {
       List<Irregularity> els =
           irregularityService
               .query(
