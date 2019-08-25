@@ -10,6 +10,7 @@ public class PeriodRowMapper implements RowMapper<Period> {
   public Period mapRow(ResultSet row, int rowNum) throws SQLException {
     Period period = new Period();
     period.id = row.getInt("id");
+    period.initialTime = row.getLong("initial_time");
     period.startTime = row.getLong("start_time");
     period.endTime = row.getLong("end_time");
     period.period = row.getInt("period");

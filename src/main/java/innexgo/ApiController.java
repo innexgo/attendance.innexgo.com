@@ -221,20 +221,39 @@ public class ApiController {
   public ResponseEntity<?> newEncounter(
       @RequestParam("studentId") Integer studentId,
       @RequestParam("locationId") Integer locationId,
-      @RequestParam(value = "courseId", defaultValue = "-1") Integer courseId,
+      @RequestParam(value = "userId", defaultValue = "-1") Integer userId,
       @RequestParam("apiKey") String apiKey) {
     if (isTrusted(apiKey)) {
       if (locationService.existsById(locationId)
           && studentService.existsById(studentId)
-          && (courseId == -1 ? true : courseService.existsById(courseId))) {
+          && (userId == -1 ? true : userService.existsById(userId))) {
         Encounter encounter = new Encounter();
         encounter.locationId = locationId;
         encounter.studentId = studentId;
         encounter.time = System.currentTimeMillis();
         encounterService.add(encounter);
 
-        if (courseId != -1) {
-          // search for open session with this student
+        // check for sessions + irregularities
+        if (userId != -1) {
+          List<Course> clist = courseService.query(
+              
+          List<Period> plist = periodService.query(
+              null,
+              System.currentTimeMillis(),
+              null,
+              null,
+              null,
+              null,
+              System.currentTimeMillis(),
+              null,
+              null,
+              null
+            );
+
+          // if and only if 
+
+
+          // search for open session with this student at the course
           List<Session> openSessions =
               sessionService.query(
                   null, // id
@@ -257,6 +276,9 @@ public class ApiController {
             session.outEncounterId = encounter.id;
             session.complete = true;
             sessionService.update(session);
+
+            // if it is in the middle of class, add a leaveEarly irregularity
+            if(
           } else {
             // make new open session
             Session session = new Session();
@@ -264,7 +286,17 @@ public class ApiController {
             session.complete = false;
             session.inEncounterId = encounter.id;
             sessionService.add(session);
+
+            // if it is after class starts, it may be a tardy
+            // 
           }
+
+
+          // now detect irregularities
+          // if it is a leave
+          //
+          // Check if this is tardy by checking if the current time is greater than this period's start time
+          // It could also be that the student left the class and is returning. In that case, we check if there was a leftEarly irregularity
         }
         // return the filled encounter on success
         return new ResponseEntity<>(fillEncounter(encounter), HttpStatus.OK);
@@ -294,12 +326,14 @@ public class ApiController {
 
   @RequestMapping("period/new/")
   public ResponseEntity<?> newPeriod(
+      @RequestParam("initialTime") Long initialTime,
       @RequestParam("startTime") Long startTime,
       @RequestParam("endTime") Long endTime,
       @RequestParam("period") Integer period,
       @RequestParam("apiKey") String apiKey) {
     if (isAdministrator(apiKey)) {
       Period p = new Period();
+      p.initialTime = initialTime;
       p.startTime = startTime;
       p.endTime = endTime;
       p.period = period;
@@ -737,6 +771,7 @@ public class ApiController {
                   parseInteger(allRequestParam.get("periodId")),
                   parseLong(allRequestParam.get("minTime")),
                   parseLong(allRequestParam.get("maxTime")),
+                  parseLong(allRequestParam.get("maxInitTime")),
                   parseInteger(allRequestParam.get("period")),
                   parseInteger(allRequestParam.get("courseId")),
                   parseInteger(allRequestParam.get("teacherId")))

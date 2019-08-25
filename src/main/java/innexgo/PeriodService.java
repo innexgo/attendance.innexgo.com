@@ -14,36 +14,36 @@ public class PeriodService {
   @Autowired private JdbcTemplate jdbcTemplate;
 
   public Period getById(int id) {
-    String sql = "SELECT id, start_time, end_time, period FROM period WHERE id=?";
+    String sql = "SELECT id, initial_time, start_time, end_time, period FROM period WHERE id=?";
     RowMapper<Period> rowMapper = new PeriodRowMapper();
     Period period = jdbcTemplate.queryForObject(sql, rowMapper, id);
     return period;
   }
 
   public List<Period> getAll() {
-    String sql = "SELECT id, start_time, end_time, period FROM period";
+    String sql = "SELECT id, initial_time, start_time, end_time, period FROM period";
     RowMapper<Period> rowMapper = new PeriodRowMapper();
     return this.jdbcTemplate.query(sql, rowMapper);
   }
 
   public void add(Period period) {
     // Add period
-    String sql = "INSERT INTO period (id, start_time, end_time, period) values (?, ?, ?, ?)";
-    jdbcTemplate.update(sql, period.id, period.startTime, period.endTime, period.period);
+    String sql = "INSERT INTO period (id, initial_time, start_time, end_time, period) values (?, ?, ?, ?, ?)";
+    jdbcTemplate.update(sql, period.id, period.initialTime, period.startTime, period.endTime, period.period);
 
     // Fetch period id
-    sql = "SELECT id FROM period WHERE start_time=? AND end_time=? AND period=?";
+    sql = "SELECT id FROM period WHERE initial_time=? AND start_time=? AND end_time=? AND period=?";
     int id =
         jdbcTemplate.queryForObject(
-            sql, Integer.class, period.startTime, period.endTime, period.period);
+            sql, Integer.class, period.initialTime, period.startTime, period.endTime, period.period);
 
     // Set period id
     period.id = id;
   }
 
   public void update(Period period) {
-    String sql = "UPDATE period SET id=?, start_time=?, end_time=?, period=? WHERE id=?";
-    jdbcTemplate.update(sql, period.id, period.startTime, period.endTime, period.period, period.id);
+    String sql = "UPDATE period SET id=?, initial_time=?, start_time=?, end_time=?, period=? WHERE id=?";
+    jdbcTemplate.update(sql, period.id, period.initialTime, period.startTime, period.endTime, period.period, period.id);
   }
 
   public Period delete(int id) {
@@ -61,8 +61,12 @@ public class PeriodService {
 
   public List<Period> query(
       Integer id,
-      Long minTime, // selects periods that end after this date
-      Long maxTime, // select periods that start before this date
+      Long initialTimeBegin,
+      Long initialTimeEnd,
+      Long startTimeBegin,
+      Long startTimeEnd,
+      Long endTimeBegin,
+      Long endTimeEnd,
       Integer period,
       Integer courseId, // all periods that have this course
       Integer teacherId // all periods where this teacher teaches a coruse
@@ -77,6 +81,7 @@ public class PeriodService {
             + (id == null ? "" : " AND p.id = " + id)
             + (minTime == null ? "" : " AND p.end_time >= " + minTime)
             + (maxTime == null ? "" : " AND p.start_time < " + maxTime)
+            + (initMaxTime == null ? "" : " AND p.initial_time < " + initMaxTime)
             + (period == null ? "" : " AND p.period = " + period)
             + (courseId == null ? "" : " AND c.course_id = " + courseId)
             + (teacherId == null ? "" : " AND c.teacher_id = " + teacherId)

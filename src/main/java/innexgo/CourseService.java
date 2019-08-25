@@ -12,9 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class CourseService {
   @Autowired private JdbcTemplate jdbcTemplate;
 
-  static final int ADMINISTRATOR = 0;
-  static final int TEACHER = 1;
-
   public Course getById(int id) {
     String sql = "SELECT id, teacher_id, location_id, period, subject, year FROM course WHERE id=?";
     RowMapper<Course> rowMapper = new CourseRowMapper();
@@ -78,6 +75,7 @@ public class CourseService {
       Integer teacherId,
       Integer locationId,
       Integer studentId,
+      Long time,
       String subject,
       Integer year) {
     String sql =
@@ -89,6 +87,7 @@ public class CourseService {
             + (locationId == null ? "" : " AND c.location_id = " + locationId)
             + (year == null ? "" : " AND c.year = " + year)
             + (studentId == null ? "" : " AND sc.student_id = " + studentId)
+            + (time == null ? "" : " AND 
             + (subject == null ? "" : " AND c.subject = " + Utils.escape(subject))
             + ";";
 
