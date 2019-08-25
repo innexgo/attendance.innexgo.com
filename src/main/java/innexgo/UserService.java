@@ -16,28 +16,36 @@ public class UserService {
   static final int TEACHER = 1;
 
   public User getById(int id) {
-    String sql = "SELECT id, name, email, password_hash, ring, prefstring FROM user WHERE id=?";
+    String sql = "SELECT id, card_id, name, email, password_hash, ring, prefstring FROM user WHERE id=?";
     RowMapper<User> rowMapper = new UserRowMapper();
     User user = jdbcTemplate.queryForObject(sql, rowMapper, id);
     return user;
   }
 
   public List<User> getByName(String name) {
-    String sql = "SELECT id, name, email, password_hash, ring, prefstring FROM user WHERE name=?";
+    String sql = "SELECT id, card_id, name, email, password_hash, ring, prefstring FROM user WHERE name=?";
     RowMapper<User> rowMapper = new UserRowMapper();
     List<User> users = jdbcTemplate.query(sql, rowMapper, name);
     return users;
   }
 
   public User getByEmail(String email) {
-    String sql = "SELECT id, name, email, password_hash, ring, prefstring FROM user WHERE email=?";
+    String sql = "SELECT id, card_id, name, email, password_hash, ring, prefstring FROM user WHERE email=?";
     RowMapper<User> rowMapper = new UserRowMapper();
     User user = jdbcTemplate.queryForObject(sql, rowMapper, email);
     return user;
   }
 
+  public User getByCardId(int cardId) {
+    String sql = "SELECT id, card_id, name, email, password_hash, ring, prefstring FROM user WHERE card_id=?";
+    RowMapper<User> rowMapper = new UserRowMapper();
+    User user = jdbcTemplate.queryForObject(sql, rowMapper, cardId);
+    return user;
+  }
+
+
   public List<User> getAll() {
-    String sql = "SELECT  id, name, email, password_hash, ring, prefstring FROM user";
+    String sql = "SELECT  id, card_id, name, email, password_hash, ring, prefstring FROM user";
     RowMapper<User> rowMapper = new UserRowMapper();
     return this.jdbcTemplate.query(sql, rowMapper);
   }
@@ -45,17 +53,18 @@ public class UserService {
   public void add(User user) {
     // Add user
     String sql =
-        "INSERT INTO user (id, name, email, password_hash, ring, prefstring ) values (?, ?, ?, ?, ?, ?)";
+        "INSERT INTO user (id, card_id, name, email, password_hash, ring, prefstring ) values (?, ?, ?, ?, ?, ?, ?)";
     jdbcTemplate.update(
         sql, user.id, user.name, user.email, user.passwordHash, user.ring, user.prefstring);
 
     // Fetch user id
     sql =
-        "SELECT id FROM user WHERE name=? AND email=? AND password_hash=? AND ring=? AND prefstring=?";
+        "SELECT id FROM user WHERE card_id=? AND name=? AND email=? AND password_hash=? AND ring=? AND prefstring=?";
     int id =
         jdbcTemplate.queryForObject(
             sql,
             Integer.class,
+            user.cardId,
             user.name,
             user.email,
             user.passwordHash,
@@ -68,10 +77,11 @@ public class UserService {
 
   public void update(User user) {
     String sql =
-        "UPDATE user SET id=?, name=?, email=?, password_hash=?, ring=?, prefstring=? WHERE id=?";
+        "UPDATE user SET id=?, card_id=?, name=?, email=?, password_hash=?, ring=?, prefstring=? WHERE id=?";
     jdbcTemplate.update(
         sql,
         user.id,
+        user.cardId,
         user.name,
         user.email,
         user.passwordHash,
@@ -93,6 +103,12 @@ public class UserService {
     return count != 0;
   }
 
+  public boolean existsByCardId(int cardId) {
+    String sql = "SELECT count(*) FROM user WHERE card_id=?";
+    int count = jdbcTemplate.queryForObject(sql, Integer.class, card_id);
+    return count != 0;
+  }
+
   public boolean existsByEmail(String email) {
     String sql = "SELECT count(*) FROM user WHERE email=?";
     int count = jdbcTemplate.queryForObject(sql, Integer.class, email);
@@ -101,9 +117,10 @@ public class UserService {
 
   public List<User> query(Integer id, String name, String email, Integer ring) {
     String sql =
-        "SELECT u.id, u.name, u.password_hash, u.email, u.ring, u.prefstring FROM user u"
+        "SELECT u.id, u.card_id, u.name, u.password_hash, u.email, u.ring, u.prefstring FROM user u"
             + " WHERE 1=1 "
             + (id == null ? "" : " AND u.id = " + id)
+            + (cardId == null ? "" : " AND u.card_id = " + cardId)
             + (name == null ? "" : " AND u.name = " + Utils.escape(name))
             + (email == null ? "" : " AND u.email = " + Utils.escape(email))
             + (ring == null ? "" : " AND u.ring = " + ring)
