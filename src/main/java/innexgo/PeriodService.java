@@ -61,6 +61,7 @@ public class PeriodService {
 
   public List<Period> query(
       Integer id,
+      Long time,
       Long initialTimeBegin,
       Long initialTimeEnd,
       Long startTimeBegin,
@@ -73,15 +74,19 @@ public class PeriodService {
       ) {
 
     String sql =
-        "SELECT p.id, p.start_time, p.end_time, p.period FROM period p"
+        "SELECT p.id, p.initial_time, p.start_time, p.end_time, p.period FROM period p"
             + (courseId == null || teacherId == null
                 ? ""
                 : " JOIN course c ON c.period = p.period ")
             + " WHERE 1=1 "
             + (id == null ? "" : " AND p.id = " + id)
-            + (minTime == null ? "" : " AND p.end_time >= " + minTime)
-            + (maxTime == null ? "" : " AND p.start_time < " + maxTime)
-            + (initMaxTime == null ? "" : " AND p.initial_time < " + initMaxTime)
+            + (time == null ? "" : " AND " + time + " BETWEEN p.initial_time AND p.end_time")
+            + (startTimeBegin == null ? "" : " AND p.start_time >= " + startTimeBegin)
+            + (startTimeEnd == null ? "" : " AND p.start_time <= " + startTimeEnd)
+            + (initialTimeBegin == null ? "" : " AND p.initial_time >= " + initialTimeBegin)
+            + (initialTimeEnd == null ? "" : " AND p.initial_time <= " + initialTimeEnd)
+            + (endTimeBegin == null ? "" : " AND p.end_time >= " + endTimeBegin)
+            + (endTimeEnd == null ? "" : " AND p.end_time <= " + endTimeEnd)
             + (period == null ? "" : " AND p.period = " + period)
             + (courseId == null ? "" : " AND c.course_id = " + courseId)
             + (teacherId == null ? "" : " AND c.teacher_id = " + teacherId)

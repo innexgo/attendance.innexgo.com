@@ -221,12 +221,12 @@ public class ApiController {
   public ResponseEntity<?> newEncounter(
       @RequestParam("studentId") Integer studentId,
       @RequestParam("locationId") Integer locationId,
-      @RequestParam(value = "userId", defaultValue = "-1") Integer userId,
+      @RequestParam(value = "courseId", defaultValue = "-1") Integer courseId,
       @RequestParam("apiKey") String apiKey) {
     if (isTrusted(apiKey)) {
       if (locationService.existsById(locationId)
           && studentService.existsById(studentId)
-          && (userId == -1 ? true : userService.existsById(userId))) {
+          && (courseId == -1 ? true : courseService.existsById(courseId))) {
         Encounter encounter = new Encounter();
         encounter.locationId = locationId;
         encounter.studentId = studentId;
@@ -234,10 +234,8 @@ public class ApiController {
         encounterService.add(encounter);
 
         // check for sessions + irregularities
-        if (userId != -1) {
-          List<Course> clist = courseService.query(
-              
-          List<Period> plist = periodService.query(
+        if (courseId != -1) {
+          /*List<Period> plist = periodService.query(
               null,
               System.currentTimeMillis(),
               null,
@@ -249,7 +247,7 @@ public class ApiController {
               null,
               null
             );
-
+          */
           // if and only if 
 
 
@@ -278,7 +276,6 @@ public class ApiController {
             sessionService.update(session);
 
             // if it is in the middle of class, add a leaveEarly irregularity
-            if(
           } else {
             // make new open session
             Session session = new Session();
@@ -682,6 +679,7 @@ public class ApiController {
                   parseInteger(allRequestParam.get("teacherId")),
                   parseInteger(allRequestParam.get("locationId")),
                   parseInteger(allRequestParam.get("studentId")),
+                  parseLong(allRequestParam.get("time")),
                   allRequestParam.get("subject"),
                   parseInteger(
                       allRequestParam.getOrDefault(
@@ -769,9 +767,13 @@ public class ApiController {
           periodService
               .query(
                   parseInteger(allRequestParam.get("periodId")),
-                  parseLong(allRequestParam.get("minTime")),
-                  parseLong(allRequestParam.get("maxTime")),
-                  parseLong(allRequestParam.get("maxInitTime")),
+                  parseLong(allRequestParam.get("time")),
+                  parseLong(allRequestParam.get("initialTimeBegin")),
+                  parseLong(allRequestParam.get("initialTimeEnd")),
+                  parseLong(allRequestParam.get("startTimeBegin")),
+                  parseLong(allRequestParam.get("startTimeEnd")),
+                  parseLong(allRequestParam.get("endTimeBegin")),
+                  parseLong(allRequestParam.get("endTimeEnd")),
                   parseInteger(allRequestParam.get("period")),
                   parseInteger(allRequestParam.get("courseId")),
                   parseInteger(allRequestParam.get("teacherId")))
@@ -1070,11 +1072,17 @@ public class ApiController {
   }
 
 
-  void addPeriod(LocalDate day, int p, String minTime, String startTime, String endTime) {
+  void addPeriod(LocalDate day, int p, String initialTime, String startTime, String endTime) {
+      String[] initialComponents = initialTime.split(":");
       String[] startComponents = startTime.split(":");
       String[] endComponents = endTime.split(":");
       Period period = new Period();
       period.period = p;
+      period.initialTime = day
+        .atTime(parseInteger(initialComponents[0]), parseInteger(initialComponents[1]))
+        .atZone(Utils.TIMEZONE)
+        .toInstant()
+        .toEpochMilli();
       period.startTime = day
         .atTime(parseInteger(startComponents[0]), parseInteger(startComponents[1]))
         .atZone(Utils.TIMEZONE)

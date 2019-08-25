@@ -80,14 +80,15 @@ public class CourseService {
       Integer year) {
     String sql =
         "SELECT c.id, c.teacher_id, c.location_id, c.period, c.subject, c.year FROM course c"
+            + (time == null ? "" : " JOIN period p ON p.period = course.period")
             + (studentId == null ? "" : " JOIN schedule sc ON c.id = sc.course_id ")
             + " WHERE 1=1 "
+            + (time == null ? "" : " AND time BETWEEN p.initial_time AND p.end_time")
             + (id == null ? "" : " AND c.id = " + id)
             + (teacherId == null ? "" : " AND c.teacher_id = " + teacherId)
             + (locationId == null ? "" : " AND c.location_id = " + locationId)
             + (year == null ? "" : " AND c.year = " + year)
             + (studentId == null ? "" : " AND sc.student_id = " + studentId)
-            + (time == null ? "" : " AND 
             + (subject == null ? "" : " AND c.subject = " + Utils.escape(subject))
             + ";";
 
