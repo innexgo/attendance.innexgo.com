@@ -16,14 +16,14 @@ public class UserService {
   public static final int TEACHER = 1;
 
   public User getById(int id) {
-    String sql = "SELECT id, card_id, name, email, password_hash, ring, prefstring FROM user WHERE id=?";
+    String sql = "SELECT id, name, email, password_hash, ring, prefstring FROM user WHERE id=?";
     RowMapper<User> rowMapper = new UserRowMapper();
     User user = jdbcTemplate.queryForObject(sql, rowMapper, id);
     return user;
   }
 
   public List<User> getByName(String name) {
-    String sql = "SELECT id, card_id, name, email, password_hash, ring, prefstring FROM user WHERE name=?";
+    String sql = "SELECT id, name, email, password_hash, ring, prefstring FROM user WHERE name=?";
     RowMapper<User> rowMapper = new UserRowMapper();
     List<User> users = jdbcTemplate.query(sql, rowMapper, name);
     return users;
@@ -37,7 +37,7 @@ public class UserService {
   }
 
   public List<User> getAll() {
-    String sql = "SELECT  id, card_id, name, email, password_hash, ring, prefstring FROM user";
+    String sql = "SELECT  id, name, email, password_hash, ring, prefstring FROM user";
     RowMapper<User> rowMapper = new UserRowMapper();
     return this.jdbcTemplate.query(sql, rowMapper);
   }
