@@ -842,6 +842,7 @@ public class ApiController {
           studentService
               .query(
                   parseInteger(allRequestParam.get("studentId")),
+                  parseInteger(allRequestParam.get("cardId")),
                   parseInteger(allRequestParam.get("graduatingYear")),
                   allRequestParam.get("name"),
                   allRequestParam.get("tags"),
@@ -955,6 +956,7 @@ public class ApiController {
               studentService
                   .query(
                       null, // id
+                      null, // cardId
                       null, // graduatingYear
                       null, // name
                       null, // tags

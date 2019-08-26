@@ -14,37 +14,44 @@ public class StudentService {
   @Autowired private JdbcTemplate jdbcTemplate;
 
   public Student getById(int id) {
-    String sql = "SELECT id, graduating_year, name, tags FROM student WHERE id=?";
+    String sql = "SELECT id, card_id, graduating_year, name, tags FROM student WHERE id=?";
     RowMapper<Student> rowMapper = new StudentRowMapper();
     Student student = jdbcTemplate.queryForObject(sql, rowMapper, id);
     return student;
   }
 
+  public Student getByCardId(int cardId) {
+    String sql = "SELECT id, card_id, graduating_year, name, tags FROM student WHERE card_id=?";
+    RowMapper<Student> rowMapper = new StudentRowMapper();
+    Student student = jdbcTemplate.queryForObject(sql, rowMapper, cardId);
+    return student;
+  }
+
   public List<Student> getAll() {
-    String sql = "SELECT id, graduating_year, name, tags FROM student";
+    String sql = "SELECT id, card_id, graduating_year, name, tags FROM student";
     RowMapper<Student> rowMapper = new StudentRowMapper();
     return this.jdbcTemplate.query(sql, rowMapper);
   }
 
   public void add(Student student) {
     // Add student
-    String sql = "INSERT INTO student (id, graduating_year, name, tags) values (?, ?, ?, ?)";
-    jdbcTemplate.update(sql, student.id, student.graduatingYear, student.name, student.tags);
+    String sql = "INSERT INTO student(id, card_id, graduating_year, name, tags) values (?, ?, ?, ?, ?)";
+    jdbcTemplate.update(sql, student.id, student.cardId, student.graduatingYear, student.name, student.tags);
 
     // Fetch student id
-    sql = "SELECT id FROM student WHERE graduating_year=? AND name=? AND tags=?";
+    sql = "SELECT id FROM student WHERE card_id=?, graduating_year=? AND name=? AND tags=?";
     int id =
         jdbcTemplate.queryForObject(
-            sql, Integer.class, student.graduatingYear, student.name, student.tags);
+            sql, Integer.class, student.cardId, student.graduatingYear, student.name, student.tags);
 
     // Set student id
     student.id = id;
   }
 
   public void update(Student student) {
-    String sql = "UPDATE student SET id=?, graduating_year=?, name=?, tags=? WHERE id=?";
+    String sql = "UPDATE student SET id=?, card_id=?, graduating_year=?, name=?, tags=? WHERE id=?";
     jdbcTemplate.update(
-        sql, student.id, student.graduatingYear, student.name, student.tags, student.id);
+        sql, student.id, student.cardId, student.graduatingYear, student.name, student.tags, student.id);
   }
 
   public Student delete(int id) {
@@ -60,11 +67,22 @@ public class StudentService {
     return count != 0;
   }
 
+  public boolean existsByCardId(int cardId) {
+    String sql = "SELECT count(*) FROM student WHERE card_id=?";
+    int count = jdbcTemplate.queryForObject(sql, Integer.class, cardId);
+    return count != 0;
+  }
+
   public List<Student> query(
-      Integer id, Integer graduatingYear, String name, String tags, Integer courseId) {
+      Integer id,
+      Integer cardId,
+      Integer graduatingYear,
+      String name, String tags,
+      Integer courseId) {
     String sql =
-        "SELECT st.id, st.graduating_year, st.name, st.tags FROM student st"
+        "SELECT st.id, st.card_id, st.graduating_year, st.name, st.tags FROM student st"
             + (courseId == null ? "" : " JOIN schedule sc ON st.id = sc.student_id ")
+            + (cardId == null ? "" : " AND st.card_id = " + cardId)
             + " WHERE 1=1 "
             + (id == null ? "" : " AND st.id = " + id)
             + (graduatingYear == null ? "" : " AND st.graduating_year = " + graduatingYear)
