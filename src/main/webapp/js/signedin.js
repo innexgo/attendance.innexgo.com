@@ -32,8 +32,7 @@ function userInfo() {
   var apiKey = Cookies.getJSON('apiKey');
   if(apiKey != null) {
     var getPeriodUrl = thisUrl() + '/period/' +
-      '?minTime=' + moment().valueOf() +
-      '&maxTime=' + moment().valueOf() +
+      '?time=' + moment().valueOf() +
       '&apiKey='  + apiKey.key;
 
     request(getPeriodUrl,

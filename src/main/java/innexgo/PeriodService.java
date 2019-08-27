@@ -53,6 +53,12 @@ public class PeriodService {
     return period;
   }
 
+  public void deleteAll() {
+    String sql = "TRUNCATE period";
+    jdbcTemplate.update(sql);
+    return;
+  }
+
   public boolean existsById(int id) {
     String sql = "SELECT count(*) FROM period WHERE id=?";
     int count = jdbcTemplate.queryForObject(sql, Integer.class, id);

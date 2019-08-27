@@ -1038,8 +1038,10 @@ public class ApiController {
 
   @RequestMapping("populatePeriods")
   public ResponseEntity<?> populatePeriods() {
+    periodService.deleteAll();
     LocalDate sunday = ZonedDateTime.now(Utils.TIMEZONE)
       .toLocalDate()
+      .plusWeeks(-1)
       .with(DayOfWeek.SUNDAY);
 
     // get weekdays
@@ -1060,33 +1062,33 @@ public class ApiController {
       addPeriod(thisMonday, 0, "10:25", "10:25", "10:55");
       addPeriod(thisMonday, 5, "10:55", "11:00", "11:40");
       addPeriod(thisMonday, 6, "11:40", "12:15", "12:55");
-      addPeriod(thisMonday, 7, "12:55", "1:00", "1:40");
+      addPeriod(thisMonday, 7, "12:55", "13:00", "13:40");
 
       // S Day
       LocalDate thisTuesday = tuesday.plusWeeks(week);
       addPeriod(thisTuesday, 1, "6:00", "7:15", "8:55");
       addPeriod(thisTuesday, 3, "8:55", "9:15", "10:55");
       addPeriod(thisTuesday, 5, "10:55", "11:15", "12:55");
-      addPeriod(thisTuesday, 7, "12:55", "1:30", "3:10");
+      addPeriod(thisTuesday, 7, "12:55", "13:30", "15:10");
 
       LocalDate thisThursday = thursday.plusWeeks(week);
       addPeriod(thisThursday, 1, "6:00", "7:15", "8:55");
       addPeriod(thisThursday, 3, "8:55", "9:15", "10:55");
       addPeriod(thisThursday, 5, "10:55", "11:15", "12:55");
-      addPeriod(thisThursday, 7, "12:55", "1:30", "3:10");
+      addPeriod(thisThursday, 7, "12:55", "13:30", "15:10");
 
       // T Day
       LocalDate thisWednesday = wednesday.plusWeeks(week);
       addPeriod(thisWednesday, 2, "6:00", "8:00", "9:40");
       addPeriod(thisWednesday, 4, "9:40", "10:00", "11:40");
       addPeriod(thisWednesday, 0, "11:40", "11:40", "12:30");
-      addPeriod(thisWednesday, 6, "12:30", "1:05", "2:45");
+      addPeriod(thisWednesday, 6, "12:30", "13:05", "14:45");
 
       LocalDate thisFriday = friday.plusWeeks(week);
       addPeriod(thisFriday, 2, "6:00", "8:00", "9:40");
       addPeriod(thisFriday, 4, "9:40", "10:00", "11:40");
       addPeriod(thisFriday, 0, "11:40", "11:40", "12:30");
-      addPeriod(thisFriday, 6, "12:30", "1:05", "2:45");
+      addPeriod(thisFriday, 6, "12:30", "13:05", "14:45");
     }
     return OK;
   }
