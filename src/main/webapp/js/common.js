@@ -45,6 +45,15 @@ function ordinal_suffix_of(i) {
     return i + "th";
 }
 
+function giveAlert(innerHTML, type) {
+  document.getElementById('alert-zone').innerHTML = 
+  '<div class="alert alert-dismissable ' + type + '" role="alert">' +
+    innerHTML +
+    '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
+      '<span aria-hidden="true">&times;</span>' +
+    '</button>' +
+  '</div>';
+}
 
 // TODO later need to actually set
 

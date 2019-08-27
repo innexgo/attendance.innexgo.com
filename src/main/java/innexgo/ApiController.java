@@ -888,15 +888,22 @@ public class ApiController {
     if (isAdministrator(apiKey)) {
       try {
         CSVParser parser =
-            CSVFormat.newFormat('\t')
+            CSVFormat.newFormat(',')
                 .parse(new InputStreamReader(new ByteArrayInputStream(file.getBytes()), "UTF8"));
         int currentGraduatingYear = Utils.getCurrentGraduatingYear();
         for (CSVRecord record : parser) {
           Integer id = parseInteger(record.get(2));
-          Integer graduatingYear = currentGraduatingYear + (12 - parseInteger(record.get(4)));
-          String name = record.get(1) + ' ' + record.get(0);
-          if (id != null && graduatingYear != null && name != null) {
-            newStudent(id, graduatingYear, name, "", apiKey);
+          if(id != null && !studentService.existsById(id)) {
+            Integer graduatingYear = currentGraduatingYear + (12 - parseInteger(record.get(4)));
+            String name = record.get(0) + ' ' + record.get(1);
+            if (graduatingYear != null && name != null) {
+              Student student = new Student();
+              student.id = id;
+              student.graduatingYear = graduatingYear;
+              student.name = name;
+              student.tags = "";
+              studentService.add(student);
+            }
           }
         }
       } catch (Exception e) {

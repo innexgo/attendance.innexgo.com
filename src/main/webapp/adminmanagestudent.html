@@ -71,6 +71,7 @@
     <!-- Content -->
     <div id="not-sidebar" class="container-fluid">
       <div class="px-3 my-3">
+        <div id="alert-zone"></div>
         <div class="card-deck">
 
 
@@ -82,7 +83,7 @@
               </div>
               <p class="card-text">Please upload a CSV file containing students exported from SchoolLoop. These students will be placed in the above class.</p>
               <input id="adminmanagestudent-teacher-file" type="file"></input>
-              <button id="adminmanagestudent-teacher-submit" type="input-button" onclick="batchSetSchedule();" class="btn mt-3 btn-block btn-warning">
+              <button id="adminmanagestudent-teacher-submit" type="input-button" onclick="batchUploadStudent();" class="btn mt-3 btn-block btn-warning">
                 Submit
               </button>
             </div>

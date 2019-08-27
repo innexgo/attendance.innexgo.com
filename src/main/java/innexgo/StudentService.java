@@ -39,7 +39,7 @@ public class StudentService {
     jdbcTemplate.update(sql, student.id, student.cardId, student.graduatingYear, student.name, student.tags);
 
     // Fetch student id
-    sql = "SELECT id FROM student WHERE card_id=?, graduating_year=? AND name=? AND tags=?";
+    sql = "SELECT id FROM student WHERE card_id=? AND graduating_year=? AND name=? AND tags=?";
     int id =
         jdbcTemplate.queryForObject(
             sql, Integer.class, student.cardId, student.graduatingYear, student.name, student.tags);
