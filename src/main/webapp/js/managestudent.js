@@ -14,8 +14,10 @@ function batchSetSchedule() {
     return;
   }
 
+  var courseId = $("#managestudent-teacher-courseselection :selected").val()
+
   var url = thisUrl() + '/batchSetSchedule/' +
-    '?courseId=' + courseinput.value +
+    '?courseId=' + courseId +
     '&apiKey=' + Cookies.getJSON('apiKey').key;
 
   var formData = new FormData();
@@ -56,7 +58,8 @@ $(document).ready(function() {
   var apiKey = Cookies.getJSON('apiKey');
 
   // populate course list
-  var selectCourseDropdown = document.getElementById('managestudent-select-course');
+  var selectCourseDropdownUploadStudent = document.getElementById('managestudent-teacher-courseselection');
+  var selectCourseDropdownClassList = document.getElementById('managestudent-select-course');
 
   request(
     thisUrl() + '/course/' +
@@ -66,8 +69,10 @@ $(document).ready(function() {
       courseList = JSON.parse(xhr.responseText);
       for(var i =0; i < courseList.length; i++) {
         var course = courseList[i];
-        selectCourseDropdown.innerHTML +=
-          '<option>' + course.period + ' : ' + course.subject + '</option>';
+        selectCourseDropdownUploadStudent.innerHTML +=
+          '<option>' + course.period + '</option>';
+        selectCourseDropdownClassList.innerHTML +=
+          '<option>' + course.period + '</option>';
       }
     },
     //failure

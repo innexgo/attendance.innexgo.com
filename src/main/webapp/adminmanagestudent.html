@@ -73,19 +73,21 @@
       <div class="px-3 my-3">
         <div class="card-deck">
 
+
           <!-- Upload Batch -->
           <div class="card col-sm-4 palette-level-two">
             <div class="card-body">
               <div>
                 <h5 class="card-title text-center">Upload Student Batch</h5>
               </div>
-              <p class="card-text">Please upload a CSV file containing students exported from SchoolLoop.</p>
-              <input id="manage-file" type="file"></input>
-              <button id="manage-submit" type="input-button" onclick="batchUploadStudent();" class="btn mt-3 btn-block btn-warning">
+              <p class="card-text">Please upload a CSV file containing students exported from SchoolLoop. These students will be placed in the above class.</p>
+              <input id="adminmanagestudent-teacher-file" type="file"></input>
+              <button id="adminmanagestudent-teacher-submit" type="input-button" onclick="batchSetSchedule();" class="btn mt-3 btn-block btn-warning">
                 Submit
               </button>
             </div>
           </div>
+
 
           <!-- Manage Users -->
           <div class="card col-sm palette-level-two">

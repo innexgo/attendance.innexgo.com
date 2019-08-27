@@ -13,7 +13,7 @@ function batchUploadStudent() {
     '?apiKey=' + Cookies.getJSON('apiKey').key;
 
   var formData = new FormData();
-  formData.append("file", document.getElementById("manage-file").files[0]);
+  formData.append("file", document.getElementById("adminmanage-file").files[0]);
 
   var xhr = new XMLHttpRequest();
   xhr.open("POST", url);
