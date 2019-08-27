@@ -389,24 +389,25 @@ public class ApiController {
       @RequestParam("email") String email,
       @RequestParam("password") String password,
       @RequestParam("ring") Integer ring,
-      @RequestParam("prefstring") String prefstring,
       @RequestParam("apiKey") String apiKey) {
-    if (!Utils.isEmpty(name)
-        && !Utils.isEmpty(password)
-        && !Utils.isEmpty(email)
-        && ring == UserService.ADMINISTRATOR
-        && !userService.existsByEmail(email)
-        && isAdministrator(apiKey)) {
-      User u = new User();
-      u.name = name;
-      u.email = email;
-      u.passwordHash = Utils.encodePassword(password);
-      u.ring = ring;
-      u.prefstring = prefstring;
-      userService.add(u);
-      return new ResponseEntity<>(fillUser(u), HttpStatus.OK);
+    if(!isAdministrator(apiKey)) {
+      if(!Utils.isEmpty(name)
+          && !Utils.isEmpty(password)
+          && !Utils.isEmpty(email)
+          && !userService.existsByEmail(email)) {
+        User u = new User();
+        u.name = name;
+        u.email = email;
+        u.passwordHash = Utils.encodePassword(password);
+        u.ring = ring;
+        u.prefstring = "";
+        userService.add(u);
+        return new ResponseEntity<>(fillUser(u), HttpStatus.OK);
+      } else {
+        return BAD_REQUEST;
+      }
     } else {
-      return BAD_REQUEST;
+      return UNAUTHORIZED;
     }
   }
 
