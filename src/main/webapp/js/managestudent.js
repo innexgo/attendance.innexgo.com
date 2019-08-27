@@ -24,6 +24,15 @@ function batchSetSchedule() {
   formData.append('file', fileinput.files[0]);
 
   var xhr = new XMLHttpRequest();
+  xhr.onreadystatechange = function() {
+    if(xhr.readyState == 4) {
+      if(xhr.status == 200) {
+        giveAlert('Students loaded successfully.', 'alert-success');
+      } else {
+        giveAlert('An error occured while loading.', 'alert-danger');
+      }
+    }
+  }
   xhr.open('POST', url);
   xhr.send(formData);
 }

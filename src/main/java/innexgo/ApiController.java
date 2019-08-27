@@ -888,7 +888,7 @@ public class ApiController {
     if (isAdministrator(apiKey)) {
       try {
         CSVParser parser =
-            CSVFormat.newFormat(',')
+            CSVFormat.DEFAULT
                 .parse(new InputStreamReader(new ByteArrayInputStream(file.getBytes()), "UTF8"));
         int currentGraduatingYear = Utils.getCurrentGraduatingYear();
         for (CSVRecord record : parser) {
@@ -920,22 +920,32 @@ public class ApiController {
       @RequestParam("courseId") Integer courseId,
       @RequestParam("file") MultipartFile file,
       @RequestParam("apiKey") String apiKey) {
-    if (isTrusted(apiKey)) {
-      try {
-        CSVParser parser =
-            CSVFormat.newFormat('\t')
-                .parse(new InputStreamReader(new ByteArrayInputStream(file.getBytes()), "UTF8"));
-        int currentGraduatingYear = Utils.getCurrentGraduatingYear();
-        for (CSVRecord record : parser) {
-          Integer id = parseInteger(record.get(2));
-          if (id != null) {
-            newSchedule(id, courseId, apiKey);
+    if (isTrusted(apiKey) ) {
+      if(courseService.existsById(courseId)) {
+        try {
+          CSVParser parser =
+              CSVFormat.DEFAULT
+                  .parse(new InputStreamReader(new ByteArrayInputStream(file.getBytes()), "UTF8"));
+          int currentGraduatingYear = Utils.getCurrentGraduatingYear();
+          for (CSVRecord record : parser) {
+            Integer studentId = parseInteger(record.get(2));
+            if (studentId != null && studentService.existsById(studentId)) {
+              if(scheduleService.query(null, studentId, null, null, null, courseService.getById(courseId).period).size() == 0) {
+                Schedule schedule = new Schedule();
+                schedule.studentId = studentId;
+                schedule.courseId = courseId;
+                scheduleService.add(schedule);
+              }
+            }
           }
+          return OK;
+        } catch (Exception e) {
+          e.printStackTrace();
+          return INTERNAL_SERVER_ERROR;
         }
-      } catch (Exception e) {
-        e.printStackTrace();
+      } else {
+        return BAD_REQUEST;
       }
-      return OK;
     } else {
       return UNAUTHORIZED;
     }
