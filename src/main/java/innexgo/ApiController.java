@@ -917,7 +917,7 @@ public class ApiController {
   }
 
   @RequestMapping("batchSetSchedule/")
-  public ResponseEntity<?> batchSetCourse(
+  public ResponseEntity<?> batchSetSchedule(
       @RequestParam("courseId") Integer courseId,
       @RequestParam("file") MultipartFile file,
       @RequestParam("apiKey") String apiKey) {

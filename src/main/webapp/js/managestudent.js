@@ -14,7 +14,7 @@ function batchSetSchedule() {
     return;
   }
 
-  var courseId = $("#managestudent-teacher-courseselection :selected").val()
+  var courseId = courseList.filter(c => c.period==$("#managestudent-teacher-courseselection :selected").val())[0].id;
 
   var url = thisUrl() + '/batchSetSchedule/' +
     '?courseId=' + courseId +
@@ -38,23 +38,23 @@ function batchSetSchedule() {
 }
 
 function updateClassList() {
-  var selectCourseDropdown = document.getElementById('managestudent-select-course');
   var teacherViewClassTable = document.getElementById('managestudent-teacher-viewclass-table');
+  var courseId = courseList.filter(c => c.period==$("#managestudent-teacher-courseselection :selected").val())[0].id;
   var apiKey = Cookies.getJSON('apiKey');
   request(
     thisUrl() + '/student/' +
-    '?courseId=' + courseList[selectCourseDropdown.selectedIndex].id +
+    '?courseId=' + courseId +
     '&apiKey=' + apiKey.key,
     //success
     function(xhr) {
       var students = JSON.parse(xhr.responseText);
-      for(var student in students) {
+      for(var i = 0; i < students.length; i++) {
         teacherViewClassTable.innerHTML +=
           '<tr>' +
-            '<td>' + student.name + '</td>' +
-            '<td>' + student.id + '</td>' +
-            '<td>' + student.graduatingYear + '</td>' +
-            '<td>' + student.tags + '</td>' +
+            '<td>' + students[i].name + '</td>' +
+            '<td>' + students[i].id + '</td>' +
+            '<td>' + students[i].graduatingYear + '</td>' +
+            '<td>' + students[i].tags + '</td>' +
           '</td>';
       }
     },
