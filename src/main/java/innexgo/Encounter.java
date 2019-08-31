@@ -8,6 +8,5 @@ public class Encounter {
 
   // Initialized by jackson during serialization
   public Student student;
-  public Course course;
   public Location location;
 }

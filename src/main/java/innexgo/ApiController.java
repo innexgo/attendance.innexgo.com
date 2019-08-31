@@ -1,10 +1,9 @@
 package innexgo;
 
 import java.time.*;
+import java.util.*;
 import java.io.ByteArrayInputStream;
 import java.io.InputStreamReader;
-import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 import org.apache.commons.csv.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -156,6 +155,15 @@ public class ApiController {
     return user != null && (user.ring <= UserService.TEACHER);
   }
 
+  //@PostConstruct
+  public void irregularityGenerator() {
+    List<Period> periodList = periodService.getAll();
+    Collections.sort(periodList, Comparator.comparingLong(p -> p.startTime));
+    for(int i = 0; i < periodList.size(); i++) {
+      Period period = periodList.get(i); 
+    }
+  }
+
   @RequestMapping("apiKey/new/")
   public ResponseEntity<?> newApiKey(
       @RequestParam(value = "userId", defaultValue = "-1") Integer userId,
@@ -219,17 +227,27 @@ public class ApiController {
 
   @RequestMapping("encounter/new/")
   public ResponseEntity<?> newEncounter(
-      @RequestParam("studentId") Integer studentId,
+      @RequestParam(value="studentId", defaultValue = "-1") Integer studentId,
+      @RequestParam(value="cardId", defaultValue = "-1") Integer cardId,
       @RequestParam("locationId") Integer locationId,
       @RequestParam(value = "courseId", defaultValue = "-1") Integer courseId,
       @RequestParam("apiKey") String apiKey) {
     if (isTrusted(apiKey)) {
+
+      Student student;
+      if(studentService.existsByCardId(cardId)) {
+        student = studentService.getByCardId(cardId);
+      } else if(studentService.existsById(studentId)) {
+        student = studentService.getById(studentId);
+      } else {
+        return BAD_REQUEST;
+      }
+
       if (locationService.existsById(locationId)
-          && studentService.existsById(studentId)
           && (courseId == -1 ? true : courseService.existsById(courseId))) {
         Encounter encounter = new Encounter();
         encounter.locationId = locationId;
-        encounter.studentId = studentId;
+        encounter.studentId = student.id;
         encounter.time = System.currentTimeMillis();
         encounterService.add(encounter);
 
@@ -262,7 +280,7 @@ public class ApiController {
                   courseId, // course id
                   false, // complete
                   null, // location id
-                  studentId, // student id
+                  student.id, // student id
                   null, // time
                   null, // in time begin
                   null, // in time end
