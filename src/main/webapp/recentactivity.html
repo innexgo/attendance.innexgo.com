@@ -144,8 +144,10 @@
 																												<input type="time" class="form-control" value="15:10">
 																								</div>
 																				</div>
-																				<input type="submit" value="Update"></input>
-
+																				<div class="row">
+																				<div class="col-6"><div class="input-group mb-3"><div class="input-group-prepend"><span class="input-group-text"># Entries</span></div><input type="text" class="form-control" value="100"></div></div>
+																				<div class="col-6"><input type="submit" value="Update"></input></div>
+																				</div>
 																</form>
 																</div>
 												</div>
@@ -160,16 +162,21 @@
               <h5 class="card-title text-center">Recent Activity</h5>
             </div>
             <div class="table-height-standard">
-              <table class="table table-striped table-bordered table-hover">
+              <table class="table table-striped table-bordered table-hover" id="recentActivity">
                 <thead class="thead-dark">
                   <tr class="table-header">
+                    <td>#</td>
                     <td>Name</td>
-                    <td>Time In</td>
+										<td>Student ID</td>
+                    <td>Period</td>
+										<td>Teacher</td>
+										<td>Building</td>
+										<td>Room</td>
+										<td>Time In</td>
 										<td>Time Out</td>
-                    <td>Location</td>
                   </tr>
                 </thead>
-                <tbody class="table-height-standard" id="recent-activity-table"></tbody>
+                <tbody class="table-height-standard" id="recentActivityContent"></tbody>
               </table>
             </div>
           </div>

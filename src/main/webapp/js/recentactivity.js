@@ -8,24 +8,30 @@ function recentActivity() {
     return;
   }
 
-  var url = thisUrl()+'/encounter/?count=100' +
+  var url = thisUrl()+'/session/?count=100' +
     '&courseId=' + course.id +
     '&apiKey='+ apiKey.key;
   request(url,
     function(xhr){
       // clear table
-      var table = document.getElementById('recent-activity-table');
+      var tableContent = document.getElementById('recentActivityContent');
       table.innerHTML = '';
 
-      var encounters = JSON.parse(xhr.responseText);
+      var sessions = JSON.parse(xhr.responseText);
       //go backwards to maintain order
-      for(var i = encounters.length-1; i >= 0; i--) {
-        var encounter = encounters[i];
+      for(var i = sessions.length-1; i >= 0; i--) {
+        var session = sessions[i];
         table.insertRow(0).innerHTML=
           ('<tr>' +
-            '<td>' + encounter.student.name + '</td>' +
-            '<td>' + moment(encounter.time).fromNow() + '</td>' +
-            '<td>' + encounter.location.name + '</td>' +
+            '<td>' + (sessions.length - i) + '</td>' +
+            '<td>' + session.inEncounter.student.name + '</td>' +
+            '<td>' + session.inEncounter.student.id + '</td>' +
+				    '<td>' + session.course.period + '</td>' +
+				    '<td>' + session.course.teacher.name + '</td>' +
+				    '<td>' + '</td>' +
+            '<td>' + session.course.location.name + '</td>' +
+				    '<td>' + session.inEncounter.time + '</td>' +
+				    '<td>' + session.outEncounter.time + '</td>' +
             '</tr>');
       }
     },
