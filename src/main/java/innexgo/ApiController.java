@@ -161,6 +161,8 @@ public class ApiController {
     Collections.sort(periodList, Comparator.comparingLong(p -> p.startTime));
     for(int i = 0; i < periodList.size(); i++) {
       Period period = periodList.get(i); 
+      // find students who are not in their assigned classes
+      // give them an absence
     }
   }
 
@@ -303,8 +305,8 @@ public class ApiController {
             session.inEncounterId = encounter.id;
             sessionService.add(session);
 
-            // if it is after class starts, it may be a tardy
-            // 
+            // if there is absence, convert it to a tardy
+            // if there is a leftEarly, convert it to a leftTemporarily
           }
 
 
