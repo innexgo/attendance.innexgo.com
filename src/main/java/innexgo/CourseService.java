@@ -77,6 +77,7 @@ public class CourseService {
       Integer studentId,
       Integer period,
       String subject,
+      Long time,
       Integer year) {
     String sql =
         "SELECT c.id, c.teacher_id, c.location_id, c.period, c.subject, c.year FROM course c"

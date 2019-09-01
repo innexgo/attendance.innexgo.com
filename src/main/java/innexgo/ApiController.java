@@ -6,13 +6,13 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStreamReader;
 import java.util.stream.Collectors;
 import org.apache.commons.csv.*;
-import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
@@ -112,7 +112,7 @@ public class ApiController {
 
   Session fillSession(Session session) {
     session.inEncounter = fillEncounter(encounterService.getById(session.inEncounterId));
-    if (session.outEncounterId != 0) {
+    if (session.complete) {
       session.outEncounter = fillEncounter(encounterService.getById(session.outEncounterId));
     }
     session.course = fillCourse(courseService.getById(session.courseId));
@@ -156,30 +156,59 @@ public class ApiController {
     return user != null && (user.ring <= UserService.TEACHER);
   }
 
-  @PostConstruct
+  @Scheduled(fixedDelay=5000)
   public void irregularityGenerator() {
-    List<Period> periodList = periodService.getAll();
+    List<Period> periodList = periodService.query(
+        null,                       // id
+        null,                       // time
+        null,                       // initialTimeBegin
+        null,                       // initialTimeEnd
+        System.currentTimeMillis(), // startTimeBegin
+        null,                       // startTimeEnd
+        null,                       // endTimeBegin
+        null,                       // endTimeEnd
+        null,                       // period
+        null,                       // courseId
+        null                        // teacherId
+      );
+
     Collections.sort(periodList, Comparator.comparingLong(p -> p.startTime));
     for(int i = 0; i < periodList.size(); i++) {
       Period period = periodList.get(i);
       // wait till we are at the right time
-      Thread.sleep(period.startTime - System.currentTimeMillis());
+      try {
+        Thread.sleep(period.startTime - System.currentTimeMillis());
+      } catch(InterruptedException e) {
+        e.printStackTrace();
+      }
 
-      // for each course currently going, we find the students who do not have an open session at this location and make them absent
-      List<Course> currentCourseList = courseService.query(
-        null,                            // id
-        null,                            // teacherId
-        null,                            // locationId
-        null,                            // studentId
-        period.id,                       // period
-        null,                            // subject
-        Utils.getCurrentGraduatingYear() // year
-      );
+      // get courses at this period
+      List<Course> courseList = courseService.query(
+          null,                            // id
+          null,                            // teacherId
+          null,                            // locationId
+          null,                            // studentId
+          period.period,                   // period
+          null,                            // subject
+          null,                            // time
+          Utils.getCurrentGraduatingYear() // year
+        );
 
-      // now iterate over each student
-      for(Course course : currentCourseList) {
-        
-
+      // for all courses at this time
+      for(Course course : courseList) {
+        List<Student> studentAbsentList = studentService.absent(course.id, period.id);
+        // mark all students not there as absent
+        for(Student student : studentAbsentList) {
+          Irregularity irregularity = new Irregularity();
+          irregularity.studentId = student.id;
+          irregularity.courseId = course.id;
+          irregularity.periodId = period.id;
+          irregularity.type = "absent";
+          irregularity.time = period.startTime;
+          irregularity.timeMissing = period.endTime - period.startTime;
+          irregularityService.add(irregularity);
+        }
+      }
     }
   }
 
@@ -720,6 +749,7 @@ public class ApiController {
                   parseInteger(allRequestParam.get("studentId")),
                   parseInteger(allRequestParam.get("period")),
                   allRequestParam.get("subject"),
+                  parseLong(allRequestParam.get("time")),
                   parseInteger(
                       allRequestParam.getOrDefault(
                           "year", Integer.toString(Utils.getCurrentGraduatingYear()))))

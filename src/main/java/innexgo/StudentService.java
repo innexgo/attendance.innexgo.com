@@ -11,6 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 public class StudentService {
 
+  @Autowired private PeriodService periodService;
+  @Autowired private CourseService courseService;
   @Autowired private JdbcTemplate jdbcTemplate;
 
   public Student getById(int id) {
@@ -95,18 +97,35 @@ public class StudentService {
     return this.jdbcTemplate.query(sql, rowMapper);
   }
 
-  public List<Student> absent(int periodId) {
+  // find students who are absent at the class at this period
+  public List<Student> absent(int courseId, int periodId) {
+    if(!periodService.existsById(periodId) || !courseService.existsById(courseId)) {
+      return null;
+    }
 
+    Course course = courseService.getById(courseId);
+    Period period = periodService.getById(periodId);
 
-    // find the period. find the sessions that have a start date before the period start date. If they have an end date, it must not exist or be after the period end date
-    // 
+    // Find the sessions that have a start date before the period start date.
+    // If they have an end date it must be after the period start date
+    // find students who are not in this list
 
     String sql =
-      "SELECT st.id, st.card_id, st.graduating_year, st.name, st.tags" +
+      " SELECT st.id, st.card_id, st.graduating_year, st.name, st.tags" +
+      " FROM student st" +
+      " JOIN schedule sc ON st.id = sc.student_id" +
+      " WHERE sc.course_id = " + courseId +
+      " EXCEPT" +
+      " SELECT st.id, st.card_id, st.graduating_year, st.name, st.tags" +
       " FROM student st" +
       " RIGHT JOIN session ses ON ses.student_id = st.id" +
-      " INNER JOIN course c ON ses.course_id = c.id" +
-      " WHERE c.period =  
+      " INNER JOIN encounter inen ON ses.in_encounter_id = inen.id" +
+      " LEFT JOIN encounter outen ON ses.out_encounter_id = outen.id" +
+      " WHERE inen.time < " + period.startTime +
+      " WHERE outen.time IS NULL or outen.time > " + period.startTime +
+      " ;";
 
+    RowMapper<Student> rowMapper = new StudentRowMapper();
+    return this.jdbcTemplate.query(sql, rowMapper);
   }
 }

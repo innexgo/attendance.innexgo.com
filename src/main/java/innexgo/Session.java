@@ -3,7 +3,7 @@ package innexgo;
 public class Session {
   public int id;
   int inEncounterId;
-  int outEncounterId;
+  Integer outEncounterId; // nullable
   int courseId;
   public boolean complete;
 

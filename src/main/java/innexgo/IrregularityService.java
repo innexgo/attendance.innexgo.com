@@ -12,9 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class IrregularityService {
   @Autowired private JdbcTemplate jdbcTemplate;
 
-  static final int ADMINISTRATOR = 0;
-  static final int TEACHER = 1;
-
   public Irregularity getById(int id) {
     String sql =
         "SELECT id, student_id, course_id, period_id, type, time, time_missing FROM irregularity WHERE id=?";
