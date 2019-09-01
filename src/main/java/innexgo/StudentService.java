@@ -94,4 +94,19 @@ public class StudentService {
     RowMapper<Student> rowMapper = new StudentRowMapper();
     return this.jdbcTemplate.query(sql, rowMapper);
   }
+
+  public List<Student> absent(int periodId) {
+
+
+    // find the period. find the sessions that have a start date before the period start date. If they have an end date, it must not exist or be after the period end date
+    // 
+
+    String sql =
+      "SELECT st.id, st.card_id, st.graduating_year, st.name, st.tags" +
+      " FROM student st" +
+      " RIGHT JOIN session ses ON ses.student_id = st.id" +
+      " INNER JOIN course c ON ses.course_id = c.id" +
+      " WHERE c.period =  
+
+  }
 }

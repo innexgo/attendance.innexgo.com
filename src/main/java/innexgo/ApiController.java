@@ -6,6 +6,7 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStreamReader;
 import java.util.stream.Collectors;
 import org.apache.commons.csv.*;
+import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -155,14 +156,30 @@ public class ApiController {
     return user != null && (user.ring <= UserService.TEACHER);
   }
 
-  //@PostConstruct
+  @PostConstruct
   public void irregularityGenerator() {
     List<Period> periodList = periodService.getAll();
     Collections.sort(periodList, Comparator.comparingLong(p -> p.startTime));
     for(int i = 0; i < periodList.size(); i++) {
-      Period period = periodList.get(i); 
-      // find students who are not in their assigned classes
-      // give them an absence
+      Period period = periodList.get(i);
+      // wait till we are at the right time
+      Thread.sleep(period.startTime - System.currentTimeMillis());
+
+      // for each course currently going, we find the students who do not have an open session at this location and make them absent
+      List<Course> currentCourseList = courseService.query(
+        null,                            // id
+        null,                            // teacherId
+        null,                            // locationId
+        null,                            // studentId
+        period.id,                       // period
+        null,                            // subject
+        Utils.getCurrentGraduatingYear() // year
+      );
+
+      // now iterate over each student
+      for(Course course : currentCourseList) {
+        
+
     }
   }
 
@@ -701,7 +718,7 @@ public class ApiController {
                   parseInteger(allRequestParam.get("teacherId")),
                   parseInteger(allRequestParam.get("locationId")),
                   parseInteger(allRequestParam.get("studentId")),
-                  parseLong(allRequestParam.get("time")),
+                  parseInteger(allRequestParam.get("period")),
                   allRequestParam.get("subject"),
                   parseInteger(
                       allRequestParam.getOrDefault(

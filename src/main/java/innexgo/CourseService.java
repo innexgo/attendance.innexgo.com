@@ -75,7 +75,7 @@ public class CourseService {
       Integer teacherId,
       Integer locationId,
       Integer studentId,
-      Long time,
+      Integer period,
       String subject,
       Integer year) {
     String sql =
