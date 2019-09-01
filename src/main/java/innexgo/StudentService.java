@@ -113,7 +113,7 @@ public class StudentService {
     String sql =
       " SELECT st.id, st.card_id, st.graduating_year, st.name, st.tags" +
       " FROM student st" +
-      " JOIN schedule sc ON st.id = sc.student_id" +
+      " INNER JOIN schedule sc ON st.id = sc.student_id" +
       " WHERE sc.course_id = " + courseId +
       " EXCEPT" +
       " SELECT st.id, st.card_id, st.graduating_year, st.name, st.tags" +
@@ -121,8 +121,7 @@ public class StudentService {
       " RIGHT JOIN session ses ON ses.student_id = st.id" +
       " INNER JOIN encounter inen ON ses.in_encounter_id = inen.id" +
       " LEFT JOIN encounter outen ON ses.out_encounter_id = outen.id" +
-      " WHERE inen.time < " + period.startTime +
-      " WHERE outen.time IS NULL or outen.time > " + period.startTime +
+      " WHERE inen.time < " + period.startTime + " AND outen.time IS NULL OR outen.time > " + period.startTime +
       " ;";
 
     RowMapper<Student> rowMapper = new StudentRowMapper();

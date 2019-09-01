@@ -111,11 +111,12 @@ public class ApiController {
   }
 
   Session fillSession(Session session) {
+    session.student = fillStudent(studentService.getById(session.studentId));
+    session.course = fillCourse(courseService.getById(session.courseId));
     session.inEncounter = fillEncounter(encounterService.getById(session.inEncounterId));
     if (session.complete) {
       session.outEncounter = fillEncounter(encounterService.getById(session.outEncounterId));
     }
-    session.course = fillCourse(courseService.getById(session.courseId));
     return session;
   }
 
@@ -173,14 +174,18 @@ public class ApiController {
       );
 
     Collections.sort(periodList, Comparator.comparingLong(p -> p.startTime));
+
+
     for(int i = 0; i < periodList.size(); i++) {
       Period period = periodList.get(i);
       // wait till we are at the right time
       try {
+        System.out.println((period.startTime - System.currentTimeMillis())/1000);
         Thread.sleep(period.startTime - System.currentTimeMillis());
       } catch(InterruptedException e) {
         e.printStackTrace();
       }
+
 
       // get courses at this period
       List<Course> courseList = courseService.query(
@@ -193,6 +198,7 @@ public class ApiController {
           null,                            // time
           Utils.getCurrentGraduatingYear() // year
         );
+
 
       // for all courses at this time
       for(Course course : courseList) {
@@ -346,6 +352,7 @@ public class ApiController {
           } else {
             // make new open session
             Session session = new Session();
+            session.studentId = student.id;
             session.courseId = courseId;
             session.complete = false;
             session.inEncounterId = encounter.id;
@@ -944,7 +951,7 @@ public class ApiController {
     }
   }
 
-  // Special Methods
+  /* SPECIAL METHODS */
 
   @RequestMapping("validate/")
   public ResponseEntity<?> validateTrusted(@RequestParam("apiKey") String apiKey) {
@@ -1020,89 +1027,6 @@ public class ApiController {
     }
   }
 
-  /* SPECIAL METHODS */
-
-  @RequestMapping("getCourseStatus/")
-  public ResponseEntity<?> getCurrentStatus(
-      @RequestParam("courseId") Integer courseId,
-      @RequestParam("periodId") Integer periodId,
-      @RequestParam("apiKey") String apiKey) {
-
-    // first ensure authorization
-    if (isTrusted(apiKey)) {
-      // then ensure that the course and period specified are valid
-      if (courseService.existsById(courseId) && periodService.existsById(periodId)) {
-        // load them
-        Course course = courseService.getById(courseId);
-        Period period = periodService.getById(periodId);
-        // ensure that it is self consistent
-        if (course.period == period.period) {
-          // get a list of students
-          return new ResponseEntity<>(
-              studentService
-                  .query(
-                      null, // id
-                      null, // cardId
-                      null, // graduatingYear
-                      null, // name
-                      null, // tags
-                      courseId // courseId
-                      )
-                  .stream()
-                  .map(
-                      s ->
-                          new Object() {
-                            public Student student = fillStudent(s);
-                            public String status =
-                                sessionService
-                                            .query(
-                                                null, // id
-                                                null, // in encounter id
-                                                null, // out encounter id
-                                                null, // any encounter id
-                                                courseId, // course id
-                                                null, // complete
-                                                null, // location id
-                                                s.id, // student id
-                                                period.startTime, // time
-                                                null, // in time begin
-                                                null, // in time end
-                                                null, // out time begin
-                                                null // out time end
-                                                )
-                                            .size()
-                                        != 0
-                                    ? "present" // return present if there is a session
-                                    : sessionService
-                                                .query(
-                                                    null, // id
-                                                    null, // in encounter id
-                                                    null, // out encounter id
-                                                    null, // any encounter id
-                                                    courseId, // course id
-                                                    null, // complete
-                                                    null, // location id
-                                                    s.id, // student id
-                                                    null, // time
-                                                    period.startTime, // in time begin
-                                                    period.endTime, // in time end
-                                                    null, // out time begin
-                                                    null // out time end
-                                                    )
-                                                .size()
-                                            != 0
-                                        ? "tardy" // return tardy if there is such a session
-                                        : "absent";
-                          })
-                  .collect(Collectors.toList()),
-              HttpStatus.OK);
-        }
-      }
-      return BAD_REQUEST;
-    } else {
-      return UNAUTHORIZED;
-    }
-  }
 
   @RequestMapping("populatePeriods")
   public ResponseEntity<?> populatePeriods() {

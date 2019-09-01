@@ -12,21 +12,23 @@ function currentStatus() {
     return;
   }
 
+
   // get students
-  var url = thisUrl() + '/getCurrentStatus/' +
+
+  // get irregularities
+  request(thisUrl() + '/irregularity/' +
     '?courseId=' + course.id +
     '&periodId=' + period.id +
-    '&apiKey=' + apiKey.key;
-  request(url,
+    '&apiKey=' + apiKey.key,
     function(xhr) {
-      var statuses = JSON.parse(xhr.responseText);
+      var irregularities = JSON.parse(xhr.responseText);
 
       //blank table
       table.innerHTML='';
 
-      for(var i = 0; i < statuses.length; i++) {
-        var status = statuses[i].status;
-        var student = statuses[i].student;
+      for(var i = 0; i < irregularities.length; i++) {
+        var status = statuses[i].type;
+        var student = irregularities[i].student;
         var text = '<span class="fa fa-times"></span>';
         var bgcolor = '#ffcccc';
         var fgcolor = '#ff0000';
