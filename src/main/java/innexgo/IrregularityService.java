@@ -64,12 +64,14 @@ public class IrregularityService {
         "UPDATE irregularity SET id=?, student_id=?, course_id=?, period_id=?, type=?, time=?, time_missing=? WHERE id=?";
     jdbcTemplate.update(
         sql,
+        irregularity.id,
         irregularity.studentId,
         irregularity.courseId,
         irregularity.periodId,
         irregularity.type,
         irregularity.time,
-        irregularity.timeMissing);
+        irregularity.timeMissing,
+        irregularity.id);
   }
 
   public Irregularity delete(int id) {

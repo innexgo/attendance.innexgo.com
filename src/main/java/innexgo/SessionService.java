@@ -103,7 +103,7 @@ public class SessionService {
         outEncounterId == null && outTimeBegin == null && outTimeEnd == null && time == null;
 
     String sql =
-        "SELECT ses.id, ses.in_encounter_id, ses.out_encounter_id, ses.course_id, ses.complete"
+        "SELECT ses.id, ses.student_id, ses.in_encounter_id, ses.out_encounter_id, ses.course_id, ses.complete"
             + " FROM session ses"
             + " JOIN encounter inen ON ses.in_encounter_id = inen.id"
             + (outEncounterUnused ? "" : " JOIN encounter outen ON ses.out_encounter_id = outen.id")

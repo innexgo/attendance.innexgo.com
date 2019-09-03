@@ -175,7 +175,6 @@ public class ApiController {
 
     Collections.sort(periodList, Comparator.comparingLong(p -> p.startTime));
 
-
     for(int i = 0; i < periodList.size(); i++) {
       Period period = periodList.get(i);
       // wait till we are at the right time
@@ -185,7 +184,6 @@ public class ApiController {
       } catch(InterruptedException e) {
         e.printStackTrace();
       }
-
 
       // get courses at this period
       List<Course> courseList = courseService.query(
@@ -198,7 +196,6 @@ public class ApiController {
           null,                            // time
           Utils.getCurrentGraduatingYear() // year
         );
-
 
       // for all courses at this time
       for(Course course : courseList) {
@@ -349,14 +346,18 @@ public class ApiController {
             sessionService.update(session);
 
             // if it is in the middle of class, add a leaveEarly irregularity
-
-            Irregularity irregularity = new Irregularity();
-            irregularity.studentId = student.id;
-            irregularity.courseId = courseId;
-            irregularity.periodId = currentPeriod.id;
-            irregularity.type = "left_early";
-            irregularity.time = currentPeriod.startTime;
-
+            if(System.currentTimeMillis() < currentPeriod.endTime
+                && System.currentTimeMillis() > currentPeriod.startTime) {
+              Irregularity irregularity = new Irregularity();
+              irregularity.studentId = student.id;
+              irregularity.courseId = courseId;
+              irregularity.periodId = currentPeriod.id;
+              irregularity.type = "left_early";
+              irregularity.time = System.currentTimeMillis();
+              irregularity.timeMissing =
+                currentPeriod.endTime - System.currentTimeMillis();
+              irregularityService.add(irregularity);
+            }
           } else {
             // make new open session
             Session session = new Session();
@@ -364,6 +365,7 @@ public class ApiController {
             session.courseId = courseId;
             session.complete = false;
             session.inEncounterId = encounter.id;
+            session.outEncounterId = 0;
             sessionService.add(session);
 
             // now we check if they arent there, and fix it
@@ -1068,7 +1070,7 @@ public class ApiController {
     LocalDate wednesday = sunday.plusDays(3);
     LocalDate thursday = sunday.plusDays(4);
     LocalDate friday = sunday.plusDays(5);
-		LocalDate saturday = sunday.plusDays(6);
+    LocalDate saturday = sunday.plusDays(6);
 
 
     for (int week = 0; week < 10; week++) {
@@ -1083,12 +1085,6 @@ public class ApiController {
       addPeriod(thisMonday, 6, "11:40", "12:15", "12:55");
       addPeriod(thisMonday, 7, "12:55", "13:00", "13:40");
 
-      /* TESTING */
-      addPeriod(thisMonday, 2, "0:00", "22:30", "22:34");
-      addPeriod(thisMonday, 3, "0:00", "22:35", "22:39");
-      addPeriod(thisMonday, 4, "0:00", "22:40", "22:44");
-      addPeriod(thisMonday, 5, "0:00", "22:45", "22:49");
-      addPeriod(thisMonday, 6, "0:00", "22:50", "22:54");
 
       // S Day
       LocalDate thisTuesday = tuesday.plusWeeks(week);
@@ -1096,6 +1092,13 @@ public class ApiController {
       addPeriod(thisTuesday, 3, "8:55", "9:15", "10:55");
       addPeriod(thisTuesday, 5, "10:55", "11:15", "12:55");
       addPeriod(thisTuesday, 7, "12:55", "13:30", "15:10");
+
+      /* TESTING */
+      addPeriod(thisTuesday, 2, "0:00", "05:40", "05:44");
+      addPeriod(thisTuesday, 3, "0:00", "05:45", "05:49");
+      addPeriod(thisTuesday, 4, "0:00", "05:50", "05:54");
+      addPeriod(thisTuesday, 5, "0:00", "05:55", "05:59");
+      addPeriod(thisTuesday, 6, "0:00", "05:00", "06:04");
 
       LocalDate thisThursday = thursday.plusWeeks(week);
       addPeriod(thisThursday, 1, "6:00", "7:15", "8:55");

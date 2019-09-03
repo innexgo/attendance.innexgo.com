@@ -27,7 +27,7 @@ function submitEncounter(studentId) {
       //now check if it was a sign in or a sign out
 
       var getSessionUrl = thisUrl() + '/session/' +
-        '?outEncounterId=' + encounter.id +
+        '?inEncounterId=' + encounter.id +
         '&apiKey=' + apiKey.key;
 
       request(getSessionUrl,
