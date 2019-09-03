@@ -1,18 +1,18 @@
 package innexgo;
 
-import java.time.*;
-import java.util.*;
 import java.io.ByteArrayInputStream;
 import java.io.InputStreamReader;
+import java.time.*;
+import java.util.*;
 import java.util.stream.Collectors;
 import org.apache.commons.csv.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
@@ -142,7 +142,7 @@ public class ApiController {
   }
 
   boolean isAdministrator(String key) {
-    if(key == null) {
+    if (key == null) {
       return false;
     }
     User user = getUserIfValid(key);
@@ -150,61 +150,60 @@ public class ApiController {
   }
 
   boolean isTrusted(String key) {
-    if(key == null) {
+    if (key == null) {
       return false;
     }
     User user = getUserIfValid(key);
     return user != null && (user.ring <= UserService.TEACHER);
   }
 
-  @Scheduled(fixedDelay=5000)
+  @Scheduled(fixedDelay = 5000)
   public void irregularityGenerator() {
-    List<Period> periodList = periodService.query(
-        null,                       // id
-        null,                       // time
-        null,                       // initialTimeBegin
-        null,                       // initialTimeEnd
-        System.currentTimeMillis(), // startTimeBegin
-        null,                       // startTimeEnd
-        null,                       // endTimeBegin
-        null,                       // endTimeEnd
-        null,                       // period
-        null,                       // courseId
-        null                        // teacherId
-      );
+    List<Period> periodList =
+        periodService.query(
+            null, // id
+            null, // time
+            null, // initialTimeBegin
+            null, // initialTimeEnd
+            System.currentTimeMillis(), // startTimeBegin
+            null, // startTimeEnd
+            null, // endTimeBegin
+            null, // endTimeEnd
+            null, // period
+            null, // courseId
+            null // teacherId
+            );
 
     Collections.sort(periodList, Comparator.comparingLong(p -> p.startTime));
 
-
-    for(int i = 0; i < periodList.size(); i++) {
+    for (int i = 0; i < periodList.size(); i++) {
       Period period = periodList.get(i);
       // wait till we are at the right time
       try {
-        System.out.println((period.startTime - System.currentTimeMillis())/1000);
+        System.out.println((period.startTime - System.currentTimeMillis()) / 1000);
         Thread.sleep(period.startTime - System.currentTimeMillis());
-      } catch(InterruptedException e) {
+      } catch (InterruptedException e) {
         e.printStackTrace();
       }
 
-
       // get courses at this period
-      List<Course> courseList = courseService.query(
-          null,                            // id
-          null,                            // teacherId
-          null,                            // locationId
-          null,                            // studentId
-          period.period,                   // period
-          null,                            // subject
-          null,                            // time
-          Utils.getCurrentGraduatingYear() // year
-        );
-
+      List<Course> courseList =
+          courseService.query(
+              null, // id
+              null, // teacherId
+              null, // locationId
+              null, // studentId
+              period.period, // period
+              null, // subject
+              null, // time
+              Utils.getCurrentGraduatingYear() // year
+              );
 
       // for all courses at this time
-      for(Course course : courseList) {
+      for (Course course : courseList) {
         List<Student> studentAbsentList = studentService.absent(course.id, period.id);
         // mark all students not there as absent
-        for(Student student : studentAbsentList) {
+        for (Student student : studentAbsentList) {
           Irregularity irregularity = new Irregularity();
           irregularity.studentId = student.id;
           irregularity.courseId = course.id;
@@ -281,17 +280,17 @@ public class ApiController {
 
   @RequestMapping("encounter/new/")
   public ResponseEntity<?> newEncounter(
-      @RequestParam(value="studentId", defaultValue = "-1") Integer studentId,
-      @RequestParam(value="cardId", defaultValue = "-1") Integer cardId,
+      @RequestParam(value = "studentId", defaultValue = "-1") Integer studentId,
+      @RequestParam(value = "cardId", defaultValue = "-1") Integer cardId,
       @RequestParam("locationId") Integer locationId,
       @RequestParam(value = "courseId", defaultValue = "-1") Integer courseId,
       @RequestParam("apiKey") String apiKey) {
     if (isTrusted(apiKey)) {
 
       Student student;
-      if(studentService.existsByCardId(cardId)) {
+      if (studentService.existsByCardId(cardId)) {
         student = studentService.getByCardId(cardId);
-      } else if(studentService.existsById(studentId)) {
+      } else if (studentService.existsById(studentId)) {
         student = studentService.getById(studentId);
       } else {
         return BAD_REQUEST;
@@ -307,19 +306,20 @@ public class ApiController {
 
         // check for sessions + irregularities
         if (courseId != -1) {
-          List<Period> plist = periodService.query(
-              null,                        // id,
-              System.currentTimeMillis(),  // time,
-              null,                        // initialTimeBegin,
-              null,                        // initialTimeEnd,
-              null,                        // startTimeBegin,
-              null,                        // startTimeEnd,
-              null,                        // endTimeBegin,
-              null,                        // endTimeEnd,
-              null,                        // period,
-              null,                        // courseId,
-              null                         // teacherId
-              );
+          List<Period> plist =
+              periodService.query(
+                  null, // id,
+                  System.currentTimeMillis(), // time,
+                  null, // initialTimeBegin,
+                  null, // initialTimeEnd,
+                  null, // startTimeBegin,
+                  null, // startTimeEnd,
+                  null, // endTimeBegin,
+                  null, // endTimeEnd,
+                  null, // period,
+                  null, // courseId,
+                  null // teacherId
+                  );
 
           // get the current period if it exists
           Period currentPeriod = plist.size() == 0 ? null : plist.get(0);
@@ -349,14 +349,17 @@ public class ApiController {
             sessionService.update(session);
 
             // if it is in the middle of class, add a leaveEarly irregularity
-
-            Irregularity irregularity = new Irregularity();
-            irregularity.studentId = student.id;
-            irregularity.courseId = courseId;
-            irregularity.periodId = currentPeriod.id;
-            irregularity.type = "left_early";
-            irregularity.time = currentPeriod.startTime;
-
+            if (System.currentTimeMillis() < currentPeriod.endTime
+                && System.currentTimeMillis() > currentPeriod.startTime) {
+              Irregularity irregularity = new Irregularity();
+              irregularity.studentId = student.id;
+              irregularity.courseId = courseId;
+              irregularity.periodId = currentPeriod.id;
+              irregularity.type = "left_early";
+              irregularity.time = System.currentTimeMillis();
+              irregularity.timeMissing = currentPeriod.endTime - System.currentTimeMillis();
+              irregularityService.add(irregularity);
+            }
           } else {
             // make new open session
             Session session = new Session();
@@ -364,32 +367,32 @@ public class ApiController {
             session.courseId = courseId;
             session.complete = false;
             session.inEncounterId = encounter.id;
+            session.outEncounterId = 0;
             sessionService.add(session);
 
             // now we check if they arent there, and fix it
-            List<Irregularity> irregularities = irregularityService.query(
-                null,        // id
-                student.id,  // studentId
-                courseId,   // courseId
-                currentPeriod.id,   // periodId
-                null,        // teacherId
-                null,        // type
-                null,        // time
-                null         // timeMissing
-              );
+            List<Irregularity> irregularities =
+                irregularityService.query(
+                    null, // id
+                    student.id, // studentId
+                    courseId, // courseId
+                    currentPeriod.id, // periodId
+                    null, // teacherId
+                    null, // type
+                    null, // time
+                    null // timeMissing
+                    );
 
-            for(Irregularity irregularity : irregularities) {
-              if(irregularity.type.equals("absent")) {
+            for (Irregularity irregularity : irregularities) {
+              if (irregularity.type.equals("absent")) {
                 // if there is absence, convert it to a tardy
                 irregularity.type = "tardy";
-                irregularity.timeMissing =
-                    System.currentTimeMillis() - currentPeriod.startTime;
+                irregularity.timeMissing = System.currentTimeMillis() - currentPeriod.startTime;
                 irregularityService.update(irregularity);
-              } else if(irregularity.type.equals("left_early")) {
+              } else if (irregularity.type.equals("left_early")) {
                 // if there is a leftEarly, convert it to a leftTemporarily
                 irregularity.type = "left_temporarily";
-                irregularity.timeMissing =
-                  System.currentTimeMillis() - irregularity.time;
+                irregularity.timeMissing = System.currentTimeMillis() - irregularity.time;
                 irregularityService.update(irregularity);
               }
             }
@@ -490,8 +493,8 @@ public class ApiController {
       @RequestParam("password") String password,
       @RequestParam("ring") Integer ring,
       @RequestParam("apiKey") String apiKey) {
-    if(!isAdministrator(apiKey)) {
-      if(!Utils.isEmpty(name)
+    if (!isAdministrator(apiKey)) {
+      if (!Utils.isEmpty(name)
           && !Utils.isEmpty(password)
           && !Utils.isEmpty(email)
           && !userService.existsByEmail(email)) {
@@ -628,10 +631,9 @@ public class ApiController {
 
   @RequestMapping("apiKey/delete/")
   public ResponseEntity<?> deleteApiKey(
-      @RequestParam("apiKeyId") Integer apiKeyId,
-      @RequestParam("apiKey") String apiKey) {
+      @RequestParam("apiKeyId") Integer apiKeyId, @RequestParam("apiKey") String apiKey) {
     if (isAdministrator(apiKey)) {
-      if(apiKeyService.existsById(apiKeyId)) {
+      if (apiKeyService.existsById(apiKeyId)) {
         return new ResponseEntity<>(fillApiKey(apiKeyService.delete(apiKeyId)), HttpStatus.OK);
       } else {
         return BAD_REQUEST;
@@ -643,10 +645,9 @@ public class ApiController {
 
   @RequestMapping("course/delete/")
   public ResponseEntity<?> deleteCourse(
-      @RequestParam("courseId") Integer courseId,
-      @RequestParam("apiKey") String apiKey) {
+      @RequestParam("courseId") Integer courseId, @RequestParam("apiKey") String apiKey) {
     if (isAdministrator(apiKey)) {
-      if(courseService.existsById(courseId)) {
+      if (courseService.existsById(courseId)) {
         return new ResponseEntity<>(fillCourse(courseService.delete(courseId)), HttpStatus.OK);
       } else {
         return BAD_REQUEST;
@@ -661,8 +662,9 @@ public class ApiController {
       @RequestParam("irregularityId") Integer irregularityId,
       @RequestParam("apiKey") String apiKey) {
     if (isAdministrator(apiKey)) {
-      if(irregularityService.existsById(irregularityId)) {
-        return new ResponseEntity<>(fillIrregularity(irregularityService.delete(irregularityId)), HttpStatus.OK);
+      if (irregularityService.existsById(irregularityId)) {
+        return new ResponseEntity<>(
+            fillIrregularity(irregularityService.delete(irregularityId)), HttpStatus.OK);
       } else {
         return BAD_REQUEST;
       }
@@ -673,11 +675,11 @@ public class ApiController {
 
   @RequestMapping("location/delete/")
   public ResponseEntity<?> deleteLocation(
-      @RequestParam("locationId") Integer locationId,
-      @RequestParam("apiKey") String apiKey) {
+      @RequestParam("locationId") Integer locationId, @RequestParam("apiKey") String apiKey) {
     if (isAdministrator(apiKey)) {
-      if(locationService.existsById(locationId)) {
-        return new ResponseEntity<>(fillLocation(locationService.delete(locationId)), HttpStatus.OK);
+      if (locationService.existsById(locationId)) {
+        return new ResponseEntity<>(
+            fillLocation(locationService.delete(locationId)), HttpStatus.OK);
       } else {
         return BAD_REQUEST;
       }
@@ -688,10 +690,9 @@ public class ApiController {
 
   @RequestMapping("period/delete/")
   public ResponseEntity<?> deletePeriod(
-      @RequestParam("periodId") Integer periodId,
-      @RequestParam("apiKey") String apiKey) {
+      @RequestParam("periodId") Integer periodId, @RequestParam("apiKey") String apiKey) {
     if (isAdministrator(apiKey)) {
-      if(periodService.existsById(periodId)) {
+      if (periodService.existsById(periodId)) {
         return new ResponseEntity<>(fillPeriod(periodService.delete(periodId)), HttpStatus.OK);
       } else {
         return BAD_REQUEST;
@@ -703,11 +704,11 @@ public class ApiController {
 
   @RequestMapping("schedule/delete/")
   public ResponseEntity<?> deleteSchedule(
-      @RequestParam("scheduleId") Integer scheduleId,
-      @RequestParam("apiKey") String apiKey) {
+      @RequestParam("scheduleId") Integer scheduleId, @RequestParam("apiKey") String apiKey) {
     if (isAdministrator(apiKey)) {
-      if(scheduleService.existsById(scheduleId)) {
-        return new ResponseEntity<>(fillSchedule(scheduleService.delete(scheduleId)), HttpStatus.OK);
+      if (scheduleService.existsById(scheduleId)) {
+        return new ResponseEntity<>(
+            fillSchedule(scheduleService.delete(scheduleId)), HttpStatus.OK);
       } else {
         return BAD_REQUEST;
       }
@@ -718,10 +719,9 @@ public class ApiController {
 
   @RequestMapping("student/delete/")
   public ResponseEntity<?> deleteStudent(
-      @RequestParam("studentId") Integer studentId,
-      @RequestParam("apiKey") String apiKey) {
+      @RequestParam("studentId") Integer studentId, @RequestParam("apiKey") String apiKey) {
     if (isAdministrator(apiKey)) {
-      if(studentService.existsById(studentId)) {
+      if (studentService.existsById(studentId)) {
         return new ResponseEntity<>(fillStudent(studentService.delete(studentId)), HttpStatus.OK);
       } else {
         return BAD_REQUEST;
@@ -733,10 +733,9 @@ public class ApiController {
 
   @RequestMapping("user/delete/")
   public ResponseEntity<?> deleteUser(
-      @RequestParam("userId") Integer userId,
-      @RequestParam("apiKey") String apiKey) {
+      @RequestParam("userId") Integer userId, @RequestParam("apiKey") String apiKey) {
     if (isAdministrator(apiKey)) {
-      if(userService.existsById(userId)) {
+      if (userService.existsById(userId)) {
         return new ResponseEntity<>(fillUser(userService.delete(userId)), HttpStatus.OK);
       } else {
         return BAD_REQUEST;
@@ -841,7 +840,6 @@ public class ApiController {
       return UNAUTHORIZED;
     }
   }
-
 
   @RequestMapping("location/")
   public ResponseEntity<?> viewLocation(@RequestParam Map<String, String> allRequestParam) {
@@ -990,12 +988,12 @@ public class ApiController {
     if (isAdministrator(apiKey)) {
       try {
         CSVParser parser =
-            CSVFormat.DEFAULT
-                .parse(new InputStreamReader(new ByteArrayInputStream(file.getBytes()), "UTF8"));
+            CSVFormat.DEFAULT.parse(
+                new InputStreamReader(new ByteArrayInputStream(file.getBytes()), "UTF8"));
         int currentGraduatingYear = Utils.getCurrentGraduatingYear();
         for (CSVRecord record : parser) {
           Integer id = parseInteger(record.get(2));
-          if(id != null && !studentService.existsById(id)) {
+          if (id != null && !studentService.existsById(id)) {
             Integer graduatingYear = currentGraduatingYear + (12 - parseInteger(record.get(4)));
             String name = record.get(0) + ' ' + record.get(1);
             if (graduatingYear != null && name != null) {
@@ -1022,17 +1020,21 @@ public class ApiController {
       @RequestParam("courseId") Integer courseId,
       @RequestParam("file") MultipartFile file,
       @RequestParam("apiKey") String apiKey) {
-    if (isTrusted(apiKey) ) {
-      if(courseService.existsById(courseId)) {
+    if (isTrusted(apiKey)) {
+      if (courseService.existsById(courseId)) {
         try {
           CSVParser parser =
-              CSVFormat.DEFAULT
-                  .parse(new InputStreamReader(new ByteArrayInputStream(file.getBytes()), "UTF8"));
+              CSVFormat.DEFAULT.parse(
+                  new InputStreamReader(new ByteArrayInputStream(file.getBytes()), "UTF8"));
           int currentGraduatingYear = Utils.getCurrentGraduatingYear();
           for (CSVRecord record : parser) {
             Integer studentId = parseInteger(record.get(2));
             if (studentId != null && studentService.existsById(studentId)) {
-              if(scheduleService.query(null, studentId, null, null, null, courseService.getById(courseId).period).size() == 0) {
+              if (scheduleService
+                      .query(
+                          null, studentId, null, null, null, courseService.getById(courseId).period)
+                      .size()
+                  == 0) {
                 Schedule schedule = new Schedule();
                 schedule.studentId = studentId;
                 schedule.courseId = courseId;
@@ -1053,14 +1055,11 @@ public class ApiController {
     }
   }
 
-
   @RequestMapping("populatePeriods")
   public ResponseEntity<?> populatePeriods() {
     periodService.deleteAll();
-    LocalDate sunday = ZonedDateTime.now(Utils.TIMEZONE)
-      .toLocalDate()
-      .plusWeeks(-1)
-      .with(DayOfWeek.SUNDAY);
+    LocalDate sunday =
+        ZonedDateTime.now(Utils.TIMEZONE).toLocalDate().plusWeeks(-1).with(DayOfWeek.SUNDAY);
 
     // get weekdays
     LocalDate monday = sunday.plusDays(1);
@@ -1068,8 +1067,7 @@ public class ApiController {
     LocalDate wednesday = sunday.plusDays(3);
     LocalDate thursday = sunday.plusDays(4);
     LocalDate friday = sunday.plusDays(5);
-		LocalDate saturday = sunday.plusDays(6);
-
+    LocalDate saturday = sunday.plusDays(6);
 
     for (int week = 0; week < 10; week++) {
       // collab
@@ -1083,19 +1081,19 @@ public class ApiController {
       addPeriod(thisMonday, 6, "11:40", "12:15", "12:55");
       addPeriod(thisMonday, 7, "12:55", "13:00", "13:40");
 
-      /* TESTING */
-      addPeriod(thisMonday, 2, "0:00", "22:30", "22:34");
-      addPeriod(thisMonday, 3, "0:00", "22:35", "22:39");
-      addPeriod(thisMonday, 4, "0:00", "22:40", "22:44");
-      addPeriod(thisMonday, 5, "0:00", "22:45", "22:49");
-      addPeriod(thisMonday, 6, "0:00", "22:50", "22:54");
-
       // S Day
       LocalDate thisTuesday = tuesday.plusWeeks(week);
       addPeriod(thisTuesday, 1, "6:00", "7:15", "8:55");
       addPeriod(thisTuesday, 3, "8:55", "9:15", "10:55");
       addPeriod(thisTuesday, 5, "10:55", "11:15", "12:55");
       addPeriod(thisTuesday, 7, "12:55", "13:30", "15:10");
+
+      ///* TESTING */
+      //addPeriod(thisTuesday, 2, "0:00", "07:30", "07:34");
+      //addPeriod(thisTuesday, 3, "0:00", "07:35", "07:39");
+      //addPeriod(thisTuesday, 4, "0:00", "07:40", "07:44");
+      //addPeriod(thisTuesday, 5, "0:00", "07:45", "07:49");
+      //addPeriod(thisTuesday, 6, "0:00", "07:50", "07:54");
 
       LocalDate thisThursday = thursday.plusWeeks(week);
       addPeriod(thisThursday, 1, "6:00", "7:15", "8:55");
@@ -1119,30 +1117,27 @@ public class ApiController {
     return OK;
   }
 
-
   void addPeriod(LocalDate day, int p, String initialTime, String startTime, String endTime) {
-      String[] initialComponents = initialTime.split(":");
-      String[] startComponents = startTime.split(":");
-      String[] endComponents = endTime.split(":");
-      Period period = new Period();
-      period.period = p;
-      period.initialTime = day
-        .atTime(parseInteger(initialComponents[0]), parseInteger(initialComponents[1]))
-        .atZone(Utils.TIMEZONE)
-        .toInstant()
-        .toEpochMilli();
-      period.startTime = day
-        .atTime(parseInteger(startComponents[0]), parseInteger(startComponents[1]))
-        .atZone(Utils.TIMEZONE)
-        .toInstant()
-        .toEpochMilli();
-      period.endTime = day
-        .atTime(parseInteger(endComponents[0]), parseInteger(endComponents[1]))
-        .atZone(Utils.TIMEZONE)
-        .toInstant()
-        .toEpochMilli();
-      periodService.add(period);
+    String[] initialComponents = initialTime.split(":");
+    String[] startComponents = startTime.split(":");
+    String[] endComponents = endTime.split(":");
+    Period period = new Period();
+    period.period = p;
+    period.initialTime =
+        day.atTime(parseInteger(initialComponents[0]), parseInteger(initialComponents[1]))
+            .atZone(Utils.TIMEZONE)
+            .toInstant()
+            .toEpochMilli();
+    period.startTime =
+        day.atTime(parseInteger(startComponents[0]), parseInteger(startComponents[1]))
+            .atZone(Utils.TIMEZONE)
+            .toInstant()
+            .toEpochMilli();
+    period.endTime =
+        day.atTime(parseInteger(endComponents[0]), parseInteger(endComponents[1]))
+            .atZone(Utils.TIMEZONE)
+            .toInstant()
+            .toEpochMilli();
+    periodService.add(period);
   }
-
-
 }

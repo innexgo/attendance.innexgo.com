@@ -12,48 +12,63 @@ function currentStatus() {
     return;
   }
 
-
   // get students
-
-  // get irregularities
-  request(thisUrl() + '/irregularity/' +
+  request(thisUrl() + '/student/' +
     '?courseId=' + course.id +
-    '&periodId=' + period.id +
     '&apiKey=' + apiKey.key,
     function(xhr) {
-      var irregularities = JSON.parse(xhr.responseText);
+      var students = JSON.parse(xhr.responseText);
+      // get irregularities
+      request(thisUrl() + '/irregularity/' +
+        '?courseId=' + course.id +
+        '&periodId=' + period.id +
+        '&apiKey=' + apiKey.key,
+        function(xhr) {
+          var irregularities = JSON.parse(xhr.responseText).sort((a, b) => (a.time > b.time) ? 1 : -1);
 
-      //blank table
-      table.innerHTML='';
+          //blank table
+          table.innerHTML='';
 
-      for(var i = 0; i < irregularities.length; i++) {
-        var status = statuses[i].type;
-        var student = irregularities[i].student;
-        var text = '<span class="fa fa-times"></span>';
-        var bgcolor = '#ffcccc';
-        var fgcolor = '#ff0000';
-        // if we can find it
-        if(status == 'present') {
-          text =  '<span class="fa fa-check"></span>'
-          bgcolor = '#ccffcc';
-          fgcolor = '#00ff00';
-        } else if (status == 'tardy') {
-          text =  '<span class="fa fa-check"></span>'
-          bgcolor = '#ffffcc';
-          fgcolor = '#ffff00';
-        } else if (status == 'absent') {
-          text =  '<span class="fa fa-times"></span>'
-          bgcolor = '#ffcccc';
-          fgcolor = '#ff0000';
+          for(var i = 0; i < students.length; i++) {
+            var text =  '<span class="fa fa-check"></span>'
+            var bgcolor = '#ccffcc';
+            var fgcolor = '#00ff00';
+            var student = students[i];
+
+            var irregularity = irregularities.filter(i => i.student.id == student.id).pop();
+            var type = irregularity == null ? null : irregularity.type;
+            if (type  == 'absent') {
+              text =  '<span class="fa fa-times"></span>'
+              bgcolor = '#ffcccc';
+              fgcolor = '#ff0000';
+            } else if (type == 'tardy') {
+              text =  '<span class="fa fa-check"></span>'
+              bgcolor = '#ffffcc';
+              fgcolor = '#ffff00';
+            } else if (type == 'left_early') {
+              text =  '<span class="fa fa-sign-out-alt"></span>'
+              bgcolor = '#ccffff';
+              fgcolor = '#00ffff';
+            } else if (type == 'left_temporarily') {
+              text =  '<span class="fa fa-check"></span>'
+              bgcolor = '#ccffff';
+              fgcolor = '#00ffff';
+            }
+
+            // put values in table
+            table.insertRow(0).innerHTML=
+              ('<tr>' +
+                '<td>' + student.name + '</td>' +
+                '<td>' + student.id + '</td>' +
+                '<td style="background-color:'+bgcolor+';color:'+fgcolor+'">' + text + '</td>' +
+                '</tr>');
+          }
+        },
+        //failure
+        function(xhr) {
+          return;
         }
-
-        table.insertRow(0).innerHTML=
-          ('<tr>' +
-            '<td>' + student.name + '</td>' +
-            '<td>' + student.id + '</td>' +
-            '<td style="background-color:'+bgcolor+';color:'+fgcolor+'">' + text + '</td>' +
-            '</tr>');
-      }
+      );
     },
     //failure
     function(xhr) {

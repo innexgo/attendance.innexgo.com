@@ -37,8 +37,10 @@ public class StudentService {
 
   public void add(Student student) {
     // Add student
-    String sql = "INSERT INTO student(id, card_id, graduating_year, name, tags) values (?, ?, ?, ?, ?)";
-    jdbcTemplate.update(sql, student.id, student.cardId, student.graduatingYear, student.name, student.tags);
+    String sql =
+        "INSERT INTO student(id, card_id, graduating_year, name, tags) values (?, ?, ?, ?, ?)";
+    jdbcTemplate.update(
+        sql, student.id, student.cardId, student.graduatingYear, student.name, student.tags);
 
     // Fetch student id
     sql = "SELECT id FROM student WHERE card_id=? AND graduating_year=? AND name=? AND tags=?";
@@ -53,7 +55,13 @@ public class StudentService {
   public void update(Student student) {
     String sql = "UPDATE student SET id=?, card_id=?, graduating_year=?, name=?, tags=? WHERE id=?";
     jdbcTemplate.update(
-        sql, student.id, student.cardId, student.graduatingYear, student.name, student.tags, student.id);
+        sql,
+        student.id,
+        student.cardId,
+        student.graduatingYear,
+        student.name,
+        student.tags,
+        student.id);
   }
 
   public Student delete(int id) {
@@ -79,7 +87,8 @@ public class StudentService {
       Integer id,
       Integer cardId,
       Integer graduatingYear,
-      String name, String tags,
+      String name,
+      String tags,
       Integer courseId) {
     String sql =
         "SELECT st.id, st.card_id, st.graduating_year, st.name, st.tags FROM student st"
@@ -99,7 +108,7 @@ public class StudentService {
 
   // find students who are absent at the class at this period
   public List<Student> absent(int courseId, int periodId) {
-    if(!periodService.existsById(periodId) || !courseService.existsById(courseId)) {
+    if (!periodService.existsById(periodId) || !courseService.existsById(courseId)) {
       return null;
     }
 
@@ -111,18 +120,22 @@ public class StudentService {
     // find students who are not in this list
 
     String sql =
-      " SELECT st.id, st.card_id, st.graduating_year, st.name, st.tags" +
-      " FROM student st" +
-      " INNER JOIN schedule sc ON st.id = sc.student_id" +
-      " WHERE sc.course_id = " + courseId +
-      " EXCEPT" +
-      " SELECT st.id, st.card_id, st.graduating_year, st.name, st.tags" +
-      " FROM student st" +
-      " RIGHT JOIN session ses ON ses.student_id = st.id" +
-      " INNER JOIN encounter inen ON ses.in_encounter_id = inen.id" +
-      " LEFT JOIN encounter outen ON ses.out_encounter_id = outen.id" +
-      " WHERE inen.time < " + period.startTime + " AND outen.time IS NULL OR outen.time > " + period.startTime +
-      " ;";
+        " SELECT st.id, st.card_id, st.graduating_year, st.name, st.tags"
+            + " FROM student st"
+            + " INNER JOIN schedule sc ON st.id = sc.student_id"
+            + " WHERE sc.course_id = "
+            + courseId
+            + " EXCEPT"
+            + " SELECT st.id, st.card_id, st.graduating_year, st.name, st.tags"
+            + " FROM student st"
+            + " RIGHT JOIN session ses ON ses.student_id = st.id"
+            + " INNER JOIN encounter inen ON ses.in_encounter_id = inen.id"
+            + " LEFT JOIN encounter outen ON ses.out_encounter_id = outen.id"
+            + " WHERE inen.time < "
+            + period.startTime
+            + " AND outen.time IS NULL OR outen.time > "
+            + period.startTime
+            + " ;";
 
     RowMapper<Student> rowMapper = new StudentRowMapper();
     return this.jdbcTemplate.query(sql, rowMapper);

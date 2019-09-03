@@ -64,12 +64,14 @@ public class IrregularityService {
         "UPDATE irregularity SET id=?, student_id=?, course_id=?, period_id=?, type=?, time=?, time_missing=? WHERE id=?";
     jdbcTemplate.update(
         sql,
+        irregularity.id,
         irregularity.studentId,
         irregularity.courseId,
         irregularity.periodId,
         irregularity.type,
         irregularity.time,
-        irregularity.timeMissing);
+        irregularity.timeMissing,
+        irregularity.id);
   }
 
   public Irregularity delete(int id) {
@@ -94,19 +96,20 @@ public class IrregularityService {
       String type,
       Long time,
       Long timeMissing) {
-    String sql = "SELECT irr.id, irr.student_id, irr.course_id, irr.period_id, irr.type, irr.time, irr.time_missing"
-       + " FROM irregularity irr"
-       + (teacherId == null ? "" : " JOIN course crs ON crs.id = irr.course_id")
-        + " WHERE 1=1 "
-        + (id == null ? "" : " AND irr.id = " + id)
-        + (studentId == null ? "" : " AND irr.student_id = " + studentId)
-        + (courseId == null ? "" : " AND irr.course_id = " + courseId)
-        + (periodId == null ? "" : " AND irr.period_id = " + periodId)
-        + (teacherId == null ? "" : " AND crs.teacher_id = " + teacherId)
-        + (type == null ? "" : " AND irr.type = " + Utils.escape(type))
-        + (time == null ? "" : " AND irr.time = " + time)
-        + (timeMissing == null ? "" : " AND irr.time_missing = " + timeMissing)
-        + ";";
+    String sql =
+        "SELECT irr.id, irr.student_id, irr.course_id, irr.period_id, irr.type, irr.time, irr.time_missing"
+            + " FROM irregularity irr"
+            + (teacherId == null ? "" : " JOIN course crs ON crs.id = irr.course_id")
+            + " WHERE 1=1 "
+            + (id == null ? "" : " AND irr.id = " + id)
+            + (studentId == null ? "" : " AND irr.student_id = " + studentId)
+            + (courseId == null ? "" : " AND irr.course_id = " + courseId)
+            + (periodId == null ? "" : " AND irr.period_id = " + periodId)
+            + (teacherId == null ? "" : " AND crs.teacher_id = " + teacherId)
+            + (type == null ? "" : " AND irr.type = " + Utils.escape(type))
+            + (time == null ? "" : " AND irr.time = " + time)
+            + (timeMissing == null ? "" : " AND irr.time_missing = " + timeMissing)
+            + ";";
 
     RowMapper<Irregularity> rowMapper = new IrregularityRowMapper();
     return this.jdbcTemplate.query(sql, rowMapper);

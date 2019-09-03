@@ -28,22 +28,37 @@ public class PeriodService {
 
   public void add(Period period) {
     // Add period
-    String sql = "INSERT INTO period (id, initial_time, start_time, end_time, period) values (?, ?, ?, ?, ?)";
-    jdbcTemplate.update(sql, period.id, period.initialTime, period.startTime, period.endTime, period.period);
+    String sql =
+        "INSERT INTO period (id, initial_time, start_time, end_time, period) values (?, ?, ?, ?, ?)";
+    jdbcTemplate.update(
+        sql, period.id, period.initialTime, period.startTime, period.endTime, period.period);
 
     // Fetch period id
     sql = "SELECT id FROM period WHERE initial_time=? AND start_time=? AND end_time=? AND period=?";
     int id =
         jdbcTemplate.queryForObject(
-            sql, Integer.class, period.initialTime, period.startTime, period.endTime, period.period);
+            sql,
+            Integer.class,
+            period.initialTime,
+            period.startTime,
+            period.endTime,
+            period.period);
 
     // Set period id
     period.id = id;
   }
 
   public void update(Period period) {
-    String sql = "UPDATE period SET id=?, initial_time=?, start_time=?, end_time=?, period=? WHERE id=?";
-    jdbcTemplate.update(sql, period.id, period.initialTime, period.startTime, period.endTime, period.period, period.id);
+    String sql =
+        "UPDATE period SET id=?, initial_time=?, start_time=?, end_time=?, period=? WHERE id=?";
+    jdbcTemplate.update(
+        sql,
+        period.id,
+        period.initialTime,
+        period.startTime,
+        period.endTime,
+        period.period,
+        period.id);
   }
 
   public Period delete(int id) {
