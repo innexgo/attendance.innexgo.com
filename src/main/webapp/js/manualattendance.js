@@ -70,5 +70,6 @@ $(document).ready(function () {
   var button = document.getElementById('manual-submit');
   button.addEventListener('click', function(event) {
     submitEncounter(parseInt(tbox.value));
+    document.getElementById('manual-userid').innerHTML = '';
   });
 });
