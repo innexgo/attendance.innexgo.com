@@ -1088,6 +1088,13 @@ public class ApiController {
       addPeriod(thisTuesday, 5, "10:55", "11:15", "12:55");
       addPeriod(thisTuesday, 7, "12:55", "13:30", "15:10");
 
+      ///* TESTING */
+      //addPeriod(thisTuesday, 2, "0:00", "07:30", "07:34");
+      //addPeriod(thisTuesday, 3, "0:00", "07:35", "07:39");
+      //addPeriod(thisTuesday, 4, "0:00", "07:40", "07:44");
+      //addPeriod(thisTuesday, 5, "0:00", "07:45", "07:49");
+      //addPeriod(thisTuesday, 6, "0:00", "07:50", "07:54");
+
       LocalDate thisThursday = thursday.plusWeeks(week);
       addPeriod(thisThursday, 1, "6:00", "7:15", "8:55");
       addPeriod(thisThursday, 3, "8:55", "9:15", "10:55");
