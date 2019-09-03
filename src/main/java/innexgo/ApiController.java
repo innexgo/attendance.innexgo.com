@@ -349,6 +349,14 @@ public class ApiController {
             sessionService.update(session);
 
             // if it is in the middle of class, add a leaveEarly irregularity
+
+            Irregularity irregularity = new Irregularity();
+            irregularity.studentId = student.id;
+            irregularity.courseId = courseId;
+            irregularity.periodId = currentPeriod.id;
+            irregularity.type = "left_early";
+            irregularity.time = currentPeriod.startTime;
+
           } else {
             // make new open session
             Session session = new Session();
@@ -358,16 +366,34 @@ public class ApiController {
             session.inEncounterId = encounter.id;
             sessionService.add(session);
 
-            // if there is absence, convert it to a tardy
-            // if there is a leftEarly, convert it to a leftTemporarily
+            // now we check if they arent there, and fix it
+            List<Irregularity> irregularities = irregularityService.query(
+                null,        // id
+                student.id,  // studentId
+                courseId,   // courseId
+                currentPeriod.id,   // periodId
+                null,        // teacherId
+                null,        // type
+                null,        // time
+                null         // timeMissing
+              );
+
+            for(Irregularity irregularity : irregularities) {
+              if(irregularity.type.equals("absent")) {
+                // if there is absence, convert it to a tardy
+                irregularity.type = "tardy";
+                irregularity.timeMissing =
+                    System.currentTimeMillis() - currentPeriod.startTime;
+                irregularityService.update(irregularity);
+              } else if(irregularity.type.equals("left_early")) {
+                // if there is a leftEarly, convert it to a leftTemporarily
+                irregularity.type = "left_temporarily";
+                irregularity.timeMissing =
+                  System.currentTimeMillis() - irregularity.time;
+                irregularityService.update(irregularity);
+              }
+            }
           }
-
-
-          // now detect irregularities
-          // if it is a leave
-          //
-          // Check if this is tardy by checking if the current time is greater than this period's start time
-          // It could also be that the student left the class and is returning. In that case, we check if there was a leftEarly irregularity
         }
         // return the filled encounter on success
         return new ResponseEntity<>(fillEncounter(encounter), HttpStatus.OK);
@@ -1055,6 +1081,13 @@ public class ApiController {
       addPeriod(thisMonday, 5, "10:55", "11:00", "11:40");
       addPeriod(thisMonday, 6, "11:40", "12:15", "12:55");
       addPeriod(thisMonday, 7, "12:55", "13:00", "13:40");
+
+      /* TESTING */
+      addPeriod(thisMonday, 2, "0:00", "20:30", "20:34");
+      addPeriod(thisMonday, 3, "0:00", "20:35", "20:39");
+      addPeriod(thisMonday, 4, "0:00", "20:40", "20:44");
+      addPeriod(thisMonday, 5, "0:00", "20:45", "20:49");
+      addPeriod(thisMonday, 6, "0:00", "20:50", "20:54");
 
       // S Day
       LocalDate thisTuesday = tuesday.plusWeeks(week);
