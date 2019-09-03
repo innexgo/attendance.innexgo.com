@@ -1084,11 +1084,11 @@ public class ApiController {
       addPeriod(thisMonday, 7, "12:55", "13:00", "13:40");
 
       /* TESTING */
-      addPeriod(thisMonday, 2, "0:00", "20:30", "20:34");
-      addPeriod(thisMonday, 3, "0:00", "20:35", "20:39");
-      addPeriod(thisMonday, 4, "0:00", "20:40", "20:44");
-      addPeriod(thisMonday, 5, "0:00", "20:45", "20:49");
-      addPeriod(thisMonday, 6, "0:00", "20:50", "20:54");
+      addPeriod(thisMonday, 2, "0:00", "22:30", "22:34");
+      addPeriod(thisMonday, 3, "0:00", "22:35", "22:39");
+      addPeriod(thisMonday, 4, "0:00", "22:40", "22:44");
+      addPeriod(thisMonday, 5, "0:00", "22:45", "22:49");
+      addPeriod(thisMonday, 6, "0:00", "22:50", "22:54");
 
       // S Day
       LocalDate thisTuesday = tuesday.plusWeeks(week);
@@ -1115,9 +1115,6 @@ public class ApiController {
       addPeriod(thisFriday, 4, "9:40", "10:00", "11:40");
       addPeriod(thisFriday, 0, "11:40", "11:40", "12:30");
       addPeriod(thisFriday, 6, "12:30", "13:05", "14:45");
-
-			LocalDate thisSaturday = saturday.plusWeeks(week);
-			addPeriod(thisSaturday, 1, 
     }
     return OK;
   }
