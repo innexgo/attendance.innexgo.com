@@ -31,7 +31,7 @@
 
   <body class="palette-level-one">
 
-  <!-- Sidebar -->
+    <!-- Sidebar -->
     <nav style="height:100%" id="sidebar" class="navbar-palette">
       <nav class="navbar sidebar-top">
         <button type="button" onclick="closeSidebar()" class="btn btn-icon sidebar-button">
@@ -76,47 +76,50 @@
 
     <!-- Center Screen -->
     <div id="not-sidebar" class="container-fluid">
-      <div class="card-deck px-3 my-3">
-        <!-- Current Status -->
-        <div class="card col-sm-8 palette-level-two">
-          <div class="card-body">
-            <div>
-              <h5 class="card-title text-center">Current Status</h5>
-            </div>
-            <p class="card-text">View the status of students in your class this period</p>
-            <div class="table-height-standard">
-              <table class="table striped white">
-                <thead>
-                  <tr class="table-header">
-                    <td>Name</td>
-                    <td>ID</td>
-                    <td>Status</td>
-                  </tr>
-                </thead>
-                <tbody class="table-height-standard" id="current-status-table"></tbody>
-              </table>
+      <div class="px-3 my-3">
+        <div id="alert-zone"></div>
+        <div class="card-deck">
+          <!-- Current Status -->
+          <div class="card col-sm-8 palette-level-two">
+            <div class="card-body">
+              <div>
+                <h5 class="card-title text-center">Current Status</h5>
+              </div>
+              <p class="card-text">View the status of students in your class this period</p>
+              <div class="table-height-standard">
+                <table class="table striped white">
+                  <thead>
+                    <tr class="table-header">
+                      <td>Name</td>
+                      <td>ID</td>
+                      <td>Status</td>
+                    </tr>
+                  </thead>
+                  <tbody class="table-height-standard" id="current-status-table"></tbody>
+                </table>
+              </div>
             </div>
           </div>
-        </div>
 
-        <!-- Manual Attendance -->
-        <div class="card col-sm-4 palette-level-two">
-          <div class="card-body">
-            <div>
-              <h5 class="card-title text-center">Take Attendance</h5>
-            </div>
-            <p class="card-text">Sign in students manually.</p>
-            <div class="input-group mb-3">
-              <div class="input-group-prepend">
-                <span class="input-group-text bg-innexgocrimson">
-                  Student ID
-                </span>
+          <!-- Manual Attendance -->
+          <div class="card col-sm-4 palette-level-two">
+            <div class="card-body">
+              <div>
+                <h5 class="card-title text-center">Take Attendance</h5>
               </div>
-              <input id="manual-userid" type="text" class="form-control">
+              <p class="card-text">Sign in students manually.</p>
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text bg-innexgocrimson">
+                    Student ID
+                  </span>
+                </div>
+                <input id="manual-userid" type="text" class="form-control">
+              </div>
+              <button id="manual-submit" type="input-button" class="btn mt-3 btn-block btn-warning">
+                Submit
+              </button>
             </div>
-            <button id="manual-submit" type="input-button" class="btn mt-3 btn-block btn-warning">
-              Submit
-            </button>
           </div>
         </div>
       </div>
