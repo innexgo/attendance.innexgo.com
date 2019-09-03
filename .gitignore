@@ -27,3 +27,4 @@
 /.nb-gradle/
 
 /innexgo.sql
+/.syntastic_javac_config

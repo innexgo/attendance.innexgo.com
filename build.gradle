@@ -1,6 +1,7 @@
 plugins {
   id 'org.springframework.boot' version '2.2.0.BUILD-SNAPSHOT'
   id 'java'
+  id "com.scuilion.syntastic" version "0.3.8"
 }
 
 apply plugin: 'io.spring.dependency-management'

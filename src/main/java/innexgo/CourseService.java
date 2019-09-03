@@ -75,8 +75,9 @@ public class CourseService {
       Integer teacherId,
       Integer locationId,
       Integer studentId,
-      Long time,
+      Integer period,
       String subject,
+      Long time,
       Integer year) {
     String sql =
         "SELECT c.id, c.teacher_id, c.location_id, c.period, c.subject, c.year FROM course c"
@@ -85,6 +86,7 @@ public class CourseService {
             + " WHERE 1=1 "
             + (time == null ? "" : " AND time BETWEEN p.initial_time AND p.end_time")
             + (id == null ? "" : " AND c.id = " + id)
+            + (period == null ? "" : " AND c.period = " + period)
             + (teacherId == null ? "" : " AND c.teacher_id = " + teacherId)
             + (locationId == null ? "" : " AND c.location_id = " + locationId)
             + (year == null ? "" : " AND c.year = " + year)
