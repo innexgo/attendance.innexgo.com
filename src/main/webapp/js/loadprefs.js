@@ -9,7 +9,7 @@ $(document).ready(function(){
 
   switch(colour){
     case "dark":
-      palette.href = "../css/palettes/dark.css?version=1.2";
+      palette.href = "../css/palettes/dark.css?version=1.3";
     break;
     case "light":
       palette.href = "../css/palettes/light.css?version=1.1";
