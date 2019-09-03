@@ -1069,6 +1069,7 @@ public class ApiController {
     LocalDate wednesday = sunday.plusDays(3);
     LocalDate thursday = sunday.plusDays(4);
     LocalDate friday = sunday.plusDays(5);
+		LocalDate saturday = sunday.plusDays(6);
 
 
     for (int week = 0; week < 10; week++) {
@@ -1108,6 +1109,9 @@ public class ApiController {
       addPeriod(thisFriday, 4, "9:40", "10:00", "11:40");
       addPeriod(thisFriday, 0, "11:40", "11:40", "12:30");
       addPeriod(thisFriday, 6, "12:30", "13:05", "14:45");
+
+			LocalDate thisSaturday = saturday.plusWeeks(week);
+			addPeriod(thisSaturday, 1, 
     }
     return OK;
   }
