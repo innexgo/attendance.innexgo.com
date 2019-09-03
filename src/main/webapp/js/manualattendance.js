@@ -1,5 +1,6 @@
 var beepup = new Audio('assets/beepup.wav');
 var beepdown = new Audio('assets/beepdown.wav');
+var error = new Audio('assets/error.wav');
 
 function submitEncounter(studentId) {
   var checkBox = document.getElementById('manual-type-toggle');
@@ -8,8 +9,7 @@ function submitEncounter(studentId) {
   var course = Cookies.getJSON('courses').filter(c => c.period == period.period)[0];
 
   if(course == null) {
-    //TODO actually give this error
-    console.log('no class at the moment to sign into');
+    giveAlert('No class at the moment to sign into.');
     return;
   }
 
@@ -41,10 +41,16 @@ function submitEncounter(studentId) {
           }
         },
         //failure
-        function(xhr) {}
+        function(xhr) {
+          giveAlert('Something went wrong while finalizing sign in.');
+          error.play();
+        }
       );
     },
-    function(xhr) {}
+    function(xhr) {
+      giveAlert('Something went wrong while trying to sign you in.');
+      error.play();
+    }
   );
 }
 
