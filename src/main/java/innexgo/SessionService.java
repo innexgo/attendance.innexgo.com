@@ -22,7 +22,8 @@ public class SessionService {
   }
 
   public List<Session> getAll() {
-    String sql = "SELECT id, student_id, in_encounter_id, out_encounter_id, course_id, complete FROM session";
+    String sql =
+        "SELECT id, student_id, in_encounter_id, out_encounter_id, course_id, complete FROM session";
     RowMapper<Session> rowMapper = new SessionRowMapper();
     return this.jdbcTemplate.query(sql, rowMapper);
   }
