@@ -96,23 +96,15 @@
               <div>
                 <h5 class="card-title text-center">Add New Student</h5>
               </div>
-              <div id="student-select">
-                <div class="form-group row" id="name-input-div">
-                  <i class="fa fa-search" style="padding-top: 20px;padding-bottom: 10px;font-size: 1.25rem"></i>
-
-                  <label for="name-input" class="col-form-label" style="width:10%">Name:</label>
-                  <div style="width:20%">
+              <div class="card-text">
+                <div class="form-group">
+                  <label for="name-input" class="col-sm-4 col-form-label" >Name:</label>
+                  <div class="col-sm-6">
                     <input class="form-control" type="text" placeholder="Name" id="name-input">
                   </div>
-
                   <label for="ID-input" class="col-sm-4 col-form-label">Student ID:</label>
                   <div class="col-sm-6">
                     <input class="form-control" type="text" placeholder="ID Number" id="ID-input">
-                  </div>
-
-                  <label for="course-input" class="col-sm-4 col-form-label">In Course:</label>
-                  <div class="col-sm-6">
-                    <input class="form-control" type="text" placeholder="Course Name" id="course-input">
                   </div>
 
                   <label for="grade-input" class="col-sm-4 col-form-label">Grade:</label>
@@ -127,7 +119,9 @@
                   </div>
                 </div>
               </div>
-              <input id="query-button" class="input-button btn" type="button" onclick="onQueryClick();" value="Submit">
+              <button id="adminmanagestudent-teacher-submit" type="input-button" onclick="batchUploadStudent();" class="btn mt-3 btn-block btn-warning">
+                Submit
+              </button>
             </div>
           </div>
         </div>

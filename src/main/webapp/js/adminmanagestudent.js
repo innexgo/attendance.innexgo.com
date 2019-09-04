@@ -1,11 +1,53 @@
 "use strict"
 
+function singleUploadStudent() {
+  var apiKey = Cookies.getJSON('apiKey');
+
+  if(apiKey == null) {
+    console.log('need apiKey for singleUploadStudent');
+    return;
+  }
+
+  var studentId = document.getElementById('adminmanagestudent-studentid').value;
+  if(isEmpty(studentId)) {
+    giveAlert('Please fill in student student ID.', 'alert-danger');
+    return;
+  }
+
+  var graduatingYear = toGraduatingYear($('#adminmanagestudent-graduatingyear :selected'));
+  if(isEmpty(graduatingYear)) {
+    giveAlert('Please select student grade.', 'alert-danger');
+    return;
+  }
+
+  var name = document.getElementById('adminmanagestudent-name').value;
+  if(isEmpty(name)) {
+    giveAlert('Please fill in student name.', 'alert-danger');
+    return;
+  }
+
+  request(thisUrl() + '/student/new/' +
+    '?studentId='+encodeURI(studentId) +
+    '&graduatingYear='+ encodeURI(graduatingYear) +
+    '&name='+name+
+    '&apiKey='+apiKey.key,
+    function(xhr) {
+      giveAlert('Student uploaded successfully.', 'alert-success');
+    },
+    function(xhr) {
+      giveAlert('Student failed to upload.', 'alert-danger');
+    }
+  );
+}
+
+
+
 //gets new data from server and inserts it at the beginning
 function batchUploadStudent() {
   var apiKey = Cookies.getJSON('apiKey');
 
   if(apiKey == null) {
-    console.log('need apiKey for recentActivity');
+    console.log('need apiKey for batchUploadStudent');
     return;
   }
 

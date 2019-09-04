@@ -55,24 +55,12 @@ function giveAlert(innerHTML, type) {
   '</div>';
 }
 
-// TODO later need to actually set
-
-var period_dbg = 1;
-var periodStartTime_dbg = 1;
-function getPeriod(time) {
-  return period_dbg
+function toGraduatingYear(grade) {
+  var currentTime = moment();
+  var currentYear = currentTime.year();
+  if(currentTime.month() >= 7) {
+    currentYear++;
+  }
+  return currentYear;
 }
 
-// TODO debugging only
-function setPeriod(period) {
-  period_dbg = period;
-}
-
-function getPeriodStart(periodNum) {
-  return periodStartTime_dbg;
-}
-
-// TODO debugging only
-function setPeriodStart(periodTime) {
-  periodStartTime_dbg = periodTime;
-}

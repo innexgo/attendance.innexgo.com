@@ -42,13 +42,13 @@ function submitEncounter(studentId) {
         },
         //failure
         function(xhr) {
-          giveAlert('Something went wrong while finalizing sign in.', 'danger');
+          giveAlert('Something went wrong while finalizing sign in.', 'alert-danger');
           error.play();
         }
       );
     },
     function(xhr) {
-      giveAlert('Something went wrong while trying to sign you in.', 'danger');
+      giveAlert('Something went wrong while trying to sign you in.', 'alert-danger');
       error.play();
     }
   );
