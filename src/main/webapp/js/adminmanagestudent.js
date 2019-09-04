@@ -8,23 +8,24 @@ function singleUploadStudent() {
     return;
   }
 
-  var studentId = document.getElementById('adminmanagestudent-studentid').value;
-  if(isEmpty(studentId)) {
-    giveAlert('Please fill in student student ID.', 'alert-danger');
-    return;
-  }
-
-  var graduatingYear = toGraduatingYear($('#adminmanagestudent-graduatingyear :selected'));
-  if(isEmpty(graduatingYear)) {
-    giveAlert('Please select student grade.', 'alert-danger');
-    return;
-  }
-
   var name = document.getElementById('adminmanagestudent-name').value;
   if(isEmpty(name)) {
     giveAlert('Please fill in student name.', 'alert-danger');
     return;
   }
+
+  var studentId = document.getElementById('adminmanagestudent-studentid').value;
+  if(isEmpty(studentId)) {
+    giveAlert('Please fill in student ID.', 'alert-danger');
+    return;
+  }
+
+  var graduatingYear = toGraduatingYear($('#adminmanagestudent-grade :selected'));
+  if(isEmpty(graduatingYear)) {
+    giveAlert('Please select student grade.', 'alert-danger');
+    return;
+  }
+
 
   request(thisUrl() + '/student/new/' +
     '?studentId='+encodeURI(studentId) +
@@ -55,6 +56,10 @@ function batchUploadStudent() {
     '?apiKey=' + Cookies.getJSON('apiKey').key;
 
   var files = document.getElementById('adminmanagestudent-teacher-file').files;
+  if(files.length == 0) {
+    giveAlert('Please upload CSV file.', 'alert-danger');
+    return;
+  }
   for(var i = 0; i < files.length; i++) {
     var formData = new FormData();
     formData.append("file", files[0]);

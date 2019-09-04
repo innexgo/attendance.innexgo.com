@@ -91,25 +91,24 @@
 
 
           <!-- Manage Users -->
-          <div class="card col-sm palette-level-two">
+          <div class="card col-sm palette-level-two py-3">
             <div class-"card-body">
               <div>
                 <h5 class="card-title text-center">Add New Student</h5>
               </div>
               <div class="card-text">
                 <div class="form-group">
-                  <label for="name-input" class="col-sm-4 col-form-label" >Name:</label>
-                  <div class="col-sm-6">
-                    <input class="form-control" type="text" placeholder="Name" id="name-input">
+                  <div>
+                    <label for="adminmanagestudent-name" class="col-form-label" >Name:</label>
+                    <input class="form-control" type="text" placeholder="Name" id="adminmanagestudent-name">
                   </div>
-                  <label for="ID-input" class="col-sm-4 col-form-label">Student ID:</label>
-                  <div class="col-sm-6">
-                    <input class="form-control" type="text" placeholder="ID Number" id="ID-input">
+                  <div>
+                    <label for="adminmanagestudent-studentid" class="col-form-label">Student ID:</label>
+                    <input class="form-control" type="text" placeholder="ID Number" id="adminmanagestudent-studentid">
                   </div>
-
-                  <label for="grade-input" class="col-sm-4 col-form-label">Grade:</label>
-                  <div class="col-sm-6">
-                    <select class="form-control" id="grade-input">
+                  <div>
+                    <label for="adminmanagestudent-grade" class="col-form-label">Grade:</label>
+                    <select class="form-control" id="adminmanagestudent-grade">
                       <option selected>Choose...</option>
                       <option>9</option>
                       <option>10</option>
@@ -119,7 +118,7 @@
                   </div>
                 </div>
               </div>
-              <button id="adminmanagestudent-teacher-submit" type="input-button" onclick="batchUploadStudent();" class="btn mt-3 btn-block btn-warning">
+              <button id="adminmanagestudent-teacher-submit" type="input-button" onclick="singleUploadStudent();" class="btn mt-3 btn-block btn-warning">
                 Submit
               </button>
             </div>

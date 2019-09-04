@@ -1,4 +1,4 @@
-within_sinpackage innexgo;
+package innexgo;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStreamReader;
