@@ -12,6 +12,12 @@ function currentStatus() {
     return;
   }
 
+  if(period.startTime > Date.now()) {
+    console.log('Not right time');
+    table.innerHTML='';
+    return;
+  }
+
   // get students
   request(thisUrl() + '/student/' +
     '?courseId=' + course.id +

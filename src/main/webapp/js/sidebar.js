@@ -95,7 +95,7 @@ function displayInfo() {
   document.getElementById('info-name').innerHTML = apiKey.user.name;
 
   document.getElementById('info-period').innerHTML =
-    period == null ? '' : 'Period ' + period.period;
+    period == null || period.startTime > Date.now() ? '' : 'Period ' + period.period;
 
   document.getElementById('info-location').innerHTML =
     course == null ? '' : course.location.name;
