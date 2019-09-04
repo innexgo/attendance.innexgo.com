@@ -33,6 +33,7 @@ function submitEncounter(studentId) {
       request(getSessionUrl,
         //success
         function(xhr) {
+          giveAlert('Sucessfully logged.', 'alert-success');
           var sessionList = JSON.parse(xhr.responseText);
           if(sessionList.length != 0) {
             beepup.play();
@@ -57,7 +58,8 @@ function submitEncounter(studentId) {
 $(document).ready(function () {
   // Initialize scanner selector
   $(document).scannerDetection(function(e, data) {
-    submitEncounter(e);
+    console.log(e);
+    submitEncounter(parseInt(e));
   });
 
   var tbox = document.getElementById('manual-userid');
@@ -73,3 +75,4 @@ $(document).ready(function () {
     document.getElementById('manual-userid').innerHTML = '';
   });
 });
+
