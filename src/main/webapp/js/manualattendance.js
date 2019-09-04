@@ -3,12 +3,14 @@ var beepdown = new Audio('assets/beepdown.wav');
 var error = new Audio('assets/error.wav');
 
 function submitEncounter(studentId) {
+  console.log('submitting encounter ' + String(studentId))
+  document.getElementById('manual-userid').value = '';
   var checkBox = document.getElementById('manual-type-toggle');
   var apiKey = Cookies.getJSON('apiKey');
   var period = Cookies.getJSON('period');
   var course = Cookies.getJSON('courses').filter(c => c.period == period.period)[0];
 
-  if(course == null) {
+  if (course == null) {
     giveAlert('No class at the moment to sign into.');
     return;
   }
@@ -21,7 +23,7 @@ function submitEncounter(studentId) {
 
   request(addEncounterUrl,
     //success
-    function(xhr) {
+    function (xhr) {
       var encounter = JSON.parse(xhr.responseText);
 
       //now check if it was a sign in or a sign out
@@ -32,23 +34,23 @@ function submitEncounter(studentId) {
 
       request(getSessionUrl,
         //success
-        function(xhr) {
+        function (xhr) {
           giveAlert('Sucessfully logged.', 'alert-success');
           var sessionList = JSON.parse(xhr.responseText);
-          if(sessionList.length != 0) {
+          if (sessionList.length != 0) {
             beepup.play();
           } else {
             beepdown.play();
           }
         },
         //failure
-        function(xhr) {
+        function (xhr) {
           giveAlert('Something went wrong while finalizing sign in.', 'alert-danger');
           error.play();
         }
       );
     },
-    function(xhr) {
+    function (xhr) {
       giveAlert('Something went wrong while trying to sign you in.', 'alert-danger');
       error.play();
     }
@@ -57,22 +59,27 @@ function submitEncounter(studentId) {
 
 $(document).ready(function () {
   // Initialize scanner selector
-  $(document).scannerDetection(function(e, data) {
+  var tbox = document.getElementById('manual-userid');
+  $(document).scannerDetection(function (e, data) {
     console.log(e);
-    submitEncounter(parseInt(e));
+    if (!(document.activeElement === tbox)) {
+      console.log('doing scanner')
+      submitEncounter(parseInt(e));
+    }
   });
 
-  var tbox = document.getElementById('manual-userid');
-  tbox.addEventListener('keydown', function(event) {
+
+  tbox.addEventListener('keydown', function (event) {
     if (event.keyCode === 13) {
+      console.log('doing enter key')
       submitEncounter(parseInt(tbox.value));
     }
   });
 
   var button = document.getElementById('manual-submit');
-  button.addEventListener('click', function(event) {
+  button.addEventListener('click', function (event) {
+    console.log('doing button')
     submitEncounter(parseInt(tbox.value));
-    document.getElementById('manual-userid').innerHTML = '';
   });
 });
 
