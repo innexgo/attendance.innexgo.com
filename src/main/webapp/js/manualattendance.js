@@ -37,10 +37,10 @@ function submitEncounter(studentId) {
         function (xhr) {
           var sessionList = JSON.parse(xhr.responseText);
           if (sessionList.length != 0) {
-            giveAlert('Sucessfully logged in to ' + encounter.location.name, 'alert-success');
+            giveAlert('Sucessfully logged ' + encounter.student.name + ' in to ' + encounter.location.name, 'alert-success');
             beepup.play();
           } else {
-            giveAlert('Sucessfully logged out of ' + encounter.location.name, 'alert-success');
+            giveAlert('Sucessfully logged ' + encounter.student.name + ' out of ' + encounter.location.name, 'alert-success');
             beepdown.play();
           }
         },
