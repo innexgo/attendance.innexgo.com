@@ -11,7 +11,7 @@ function submitEncounter(studentId) {
   var course = Cookies.getJSON('courses').filter(c => c.period == period.period)[0];
 
   if (course == null) {
-    giveAlert('No class at the moment to sign into.');
+    giveAlert('No class at the moment to sign into.', 'alert-encounter');
     return;
   }
 
@@ -35,11 +35,12 @@ function submitEncounter(studentId) {
       request(getSessionUrl,
         //success
         function (xhr) {
-          giveAlert('Sucessfully logged.', 'alert-success');
           var sessionList = JSON.parse(xhr.responseText);
           if (sessionList.length != 0) {
+            giveAlert('Sucessfully logged ' + encounter.student.name + ' in to ' + encounter.location.name, 'alert-success');
             beepup.play();
           } else {
+            giveAlert('Sucessfully logged ' + encounter.student.name + ' out of ' + encounter.location.name, 'alert-success');
             beepdown.play();
           }
         },
