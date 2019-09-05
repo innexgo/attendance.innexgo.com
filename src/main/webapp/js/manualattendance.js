@@ -11,7 +11,7 @@ function submitEncounter(studentId) {
   var course = Cookies.getJSON('courses').filter(c => c.period == period.period)[0];
 
   if (course == null) {
-    giveAlert('No class at the moment to sign into.', 'alert-encounter');
+    giveAlert('No class at the moment to sign into.', 'alert-danger');
     return;
   }
 
