@@ -11,7 +11,7 @@ function submitEncounter(studentId) {
   var period = Cookies.getJSON('period');
   var course = Cookies.getJSON('courses').filter(c => c.period == period.period)[0];
 
-  if(String(studentId) == String(NaN)) {
+  if (String(studentId) == String(NaN)) {
     giveAlert('What you entered wasn\'t a valid ID', 'alert-danger');
     return;
   }
@@ -71,7 +71,12 @@ $(document).ready(function () {
     console.log(e);
     if (!(document.activeElement === tbox)) {
       console.log('doing scanner')
-      submitEncounter(parseInt(e));
+      if (isEmpty(tbox.value)) {
+        console.log('studentID is Empty')
+      }
+      else {
+        submitEncounter(parseInt(e));
+      }
     }
   });
 
@@ -79,14 +84,24 @@ $(document).ready(function () {
   tbox.addEventListener('keydown', function (event) {
     if (event.keyCode === 13) {
       console.log('doing enter key')
-      submitEncounter(parseInt(tbox.value));
+      if (isEmpty(tbox.value)) {
+        console.log('studentID is Empty')
+      }
+      else {
+        submitEncounter(parseInt(tbox.value));
+      }
     }
   });
 
   var button = document.getElementById('manual-submit');
   button.addEventListener('click', function (event) {
     console.log('doing button')
-    submitEncounter(parseInt(tbox.value));
+    if (isEmpty(tbox.value)) {
+      console.log('studentID is Empty')
+    }
+    else {
+      submitEncounter(parseInt(tbox.value));
+    }
   });
 });
 
