@@ -17,7 +17,7 @@ function submitEncounter(studentId) {
   }
 
   if (course == null) {
-    giveAlert('No class at the moment to sign into.', 'alert-warning');
+    giveAlert('No class at the moment to sign into.', 'alert-danger');
     return;
   }
 
