@@ -120,7 +120,7 @@ public class ApiController {
     session.student = fillStudent(studentService.getById(session.studentId));
     session.course = fillCourse(courseService.getById(session.courseId));
     session.inEncounter = fillEncounter(encounterService.getById(session.inEncounterId));
-    if (session.complete && session.outEncounterId != 0) {
+    if (session.complete && session.outEncounterId != null && session.outEncounterId != 0) {
       session.outEncounter = fillEncounter(encounterService.getById(session.outEncounterId));
     }
     return session;
