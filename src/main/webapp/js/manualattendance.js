@@ -4,14 +4,20 @@ var error = new Audio('assets/error.wav');
 
 function submitEncounter(studentId) {
   console.log('submitting encounter ' + String(studentId))
+  console.log(String(studentId));
   document.getElementById('manual-userid').value = '';
   var checkBox = document.getElementById('manual-type-toggle');
   var apiKey = Cookies.getJSON('apiKey');
   var period = Cookies.getJSON('period');
   var course = Cookies.getJSON('courses').filter(c => c.period == period.period)[0];
 
+  if(String(studentId) == String(NaN)) {
+    giveAlert('What you entered wasn\'t a valid ID', 'alert-danger');
+    return;
+  }
+
   if (course == null) {
-    giveAlert('No class at the moment to sign into.', 'alert-encounter');
+    giveAlert('No class at the moment to sign into.', 'alert-warning');
     return;
   }
 
