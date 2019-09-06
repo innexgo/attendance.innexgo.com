@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class ApiController {
 
   @Autowired ApiKeyService apiKeyService;
+  @Autowired CardService cardService;
   @Autowired CourseService courseService;
   @Autowired EncounterService encounterService;
   @Autowired IrregularityService irregularityService;
@@ -75,6 +76,11 @@ public class ApiController {
   ApiKey fillApiKey(ApiKey apiKey) {
     apiKey.user = fillUser(userService.getById(apiKey.userId));
     return apiKey;
+  }
+
+  Card fillCard(Card card) {
+    card.student = fillStudent(studentService.getById(card.studentId));
+    return card;
   }
 
   Course fillCourse(Course course) {
@@ -253,6 +259,27 @@ public class ApiController {
     return BAD_REQUEST;
   }
 
+  @RequestMapping("card/new/")
+  public ResponseEntity<?> newCard(
+      @RequestParam("cardId") Integer cardId,
+      @RequestParam("studentId") Integer studentId,
+      @RequestParam("apiKey") String apiKey) {
+    if(isTrusted(apiKey)) {
+      if (studentService.existsById(studentId)
+          && !cardService.existsById(cardId)) {
+        Card card = new Card();
+        card.id = cardId;
+        card.studentId = studentId;
+        cardService.add(card);
+        return new ResponseEntity<>(fillCard(card), HttpStatus.OK);
+      } else {
+        return BAD_REQUEST;
+      }
+    } else {
+      return UNAUTHORIZED;
+    }
+  }
+
   @RequestMapping("course/new/")
   public ResponseEntity<?> newCourse(
       @RequestParam("userId") Integer teacherId,
@@ -288,8 +315,8 @@ public class ApiController {
     if (isTrusted(apiKey)) {
 
       Student student;
-      if (studentService.existsByCardId(cardId)) {
-        student = studentService.getByCardId(cardId);
+      if (cardService.existsById(cardId)) {
+        student = studentService.getById(cardService.getById(cardId).studentId);
       } else if (studentService.existsById(studentId)) {
         student = studentService.getById(studentId);
       } else {
@@ -430,17 +457,21 @@ public class ApiController {
 
   @RequestMapping("location/new/")
   public ResponseEntity<?> newLocation(
-      @RequestParam("startTime") String name,
+      @RequestParam("name") String name,
       @RequestParam("tags") String tags,
       @RequestParam("apiKey") String apiKey) {
-    if (!Utils.isEmpty(name) && !Utils.isEmpty(tags) && isAdministrator(apiKey)) {
-      Location location = new Location();
-      location.name = name;
-      location.tags = tags;
-      locationService.add(location);
-      return new ResponseEntity<>(fillLocation(location), HttpStatus.OK);
+    if(isAdministrator(apiKey)) {
+      if (!Utils.isEmpty(name) && !Utils.isEmpty(tags)) {
+        Location location = new Location();
+        location.name = name;
+        location.tags = tags;
+        locationService.add(location);
+        return new ResponseEntity<>(fillLocation(location), HttpStatus.OK);
+      } else {
+        return BAD_REQUEST;
+      }
     } else {
-      return BAD_REQUEST;
+      return UNAUTHORIZED;
     }
   }
 
@@ -460,7 +491,7 @@ public class ApiController {
       periodService.add(p);
       return new ResponseEntity<>(fillPeriod(p), HttpStatus.OK);
     } else {
-      return BAD_REQUEST;
+      return UNAUTHORIZED;
     }
   }
 
@@ -469,20 +500,23 @@ public class ApiController {
       @RequestParam("studentId") Integer studentId,
       @RequestParam("courseId") Integer courseId,
       @RequestParam("apiKey") String apiKey) {
-    if (isTrusted(apiKey)
-        && studentService.existsById(studentId)
-        && courseService.existsById(courseId)
-        && scheduleService
-                .query(null, studentId, null, null, null, courseService.getById(courseId).period)
-                .size()
-            == 0) {
-      Schedule schedule = new Schedule();
-      schedule.studentId = studentId;
-      schedule.courseId = courseId;
-      scheduleService.add(schedule);
-      return new ResponseEntity<>(fillSchedule(schedule), HttpStatus.OK);
+    if (isTrusted(apiKey)) {
+      if (studentService.existsById(studentId)
+          && courseService.existsById(courseId)
+          && scheduleService
+                  .query(null, studentId, null, null, null, courseService.getById(courseId).period)
+                  .size()
+              == 0) {
+        Schedule schedule = new Schedule();
+        schedule.studentId = studentId;
+        schedule.courseId = courseId;
+        scheduleService.add(schedule);
+        return new ResponseEntity<>(fillSchedule(schedule), HttpStatus.OK);
+      } else {
+        return BAD_REQUEST;
+      }
     } else {
-      return BAD_REQUEST;
+      return UNAUTHORIZED;
     }
   }
 
@@ -493,16 +527,20 @@ public class ApiController {
       @RequestParam("name") String name,
       @RequestParam(value = "tags", defaultValue = "") String tags,
       @RequestParam("apiKey") String apiKey) {
-    if (!studentService.existsById(id) && isAdministrator(apiKey)) {
-      Student student = new Student();
-      student.id = id;
-      student.graduatingYear = graduatingYear;
-      student.name = name;
-      student.tags = tags;
-      studentService.add(student);
-      return new ResponseEntity<>(fillStudent(student), HttpStatus.OK);
+    if(isAdministrator(apiKey)) {
+      if (!studentService.existsById(id) && !Utils.isEmpty(name)) {
+        Student student = new Student();
+        student.id = id;
+        student.graduatingYear = graduatingYear;
+        student.name = name.toUpperCase();
+        student.tags = tags;
+        studentService.add(student);
+        return new ResponseEntity<>(fillStudent(student), HttpStatus.OK);
+      } else {
+        return BAD_REQUEST;
+      }
     } else {
-      return BAD_REQUEST;
+      return UNAUTHORIZED;
     }
   }
 
@@ -536,79 +574,86 @@ public class ApiController {
 
   @RequestMapping("student/update")
   public ResponseEntity<?> updateStudent(@RequestParam Map<String, String> allRequestParam) {
-    if ( // make sure changer is admin
-    isAdministrator(allRequestParam.getOrDefault("apiKey", "invalid"))
-        // make sure student exists
-        && studentService.existsById(parseInteger(allRequestParam.getOrDefault("studentId", "-1")))
-        // if they are trying to set a name, it cannot be blank
-        && !Utils.isEmpty(allRequestParam.getOrDefault("studentName", "default"))
-        // if they are setting the graduating year, it must be a valid integer
-        && parseInteger(allRequestParam.getOrDefault("graduatingYear", "0")) != null) {
-      Student student = studentService.getById(parseInteger(allRequestParam.get("studentId")));
+    // make sure changer is admin
+    if (isAdministrator(allRequestParam.getOrDefault("apiKey", "invalid"))) {
+      // make sure student exists
+      // if they are trying to set a name, it cannot be blank
+      // if they are setting the graduating year, it must be a valid integer
+      if(studentService.existsById(parseInteger(allRequestParam.getOrDefault("studentId", "-1")))
+          && !Utils.isEmpty(allRequestParam.getOrDefault("studentName", "default"))
+          && parseInteger(allRequestParam.getOrDefault("graduatingYear", "0")) != null) {
+        Student student = studentService.getById(parseInteger(allRequestParam.get("studentId")));
 
-      // if it is specified, set the name
-      if (allRequestParam.containsKey("studentName")) {
-        student.name = allRequestParam.get("studentName");
+        // if it is specified, set the name
+        if (allRequestParam.containsKey("studentName")) {
+          student.name = allRequestParam.get("studentName");
+        }
+
+        // if it is specified, set the tags
+        if (allRequestParam.containsKey("tags")) {
+          student.tags = allRequestParam.get("tags");
+        }
+
+        // if it is specified, set the graduatingYear
+        if (allRequestParam.containsKey("graduatingYear")) {
+          student.graduatingYear = parseInteger(allRequestParam.get("graduatingYear"));
+        }
+
+        studentService.update(student);
+        return new ResponseEntity<>(fillStudent(student), HttpStatus.OK);
+      } else {
+        return BAD_REQUEST;
       }
-
-      // if it is specified, set the tags
-      if (allRequestParam.containsKey("tags")) {
-        student.tags = allRequestParam.get("tags");
-      }
-
-      // if it is specified, set the graduatingYear
-      if (allRequestParam.containsKey("graduatingYear")) {
-        student.graduatingYear = parseInteger(allRequestParam.get("graduatingYear"));
-      }
-
-      studentService.update(student);
-      return new ResponseEntity<>(fillStudent(student), HttpStatus.OK);
     } else {
-      return BAD_REQUEST;
+      return UNAUTHORIZED;
     }
   }
 
   @RequestMapping("user/update/")
   public ResponseEntity<?> updateUser(@RequestParam Map<String, String> allRequestParam) {
-    if ( // make sure changer is admin
-    isAdministrator(allRequestParam.getOrDefault("apiKey", "invalid"))
-        // make sure user exists
-        && userService.existsById(parseInteger(allRequestParam.getOrDefault("userId", "-1")))
-        // if they are trying to set a name, it cannot be blank
-        && !Utils.isEmpty(allRequestParam.getOrDefault("userName", "default"))
-        // if they are trying to set a password, it cannot be blank
-        && !Utils.isEmpty(allRequestParam.getOrDefault("password", "default"))
-        // if they are trying to set an email, it cannot be blank
-        && !Utils.isEmpty(allRequestParam.getOrDefault("email", "default"))
-        // if they are trying to set an email, it cannot be taken already
-        && (allRequestParam.containsKey("email") ? !userService.existsByEmail("email") : true)
-        // if they are trying to set the ring, it must be a valid integer
-        && parseInteger(allRequestParam.getOrDefault("ring", "0")) != null) {
-      User user = userService.getById(parseInteger(allRequestParam.get("userId")));
+    // make sure changer is admin
 
-      // if it is specified, set the name
-      if (allRequestParam.containsKey("userName")) {
-        user.name = allRequestParam.get("userName");
-      }
-      // if it is specified, set the password
-      if (allRequestParam.containsKey("password")) {
-        user.passwordHash = Utils.encodePassword(allRequestParam.get("password"));
-      }
+    if (isAdministrator(allRequestParam.getOrDefault("apiKey", "invalid"))) {
+      // make sure user exists
+      if(userService.existsById(parseInteger(allRequestParam.getOrDefault("userId", "-1")))
+          // if they are trying to set a name, it cannot be blank
+          && !Utils.isEmpty(allRequestParam.getOrDefault("userName", "default"))
+          // if they are trying to set a password, it cannot be blank
+          && !Utils.isEmpty(allRequestParam.getOrDefault("password", "default"))
+          // if they are trying to set an email, it cannot be blank
+          && !Utils.isEmpty(allRequestParam.getOrDefault("email", "default"))
+          // if they are trying to set an email, it cannot be taken already
+          && (allRequestParam.containsKey("email") ? !userService.existsByEmail("email") : true)
+          // if they are trying to set the ring, it must be a valid integer
+          && parseInteger(allRequestParam.getOrDefault("ring", "0")) != null) {
+        User user = userService.getById(parseInteger(allRequestParam.get("userId")));
 
-      // if it is specified, set the email
-      if (allRequestParam.containsKey("email")) {
-        user.email = allRequestParam.get("email");
-      }
+        // if it is specified, set the name
+        if (allRequestParam.containsKey("userName")) {
+          user.name = allRequestParam.get("userName");
+        }
+        // if it is specified, set the password
+        if (allRequestParam.containsKey("password")) {
+          user.passwordHash = Utils.encodePassword(allRequestParam.get("password"));
+        }
 
-      // if it is specified, set the ring level
-      if (allRequestParam.containsKey("ring")) {
-        user.ring = parseInteger(allRequestParam.get("ring"));
-      }
+        // if it is specified, set the email
+        if (allRequestParam.containsKey("email")) {
+          user.email = allRequestParam.get("email");
+        }
 
-      userService.update(user);
-      return new ResponseEntity<>(fillUser(user), HttpStatus.OK);
+        // if it is specified, set the ring level
+        if (allRequestParam.containsKey("ring")) {
+          user.ring = parseInteger(allRequestParam.get("ring"));
+        }
+
+        userService.update(user);
+        return new ResponseEntity<>(fillUser(user), HttpStatus.OK);
+      } else {
+        return BAD_REQUEST;
+      } 
     } else {
-      return BAD_REQUEST;
+      return UNAUTHORIZED;
     }
   }
 
@@ -619,15 +664,19 @@ public class ApiController {
       @RequestParam("oldPassword") String oldPassword,
       @RequestParam("newPassword") String newPassword) {
     if (!Utils.isEmpty(oldPassword)
-        && !Utils.isEmpty(newPassword)
         && userService.existsById(userId)
         && Utils.matchesPassword(oldPassword, userService.getById(userId).passwordHash)) {
-      User user = userService.getById(userId);
-      user.passwordHash = Utils.encodePassword(newPassword);
-      userService.update(user);
-      return new ResponseEntity<>(fillUser(user), HttpStatus.OK);
+
+      if(!Utils.isEmpty(newPassword)) {
+        User user = userService.getById(userId);
+        user.passwordHash = Utils.encodePassword(newPassword);
+        userService.update(user);
+        return new ResponseEntity<>(fillUser(user), HttpStatus.OK);
+      } else {
+        return BAD_REQUEST;
+      }
     } else {
-      return BAD_REQUEST;
+      return UNAUTHORIZED;
     }
   }
 
@@ -646,7 +695,7 @@ public class ApiController {
         return new ResponseEntity<>(fillUser(user), HttpStatus.OK);
       }
     }
-    return BAD_REQUEST;
+    return UNAUTHORIZED;
   }
 
   @RequestMapping("apiKey/delete/")
@@ -655,6 +704,20 @@ public class ApiController {
     if (isAdministrator(apiKey)) {
       if (apiKeyService.existsById(apiKeyId)) {
         return new ResponseEntity<>(fillApiKey(apiKeyService.delete(apiKeyId)), HttpStatus.OK);
+      } else {
+        return BAD_REQUEST;
+      }
+    } else {
+      return UNAUTHORIZED;
+    }
+  }
+
+  @RequestMapping("card/delete/")
+  public ResponseEntity<?> deleteCard(
+      @RequestParam("cardId") Integer cardId, @RequestParam("apiKey") String apiKey) {
+    if (isAdministrator(apiKey)) {
+      if (cardService.existsById(cardId)) {
+        return new ResponseEntity<>(fillCard(cardService.deleteById(cardId)), HttpStatus.OK);
       } else {
         return BAD_REQUEST;
       }
@@ -780,6 +843,23 @@ public class ApiController {
                       : null)
               .stream()
               .map(x -> fillApiKey(x))
+              .collect(Collectors.toList());
+      return new ResponseEntity<>(list, HttpStatus.OK);
+    } else {
+      return UNAUTHORIZED;
+    }
+  }
+
+  @RequestMapping("card/")
+  public ResponseEntity<?> viewCard(@RequestParam Map<String, String> allRequestParam) {
+    if (allRequestParam.containsKey("apiKey") && isTrusted(allRequestParam.get("apiKey"))) {
+      List<Card> list =
+          cardService
+              .query(
+                  parseInteger(allRequestParam.get("cardId")),
+                  parseInteger(allRequestParam.get("studentId")))
+              .stream()
+              .map(x -> fillCard(x))
               .collect(Collectors.toList());
       return new ResponseEntity<>(list, HttpStatus.OK);
     } else {
