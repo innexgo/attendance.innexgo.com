@@ -72,13 +72,8 @@ $(document).ready(function () {
   $(document).scannerDetection(function (e, data) {
     console.log(e);
     if (!(document.activeElement === tbox)) {
-      console.log('doing scanner')
-      if (isEmpty(tbox.value)) {
-        console.log('studentID is Empty')
-      }
-      else {
+      console.log('doing scanner')    
         submitEncounter(parseInt(e));
-      }
     }
   });
 
