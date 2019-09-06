@@ -85,7 +85,7 @@ public class StudentService {
     return this.jdbcTemplate.query(sql, rowMapper);
   }
 
-  // find students who are absent at the class at this period
+  // find students who are absent at the location that they are supposed to be in at this period
   public List<Student> absent(int courseId, int periodId) {
     if (!periodService.existsById(periodId) || !courseService.existsById(courseId)) {
       return null;
@@ -102,18 +102,18 @@ public class StudentService {
         " SELECT st.id, st.graduating_year, st.name, st.tags"
             + " FROM student st"
             + " INNER JOIN schedule sc ON st.id = sc.student_id"
-            + " WHERE sc.course_id = "
-            + courseId
+            + (" WHERE sc.course_id = " + courseId)
             + " EXCEPT"
             + " SELECT st.id, st.card_id, st.graduating_year, st.name, st.tags"
             + " FROM student st"
             + " RIGHT JOIN session ses ON ses.student_id = st.id"
             + " INNER JOIN encounter inen ON ses.in_encounter_id = inen.id"
             + " LEFT JOIN encounter outen ON ses.out_encounter_id = outen.id"
-            + " WHERE inen.time < "
-            + period.startTime
-            + " AND outen.time IS NULL OR outen.time > "
-            + period.startTime
+            + " WHERE 1 = 1 "
+            + (" AND inen.location_id = " + course.locationId)
+            + (" AND inen.time < " + period.startTime)
+            + (" AND outen.time IS NULL OR outen.time > " + period.startTime)
+            + (" AND outen.time IS NULL OR outen.time > " + period.startTime)
             + " ;";
 
     RowMapper<Student> rowMapper = new StudentRowMapper();

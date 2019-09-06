@@ -169,9 +169,9 @@ public class ApiController {
         periodService.query(
             null, // id
             null, // time
-            null, // initialTimeBegin
+            System.currentTimeMillis(), // initialTimeBegin
             null, // initialTimeEnd
-            System.currentTimeMillis(), // startTimeBegin
+            null, // startTimeBegin
             null, // startTimeEnd
             null, // endTimeBegin
             null, // endTimeEnd
@@ -287,21 +287,24 @@ public class ApiController {
       @RequestParam("period") Integer period,
       @RequestParam("subject") String subject,
       @RequestParam("apiKey") String apiKey) {
-    if (!Utils.isEmpty(subject)
-        && locationService.existsById(locationId)
-        && userService.existsById(teacherId)
-        && isAdministrator(apiKey)) {
-      Course course = new Course();
-      course.teacherId = teacherId;
-      course.locationId = locationId;
-      course.period = period;
-      course.subject = subject;
-      course.year = Utils.getCurrentGraduatingYear();
-      courseService.add(course);
-      // return the filled course on success
-      return new ResponseEntity<>(fillCourse(course), HttpStatus.OK);
+    if(isAdministrator(apiKey)) {
+      if (!Utils.isEmpty(subject)
+          && locationService.existsById(locationId)
+          && userService.existsById(teacherId)) {
+        Course course = new Course();
+        course.teacherId = teacherId;
+        course.locationId = locationId;
+        course.period = period;
+        course.subject = subject;
+        course.year = Utils.getCurrentGraduatingYear();
+        courseService.add(course);
+        // return the filled course on success
+        return new ResponseEntity<>(fillCourse(course), HttpStatus.OK);
+      } else {
+        return BAD_REQUEST;
+      }
     } else {
-      return BAD_REQUEST;
+      return UNAUTHORIZED;
     }
   }
 
@@ -383,13 +386,15 @@ public class ApiController {
               sessionService.update(openSession);
 
               // if it is in the middle of class, add a leaveEarly irregularity
-              if (System.currentTimeMillis() < currentPeriod.endTime
-                  && System.currentTimeMillis() > currentPeriod.startTime) {
+              if (System.currentTimeMillis() < currentPeriod.endTime) {
                 Irregularity irregularity = new Irregularity();
                 irregularity.studentId = student.id;
                 irregularity.courseId = courseId;
                 irregularity.periodId = currentPeriod.id;
-                irregularity.type = "left_early";
+                irregularity.type =
+                  System.currentTimeMillis() > currentPeriod.startTime
+                    ? "left_early"
+                    : "absent";
                 irregularity.time = System.currentTimeMillis();
                 irregularity.timeMissing = currentPeriod.endTime - System.currentTimeMillis();
                 irregularityService.add(irregularity);
