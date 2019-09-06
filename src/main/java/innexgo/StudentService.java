@@ -104,7 +104,7 @@ public class StudentService {
             + " INNER JOIN schedule sc ON st.id = sc.student_id"
             + (" WHERE sc.course_id = " + courseId)
             + " EXCEPT"
-            + " SELECT st.id, st.card_id, st.graduating_year, st.name, st.tags"
+            + " SELECT st.id, st.graduating_year, st.name, st.tags"
             + " FROM student st"
             + " RIGHT JOIN session ses ON ses.student_id = st.id"
             + " INNER JOIN encounter inen ON ses.in_encounter_id = inen.id"

@@ -120,7 +120,7 @@ public class ApiController {
     session.student = fillStudent(studentService.getById(session.studentId));
     session.course = fillCourse(courseService.getById(session.courseId));
     session.inEncounter = fillEncounter(encounterService.getById(session.inEncounterId));
-    if (session.complete) {
+    if (session.complete && session.outEncounterId != 0) {
       session.outEncounter = fillEncounter(encounterService.getById(session.outEncounterId));
     }
     return session;
@@ -169,9 +169,9 @@ public class ApiController {
         periodService.query(
             null, // id
             null, // time
-            System.currentTimeMillis(), // initialTimeBegin
+            null, // initialTimeBegin
             null, // initialTimeEnd
-            null, // startTimeBegin
+            System.currentTimeMillis(), // startTimeBegin
             null, // startTimeEnd
             null, // endTimeBegin
             null, // endTimeEnd
@@ -187,7 +187,7 @@ public class ApiController {
       // wait till we are at the right time
       try {
         System.out.println((period.initialTime - System.currentTimeMillis()) / 1000);
-        Thread.sleep(period.initialTime - System.currentTimeMillis());
+        Thread.sleep(Math.max(0, period.initialTime - System.currentTimeMillis()));
       } catch (InterruptedException e) {
         e.printStackTrace();
       }
@@ -414,7 +414,7 @@ public class ApiController {
             session.courseId = courseId;
             session.complete = false;
             session.inEncounterId = encounter.id;
-            session.outEncounterId = 0;
+            session.outEncounterId = null;
             sessionService.add(session);
 
             // now we check if they arent there, and fix it

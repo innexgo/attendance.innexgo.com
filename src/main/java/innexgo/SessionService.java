@@ -43,14 +43,13 @@ public class SessionService {
 
     // Fetch session id
     sql =
-        "SELECT id FROM session WHERE student_id=? AND in_encounter_id=? AND out_encounter_id=? AND course_id=? AND complete=?";
+        "SELECT id FROM session WHERE student_id=? AND in_encounter_id=? AND course_id=? AND complete=?";
     int id =
         jdbcTemplate.queryForObject(
             sql,
             Integer.class,
             session.studentId,
             session.inEncounterId,
-            session.outEncounterId,
             session.courseId,
             session.complete);
 
