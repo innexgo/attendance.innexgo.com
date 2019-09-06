@@ -42,7 +42,7 @@ function submitEncounter(studentId) {
         //success
         function (xhr) {
           var sessionList = JSON.parse(xhr.responseText);
-          curRow = $('#'+studentId)
+          curRow = $('#id-'+studentId)
           curRow.insertBefore(curRow.parent().find('tr:first-child'));
           if (sessionList.length != 0) {
             giveAlert('Sucessfully logged ' + encounter.student.name + ' in to ' + encounter.location.name, 'alert-success');
