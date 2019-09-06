@@ -79,9 +79,9 @@ $(document).ready(function() {
       for(var i =0; i < courseList.length; i++) {
         var course = courseList[i];
         selectCourseDropdownUploadStudent.innerHTML +=
-          '<option>' + course.period + '</option>';
+          '<option>' + ordinal_suffix_of(course.period) + ' Period </option>';
         selectCourseDropdownClassList.innerHTML +=
-          '<option>' + course.period + '</option>';
+          '<option>' + ordinal_suffix_of(course.period) + ' Period </option>';
       }
     },
     //failure

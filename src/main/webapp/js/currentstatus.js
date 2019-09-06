@@ -56,10 +56,12 @@ function currentStatus() {
             }
 
             // put values in table
-            table.insertRow(0).innerHTML =
+            newrow = table.insertRow(0);
+            newrow.innerHTML =
               ('<td>' + student.name + '</td>' +
                '<td>' + student.id + '</td>' +
-               '<td style="background-color:' + bgcolor + ';color:' + fgcolor + '">' + text + '</td>')
+               '<td style="background-color:' + bgcolor + ';color:' + fgcolor + '">' + text + '</td>');
+            newrow.className = String(student.id);
           }
         },
         //failure
