@@ -120,7 +120,7 @@ public class ApiController {
     session.student = fillStudent(studentService.getById(session.studentId));
     session.course = fillCourse(courseService.getById(session.courseId));
     session.inEncounter = fillEncounter(encounterService.getById(session.inEncounterId));
-    if (session.complete && session.outEncounterId != null && session.outEncounterId != 0) {
+    if (session.hasOut) {
       session.outEncounter = fillEncounter(encounterService.getById(session.outEncounterId));
     }
     return session;
@@ -169,9 +169,9 @@ public class ApiController {
         periodService.query(
             null, // id
             null, // time
-            null, // initialTimeBegin
+            System.currentTimeMillis(), // initialTimeBegin
             null, // initialTimeEnd
-            System.currentTimeMillis(), // startTimeBegin
+            null, // startTimeBegin
             null, // startTimeEnd
             null, // endTimeBegin
             null, // endTimeEnd
@@ -365,6 +365,7 @@ public class ApiController {
                   null, // any encounter id
                   courseId, // course id
                   false, // complete
+                  null, // hasOut
                   null, // location id
                   student.id, // student id
                   null, // time
@@ -381,8 +382,10 @@ public class ApiController {
           for(Session openSession : openSessions) {
             if(locationId ==
                 encounterService.getById(openSession.inEncounterId).locationId) {
+              // if it's at the same location
               openSession.outEncounterId = encounter.id;
               openSession.complete = true;
+              openSession.hasOut = true;
               sessionService.update(openSession);
 
               // if it is in the middle of class, add a leaveEarly irregularity
@@ -400,6 +403,7 @@ public class ApiController {
                 irregularityService.add(irregularity);
               }
             } else {
+              // its not at the same location as the beginning
               // end that session
               openSession.complete = true;
               sessionService.update(openSession);
@@ -413,8 +417,9 @@ public class ApiController {
             session.studentId = student.id;
             session.courseId = courseId;
             session.complete = false;
+            session.hasOut = false;
             session.inEncounterId = encounter.id;
-            session.outEncounterId = null;
+            session.outEncounterId = 0;
             sessionService.add(session);
 
             // now we check if they arent there, and fix it
@@ -656,7 +661,7 @@ public class ApiController {
         return new ResponseEntity<>(fillUser(user), HttpStatus.OK);
       } else {
         return BAD_REQUEST;
-      } 
+      }
     } else {
       return UNAUTHORIZED;
     }
@@ -1024,6 +1029,7 @@ public class ApiController {
                   parseInteger(allRequestParam.get("anyEncounterId")),
                   parseInteger(allRequestParam.get("courseId")),
                   parseBoolean(allRequestParam.get("complete")),
+                  parseBoolean(allRequestParam.get("hasOut")),
                   parseInteger(allRequestParam.get("locationId")),
                   parseInteger(allRequestParam.get("studentId")),
                   parseLong(allRequestParam.get("time")),
