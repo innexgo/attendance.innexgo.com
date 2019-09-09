@@ -5,7 +5,8 @@ public class Session {
   int studentId;
   int courseId;
   int inEncounterId;
-  Integer outEncounterId; // nullable
+  int outEncounterId;
+  public boolean hasOut;
   public boolean complete;
 
   // Initialized by jackson during serialization

@@ -15,7 +15,7 @@ public class SessionService {
 
   public Session getById(int id) {
     String sql =
-        "SELECT id, student_id, in_encounter_id, out_encounter_id, course_id, complete FROM session WHERE id=?";
+        "SELECT id, student_id, in_encounter_id, out_encounter_id, course_id, has_out, complete FROM session WHERE id=?";
     RowMapper<Session> rowMapper = new SessionRowMapper();
     Session session = jdbcTemplate.queryForObject(sql, rowMapper, id);
     return session;
@@ -23,7 +23,7 @@ public class SessionService {
 
   public List<Session> getAll() {
     String sql =
-        "SELECT id, student_id, in_encounter_id, out_encounter_id, course_id, complete FROM session";
+        "SELECT id, student_id, in_encounter_id, out_encounter_id, course_id, has_out, complete FROM session";
     RowMapper<Session> rowMapper = new SessionRowMapper();
     return this.jdbcTemplate.query(sql, rowMapper);
   }
@@ -31,7 +31,7 @@ public class SessionService {
   public void add(Session session) {
     // Add session
     String sql =
-        "INSERT INTO session (id, student_id, in_encounter_id, out_encounter_id, course_id, complete) values (?, ?, ?, ?, ?, ?)";
+        "INSERT INTO session (id, student_id, in_encounter_id, out_encounter_id, course_id, has_out, complete) values (?, ?, ?, ?, ?, ?, ?)";
     jdbcTemplate.update(
         sql,
         session.id,
@@ -39,6 +39,7 @@ public class SessionService {
         session.inEncounterId,
         session.outEncounterId,
         session.courseId,
+        session.hasOut,
         session.complete);
 
     // Fetch session id
@@ -59,7 +60,7 @@ public class SessionService {
 
   public void update(Session session) {
     String sql =
-        "UPDATE session SET id=?, student_id=?, in_encounter_id=?, out_encounter_id=?, course_id=?, complete=? WHERE id=?";
+        "UPDATE session SET id=?, student_id=?, in_encounter_id=?, out_encounter_id=?, course_id=?, has_out=?, complete=? WHERE id=?";
     jdbcTemplate.update(
         sql,
         session.id,
@@ -67,6 +68,7 @@ public class SessionService {
         session.inEncounterId,
         session.outEncounterId,
         session.courseId,
+        session.hasOut,
         session.complete,
         session.id);
   }
@@ -91,6 +93,7 @@ public class SessionService {
       Integer anyEncounterId,
       Integer courseId,
       Boolean complete,
+      Boolean hasOut,
       Integer locationId,
       Integer studentId,
       Long time,
@@ -103,7 +106,7 @@ public class SessionService {
         outEncounterId == null && outTimeBegin == null && outTimeEnd == null && time == null;
 
     String sql =
-        "SELECT ses.id, ses.student_id, ses.in_encounter_id, ses.out_encounter_id, ses.course_id, ses.complete"
+        "SELECT ses.id, ses.student_id, ses.in_encounter_id, ses.out_encounter_id, ses.course_id, ses.has_out, ses.complete"
             + " FROM session ses"
             + " JOIN encounter inen ON ses.in_encounter_id = inen.id"
             + (outEncounterUnused ? "" : " JOIN encounter outen ON ses.out_encounter_id = outen.id")
@@ -119,6 +122,7 @@ public class SessionService {
                     + anyEncounterId
                     + ")")
             + (complete == null ? "" : " AND ses.complete = " + complete)
+            + (hasOut == null ? "" : " AND ses.has_out = " + hasOut)
             + (courseId == null ? "" : " AND ses.course_id = " + courseId)
             + (studentId == null ? "" : " AND ses.student_id = " + studentId)
             + (locationId == null ? "" : " AND inen.location_id = " + locationId)
