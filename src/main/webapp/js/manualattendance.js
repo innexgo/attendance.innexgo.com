@@ -77,7 +77,6 @@ $(document).ready(function () {
     }
   });
 
-
   tbox.addEventListener('keydown', function (event) {
     if (event.keyCode === 13) {
       console.log('doing enter key')
