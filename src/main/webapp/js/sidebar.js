@@ -86,6 +86,9 @@ $(document).ready(function(){
 });
 
 function displayInfo() {
+  if(Cookies.getJSON('period') == null) {
+    updateInfo();
+  }
   var apiKey = Cookies.getJSON('apiKey');
   var period = Cookies.getJSON('period');
   var course = period == null ? null : Cookies.getJSON('courses').filter(c => c.period == period.period)[0];
