@@ -38,19 +38,19 @@ function currentStatus() {
             var irregularity = irregularities.filter(i => i.student.id == student.id).pop();
             var type = irregularity == null ? null : irregularity.type;
             if (type == 'absent') {
-              text = '<span class="fa fa-times"></span>'
+              text = '<span class="fa fa-times"></span>';
               bgcolor = '#ffcccc';
               fgcolor = '#ff0000';
             } else if (type == 'tardy') {
-              text = '<span class="fa fa-check"></span>'
+              text = '<span class="fa fa-check"></span>';
               bgcolor = '#ffffcc';
               fgcolor = '#ffff00';
             } else if (type == 'left_early') {
-              text = '<span class="fa fa-sign-out-alt"></span>'
+              text = '<span class="fa fa-sign-out-alt"></span>';
               bgcolor = '#ccffff';
               fgcolor = '#00ffff';
             } else if (type == 'left_temporarily') {
-              text = '<span class="fa fa-check"></span>'
+              text = '<span class="fa fa-check"></span>';
               bgcolor = '#ccffff';
               fgcolor = '#00ffff';
             }
@@ -59,8 +59,8 @@ function currentStatus() {
             newrow = table.insertRow(0);
             newrow.innerHTML =
               ('<td>' + student.name + '</td>' +
-               '<td>' + student.id + '</td>' +
-               '<td style="background-color:' + bgcolor + ';color:' + fgcolor + '">' + text + '</td>');
+                '<td>' + student.id + '</td>' +
+                '<td style="background-color:' + bgcolor + ';color:' + fgcolor + '">' + text + '</td>');
             newrow.className = 'id-' + student.id;
           }
         },

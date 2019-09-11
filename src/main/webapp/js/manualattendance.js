@@ -48,7 +48,7 @@ function submitEncounter(studentId) {
             giveAlert('Sucessfully logged ' + encounter.student.name + ' in to ' + encounter.location.name, 'alert-success');
             beepup.play();
           } else {
-            giveAlert('Sucessfully logged ' + encounter.student.name + ' out of ' + encounter.location.name, 'alert-success');
+            giveAlert('Sucessfully logged ' + encounter.student.name + ' out of ' + encounter.location.name, 'alert-info');
             beepdown.play();
           }
         },
