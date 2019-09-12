@@ -1166,6 +1166,27 @@ public class ApiController {
     }
   }
 
+  /* TESTING */
+  @RequestMapping("populateTestingPeriods")
+  public ResponseEntity<?> populateTestingPeriods() {
+    periodService.deleteAll();
+    LocalDate today =
+        ZonedDateTime.now(Utils.TIMEZONE).toLocalDate();
+
+    long minute = 1*60*1000;
+    long initialTime = System.currentTimeMillis();
+    for(int i = 2; i < 7; i++) {
+      Period period = new Period();
+      period.period = i;
+      period.initialTime = initialTime;
+      period.startTime = initialTime + minute;
+      period.endTime = initialTime + minute*3;
+      initialTime += minute*3;
+      periodService.add(period);
+    }
+    return OK;
+}
+
   @RequestMapping("populatePeriods")
   public ResponseEntity<?> populatePeriods() {
     periodService.deleteAll();
@@ -1199,13 +1220,6 @@ public class ApiController {
       addPeriod(thisTuesday, 5, "10:55", "11:15", "12:55");
       addPeriod(thisTuesday, 7, "12:55", "13:30", "15:10");
 
-      ///* TESTING */
-      //addPeriod(thisTuesday, 2, "0:00", "07:30", "07:34");
-      //addPeriod(thisTuesday, 3, "0:00", "07:35", "07:39");
-      //addPeriod(thisTuesday, 4, "0:00", "07:40", "07:44");
-      //addPeriod(thisTuesday, 5, "0:00", "07:45", "07:49");
-      //addPeriod(thisTuesday, 6, "0:00", "07:50", "07:54");
-
       LocalDate thisThursday = thursday.plusWeeks(week);
       addPeriod(thisThursday, 1, "6:00", "7:15", "8:55");
       addPeriod(thisThursday, 3, "8:55", "9:15", "10:55");
@@ -1227,6 +1241,7 @@ public class ApiController {
     }
     return OK;
   }
+
 
   void addPeriod(LocalDate day, int p, String initialTime, String startTime, String endTime) {
     String[] initialComponents = initialTime.split(":");
