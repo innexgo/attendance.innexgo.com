@@ -801,7 +801,7 @@ public class ApiController {
     if (isAdministrator(apiKey)) {
       if (scheduleService.existsById(scheduleId)) {
         return new ResponseEntity<>(
-            fillSchedule(scheduleService.delete(scheduleId)), HttpStatus.OK);
+            fillSchedule(scheduleService.deleteById(scheduleId)), HttpStatus.OK);
       } else {
         return BAD_REQUEST;
       }
@@ -1130,7 +1130,8 @@ public class ApiController {
   public ResponseEntity<?> batchSetSchedule(
       @RequestParam("courseId") Integer courseId,
       @RequestParam("file") MultipartFile file,
-      @RequestParam("apiKey") String apiKey) {
+      @RequestParam("apiKey") String apiKey,
+      @RequestParam(value="remove", defaultValue="false") Boolean remove) {
     if (isTrusted(apiKey)) {
       if (courseService.existsById(courseId)) {
         try {
@@ -1146,10 +1147,17 @@ public class ApiController {
                           null, studentId, null, null, null, courseService.getById(courseId).period)
                       .size()
                   == 0) {
-                Schedule schedule = new Schedule();
-                schedule.studentId = studentId;
-                schedule.courseId = courseId;
-                scheduleService.add(schedule);
+                if(remove) {
+                  Schedule schedule = scheduleService.getScheduleByStudentIdCourseId(studentId, courseId);
+                  if(schedule != null) {
+                    scheduleService.deleteById(schedule.id);
+                  }
+                } else {
+                  Schedule schedule = new Schedule();
+                  schedule.studentId = studentId;
+                  schedule.courseId = courseId;
+                  scheduleService.add(schedule);
+                }
               }
             }
           }
