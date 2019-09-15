@@ -15,7 +15,7 @@ public class StudentService {
   @Autowired private CourseService courseService;
   @Autowired private JdbcTemplate jdbcTemplate;
 
-  public Student getById(int id) {
+  public Student getById(long id) {
     String sql = "SELECT id, graduating_year, name, tags FROM student WHERE id=?";
     RowMapper<Student> rowMapper = new StudentRowMapper();
     Student student = jdbcTemplate.queryForObject(sql, rowMapper, id);
@@ -48,26 +48,26 @@ public class StudentService {
         student.id);
   }
 
-  public Student delete(int id) {
+  public Student deleteById(long id) {
     Student student = getById(id);
     String sql = "DELETE FROM student WHERE id=?";
     jdbcTemplate.update(sql, id);
     return student;
   }
 
-  public boolean existsById(int id) {
+  public boolean existsById(long id) {
     String sql = "SELECT count(*) FROM student WHERE id=?";
     int count = jdbcTemplate.queryForObject(sql, Integer.class, id);
     return count != 0;
   }
 
   public List<Student> query(
-      Integer id,
-      Integer cardId,
+      Long id,
+      Long cardId,
+      Long courseId,
       Integer graduatingYear,
       String name,
-      String tags,
-      Integer courseId) {
+      String tags) {
     String sql =
         "SELECT st.id, st.graduating_year, st.name, st.tags FROM student st"
             + (courseId == null ? "" : " INNER JOIN schedule sc ON st.id = sc.student_id ")
@@ -86,7 +86,7 @@ public class StudentService {
   }
 
   // find students who are absent at the location that they are supposed to be in at this period
-  public List<Student> absent(int courseId, int periodId) {
+  public List<Student> absent(long courseId, long periodId) {
     if (!periodService.existsById(periodId) || !courseService.existsById(courseId)) {
       return null;
     }

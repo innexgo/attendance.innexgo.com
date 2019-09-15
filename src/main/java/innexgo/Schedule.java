@@ -1,9 +1,9 @@
 package innexgo;
 
 public class Schedule {
-  public int id;
-  int studentId;
-  int courseId;
+  public long id;
+  long studentId;
+  long courseId;
 
   // for jackson
   public Student student;

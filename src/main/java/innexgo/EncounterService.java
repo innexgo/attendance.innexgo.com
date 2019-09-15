@@ -13,7 +13,7 @@ public class EncounterService {
 
   @Autowired private JdbcTemplate jdbcTemplate;
 
-  public Encounter getById(int id) {
+  public Encounter getById(long id) {
     String sql = "SELECT id, time, location_id, student_id FROM encounter WHERE id=?";
     RowMapper<Encounter> rowMapper = new EncounterRowMapper();
     Encounter encounter = jdbcTemplate.queryForObject(sql, rowMapper, id);
@@ -28,9 +28,9 @@ public class EncounterService {
 
   public List<Encounter> query(
       Integer count,
-      Integer encounterId,
-      Integer studentId,
-      Integer locationId,
+      Long encounterId,
+      Long studentId,
+      Long locationId,
       Long minTime,
       Long maxTime,
       String studentName) {
@@ -62,9 +62,9 @@ public class EncounterService {
 
     // Fetch encounter id
     sql = "SELECT id FROM encounter WHERE time=? AND location_id=? AND student_id=?";
-    int id =
+    long id =
         jdbcTemplate.queryForObject(
-            sql, Integer.class, encounter.time, encounter.locationId, encounter.studentId);
+            sql, Long.class, encounter.time, encounter.locationId, encounter.studentId);
     encounter.id = id;
   }
 
@@ -74,14 +74,14 @@ public class EncounterService {
         sql, encounter.id, encounter.time, encounter.locationId, encounter.studentId, encounter.id);
   }
 
-  public Encounter delete(int id) {
+  public Encounter delete(long id) {
     Encounter e = getById(id);
     String sql = "DELETE FROM encounter WHERE id=?";
     jdbcTemplate.update(sql, id);
     return e;
   }
 
-  public boolean existsById(int id) {
+  public boolean existsById(long id) {
     String sql = "SELECT count(*) FROM encounter WHERE id=?";
     int count = jdbcTemplate.queryForObject(sql, Integer.class, id);
     return count != 0;

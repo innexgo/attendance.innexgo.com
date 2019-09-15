@@ -14,7 +14,7 @@ public class CardService {
 
   @Autowired private JdbcTemplate jdbcTemplate;
 
-  public Card getById(int id) {
+  public Card getById(long id) {
     String sql = "SELECT id, student_id FROM card WHERE id=?";
     RowMapper<Card> rowMapper = new CardRowMapper();
     Card card = jdbcTemplate.queryForObject(sql, rowMapper, id);
@@ -38,20 +38,20 @@ public class CardService {
     jdbcTemplate.update(sql, card.id, card.studentId, card.id);
   }
 
-  public Card deleteById(int id) {
+  public Card deleteById(long id) {
     Card card = getById(id);
     String sql = "DELETE FROM card WHERE id=?";
     jdbcTemplate.update(sql, id);
     return card;
   }
 
-  public boolean existsById(int id) {
+  public boolean existsById(long id) {
     String sql = "SELECT count(*) FROM card WHERE id=?";
     int count = jdbcTemplate.queryForObject(sql, Integer.class, id);
     return count != 0;
   }
 
-  public List<Card> query(Integer id, Integer studentId) {
+  public List<Card> query(Long id, Long studentId) {
     String sql =
         "SELECT c.id, c.student_id FROM card c"
             + " WHERE 1=1 "

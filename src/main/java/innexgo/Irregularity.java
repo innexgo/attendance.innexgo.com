@@ -1,10 +1,10 @@
 package innexgo;
 
 public class Irregularity {
-  public int id;
-  int studentId;
-  int courseId;
-  int periodId;
+  public long id;
+  long studentId;
+  long courseId;
+  long periodId;
   public String type;
   public long time;
   public long timeMissing;

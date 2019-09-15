@@ -9,9 +9,9 @@ public class ScheduleRowMapper implements RowMapper<Schedule> {
   @Override
   public Schedule mapRow(ResultSet row, int rowNum) throws SQLException {
     Schedule schedule = new Schedule();
-    schedule.id = row.getInt("id");
-    schedule.studentId = row.getInt("student_id");
-    schedule.courseId = row.getInt("course_id");
+    schedule.id = row.getLong("id");
+    schedule.studentId = row.getLong("student_id");
+    schedule.courseId = row.getLong("course_id");
     return schedule;
   }
 }

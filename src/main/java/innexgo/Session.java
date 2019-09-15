@@ -1,11 +1,11 @@
 package innexgo;
 
 public class Session {
-  public int id;
-  int studentId;
-  int courseId;
-  int inEncounterId;
-  int outEncounterId;
+  public long id;
+  long studentId;
+  long courseId;
+  long inEncounterId;
+  long outEncounterId;
   public boolean hasOut;
   public boolean complete;
 

@@ -1,7 +1,7 @@
 package innexgo;
 
 public class Period {
-  public int id;
+  public long id;
   public long initialTime;
   public long startTime;
   public long endTime;
