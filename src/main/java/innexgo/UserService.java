@@ -15,7 +15,7 @@ public class UserService {
   public static final int ADMINISTRATOR = 0;
   public static final int TEACHER = 1;
 
-  public User getById(int id) {
+  public User getById(long id) {
     String sql = "SELECT id, name, email, password_hash, ring, prefstring FROM user WHERE id=?";
     RowMapper<User> rowMapper = new UserRowMapper();
     User user = jdbcTemplate.queryForObject(sql, rowMapper, id);
@@ -52,10 +52,10 @@ public class UserService {
     // Fetch user id
     sql =
         "SELECT id FROM user WHERE name=? AND email=? AND password_hash=? AND ring=? AND prefstring=?";
-    int id =
+    long id =
         jdbcTemplate.queryForObject(
             sql,
-            Integer.class,
+            Long.class,
             user.name,
             user.email,
             user.passwordHash,
@@ -80,14 +80,14 @@ public class UserService {
         user.id);
   }
 
-  public User delete(int id) {
+  public User deleteById(long id) {
     User user = getById(id);
     String sql = "DELETE FROM user WHERE id=?";
     jdbcTemplate.update(sql, id);
     return user;
   }
 
-  public boolean existsById(int id) {
+  public boolean existsById(long id) {
     String sql = "SELECT count(*) FROM user WHERE id=?";
     int count = jdbcTemplate.queryForObject(sql, Integer.class, id);
     return count != 0;
@@ -99,7 +99,7 @@ public class UserService {
     return count != 0;
   }
 
-  public List<User> query(Integer id, String name, String email, Integer ring) {
+  public List<User> query(Long id, String name, String email, Integer ring) {
     String sql =
         "SELECT u.id, u.name, u.password_hash, u.email, u.ring, u.prefstring FROM user u"
             + " WHERE 1=1 "

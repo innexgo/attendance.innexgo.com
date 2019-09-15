@@ -13,7 +13,7 @@ public class LocationService {
 
   @Autowired private JdbcTemplate jdbcTemplate;
 
-  public Location getById(int id) {
+  public Location getById(long id) {
     String sql = "SELECT id, name, tags FROM location WHERE id=?";
     RowMapper<Location> rowMapper = new LocationRowMapper();
     Location location = jdbcTemplate.queryForObject(sql, rowMapper, id);
@@ -33,7 +33,7 @@ public class LocationService {
 
     // Fetch location id
     sql = "SELECT id FROM location WHERE name=? AND tags=?";
-    int id = jdbcTemplate.queryForObject(sql, Integer.class, location.name, location.tags);
+    long id = jdbcTemplate.queryForObject(sql, Long.class, location.name, location.tags);
 
     // Set location id
     location.id = id;
@@ -44,20 +44,20 @@ public class LocationService {
     jdbcTemplate.update(sql, location.id, location.name, location.tags, location.id);
   }
 
-  public Location delete(int id) {
+  public Location deleteById(long id) {
     Location location = getById(id);
     String sql = "DELETE FROM location WHERE id=?";
     jdbcTemplate.update(sql, id);
     return location;
   }
 
-  public boolean existsById(int id) {
+  public boolean existsById(long id) {
     String sql = "SELECT count(*) FROM location WHERE id=?";
     int count = jdbcTemplate.queryForObject(sql, Integer.class, id);
     return count != 0;
   }
 
-  public List<Location> query(Integer id, String name, String tags) {
+  public List<Location> query(Long id, String name, String tags) {
     String sql =
         "SELECT l.id, l.name, l.tags FROM location l"
             + " WHERE 1=1 "

@@ -8,10 +8,10 @@ public class EncounterRowMapper implements RowMapper<Encounter> {
   @Override
   public Encounter mapRow(ResultSet row, int rowNum) throws SQLException {
     Encounter encounter = new Encounter();
-    encounter.id = row.getInt("id");
+    encounter.id = row.getLong("id");
     encounter.time = row.getLong("time");
-    encounter.locationId = row.getInt("location_id");
-    encounter.studentId = row.getInt("student_id");
+    encounter.locationId = row.getLong("location_id");
+    encounter.studentId = row.getLong("student_id");
     return encounter;
   }
 }

@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class IrregularityService {
   @Autowired private JdbcTemplate jdbcTemplate;
 
-  public Irregularity getById(int id) {
+  public Irregularity getById(long id) {
     String sql =
         "SELECT id, student_id, course_id, period_id, type, time, time_missing FROM irregularity WHERE id=?";
     RowMapper<Irregularity> rowMapper = new IrregularityRowMapper();
@@ -44,10 +44,10 @@ public class IrregularityService {
     // Fetch irregularity id
     sql =
         "SELECT id FROM irregularity WHERE student_id=? AND course_id=? AND period_id=? AND type=? AND time=? AND time_missing=?";
-    int id =
+    long id =
         jdbcTemplate.queryForObject(
             sql,
-            Integer.class,
+            Long.class,
             irregularity.studentId,
             irregularity.courseId,
             irregularity.periodId,
@@ -74,25 +74,25 @@ public class IrregularityService {
         irregularity.id);
   }
 
-  public Irregularity delete(int id) {
+  public Irregularity deleteById(long id) {
     Irregularity irregularity = getById(id);
     String sql = "DELETE FROM irregularity WHERE id=?";
     jdbcTemplate.update(sql, id);
     return irregularity;
   }
 
-  public boolean existsById(int id) {
+  public boolean existsById(long id) {
     String sql = "SELECT count(*) FROM irregularity WHERE id=?";
     int count = jdbcTemplate.queryForObject(sql, Integer.class, id);
     return count != 0;
   }
 
   public List<Irregularity> query(
-      Integer id,
-      Integer studentId,
-      Integer courseId,
-      Integer periodId,
-      Integer teacherId,
+      Long id,
+      Long studentId,
+      Long courseId,
+      Long periodId,
+      Long teacherId,
       String type,
       Long time,
       Long timeMissing) {

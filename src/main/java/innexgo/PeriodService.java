@@ -13,7 +13,7 @@ public class PeriodService {
 
   @Autowired private JdbcTemplate jdbcTemplate;
 
-  public Period getById(int id) {
+  public Period getById(long id) {
     String sql = "SELECT id, initial_time, start_time, end_time, period FROM period WHERE id=?";
     RowMapper<Period> rowMapper = new PeriodRowMapper();
     Period period = jdbcTemplate.queryForObject(sql, rowMapper, id);
@@ -35,10 +35,10 @@ public class PeriodService {
 
     // Fetch period id
     sql = "SELECT id FROM period WHERE initial_time=? AND start_time=? AND end_time=? AND period=?";
-    int id =
+    long id =
         jdbcTemplate.queryForObject(
             sql,
-            Integer.class,
+            Long.class,
             period.initialTime,
             period.startTime,
             period.endTime,
@@ -61,7 +61,7 @@ public class PeriodService {
         period.id);
   }
 
-  public Period delete(int id) {
+  public Period deleteById(long id) {
     Period period = getById(id);
     String sql = "DELETE FROM period WHERE id=?";
     jdbcTemplate.update(sql, id);
@@ -74,14 +74,14 @@ public class PeriodService {
     return;
   }
 
-  public boolean existsById(int id) {
+  public boolean existsById(long id) {
     String sql = "SELECT count(*) FROM period WHERE id=?";
     int count = jdbcTemplate.queryForObject(sql, Integer.class, id);
     return count != 0;
   }
 
   public List<Period> query(
-      Integer id,
+      Long id,
       Long time,
       Long initialTimeBegin,
       Long initialTimeEnd,
@@ -90,8 +90,8 @@ public class PeriodService {
       Long endTimeBegin,
       Long endTimeEnd,
       Integer period,
-      Integer courseId, // all periods that have this course
-      Integer teacherId // all periods where this teacher teaches a coruse
+      Long courseId, // all periods that have this course
+      Long teacherId // all periods where this teacher teaches a coruse
       ) {
 
     String sql =

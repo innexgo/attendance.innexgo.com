@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class CourseService {
   @Autowired private JdbcTemplate jdbcTemplate;
 
-  public Course getById(int id) {
+  public Course getById(long id) {
     String sql = "SELECT id, teacher_id, location_id, period, subject, year FROM course WHERE id=?";
     RowMapper<Course> rowMapper = new CourseRowMapper();
     Course course = jdbcTemplate.queryForObject(sql, rowMapper, id);
@@ -35,9 +35,9 @@ public class CourseService {
     // Fetch course id
     sql =
         "SELECT id FROM course WHERE teacher_id=? AND location_id=? AND period=? AND subject=? AND year=?";
-    int id =
+    long id =
         jdbcTemplate.queryForObject(
-            sql, Integer.class, course.teacherId, course.locationId, course.period, course.subject);
+            sql, Long.class, course.teacherId, course.locationId, course.period, course.subject);
 
     // Set course id
     course.id = id;
@@ -57,24 +57,24 @@ public class CourseService {
         course.id);
   }
 
-  public Course delete(int id) {
+  public Course deleteById(long id) {
     Course course = getById(id);
     String sql = "DELETE FROM course WHERE id=?";
     jdbcTemplate.update(sql, id);
     return course;
   }
 
-  public boolean existsById(int id) {
+  public boolean existsById(long id) {
     String sql = "SELECT count(*) FROM course WHERE id=?";
     int count = jdbcTemplate.queryForObject(sql, Integer.class, id);
     return count != 0;
   }
 
   public List<Course> query(
-      Integer id,
-      Integer teacherId,
-      Integer locationId,
-      Integer studentId,
+      Long id,
+      Long teacherId,
+      Long locationId,
+      Long studentId,
       Integer period,
       String subject,
       Long time,

@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class ApiKeyService {
   @Autowired private JdbcTemplate jdbcTemplate;
 
-  public ApiKey getById(int id) {
+  public ApiKey getById(long id) {
     String sql =
         "SELECT id, user_id, creation_time, expiration_time, key_hash FROM api_key WHERE id=?";
     RowMapper<ApiKey> rowMapper = new ApiKeyRowMapper();
@@ -44,10 +44,10 @@ public class ApiKeyService {
     // Fetch apiKey id
     sql =
         "SELECT id FROM api_key WHERE user_id=? AND creation_time=? AND expiration_time=? AND key_hash=?";
-    int id =
+    long id =
         jdbcTemplate.queryForObject(
             sql,
-            Integer.class,
+            Long.class,
             apiKey.userId,
             apiKey.creationTime,
             apiKey.expirationTime,
@@ -64,14 +64,14 @@ public class ApiKeyService {
         sql, apiKey.id, apiKey.userId, apiKey.creationTime, apiKey.expirationTime, apiKey.keyHash);
   }
 
-  public ApiKey delete(int id) {
+  public ApiKey deleteById(long id) {
     ApiKey apiKey = getById(id);
     String sql = "DELETE FROM api_key WHERE id=?";
     jdbcTemplate.update(sql, id);
     return apiKey;
   }
 
-  public boolean existsById(int id) {
+  public boolean existsById(long id) {
     String sql = "SELECT count(*) FROM api_key WHERE id=?";
     int count = jdbcTemplate.queryForObject(sql, Integer.class, id);
     if (count == 0) {
@@ -83,12 +83,12 @@ public class ApiKeyService {
 
   public boolean existsByKeyHash(String keyHash) {
     String sql = "SELECT count(*) FROM api_key WHERE key_hash=?";
-    int count = jdbcTemplate.queryForObject(sql, Integer.class, keyHash);
+    long count = jdbcTemplate.queryForObject(sql, Long.class, keyHash);
     return count != 0;
   }
 
   public List<ApiKey> query(
-      Integer id, Integer userId, Long minCreationTime, Long maxCreationTime, String keyHash) {
+      Long id, Long userId, Long minCreationTime, Long maxCreationTime, String keyHash) {
     String sql =
         "SELECT id, user_id, creation_time, expiration_time, key_hash FROM api_key WHERE 1=1"
             + (id == null ? "" : " AND id=" + id)

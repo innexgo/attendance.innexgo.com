@@ -13,7 +13,7 @@ public class SessionService {
 
   @Autowired private JdbcTemplate jdbcTemplate;
 
-  public Session getById(int id) {
+  public Session getById(long id) {
     String sql =
         "SELECT id, student_id, in_encounter_id, out_encounter_id, course_id, has_out, complete FROM session WHERE id=?";
     RowMapper<Session> rowMapper = new SessionRowMapper();
@@ -45,10 +45,10 @@ public class SessionService {
     // Fetch session id
     sql =
         "SELECT id FROM session WHERE student_id=? AND in_encounter_id=? AND course_id=? AND complete=?";
-    int id =
+    long id =
         jdbcTemplate.queryForObject(
             sql,
-            Integer.class,
+            Long.class,
             session.studentId,
             session.inEncounterId,
             session.courseId,
@@ -73,29 +73,29 @@ public class SessionService {
         session.id);
   }
 
-  public Session delete(int id) {
+  public Session delete(long id) {
     Session session = getById(id);
     String sql = "DELETE FROM session WHERE id=?";
     jdbcTemplate.update(sql, id);
     return session;
   }
 
-  public boolean existsById(int id) {
+  public boolean existsById(long id) {
     String sql = "SELECT count(*) FROM session WHERE id=?";
     int count = jdbcTemplate.queryForObject(sql, Integer.class, id);
     return count != 0;
   }
 
   public List<Session> query(
-      Integer id,
-      Integer inEncounterId,
-      Integer outEncounterId,
-      Integer anyEncounterId,
-      Integer courseId,
+      Long id,
+      Long inEncounterId,
+      Long outEncounterId,
+      Long anyEncounterId,
+      Long courseId,
       Boolean complete,
       Boolean hasOut,
-      Integer locationId,
-      Integer studentId,
+      Long locationId,
+      Long studentId,
       Long time,
       Long inTimeBegin,
       Long inTimeEnd,

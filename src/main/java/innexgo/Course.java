@@ -1,9 +1,9 @@
 package innexgo;
 
 public class Course {
-  public int id;
-  int teacherId;
-  int locationId;
+  public long id;
+  long teacherId;
+  long locationId;
   public int period;
   public String subject;
   public int year;

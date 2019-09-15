@@ -225,7 +225,7 @@ public class ApiController {
 
   @RequestMapping("apiKey/new/")
   public ResponseEntity<?> newApiKey(
-      @RequestParam(value = "userId", defaultValue = "-1") Integer userId,
+      @RequestParam(value = "userId", defaultValue = "-1") Long userId,
       @RequestParam(value = "email", defaultValue = "") String email,
       @RequestParam("expirationTime") Long expirationTime,
       @RequestParam("password") String password) {
@@ -261,8 +261,8 @@ public class ApiController {
 
   @RequestMapping("card/new/")
   public ResponseEntity<?> newCard(
-      @RequestParam("cardId") Integer cardId,
-      @RequestParam("studentId") Integer studentId,
+      @RequestParam("cardId") Long cardId,
+      @RequestParam("studentId") Long studentId,
       @RequestParam("apiKey") String apiKey) {
     if(isTrusted(apiKey)) {
       if (studentService.existsById(studentId)
@@ -282,8 +282,8 @@ public class ApiController {
 
   @RequestMapping("course/new/")
   public ResponseEntity<?> newCourse(
-      @RequestParam("userId") Integer teacherId,
-      @RequestParam("locationId") Integer locationId,
+      @RequestParam("userId") Long teacherId,
+      @RequestParam("locationId") Long locationId,
       @RequestParam("period") Integer period,
       @RequestParam("subject") String subject,
       @RequestParam("apiKey") String apiKey) {
@@ -310,13 +310,12 @@ public class ApiController {
 
   @RequestMapping("encounter/new/")
   public ResponseEntity<?> newEncounter(
-      @RequestParam(value = "studentId", defaultValue = "-1") Integer studentId,
-      @RequestParam(value = "cardId", defaultValue = "-1") Integer cardId,
-      @RequestParam("locationId") Integer locationId,
-      @RequestParam(value = "courseId", defaultValue = "-1") Integer courseId,
+      @RequestParam(value = "studentId", defaultValue = "-1") Long studentId,
+      @RequestParam(value = "cardId", defaultValue = "-1") Long cardId,
+      @RequestParam("locationId") Long locationId,
+      @RequestParam(value = "courseId", defaultValue = "-1") Long courseId,
       @RequestParam("apiKey") String apiKey) {
     if (isTrusted(apiKey)) {
-
       Student student;
       if (cardService.existsById(cardId)) {
         student = studentService.getById(cardService.getById(cardId).studentId);
@@ -444,7 +443,7 @@ public class ApiController {
                   irregularityService.update(irregularity);
                 } else {
                   // if they're present before the startTime
-                  irregularityService.delete(irregularity.id);
+                  irregularityService.deleteById(irregularity.id);
                 }
               } else if (irregularity.type.equals("left_early")) {
                 // if there is a leftEarly, convert it to a leftTemporarily
@@ -507,8 +506,8 @@ public class ApiController {
 
   @RequestMapping("schedule/new/")
   public ResponseEntity<?> newSchedule(
-      @RequestParam("studentId") Integer studentId,
-      @RequestParam("courseId") Integer courseId,
+      @RequestParam("studentId") Long studentId,
+      @RequestParam("courseId") Long courseId,
       @RequestParam("apiKey") String apiKey) {
     if (isTrusted(apiKey)) {
       if (studentService.existsById(studentId)
@@ -532,7 +531,7 @@ public class ApiController {
 
   @RequestMapping("student/new/")
   public ResponseEntity<?> newStudent(
-      @RequestParam("studentId") Integer id,
+      @RequestParam("studentId") Long id,
       @RequestParam("graduatingYear") Integer graduatingYear,
       @RequestParam("name") String name,
       @RequestParam(value = "tags", defaultValue = "") String tags,
@@ -591,8 +590,8 @@ public class ApiController {
       // if they are setting the graduating year, it must be a valid integer
       if(studentService.existsById(parseInteger(allRequestParam.getOrDefault("studentId", "-1")))
           && !Utils.isEmpty(allRequestParam.getOrDefault("studentName", "default"))
-          && parseInteger(allRequestParam.getOrDefault("graduatingYear", "0")) != null) {
-        Student student = studentService.getById(parseInteger(allRequestParam.get("studentId")));
+          && parseLong(allRequestParam.getOrDefault("graduatingYear", "0")) != null) {
+        Student student = studentService.getById(parseLong(allRequestParam.get("studentId")));
 
         // if it is specified, set the name
         if (allRequestParam.containsKey("studentName")) {
@@ -625,7 +624,7 @@ public class ApiController {
 
     if (isAdministrator(allRequestParam.getOrDefault("apiKey", "invalid"))) {
       // make sure user exists
-      if(userService.existsById(parseInteger(allRequestParam.getOrDefault("userId", "-1")))
+      if(userService.existsById(parseLong(allRequestParam.getOrDefault("userId", "-1")))
           // if they are trying to set a name, it cannot be blank
           && !Utils.isEmpty(allRequestParam.getOrDefault("userName", "default"))
           // if they are trying to set a password, it cannot be blank
@@ -636,7 +635,7 @@ public class ApiController {
           && (allRequestParam.containsKey("email") ? !userService.existsByEmail("email") : true)
           // if they are trying to set the ring, it must be a valid integer
           && parseInteger(allRequestParam.getOrDefault("ring", "0")) != null) {
-        User user = userService.getById(parseInteger(allRequestParam.get("userId")));
+        User user = userService.getById(parseLong(allRequestParam.get("userId")));
 
         // if it is specified, set the name
         if (allRequestParam.containsKey("userName")) {
@@ -670,7 +669,7 @@ public class ApiController {
   // This method updates the password for same user only
   @RequestMapping("user/updatePassword/")
   public ResponseEntity<?> updatePassword(
-      @RequestParam("userId") Integer userId,
+      @RequestParam("userId") Long userId,
       @RequestParam("oldPassword") String oldPassword,
       @RequestParam("newPassword") String newPassword) {
     if (!Utils.isEmpty(oldPassword)
@@ -693,7 +692,7 @@ public class ApiController {
   // This method updates the prefstring for same user only
   @RequestMapping("user/updatePrefs/")
   public ResponseEntity<?> updatePrefs(
-      @RequestParam("userId") Integer userId,
+      @RequestParam("userId") Long userId,
       @RequestParam("prefstring") String prefstring,
       @RequestParam("apiKey") String apiKey) {
     if (!Utils.isEmpty(apiKey) && userService.existsById(userId)) {
@@ -710,10 +709,10 @@ public class ApiController {
 
   @RequestMapping("apiKey/delete/")
   public ResponseEntity<?> deleteApiKey(
-      @RequestParam("apiKeyId") Integer apiKeyId, @RequestParam("apiKey") String apiKey) {
+      @RequestParam("apiKeyId") Long apiKeyId, @RequestParam("apiKey") String apiKey) {
     if (isAdministrator(apiKey)) {
       if (apiKeyService.existsById(apiKeyId)) {
-        return new ResponseEntity<>(fillApiKey(apiKeyService.delete(apiKeyId)), HttpStatus.OK);
+        return new ResponseEntity<>(fillApiKey(apiKeyService.deleteById(apiKeyId)), HttpStatus.OK);
       } else {
         return BAD_REQUEST;
       }
@@ -724,7 +723,7 @@ public class ApiController {
 
   @RequestMapping("card/delete/")
   public ResponseEntity<?> deleteCard(
-      @RequestParam("cardId") Integer cardId, @RequestParam("apiKey") String apiKey) {
+      @RequestParam("cardId") Long cardId, @RequestParam("apiKey") String apiKey) {
     if (isAdministrator(apiKey)) {
       if (cardService.existsById(cardId)) {
         return new ResponseEntity<>(fillCard(cardService.deleteById(cardId)), HttpStatus.OK);
@@ -738,10 +737,10 @@ public class ApiController {
 
   @RequestMapping("course/delete/")
   public ResponseEntity<?> deleteCourse(
-      @RequestParam("courseId") Integer courseId, @RequestParam("apiKey") String apiKey) {
+      @RequestParam("courseId") Long courseId, @RequestParam("apiKey") String apiKey) {
     if (isAdministrator(apiKey)) {
       if (courseService.existsById(courseId)) {
-        return new ResponseEntity<>(fillCourse(courseService.delete(courseId)), HttpStatus.OK);
+        return new ResponseEntity<>(fillCourse(courseService.deleteById(courseId)), HttpStatus.OK);
       } else {
         return BAD_REQUEST;
       }
@@ -752,12 +751,12 @@ public class ApiController {
 
   @RequestMapping("irregularity/delete/")
   public ResponseEntity<?> deleteIrregularity(
-      @RequestParam("irregularityId") Integer irregularityId,
+      @RequestParam("irregularityId") Long irregularityId,
       @RequestParam("apiKey") String apiKey) {
     if (isAdministrator(apiKey)) {
       if (irregularityService.existsById(irregularityId)) {
         return new ResponseEntity<>(
-            fillIrregularity(irregularityService.delete(irregularityId)), HttpStatus.OK);
+            fillIrregularity(irregularityService.deleteById(irregularityId)), HttpStatus.OK);
       } else {
         return BAD_REQUEST;
       }
@@ -768,11 +767,11 @@ public class ApiController {
 
   @RequestMapping("location/delete/")
   public ResponseEntity<?> deleteLocation(
-      @RequestParam("locationId") Integer locationId, @RequestParam("apiKey") String apiKey) {
+      @RequestParam("locationId") Long locationId, @RequestParam("apiKey") String apiKey) {
     if (isAdministrator(apiKey)) {
       if (locationService.existsById(locationId)) {
         return new ResponseEntity<>(
-            fillLocation(locationService.delete(locationId)), HttpStatus.OK);
+            fillLocation(locationService.deleteById(locationId)), HttpStatus.OK);
       } else {
         return BAD_REQUEST;
       }
@@ -783,10 +782,10 @@ public class ApiController {
 
   @RequestMapping("period/delete/")
   public ResponseEntity<?> deletePeriod(
-      @RequestParam("periodId") Integer periodId, @RequestParam("apiKey") String apiKey) {
+      @RequestParam("periodId") Long periodId, @RequestParam("apiKey") String apiKey) {
     if (isAdministrator(apiKey)) {
       if (periodService.existsById(periodId)) {
-        return new ResponseEntity<>(fillPeriod(periodService.delete(periodId)), HttpStatus.OK);
+        return new ResponseEntity<>(fillPeriod(periodService.deleteById(periodId)), HttpStatus.OK);
       } else {
         return BAD_REQUEST;
       }
@@ -815,7 +814,7 @@ public class ApiController {
       @RequestParam("studentId") Integer studentId, @RequestParam("apiKey") String apiKey) {
     if (isAdministrator(apiKey)) {
       if (studentService.existsById(studentId)) {
-        return new ResponseEntity<>(fillStudent(studentService.delete(studentId)), HttpStatus.OK);
+        return new ResponseEntity<>(fillStudent(studentService.deleteById(studentId)), HttpStatus.OK);
       } else {
         return BAD_REQUEST;
       }
@@ -829,7 +828,7 @@ public class ApiController {
       @RequestParam("userId") Integer userId, @RequestParam("apiKey") String apiKey) {
     if (isAdministrator(apiKey)) {
       if (userService.existsById(userId)) {
-        return new ResponseEntity<>(fillUser(userService.delete(userId)), HttpStatus.OK);
+        return new ResponseEntity<>(fillUser(userService.deleteById(userId)), HttpStatus.OK);
       } else {
         return BAD_REQUEST;
       }
@@ -844,8 +843,8 @@ public class ApiController {
       List<ApiKey> list =
           apiKeyService
               .query(
-                  parseInteger(allRequestParam.get("apiKeyId")),
-                  parseInteger(allRequestParam.get("userId")),
+                  parseLong(allRequestParam.get("apiKeyId")),
+                  parseLong(allRequestParam.get("userId")),
                   parseLong(allRequestParam.get("minCreationTime")),
                   parseLong(allRequestParam.get("maxCreationTime")),
                   allRequestParam.containsKey("apiKeyData")
@@ -866,8 +865,8 @@ public class ApiController {
       List<Card> list =
           cardService
               .query(
-                  parseInteger(allRequestParam.get("cardId")),
-                  parseInteger(allRequestParam.get("studentId")))
+                  parseLong(allRequestParam.get("cardId")),
+                  parseLong(allRequestParam.get("studentId")))
               .stream()
               .map(x -> fillCard(x))
               .collect(Collectors.toList());
@@ -885,10 +884,10 @@ public class ApiController {
       List<Course> els =
           courseService
               .query(
-                  parseInteger(allRequestParam.get("courseId")),
-                  parseInteger(allRequestParam.get("teacherId")),
-                  parseInteger(allRequestParam.get("locationId")),
-                  parseInteger(allRequestParam.get("studentId")),
+                  parseLong(allRequestParam.get("courseId")),
+                  parseLong(allRequestParam.get("teacherId")),
+                  parseLong(allRequestParam.get("locationId")),
+                  parseLong(allRequestParam.get("studentId")),
                   parseInteger(allRequestParam.get("period")),
                   allRequestParam.get("subject"),
                   parseLong(allRequestParam.get("time")),
@@ -912,9 +911,9 @@ public class ApiController {
           encounterService
               .query(
                   parseInteger(allRequestParam.get("count")),
-                  parseInteger(allRequestParam.get("encounterId")),
-                  parseInteger(allRequestParam.get("studentId")),
-                  parseInteger(allRequestParam.get("locationId")),
+                  parseLong(allRequestParam.get("encounterId")),
+                  parseLong(allRequestParam.get("studentId")),
+                  parseLong(allRequestParam.get("locationId")),
                   parseLong(allRequestParam.get("minTime")),
                   parseLong(allRequestParam.get("maxTime")),
                   allRequestParam.get("studentName"))
@@ -934,11 +933,11 @@ public class ApiController {
       List<Irregularity> els =
           irregularityService
               .query(
-                  parseInteger(allRequestParam.get("irregularityId")),
-                  parseInteger(allRequestParam.get("studentId")),
-                  parseInteger(allRequestParam.get("courseId")),
-                  parseInteger(allRequestParam.get("periodId")),
-                  parseInteger(allRequestParam.get("teacherId")),
+                  parseLong(allRequestParam.get("irregularityId")),
+                  parseLong(allRequestParam.get("studentId")),
+                  parseLong(allRequestParam.get("courseId")),
+                  parseLong(allRequestParam.get("periodId")),
+                  parseLong(allRequestParam.get("teacherId")),
                   allRequestParam.get("type"),
                   parseLong(allRequestParam.get("time")),
                   parseLong(allRequestParam.get("timeMissing")))
@@ -957,7 +956,7 @@ public class ApiController {
       List<Location> list =
           locationService
               .query(
-                  parseInteger(allRequestParam.get("locationId")),
+                  parseLong(allRequestParam.get("locationId")),
                   allRequestParam.get("name"),
                   allRequestParam.get("tags"))
               .stream()
@@ -976,7 +975,7 @@ public class ApiController {
       List<Period> els =
           periodService
               .query(
-                  parseInteger(allRequestParam.get("periodId")),
+                  parseLong(allRequestParam.get("periodId")),
                   parseLong(allRequestParam.get("time")),
                   parseLong(allRequestParam.get("initialTimeBegin")),
                   parseLong(allRequestParam.get("initialTimeEnd")),
@@ -985,8 +984,8 @@ public class ApiController {
                   parseLong(allRequestParam.get("endTimeBegin")),
                   parseLong(allRequestParam.get("endTimeEnd")),
                   parseInteger(allRequestParam.get("period")),
-                  parseInteger(allRequestParam.get("courseId")),
-                  parseInteger(allRequestParam.get("teacherId")))
+                  parseLong(allRequestParam.get("courseId")),
+                  parseLong(allRequestParam.get("teacherId")))
               .stream()
               .map(x -> fillPeriod(x))
               .collect(Collectors.toList());
@@ -1002,11 +1001,11 @@ public class ApiController {
       List<Schedule> list =
           scheduleService
               .query(
-                  parseInteger(allRequestParam.get("scheduleId")),
-                  parseInteger(allRequestParam.get("studentId")),
-                  parseInteger(allRequestParam.get("courseId")),
-                  parseInteger(allRequestParam.get("teacherId")),
-                  parseInteger(allRequestParam.get("locationId")),
+                  parseLong(allRequestParam.get("scheduleId")),
+                  parseLong(allRequestParam.get("studentId")),
+                  parseLong(allRequestParam.get("courseId")),
+                  parseLong(allRequestParam.get("teacherId")),
+                  parseLong(allRequestParam.get("locationId")),
                   parseInteger(allRequestParam.get("period")))
               .stream()
               .map(x -> fillSchedule(x))
@@ -1023,15 +1022,15 @@ public class ApiController {
       List<Session> list =
           sessionService
               .query(
-                  parseInteger(allRequestParam.get("id")),
-                  parseInteger(allRequestParam.get("inEncounterId")),
-                  parseInteger(allRequestParam.get("outEncounterId")),
-                  parseInteger(allRequestParam.get("anyEncounterId")),
-                  parseInteger(allRequestParam.get("courseId")),
+                  parseLong(allRequestParam.get("id")),
+                  parseLong(allRequestParam.get("inEncounterId")),
+                  parseLong(allRequestParam.get("outEncounterId")),
+                  parseLong(allRequestParam.get("anyEncounterId")),
+                  parseLong(allRequestParam.get("courseId")),
                   parseBoolean(allRequestParam.get("complete")),
                   parseBoolean(allRequestParam.get("hasOut")),
-                  parseInteger(allRequestParam.get("locationId")),
-                  parseInteger(allRequestParam.get("studentId")),
+                  parseLong(allRequestParam.get("locationId")),
+                  parseLong(allRequestParam.get("studentId")),
                   parseLong(allRequestParam.get("time")),
                   parseLong(allRequestParam.get("inTimeBegin")),
                   parseLong(allRequestParam.get("inTimeEnd")),
@@ -1052,12 +1051,12 @@ public class ApiController {
       List<Student> list =
           studentService
               .query(
-                  parseInteger(allRequestParam.get("studentId")),
-                  parseInteger(allRequestParam.get("cardId")),
+                  parseLong(allRequestParam.get("studentId")),
+                  parseLong(allRequestParam.get("cardId")),
+                  parseLong(allRequestParam.get("courseId")),
                   parseInteger(allRequestParam.get("graduatingYear")),
                   allRequestParam.get("name"),
-                  allRequestParam.get("tags"),
-                  parseInteger(allRequestParam.get("courseId")))
+                  allRequestParam.get("tags"))
               .stream()
               .map(x -> fillStudent(x))
               .collect(Collectors.toList());
@@ -1073,7 +1072,7 @@ public class ApiController {
       List<User> list =
           userService
               .query(
-                  parseInteger(allRequestParam.get("userId")),
+                  parseLong(allRequestParam.get("userId")),
                   allRequestParam.get("name"),
                   allRequestParam.get("email"),
                   parseInteger(allRequestParam.get("ring")))
@@ -1140,7 +1139,7 @@ public class ApiController {
                   new InputStreamReader(new ByteArrayInputStream(file.getBytes()), "UTF8"));
           int currentGraduatingYear = Utils.getCurrentGraduatingYear();
           for (CSVRecord record : parser) {
-            Integer studentId = parseInteger(record.get(2));
+            Long studentId = parseLong(record.get(2));
             if (studentId != null && studentService.existsById(studentId)) {
               if (scheduleService
                       .query(
@@ -1183,7 +1182,7 @@ public class ApiController {
 
     long minute = 1*60*1000;
     long initialTime = System.currentTimeMillis();
-    for(int i = 2; i < 7; i++) {
+    for(int i = 3; i < 7; i++) {
       Period period = new Period();
       period.period = i;
       period.initialTime = initialTime;

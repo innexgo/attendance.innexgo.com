@@ -1,8 +1,8 @@
 package innexgo;
 
 public class Card {
-  public int id;
-  int studentId;
+  public long id;
+  long studentId;
 
   // for jackson
   Student student;

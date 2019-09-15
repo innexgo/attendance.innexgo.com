@@ -1,10 +1,10 @@
 package innexgo;
 
 public class Encounter {
-  public int id;
+  public long id;
   public long time;
-  int locationId;
-  int studentId;
+  long locationId;
+  long studentId;
 
   // Initialized by jackson during serialization
   public Student student;
