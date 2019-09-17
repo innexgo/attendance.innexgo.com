@@ -462,26 +462,26 @@ public class ApiController {
         encounter.time = System.currentTimeMillis();
         encounterService.add(encounter);
 
+        List<Period> plist =
+            periodService.query(
+                null, // id,
+                System.currentTimeMillis(), // time,
+                null, // initialTimeBegin,
+                null, // initialTimeEnd,
+                null, // startTimeBegin,
+                null, // startTimeEnd,
+                null, // endTimeBegin,
+                null, // endTimeEnd,
+                null, // period,
+                null, // courseId,
+                null // teacherId
+                );
+
+        // get the current period if it exists
+        Period currentPeriod = plist.size() == 0 ? null : plist.get(0);
+
         // check for sessions + irregularities
-        if (courseId != -1) {
-          List<Period> plist =
-              periodService.query(
-                  null, // id,
-                  System.currentTimeMillis(), // time,
-                  null, // initialTimeBegin,
-                  null, // initialTimeEnd,
-                  null, // startTimeBegin,
-                  null, // startTimeEnd,
-                  null, // endTimeBegin,
-                  null, // endTimeEnd,
-                  null, // period,
-                  null, // courseId,
-                  null // teacherId
-                  );
-
-          // get the current period if it exists
-          Period currentPeriod = plist.size() == 0 ? null : plist.get(0);
-
+        if (currentPeriod != null && courseId != -1) {
           boolean newLogin = false;
 
           // search for open session with this student at the course
