@@ -1314,7 +1314,6 @@ public class ApiController {
   /* TESTING */
   @RequestMapping("populateTestingPeriods")
   public ResponseEntity<?> populateTestingPeriods() {
-    periodService.deleteAll();
     LocalDate today =
         ZonedDateTime.now(Utils.TIMEZONE).toLocalDate();
 
