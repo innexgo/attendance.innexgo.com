@@ -109,7 +109,7 @@ public class ApiController {
   /**
    * Fills in jackson objects(Teacher and Location) in Course
    * @param   course - Course object
-   * @return  Course object with filled jackson objects 
+   * @return  Course object with filled jackson objects
    */
   Course fillCourse(Course course) {
     course.teacher = fillUser(userService.getById(course.teacherId));
@@ -142,7 +142,7 @@ public class ApiController {
 
   /**
    * Fills in jackson objects (none at the moment) for Location
-   * @param   location - Location object 
+   * @param   location - Location object
    * @return  Location object with filled jackson objects
    */
   Location fillLocation(Location location) {
@@ -171,7 +171,7 @@ public class ApiController {
 
   /**
    * Fills in jackson objects (Student, Course, inEncounter, and outEncounter) for Session
-   * @param   session - Session object 
+   * @param   session - Session object
    * @return  Session object with filled jackson objects
    */
   Session fillSession(Session session) {
@@ -248,7 +248,7 @@ public class ApiController {
 
   /**
    * For all the courses at the current time, create irregularities
-   *     If the student has not signed in yet before or during the period, 
+   *     If the student has not signed in yet before or during the period,
    *        generate an absent irregularity
    */
   @Scheduled(fixedDelay = 5000)
