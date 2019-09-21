@@ -26,7 +26,6 @@ function recentActivity() {
 				var endTime = Document.getElementById("endTime").value;
 				var count = Document.getElementById("count").value;
 								
-				alert("Hello");
 
   request(url,
     function(xhr){
