@@ -1,5 +1,40 @@
 "use strict"
 
+var studentIrregularities = null;
+
+function loadStudentIrregularities() {
+  var apiKey = Cookies.getJSON('apiKey');
+
+  if(apiKey == null) {
+    console.log('not signed in');
+    return;
+  }
+
+  var searchParams = new URLSearchParams(window.location.search);
+
+  if(!searchParams.has('studentId')) {
+    console.log('page not loaded with right params');
+    return;
+  }
+
+  var studentId = searchParams.get('studentId');
+
+  request(thisUrl() +  '/student/' +
+    '?studentId='+studentId +
+    '&apiKey='apiKey.key,
+    function(xhr) {
+    },
+    function(xhr) {
+      //failure
+      // TODO send alert
+      return
+    }
+  );
+}
+
+
+
+
 $(document).ready(function() {
   var chartOne = document.getElementById('chart-one');
   var chartTwo = document.getElementById('chart-two');
