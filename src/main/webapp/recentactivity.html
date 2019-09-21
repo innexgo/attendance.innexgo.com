@@ -86,19 +86,19 @@
 																												<div class="input-group-prepend">
 																																<span class="input-group-text">Name:&nbsp;&nbsp;</span>
 																												 </div>
-																												<input type="text" class="form-control" placeholder="Student Name">
+																												<input type="text" class="form-control" id="name" placeholder="Student Name">
 																								 </div>
 																								<div class="input-group mb-3">
 																												<div class="input-group-prepend">
 																																<span class="input-group-text">ID:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
 																												 </div>
-																												<input type="text" class="form-control" placeholder="Student ID">
+																												<input type="text" class="form-control" id="id" placeholder="Student ID">
 																								 </div>
 																								<div class="input-group mb-3">
 																												<div class="input-group-prepend">
 																																<span class="input-group-text">Period:</span>
 																												 </div>
-																												<input type="text" class="form-control" placeholder="Period">
+																												<input type="text" class="form-control" id="period" placeholder="Period">
 																								 </div>
 																				</form>
 																</div>
@@ -108,19 +108,19 @@
 																												<div class="input-group-prepend">
 																																<span class="input-group-text">Teacher:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
 																												 </div>
-																												 <input type="text" class="form-control" placeholder="Teacher Name">
+																												 <input type="text" class="form-control" id="teacher" placeholder="Teacher Name">
 																								 </div>
 																								<div class="input-group mb-3">
 																												<div class="input-group-prepend">
 																																<span class="input-group-text">Building Number:</span>
 																												 </div>
-																												 <input type="text" class="form-control" placeholder="Building Number">
+																												 <input type="text" class="form-control" id="building" placeholder="Building Number">
 																								 </div>
 																								<div class="input-group mb-3">
 																												<div class="input-group-prepend">
 																																<span class="input-group-text">Room Number:&nbsp;&nbsp;&nbsp;&nbsp;</span>
 																												 </div>
-																												<input type="text" class="form-control" placeholder="Room Number">
+																												<input type="text" class="form-control" id="room" placeholder="Room Number">
 																								 </div>
 																				</form>
 																</div>
@@ -130,23 +130,23 @@
 																								<div class="input-group-prepend">
 																												<span class="input-group-text">From:</span>
 																								</div>
-																								<input type="date" class="form-control">
+																								<input type="date" id="startDate" class="form-control">
 																								<div class="input-group-append">
-																												<input type="time" class="form-control" value="07:15">
+																												<input type="time" id="startTime" class="form-control" value="07:15">
 																								</div>
 																								</div>
 																				<div class="input-group mb-3">
 																								<div class="input-group-prepend">
 																												<span class="input-group-text">To:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
 																								</div>
-																								<input type="date" class="form-control">
+																								<input type="date" id="endDate" class="form-control">
 																								<div class="input-group-append">
-																												<input type="time" class="form-control" value="15:10">
+																												<input type="time" id="endTime" class="form-control" value="15:10">
 																								</div>
 																				</div>
 																				<div class="row">
-																				<div class="col-6"><div class="input-group mb-3"><div class="input-group-prepend"><span class="input-group-text"># Entries</span></div><input type="text" class="form-control" value="100"></div></div>
-																				<div class="col-6"><input type="submit" value="Update"></input></div>
+																				<div class="col-6"><div class="input-group mb-3"><div class="input-group-prepend"><span class="input-group-text"># Entries</span></div><input type="text" class="form-control" id="count" value="100"></div></div>
+																				<div class="col-6"><button onclick="recentActivity()">Submit</button></div>
 																				</div>
 																</form>
 																</div>
