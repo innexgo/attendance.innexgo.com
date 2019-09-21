@@ -1,5 +1,6 @@
 "use strict"
 
+var student = null;
 var studentIrregularities = null;
 
 function loadStudentIrregularities() {
@@ -21,21 +22,38 @@ function loadStudentIrregularities() {
 
   request(thisUrl() +  '/student/' +
     '?studentId='+studentId +
-    '&apiKey='apiKey.key,
+    '&apiKey='+apiKey.key,
     function(xhr) {
+      students = JSON.parse(xhr.responseText);
+      if(students.length  == 0) {
+        giveAlert('No students found with this ID.', 'alert-danger');
+        return;
+      }
+      student = students[0];
+      request(thisUrl() + '/irregularity/' +
+        '?studentId='+studentId +
+        '&apiKey='+apiKey.key,
+        function(xhr) {
+          studentIrregularities = JSON.parse(xhr.responseText);
+        },
+        function(xhr) {
+          //failure to load irregularity
+          giveAlert('Failed to load irregularities.', 'alert-danger');
+          return;
+        }
+      );
     },
     function(xhr) {
       //failure
-      // TODO send alert
+      giveAlert('Failed to connect to server.', 'alert-danger');
       return
     }
   );
 }
 
-
-
-
 $(document).ready(function() {
+  loadStudentIrregularities();
+
   var chartOne = document.getElementById('chart-one');
   var chartTwo = document.getElementById('chart-two');
 
