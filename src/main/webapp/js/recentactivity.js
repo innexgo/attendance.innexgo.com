@@ -1,3 +1,5 @@
+
+
 //gets new data from server and inserts it at the beginning
 function recentActivity() {
   var apiKey = Cookies.getJSON('apiKey');
@@ -26,12 +28,12 @@ function recentActivity() {
             '<td>' + (sessions.length - i) + '</td>' +
             '<td>' + session.inEncounter.student.name + '</td>' +
             '<td>' + session.inEncounter.student.id + '</td>' +
-				    '<td>' + session.course.period + '</td>' +
-				    '<td>' + session.course.teacher.name + '</td>' +
-				    '<td>' + '</td>' +
+            '<td>' + session.course.period + '</td>' +
+            '<td>' + session.course.teacher.name + '</td>' +
+            '<td>' + '</td>' +
             '<td>' + session.course.location.name + '</td>' +
-				    '<td>' + session.inEncounter.time + '</td>' +
-				    '<td>' + session.outEncounter.time + '</td>' +
+            '<td>' + session.inEncounter.time + '</td>' +
+            '<td>' + session.outEncounter.time + '</td>' +
             '</tr>');
       }
     },

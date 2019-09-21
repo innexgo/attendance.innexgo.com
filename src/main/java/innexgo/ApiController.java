@@ -37,6 +37,11 @@ public class ApiController {
   static final ResponseEntity<?> UNAUTHORIZED = new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
   static final ResponseEntity<?> NOT_FOUND = new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
+  /**
+   * Parses string for Integer
+   * @param   str - string to be parsed
+   * @return        Integer parsed from str; null if the string is null or cannot be parsed
+   */
   Integer parseInteger(String str) {
     if (str == null) {
       return null;
@@ -48,7 +53,11 @@ public class ApiController {
       }
     }
   }
-
+  /**
+   * Parses string for Long
+   * @param   str - string to be parsed
+   * @return        Long parsed from str; null if string is null or cannot be parsed
+   */
   Long parseLong(String str) {
     if (str == null) {
       return null;
@@ -60,7 +69,11 @@ public class ApiController {
       }
     }
   }
-
+  /**
+   * Parses string for Boolean
+   * @param   str - string to be parsed
+   * @return        Boolean parsed from str; null if string is null or cannot be parsed
+   */
   Boolean parseBoolean(String str) {
     if (str == null) {
       return null;
@@ -73,28 +86,53 @@ public class ApiController {
     }
   }
 
+  /**
+   * Fills in jackson objects (User) for ApiKey
+   * @param     apiKey - ApiKey object
+   * @return    apiKey with filled jackson objects
+   */
   ApiKey fillApiKey(ApiKey apiKey) {
     apiKey.user = fillUser(userService.getById(apiKey.userId));
     return apiKey;
   }
 
+  /**
+   * Fills in jackson objects(Student) in Card
+   * @param    card - Card object
+   * @return   Card object with filled jackson objects
+   */
   Card fillCard(Card card) {
     card.student = fillStudent(studentService.getById(card.studentId));
     return card;
   }
 
+  /**
+   * Fills in jackson objects(Teacher and Location) in Course
+   * @param   course - Course object
+   * @return  Course object with filled jackson objects
+   */
   Course fillCourse(Course course) {
     course.teacher = fillUser(userService.getById(course.teacherId));
     course.location = fillLocation(locationService.getById(course.locationId));
     return course;
   }
 
+  /**
+   * Fills in jackson objects(Location and Student) in Encounter
+   * @param   encounter - Encounter object
+   * @return  Encounter object with filled jackson objects
+   */
   Encounter fillEncounter(Encounter encounter) {
     encounter.location = fillLocation(locationService.getById(encounter.locationId));
     encounter.student = fillStudent(studentService.getById(encounter.studentId));
     return encounter;
   }
 
+  /**
+   * Fills in jackson objects(Course, Period, and Student) in Irregularity
+   * @param   irregularity - Irregularity object
+   * @return  Irregularity object with filled jackson objects
+   */
   Irregularity fillIrregularity(Irregularity irregularity) {
     irregularity.course = fillCourse(courseService.getById(irregularity.courseId));
     irregularity.period = fillPeriod(periodService.getById(irregularity.periodId));
@@ -102,20 +140,40 @@ public class ApiController {
     return irregularity;
   }
 
+  /**
+   * Fills in jackson objects (none at the moment) for Location
+   * @param   location - Location object
+   * @return  Location object with filled jackson objects
+   */
   Location fillLocation(Location location) {
     return location;
   }
 
+  /**
+   * Fills in jackson objects (none at the moment) for Period
+   * @param   period - Period object
+   * @return  Period object with filled jackson objects
+   */
   Period fillPeriod(Period period) {
     return period;
   }
 
+  /**
+   * Fills in jackson objects(Student, Course) for Schedule
+   * @param   schedule - Schedule object
+   * @return  Schedule object with filled jackson objects
+   */
   Schedule fillSchedule(Schedule schedule) {
     schedule.student = fillStudent(studentService.getById(schedule.studentId));
     schedule.course = fillCourse(courseService.getById(schedule.courseId));
     return schedule;
   }
 
+  /**
+   * Fills in jackson objects (Student, Course, inEncounter, and outEncounter) for Session
+   * @param   session - Session object
+   * @return  Session object with filled jackson objects
+   */
   Session fillSession(Session session) {
     session.student = fillStudent(studentService.getById(session.studentId));
     session.course = fillCourse(courseService.getById(session.courseId));
@@ -126,14 +184,29 @@ public class ApiController {
     return session;
   }
 
+  /**
+   * Fills in jackson objects (none at the moment) for Student
+   * @param   student - Student object
+   * @return  Student object with filled jackson objects
+   */
   Student fillStudent(Student student) {
     return student;
   }
 
+  /**
+   * Fills in jackson objects (none at the moment) for User
+   * @param   user - User object
+   * @return  User object with filled jackson objects
+   */
   User fillUser(User user) {
     return user;
   }
 
+  /**
+   * Returns a user if valid
+   * @param   key - apikey code of the User
+   * @return  User or null if invalid
+   */
   User getUserIfValid(String key) {
     String hash = Utils.encodeApiKey(key);
     if (apiKeyService.existsByKeyHash(hash)) {
@@ -147,6 +220,11 @@ public class ApiController {
     return null;
   }
 
+  /**
+   * Checks if a user is an administrator
+   * @param   key - apikey code of a User
+   * @return  true if administrator; false if not administrator or invalid
+   */
   boolean isAdministrator(String key) {
     if (key == null) {
       return false;
@@ -155,6 +233,11 @@ public class ApiController {
     return user != null && (user.ring == UserService.ADMINISTRATOR);
   }
 
+  /**
+   * Checks whether a User is trusted
+   * @param   key - apikey code of User
+   * @return  true if User is trusted; false if User not trusted
+   */
   boolean isTrusted(String key) {
     if (key == null) {
       return false;
@@ -163,6 +246,11 @@ public class ApiController {
     return user != null && (user.ring <= UserService.TEACHER);
   }
 
+  /**
+   * For all the courses at the current time, create irregularities
+   *     If the student has not signed in yet before or during the period,
+   *        generate an absent irregularity
+   */
   @Scheduled(fixedDelay = 5000)
   public void irregularityGenerator() {
     List<Period> periodList =
@@ -223,6 +311,16 @@ public class ApiController {
     }
   }
 
+  /**
+   * Create a new apiKey for a User
+   * @param userId the id of the User
+   * @param email email of the User
+   * @param expirationTime  //TODO what is expiration time?
+   * @param password User password
+   * @return ResponseEntity with ApiKey of User and HttpStatus.OK code if successful
+   * @throws ResponseEntity with HttpStatus.UNAUTHORIZED if the User is unauthorized
+   * @throws ResponseEntity with HttpStatus.BAD_REQUEST if the process is unsuccessful
+   */
   @RequestMapping("apiKey/new/")
   public ResponseEntity<?> newApiKey(
       @RequestParam(value = "userId", defaultValue = "-1") Long userId,
@@ -259,6 +357,15 @@ public class ApiController {
     return BAD_REQUEST;
   }
 
+  /**
+   * Create a new Student ID Card and can be done by a trusted User
+   * @param cardId - unique identifier of the card
+   * @param studentId - student id (the id on the card given by the school)
+   * @param apiKey - api key of the user trying to make a new card
+   * @return ResponseEntity with a Card and HttpStatus.OK
+   * @throws ResponseEntity with HttpStatus.UNAUTHORIZED if the User is unauthorized
+   * @throws ResponseEntity with HttpStatus.BAD_REQUEST if the process if unsuccessful
+   */
   @RequestMapping("card/new/")
   public ResponseEntity<?> newCard(
       @RequestParam("cardId") Long cardId,
@@ -280,6 +387,17 @@ public class ApiController {
     }
   }
 
+  /**
+   * Create a new course and can only be done by an administrator
+   * @param teacherId - id of teacher that normally teaches the class
+   * @param locationId - id of location where class is normally held
+   * @param period - period of the class //TODO what are the values of period?
+   * @param subject                      //TODO what are possible values of subject?
+   * @param apiKey - of User creating new Course
+   * @return ResponseEntity with a Course and HttpStatus.OK
+   * @throws ResponseEntity with HttpStatus.UNAUTHORIZED if the User is not an administrator
+   * @throws ResponseEntity with HttpStatus.BAD_REQUEST if the process if unsuccessful
+   */
   @RequestMapping("course/new/")
   public ResponseEntity<?> newCourse(
       @RequestParam("userId") Long teacherId,
@@ -308,6 +426,17 @@ public class ApiController {
     }
   }
 
+  /**
+   * Creates a new encounter and can be done by a trusted user
+   * @param studentId - student id number
+   * @param cardId - unique identifier for the card
+   * @param locationId - location id of the location where this course is normally taught
+   * @param courseId - course id
+   * @param apiKey - apiKey of the user creating the encounter
+   * @return ResponseEntity with Encounter and HttpStatus.OK
+   * @throws ResponseEntity with HttpStatus.BAD_REQUEST if process is unsuccessful
+   * @throws ResponseEntity with HttpStatus.UNAUTHORIZED if the User is not trusted
+   */
   @RequestMapping("encounter/new/")
   public ResponseEntity<?> newEncounter(
       @RequestParam(value = "studentId", defaultValue = "-1") Long studentId,
@@ -333,26 +462,26 @@ public class ApiController {
         encounter.time = System.currentTimeMillis();
         encounterService.add(encounter);
 
+        List<Period> plist =
+            periodService.query(
+                null, // id,
+                System.currentTimeMillis(), // time,
+                null, // initialTimeBegin,
+                null, // initialTimeEnd,
+                null, // startTimeBegin,
+                null, // startTimeEnd,
+                null, // endTimeBegin,
+                null, // endTimeEnd,
+                null, // period,
+                null, // courseId,
+                null // teacherId
+                );
+
+        // get the current period if it exists
+        Period currentPeriod = plist.size() == 0 ? null : plist.get(0);
+
         // check for sessions + irregularities
-        if (courseId != -1) {
-          List<Period> plist =
-              periodService.query(
-                  null, // id,
-                  System.currentTimeMillis(), // time,
-                  null, // initialTimeBegin,
-                  null, // initialTimeEnd,
-                  null, // startTimeBegin,
-                  null, // startTimeEnd,
-                  null, // endTimeBegin,
-                  null, // endTimeEnd,
-                  null, // period,
-                  null, // courseId,
-                  null // teacherId
-                  );
-
-          // get the current period if it exists
-          Period currentPeriod = plist.size() == 0 ? null : plist.get(0);
-
+        if (currentPeriod != null && courseId != -1) {
           boolean newLogin = false;
 
           // search for open session with this student at the course
@@ -464,6 +593,15 @@ public class ApiController {
     }
   }
 
+  /**
+   * Creates a new location and can only be done by an Administrator
+   * @param name //TODO what do you mean by name
+   * @param tags //TODO what do you mean by tags
+   * @param apiKey - apiKey of the User creating the location
+   * @return ResponseEntity with location and HttpStatus.OK
+   * @throws ResponseEntity with HttpStatus.BAD_REQUEST if process if unsuccessful
+   * @throws ResponseEntity with HttpStatus.UNAUTHORIZED if the User is not an administrator
+   */
   @RequestMapping("location/new/")
   public ResponseEntity<?> newLocation(
       @RequestParam("name") String name,
@@ -1176,7 +1314,6 @@ public class ApiController {
   /* TESTING */
   @RequestMapping("populateTestingPeriods")
   public ResponseEntity<?> populateTestingPeriods() {
-    periodService.deleteAll();
     LocalDate today =
         ZonedDateTime.now(Utils.TIMEZONE).toLocalDate();
 
