@@ -5,14 +5,28 @@ function recentActivity() {
   var apiKey = Cookies.getJSON('apiKey');
   var course = Cookies.getJSON('course');
 
-  if(apiKey == null || course == null) {
+  if(apiKey == null || course==null) {
     console.log('not enough cookies for recentActivity');
     return;
   }
 
+				alert(name);
   var url = thisUrl()+'/session/?count=100' +
     '&courseId=' + course.id +
     '&apiKey='+ apiKey.key;
+
+				var name = Document.getElementById("name").value;
+				var id = Document.getElementById("id").value;
+				var period = Document.getElementById("period").value;
+				var teacher = Document.getElementById("teacher").value;
+				var room = Document.getElementById("room").value;
+				var startDate = Document.getElementById("startDate").value;
+				var startTime = Document.getElementById("startTime").value;
+				var endDate = Document.getElementById("endDate").value;
+				var endTime = Document.getElementById("endTime").value;
+				var count = Document.getElementById("count").value;
+								
+
   request(url,
     function(xhr){
       // clear table
@@ -41,9 +55,6 @@ function recentActivity() {
       console.log(xhr);
     }
   );
+
 }
 
-$(document).ready(function () {
-  recentActivity();
-  setInterval(recentActivity, 5000);
-})
