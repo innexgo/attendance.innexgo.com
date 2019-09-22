@@ -44,8 +44,7 @@ function getIrregularities(chartName) {
       chartName.update();
     },
     function (xhr) {
-      //failure
-      // TODO send alert
+      giveAlert('Failed to connect to server.', 'alert-danger');
       return;
     }
   );
@@ -106,6 +105,7 @@ function loadStudentProfile() {
     },
     function (xhr) {
       //failure
+      giveAlert('Failed to connect to server.', 'alert-danger');
       return;
     }
   );
