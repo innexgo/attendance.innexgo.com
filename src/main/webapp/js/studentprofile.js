@@ -2,7 +2,7 @@
 
 var studentIrregularities = null;
 
-function loadStudentIrregularities() {
+function loadStudentProfile() {
   var apiKey = Cookies.getJSON('apiKey');
 
   if(apiKey == null) {
@@ -21,8 +21,27 @@ function loadStudentIrregularities() {
 
   request(thisUrl() +  '/student/' +
     '?studentId='+studentId +
-    '&apiKey='apiKey.key,
+    '&apiKey='+apiKey.key,
     function(xhr) {
+        var response = JSON.parse(xhr.responseText)[0];
+        document.getElementById('studentprofile-name').innerHTML = response.name;
+        document.getElementById('studentprofile-id').innerHTML = response.id;
+    },
+    function(xhr) {
+      //failure
+      // TODO send alert
+      return
+    }
+  );
+
+  request(thisUrl() +  '/irregularity/' +
+    '?studentId='+studentId +
+    '&minTime='+String(moment().subtract(14,'d').format('X'))+
+    '&maxTime='+String(moment().unix())+
+    '&apiKey='+apiKey.key,
+    function(xhr) {
+        var response = JSON.parse(xhr.responseText);
+        console.log(response);
     },
     function(xhr) {
       //failure
@@ -31,37 +50,30 @@ function loadStudentIrregularities() {
     }
   );
 }
-
-
-
-
+var dates = [];
+var i;
+for (i = 0; i < 14; i++) {
+    dates.push(moment().subtract(14-i,'d').format('MM-DD-YYYY'));
+};
 $(document).ready(function() {
-  var chartOne = document.getElementById('chart-one');
-  var chartTwo = document.getElementById('chart-two');
+    console.log(thisUrl())
+    var chartOne = document.getElementById('chart-one');
+    var chartTwo = document.getElementById('chart-two');
+    loadStudentProfile()
 
-  var myChart = new Chart(chartTwo, {
-      type: 'bar',
+    var dates = [];
+    var i;
+    for (i = 0; i < 2; i++) {
+        dates[i] = String(moment().subtract(14-i,'d').format('MM/DD/YYYY'));
+    };
+    console.log(dates);
+    var myChart = new Chart(chartTwo, {
+        labels: ['aa'],
+      type: 'line',
       data: {
-          labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
           datasets: [{
-              label: '# of Votes',
-              data: [12, 19, 3, 5, 2, 3],
-              backgroundColor: [
-                  'rgba(255, 99, 132, 0.2)',
-                  'rgba(54, 162, 235, 0.2)',
-                  'rgba(255, 206, 86, 0.2)',
-                  'rgba(75, 192, 192, 0.2)',
-                  'rgba(153, 102, 255, 0.2)',
-                  'rgba(255, 159, 64, 0.2)'
-              ],
-              borderColor: [
-                  'rgba(255, 99, 132, 1)',
-                  'rgba(54, 162, 235, 1)',
-                  'rgba(255, 206, 86, 1)',
-                  'rgba(75, 192, 192, 1)',
-                  'rgba(153, 102, 255, 1)',
-                  'rgba(255, 159, 64, 1)'
-              ],
+              label: '# of Minutes',
+              data: dates,
               borderWidth: 1
           }]
       },
