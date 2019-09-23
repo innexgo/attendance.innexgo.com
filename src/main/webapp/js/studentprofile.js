@@ -27,12 +27,15 @@ function getIrregularities(chartName) {
     '&apiKey=' + apiKey.key,
     function (xhr) {
       var irregResponse = JSON.parse(xhr.responseText);
-      var irreg = [];
-      var i;
-      for (i = 0; i < 14; i++) {
-        irreg[i] = irregResponse.filter(i => i.time > moment().subtract(14 - d, 'd').valueOf() && i.time < moment().subtract(13 - d, 'd'))
-      }
 
+      /* Plot Chart */
+      var irreg = [];
+      const arrSum = arr => arr.reduce((a, b) => a + b, 0)
+      for (var d = 0; d < 14; d++) {
+        var msMissing = [];
+        irregResponse.filter(i => i.time > moment().subtract(14 - d, 'd').valueOf() && i.time < moment().subtract(13 - d, 'd')).forEach((entry) => msMissing.push(entry.timeMissing));
+        irreg[d] = msMissing.length == 0 ? 0 : (arrSum(msMissing) / 60000).toFixed(5);
+      }
       chartName.data.datasets.forEach((dataset) => {
         dataset.data.pop();
       });
@@ -42,6 +45,20 @@ function getIrregularities(chartName) {
         })
       });
       chartName.update();
+
+      /* Get Total Absences and Tardies */
+      var totalAbsence = 0;
+      var totalTardy = 0;
+      irregResponse.forEach(function (entry) {
+        if (entry.type == 'tardy') {
+          totalTardy++;
+        }
+        else if (entry.type == 'absent') {
+          totalAbsence++;
+        };
+      });
+      document.getElementById('studentprofile-total-tardies').innerHTML = 'Total Tardies: ' + totalTardy;
+      document.getElementById('studentprofile-total-absences').innerHTML = 'Total Absences: ' + totalAbsence;
     },
     function (xhr) {
       giveAlert('Failed to connect to server.', 'alert-danger');
@@ -73,7 +90,7 @@ function loadStudentProfile() {
     function (xhr) {
       var studentResponse = JSON.parse(xhr.responseText)[0];
       document.getElementById('studentprofile-name').innerHTML = studentResponse.name;
-      document.getElementById('studentprofile-id').innerHTML = studentResponse.id;
+      document.getElementById('studentprofile-id').innerHTML = 'ID: ' + studentResponse.id;
     },
     function (xhr) {
       //failure
