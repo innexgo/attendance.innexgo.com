@@ -1354,12 +1354,13 @@ public class ApiController {
   // deletes periods with a length of less than 10 min
   @RequestMapping("deleteTestingPeriods")
   public ResponseEntity<?> deleteTestingPeriods() {
+    long maxDuration = 10*60*1000;
     List<Period> periodList =
         periodService.query(
             null, // id
             null, // time
             null, // minDuration
-            10*60*1000, // maxDuration
+            maxDuration, // maxDuration
             null, // initialTimeBegin
             null, // initialTimeEnd
             null, // startTimeBegin
@@ -1373,6 +1374,7 @@ public class ApiController {
     for(Period period : periodList) {
       periodService.deleteById(period.id);
     }
+    return OK;
   }
 
 
