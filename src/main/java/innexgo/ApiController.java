@@ -253,13 +253,16 @@ public class ApiController {
    */
   @Scheduled(fixedDelay = 5000)
   public void irregularityGenerator() {
+    // the list of periods that havent started yet
     List<Period> periodList =
         periodService.query(
             null, // id
             null, // time
-            System.currentTimeMillis(), // initialTimeBegin
+            null, // minDuration
+            null, // maxDuration
+            null, // initialTimeBegin
             null, // initialTimeEnd
-            null, // startTimeBegin
+            System.currentTimeMillis(), // startTimeBegin
             null, // startTimeEnd
             null, // endTimeBegin
             null, // endTimeEnd
@@ -298,14 +301,27 @@ public class ApiController {
         List<Student> studentAbsentList = studentService.absent(course.id, period.id);
         // mark all students not there as absent
         for (Student student : studentAbsentList) {
-          Irregularity irregularity = new Irregularity();
-          irregularity.studentId = student.id;
-          irregularity.courseId = course.id;
-          irregularity.periodId = period.id;
-          irregularity.type = "absent";
-          irregularity.time = period.startTime;
-          irregularity.timeMissing = period.endTime - period.startTime;
-          irregularityService.add(irregularity);
+          boolean alreadyAbsent = irregularityService.query(
+              null,
+              student.id,
+              null,
+              period.id,
+              null,
+              "absent",
+              null,
+              null
+            ).size() > 0;
+          // if not already absent
+          if(!alreadyAbsent) {
+            Irregularity irregularity = new Irregularity();
+            irregularity.studentId = student.id;
+            irregularity.courseId = course.id;
+            irregularity.periodId = period.id;
+            irregularity.type = "absent";
+            irregularity.time = period.startTime;
+            irregularity.timeMissing = period.endTime - period.startTime;
+            irregularityService.add(irregularity);
+          }
         }
       }
     }
@@ -466,6 +482,8 @@ public class ApiController {
             periodService.query(
                 null, // id,
                 System.currentTimeMillis(), // time,
+                null, // minDuration,
+                null, // maxDuration,
                 null, // initialTimeBegin,
                 null, // initialTimeEnd,
                 null, // startTimeBegin,
@@ -1115,6 +1133,8 @@ public class ApiController {
               .query(
                   parseLong(allRequestParam.get("periodId")),
                   parseLong(allRequestParam.get("time")),
+                  parseLong(allRequestParam.get("minDuration")),
+                  parseLong(allRequestParam.get("maxDuration")),
                   parseLong(allRequestParam.get("initialTimeBegin")),
                   parseLong(allRequestParam.get("initialTimeEnd")),
                   parseLong(allRequestParam.get("startTimeBegin")),
@@ -1329,7 +1349,32 @@ public class ApiController {
       periodService.add(period);
     }
     return OK;
-}
+  }
+
+  // deletes periods with a length of less than 10 min
+  @RequestMapping("deleteTestingPeriods")
+  public ResponseEntity<?> deleteTestingPeriods() {
+    List<Period> periodList =
+        periodService.query(
+            null, // id
+            null, // time
+            null, // minDuration
+            10*60*1000, // maxDuration
+            null, // initialTimeBegin
+            null, // initialTimeEnd
+            null, // startTimeBegin
+            null, // startTimeEnd
+            null, // endTimeBegin
+            null, // endTimeEnd
+            null, // period
+            null, // courseId
+            null // teacherId
+          );
+    for(Period period : periodList) {
+      periodService.deleteById(period.id);
+    }
+  }
+
 
   @RequestMapping("populatePeriods")
   public ResponseEntity<?> populatePeriods() {

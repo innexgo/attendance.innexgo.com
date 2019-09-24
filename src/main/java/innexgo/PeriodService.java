@@ -83,6 +83,8 @@ public class PeriodService {
   public List<Period> query(
       Long id,
       Long time,
+      Long minDuration,
+      Long maxDuration,
       Long initialTimeBegin,
       Long initialTimeEnd,
       Long startTimeBegin,
@@ -102,6 +104,8 @@ public class PeriodService {
             + " WHERE 1=1 "
             + (id == null ? "" : " AND p.id = " + id)
             + (time == null ? "" : " AND " + time + " BETWEEN p.initial_time AND p.end_time")
+            + (minDuration == null ? "" : " AND " + minDuration + " <= p.end_time - p.start_time")
+            + (maxDuration == null ? "" : " AND " + maxDuration + " >= p.end_time - p.start_time")
             + (startTimeBegin == null ? "" : " AND p.start_time >= " + startTimeBegin)
             + (startTimeEnd == null ? "" : " AND p.start_time <= " + startTimeEnd)
             + (initialTimeBegin == null ? "" : " AND p.initial_time >= " + initialTimeBegin)
