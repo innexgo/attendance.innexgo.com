@@ -45,18 +45,23 @@ function ordinal_suffix_of(i) {
   return i + "th";
 }
 
-function giveAlert(innerHTML, type) {
+var alertCounter = 0;
+function giveAlert(innerHTML, type, permanent) {
+  var alertId ='alert'+alertCounter'
   document.getElementById('alert-zone').innerHTML +=
-    '<div class="alert alert-dismissable ' + type + '" role="alert">' +
+    '<div id="'+alertId+'" class="alert alert-dismissable ' + type + '" role="alert">' +
     innerHTML +
     '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
     '<span aria-hidden="true">&times;</span>' +
     '</button>' +
     '</div>';
-  $(".alert").fadeTo(3000, 500).slideUp(500, function () {
-    $(".alert").slideUp(500);
-    this.parentNode.removeChild(this);
-  });
+  if(!permanent) {
+    $('#'+alertId).fadeTo(3000, 500).slideUp(500, function () {
+      $('#'+alertId).slideUp(500);
+      this.parentNode.removeChild(this);
+    });
+  }
+  alertCounter++;
 }
 
 function toGraduatingYear(grade) {

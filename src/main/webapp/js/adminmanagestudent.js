@@ -10,19 +10,19 @@ function singleUploadStudent() {
 
   var name = document.getElementById('adminmanagestudent-name').value;
   if(isEmpty(name)) {
-    giveAlert('Please fill in student name.', 'alert-danger');
+    giveAlert('Please fill in student name.', 'alert-danger', false);
     return;
   }
 
   var studentId = document.getElementById('adminmanagestudent-studentid').value;
   if(isEmpty(studentId)) {
-    giveAlert('Please fill in student ID.', 'alert-danger');
+    giveAlert('Please fill in student ID.', 'alert-danger', false);
     return;
   }
 
   var graduatingYear = toGraduatingYear($('#adminmanagestudent-grade :selected'));
   if(isEmpty(graduatingYear)) {
-    giveAlert('Please select student grade.', 'alert-danger');
+    giveAlert('Please select student grade.', 'alert-danger', false);
     return;
   }
 
@@ -33,10 +33,10 @@ function singleUploadStudent() {
     '&name='+name+
     '&apiKey='+apiKey.key,
     function(xhr) {
-      giveAlert('Student uploaded successfully.', 'alert-success');
+      giveAlert('Student uploaded successfully.', 'alert-success', false);
     },
     function(xhr) {
-      giveAlert('Student failed to upload.', 'alert-danger');
+      giveAlert('Student failed to upload.', 'alert-danger', false);
     }
   );
 }
@@ -57,7 +57,7 @@ function batchUploadStudent() {
 
   var files = document.getElementById('adminmanagestudent-teacher-file').files;
   if(files.length == 0) {
-    giveAlert('Please upload CSV file.', 'alert-danger');
+    giveAlert('Please upload CSV file.', 'alert-danger', false);
     return;
   }
   for(var i = 0; i < files.length; i++) {
@@ -69,9 +69,9 @@ function batchUploadStudent() {
     xhr.onreadystatechange = function() {
       if(xhr.readyState == 4) {
         if(xhr.status == 200) {
-          giveAlert('Students loaded successfully.', 'alert-success');
+          giveAlert('Students loaded successfully.', 'alert-success', false);
         } else {
-          giveAlert('An error occured while loading.', 'alert-danger');
+          giveAlert('An error occured while loading.', 'alert-danger', false);
         }
       }
     }

@@ -105,6 +105,51 @@ function loadClassText() {
 
   var courseId = searchParams.get('courseId');
   var periodId = searchParams.get('periodId');
+
+  var text = document.getElementById('classreport-text');
+
+  request(thisUrl() + '/course/' +
+    '?courseId='+courseId +
+    '&apiKey='+apiKey.key,
+    function(xhr) {
+      var courses = JSON.parse(xhr.responseText);
+      // if there are no courses with this idea
+      if(courses.length < 1)
+      {
+        console.log('failed to get course');
+        return
+      }
+
+      var course = courses[0];
+
+      // now get the period
+      request(thisUrl() + '/period/' +
+        '?apiKey='+apiKey.key +
+        '&periodId='+periodId,
+        function(xhr) {
+          var periods = JSON.parse(xhr.responseText);
+
+          if(periods.length < 1) {
+            console.log('failed to get periods');
+            return
+          }
+
+          var period = periods[0];
+
+          text.innerHTML = 'View students who attended ' + course.period + ordinal_suffix_of(course.period) +
+            ' ' + course.subject + ' ('+course.teacher.name+').';
+        },
+        function(xhr) {
+          giveAlert('Failed to get period information.', 'alert-danger', true);
+          return;
+        }
+      );
+    },
+    function(xhr) {
+      giveAlert('Failed to get course information.', 'alert-danger', true);
+      return;
+    }
+  );
 }
 
 
