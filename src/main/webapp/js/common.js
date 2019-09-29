@@ -47,7 +47,7 @@ function ordinal_suffix_of(i) {
 
 var alertCounter = 0;
 function giveAlert(innerHTML, type, permanent) {
-  var alertId ='alert'+alertCounter'
+  var alertId ='alert'+alertCounter;
   document.getElementById('alert-zone').innerHTML +=
     '<div id="'+alertId+'" class="alert alert-dismissable ' + type + '" role="alert">' +
     innerHTML +

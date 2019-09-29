@@ -136,8 +136,9 @@ function loadClassText() {
 
           var period = periods[0];
 
-          text.innerHTML = 'View students who attended ' + course.period + ordinal_suffix_of(course.period) +
-            ' ' + course.subject + ' ('+course.teacher.name+').';
+          text.innerHTML = 'View students who attended ' + ordinal_suffix_of(course.period) +
+            ' period ' + course.subject + ' ('+course.teacher.name+') on ' +
+            moment(period.startTime).format('dddd, MMMM Do YYYY') + '.';
         },
         function(xhr) {
           giveAlert('Failed to get period information.', 'alert-danger', true);
