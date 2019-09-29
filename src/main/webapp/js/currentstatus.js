@@ -56,7 +56,7 @@ function currentStatus() {
             }
 
             // put values in table
-            newrow = table.insertRow(0);
+            var newrow = table.insertRow(0);
             newrow.innerHTML =
               ('<td>' + student.name + '</td>' +
                 '<td>' + student.id + '</td>' +

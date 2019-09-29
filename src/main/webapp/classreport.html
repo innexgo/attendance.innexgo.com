@@ -1,89 +1,107 @@
 <!DOCTYPE html>
 <html>
+  <head>
+    <!--Background Information -->
+    <title>Tutorial Dashboard</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<head>
-  <!--Background Information -->
-  <title>Tutorial Dashboard</title>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- CSS References -->
+    <link rel="stylesheet" href="/vendor/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/vendor/fontawesome-free/css/all.min.css">
+    <link rel="stylesheet" href="/vendor/bootstrap4-toggle/css/bootstrap4-toggle.min.css">
+    <link rel="stylesheet" href="/css/common.css">
+    <link rel="stylesheet" href="/css/sidebar.css">
+    <link rel="stylesheet" href="/chart/css/Chart.min.css">
 
-  <!-- CSS References -->
-  <link rel="stylesheet" href="/vendor/bootstrap/css/bootstrap.min.css">
-  <link rel="stylesheet" href="/vendor/fontawesome-free/css/all.min.css">
-  <link rel="stylesheet" href="/vendor/bootstrap4-toggle/css/bootstrap4-toggle.min.css">
-  <link rel="stylesheet" href="/css/common.css">
-  <link rel="stylesheet" href="/css/sidebar.css">
-  <link rel="stylesheet" href="/chart/css/Chart.min.css">
+    <!-- JS References -->
+    <script src="/vendor/jquery/jquery.min.js"></script>
+    <script src="/vendor/bootstrap/js/bootstrap.bundle.js"></script>
+    <script src="/vendor/bootstrap4-toggle/js/bootstrap4-toggle.min.js"></script>
+    <script src="/vendor/scannerdetection/jquery.scannerdetection.min.js"></script>
+    <script src="/vendor/js-cookie/js.cookie.js"></script>
+    <script src="/vendor/moment/moment.min.js"></script>
+    <script src="/vendor/chart/js/Chart.min.js"></script>
+    <script src="/js/common.js"></script>
+    <script src="/js/signedin.js"></script>
+    <script src="/js/loadprefs.js"></script>
+    <script src="/js/sidebar.js"></script>
+    <script src="/js/classreport.js"></script>
+  </head>
 
-  <!-- JS References -->
-  <script src="/vendor/jquery/jquery.min.js"></script>
-  <script src="/vendor/bootstrap/js/bootstrap.bundle.js"></script>
-  <script src="/vendor/bootstrap4-toggle/js/bootstrap4-toggle.min.js"></script>
-  <script src="/vendor/scannerdetection/jquery.scannerdetection.min.js"></script>
-  <script src="/vendor/js-cookie/js.cookie.js"></script>
-  <script src="/vendor/moment/moment.min.js"></script>
-  <script src="/vendor/chart/js/Chart.min.js"></script>
-  <script src="/js/common.js"></script>
-  <script src="/js/signedin.js"></script>
-  <script src="/js/loadprefs.js"></script>
-  <script src="/js/sidebar.js"></script>
-  <script src="/js/classreport.js"></script>
-</head>
+  <body class="palette-level-one">
 
-<body class="palette-level-one">
-
-  <!-- Sidebar -->
-  <nav style="height:100%" id="sidebar" class="navbar-palette">
-    <nav class="navbar sidebar-top">
-      <button type="button" onclick="closeSidebar()" class="btn btn-icon sidebar-button">
-        <i class="fa fa-bars navbar-palette"></i>
-      </button>
-      <div style="margin:auto;display:block">
-        <h6 id="info-time">Current Time</h6>
+    <!-- Sidebar -->
+    <nav style="height:100%" id="sidebar" class="navbar-palette">
+      <nav class="navbar sidebar-top">
+        <button type="button" onclick="closeSidebar()" class="btn btn-icon sidebar-button">
+          <i class="fa fa-bars navbar-palette"></i>
+        </button>
+        <div style="margin:auto;display:block">
+          <h6 id="info-time">Current Time</h6>
+        </div>
+      </nav>
+      <div class="sidebar-item sidebar-info-list navbar-palette" style="border:none;display:block;">
+        <h6 id="info-name">Teacher Name</h6>
+        <h6 id="info-period">Current Period</h6>
+        <h6 id="info-location">Current Location</h6>
+      </div>
+      <div id="sidebar-navigation">
+        <a class="sidebar-item navbar-palette" href="#" id="my-overview">Overview</a>
+        <a class="sidebar-item navbar-palette" href="history.html">History</a>
+        <a class="sidebar-item navbar-palette" href="recentactivity.html">Recent Activity</a>
+        <a class="sidebar-item navbar-palette" href="#" id="my-managestudent">Manage Students</a>
+        <a class="sidebar-item navbar-palette" href="#" id="reports">Reports</a>
+      </div>
+      <div class="sidebar-bottom">
+        <a class="sidebar-item navbar-palette" href="settings.html"><i class="fa fa-cog"></i> Settings</a>
+        <a class="sidebar-item navbar-palette" href="login.html"><i class="fa fa-sign-out-alt"></i> Sign out</a>
       </div>
     </nav>
-    <div class="sidebar-item sidebar-info-list navbar-palette" style="border:none;display:block;">
-      <h6 id="info-name">Teacher Name</h6>
-      <h6 id="info-period">Current Period</h6>
-      <h6 id="info-location">Current Location</h6>
-    </div>
-    <div id="sidebar-navigation">
-      <a class="sidebar-item navbar-palette" href="#" id="my-overview">Overview</a>
-      <a class="sidebar-item navbar-palette" href="history.html">History</a>
-      <a class="sidebar-item navbar-palette" href="recentactivity.html">Recent Activity</a>
-      <a class="sidebar-item navbar-palette" href="#" id="my-managestudent">Manage Students</a>
-      <a class="sidebar-item navbar-palette" href="#" id="reports">Reports</a>
-    </div>
-    <div class="sidebar-bottom">
-      <a class="sidebar-item navbar-palette" href="settings.html"><i class="fa fa-cog"></i> Settings</a>
-      <a class="sidebar-item navbar-palette" href="login.html"><i class="fa fa-sign-out-alt"></i> Sign out</a>
-    </div>
-  </nav>
-  <!-- Overlay -->
-  <div id="overlay" onclick="closeSidebar()"></div>
-  <!-- Top Navbar -->
-  <nav class="navbar navbar-expand-md navbar-palette">
-    <div class="order-0">
-      <button type="button" onclick="openSidebar()" class="btn btn-icon sidebar-button">
-        <i class="fa fa-bars navbar-palette"></i>
-      </button>
-    </div>
-    <!-- Center Logo -->
-    <div class="mx-auto order-0">
-      <a id="navbar-brand" class="navbar-brand navbar-palette" href="index.html"></a>
-    </div>
-  </nav>
+    <!-- Overlay -->
+    <div id="overlay" onclick="closeSidebar()"></div>
+    <!-- Top Navbar -->
+    <nav class="navbar navbar-expand-md navbar-palette">
+      <div class="order-0">
+        <button type="button" onclick="openSidebar()" class="btn btn-icon sidebar-button">
+          <i class="fa fa-bars navbar-palette"></i>
+        </button>
+      </div>
+      <!-- Center Logo -->
+      <div class="mx-auto order-0">
+        <a id="navbar-brand" class="navbar-brand navbar-palette" href="index.html"></a>
+      </div>
+    </nav>
 
-  <!-- Content -->
-
-  <div class="container-fluid">
-    <div id="not-sidebar" style="height:100%; width: 100%;">
-      <div class="card palette-level-two" style="margin-top: 1rem; height:100%; width: 100%;">
-        <canvas id="report-area" style="height:100%; width: 100%;"></canvas>
+    <!-- Content -->
+    <!-- Center Screen -->
+    <div id="not-sidebar" class="container-fluid">
+      <div class="px-3 my-3">
+        <div id="alert-zone"></div>
+        <div class="card-deck">
+          <!-- Current Status -->
+          <div class="card col-sm-8 palette-level-two">
+            <div class="card-body">
+              <div>
+                <h5 class="card-title text-center">Course Session Report</h5>
+              </div>
+              <p id="classreport-text" class="card-text"></p>
+              <div class="table-height-standard">
+                <table class="table striped white">
+                  <thead>
+                    <tr class="table-header">
+                      <td>Name</td>
+                      <td>ID</td>
+                      <td>Status</td>
+                    </tr>
+                  </thead>
+                  <tbody class="table-height-standard" id="classreport-table"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-
-</body>
-
+  </body>
 </html>
