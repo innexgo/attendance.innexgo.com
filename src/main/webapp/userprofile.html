@@ -2,7 +2,7 @@
 <html>
   <head>
     <!--Background Information -->
-    <title>Student Profile</title>
+    <title>User Profile</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -25,7 +25,7 @@
     <script src="js/signedin.js"></script>
     <script src="js/loadprefs.js"></script>
     <script src="js/sidebar.js"></script>
-    <script src="js/studentprofile.js"></script>
+    <script src="js/userprofile.js"></script>
   </head>
   <body class="palette-level-one">
     <!-- Sidebar -->
@@ -75,42 +75,34 @@
     <div id="not-sidebar" class="container-fluid">
       <div class="row my-3 px-3">
 
-        <!-- Student Stats -->
+        <!-- Teacher Stats -->
         <div class="card col-sm mx-3 card-no-border palette-level-two">
           <div class="card-body">
             <div>
-              <h5 id="studentprofile-name" class="card-title text-center">Current Student</h5>
+              <h5 id="user-name" class="card-title text-center">User</h5>
             </div>
             <div class="card-text">
               <h6>
                 <table style='width:100%'>
                   <tr>
-                    <td id="studentprofile-id">ID: </td>
-                    <td id="studentprofile-total-tardies" style='text-align: left'>Total Tardies: </td>
-                  </tr>
-                  <tr>
-                    <td id="studentprofile-tags">Tags: </td>
-                    <td id="studentprofile-total-absences" style='text-align: left'>Total Absences: </td>
+                    <td id="user-email">Email: </td>
+                    <td id="user-position" style='text-align: left'>Position</td>
                   </tr>
                 </table>
               </h6>
               <hr>
-              <table class="table">
+              <table id='user-courses-table' class="table">
                 <thead>
                   <tr class='table-header'>
+                    <td>Period</td>
                     <td>Class</td>
-                    <td>Teacher</td>
                     <td>Location</td>
                   </tr>
                 </thead>
-                <tbody id="studentprofile-courses"></tbody>
+                <tbody id="user-courses"></tbody>
               </table>
             </div>
           </div>
-        </div>
-
-        <div class="card col-sm card-no-border palette-level-two">
-          <canvas id="chart-two" height="50%" width="50%"></canvas>
         </div>
       </div>
     </div>
