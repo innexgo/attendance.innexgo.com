@@ -61,7 +61,7 @@ function getIrregularities(chartName) {
       document.getElementById('studentprofile-total-absences').innerHTML = 'Total Absences: ' + totalAbsence;
     },
     function (xhr) {
-      giveAlert('Failed to connect to server.', 'alert-danger');
+      giveAlert('Failed to connect to server.', 'alert-danger', true);
       return;
     }
   );
@@ -94,7 +94,7 @@ function loadStudentProfile() {
     },
     function (xhr) {
       //failure
-      giveAlert('Failed to connect to server.', 'alert-danger');
+      giveAlert('Failed to connect to server.', 'alert-danger', true);
       return
     }
   );
@@ -122,7 +122,7 @@ function loadStudentProfile() {
     },
     function (xhr) {
       //failure
-      giveAlert('Failed to connect to server.', 'alert-danger');
+      giveAlert('Failed to connect to server.', 'alert-danger', true);
       return;
     }
   );

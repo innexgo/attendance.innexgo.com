@@ -12,12 +12,12 @@ function submitEncounter(studentId) {
   var course = Cookies.getJSON('courses').filter(c => c.period == period.period)[0];
 
   if (String(studentId) == String(NaN)) {
-    giveAlert('What you entered wasn\'t a valid ID', 'alert-danger');
+    giveAlert('What you entered wasn\'t a valid ID', 'alert-danger', false);
     return;
   }
 
   if (course == null) {
-    giveAlert('No class at the moment to sign into.', 'alert-danger');
+    giveAlert('No class at the moment to sign into.', 'alert-danger', false);
     return;
   }
 
@@ -45,22 +45,22 @@ function submitEncounter(studentId) {
           curRow = $('#id-'+studentId)
           curRow.insertBefore(curRow.parent().find('tr:first-child'));
           if (sessionList.length != 0) {
-            giveAlert('Sucessfully logged ' + encounter.student.name + ' in to ' + encounter.location.name, 'alert-success');
+            giveAlert('Sucessfully logged ' + encounter.student.name + ' in to ' + encounter.location.name, 'alert-success', false);
             beepup.play();
           } else {
-            giveAlert('Sucessfully logged ' + encounter.student.name + ' out of ' + encounter.location.name, 'alert-info');
+            giveAlert('Sucessfully logged ' + encounter.student.name + ' out of ' + encounter.location.name, 'alert-info', false);
             beepdown.play();
           }
         },
         //failure
         function (xhr) {
-          giveAlert('Something went wrong while finalizing sign in.', 'alert-danger');
+          giveAlert('Something went wrong while finalizing sign in.', 'alert-danger', false);
           error.play();
         }
       );
     },
     function (xhr) {
-      giveAlert('Something went wrong while trying to sign you in.', 'alert-danger');
+      giveAlert('Something went wrong while trying to sign you in.', 'alert-danger', false);
       error.play();
     }
   );

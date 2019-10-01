@@ -27,9 +27,9 @@ function batchSetSchedule() {
   xhr.onreadystatechange = function() {
     if(xhr.readyState == 4) {
       if(xhr.status == 200) {
-        giveAlert('Students loaded successfully.', 'alert-success');
+        giveAlert('Students loaded successfully.', 'alert-success', false);
       } else {
-        giveAlert('An error occured while loading.', 'alert-danger');
+        giveAlert('An error occured while loading.', 'alert-danger', false);
       }
     }
   }
