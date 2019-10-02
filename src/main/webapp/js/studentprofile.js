@@ -120,7 +120,10 @@ function loadStudentProfile() {
           var newrow = classTable.insertRow(0);
           newrow.innerHTML =
             ('<td>' + course.period + '</td>' +
-             '<td>' + course.subject + '</td>' +
+             '<td>' + '<a href="' + thisUrl() + 
+                '/coursereport.html/?apiKey=' + apiKey.key + 
+                '&courseId=' + course.id+ '">' + 
+                course.subject + '</a></td>' +
              '<td>' + '<a href="' + thisUrl() + 
                 '/userprofile.html/?apiKey=' + apiKey.key + 
                 '&userId=' + course.teacher.id+ '">' + 
