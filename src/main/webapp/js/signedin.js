@@ -56,13 +56,11 @@ function userInfo() {
   }
 }
 
-userInfo();
-
 $(document).ready(function(){
   ensureSignedIn();
-  // make sure they're signed in every 10 seconds
-  setInterval(function(){
-    ensureSignedIn();
-    userInfo();
-  }, 1000);
+  userInfo();
+  var apiKey = Cookies.getJSON('apiKey');
+  var period = Cookies.getJSON('period');
+  doTimer(apiKey.expirationTime - moment().valueOf(), 1, function(){}, ensureSignedIn());
+  doTimer(period.endTime -moment().valueOf(), 1, function(){}, userInfo());
 });
