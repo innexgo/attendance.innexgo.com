@@ -774,54 +774,6 @@ public class ApiController {
     }
   }
 
-  @RequestMapping("user/update/")
-  public ResponseEntity<?> updateUser(@RequestParam Map<String, String> allRequestParam) {
-    // make sure changer is admin
-
-    if (isAdministrator(allRequestParam.getOrDefault("apiKey", "invalid"))) {
-      // make sure user exists
-      if(userService.existsById(parseLong(allRequestParam.getOrDefault("userId", "-1")))
-          // if they are trying to set a name, it cannot be blank
-          && !Utils.isEmpty(allRequestParam.getOrDefault("userName", "default"))
-          // if they are trying to set a password, it cannot be blank
-          && !Utils.isEmpty(allRequestParam.getOrDefault("password", "default"))
-          // if they are trying to set an email, it cannot be blank
-          && !Utils.isEmpty(allRequestParam.getOrDefault("email", "default"))
-          // if they are trying to set an email, it cannot be taken already
-          && (allRequestParam.containsKey("email") ? !userService.existsByEmail("email") : true)
-          // if they are trying to set the ring, it must be a valid integer
-          && parseInteger(allRequestParam.getOrDefault("ring", "0")) != null) {
-        User user = userService.getById(parseLong(allRequestParam.get("userId")));
-
-        // if it is specified, set the name
-        if (allRequestParam.containsKey("userName")) {
-          user.name = allRequestParam.get("userName");
-        }
-        // if it is specified, set the password
-        if (allRequestParam.containsKey("password")) {
-          user.passwordHash = Utils.encodePassword(allRequestParam.get("password"));
-        }
-
-        // if it is specified, set the email
-        if (allRequestParam.containsKey("email")) {
-          user.email = allRequestParam.get("email");
-        }
-
-        // if it is specified, set the ring level
-        if (allRequestParam.containsKey("ring")) {
-          user.ring = parseInteger(allRequestParam.get("ring"));
-        }
-
-        userService.update(user);
-        return new ResponseEntity<>(fillUser(user), HttpStatus.OK);
-      } else {
-        return BAD_REQUEST;
-      }
-    } else {
-      return UNAUTHORIZED;
-    }
-  }
-
   // This method updates the password for same user only
   @RequestMapping("user/updatePassword/")
   public ResponseEntity<?> updatePassword(
