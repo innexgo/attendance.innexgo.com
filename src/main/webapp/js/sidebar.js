@@ -16,13 +16,13 @@ $(document).ready(function(){
   var sidebarInfo = prefs.sidebarInfo;
 
   if (userType == 0) {
-    document.getElementById('my-overview').href = 'adminoverview.html';
-    document.getElementById('my-managestudent').href = 'adminmanagestudent.html';
-    document.getElementById('reports').href = 'adminreports.html';
+    document.getElementById('my-overview').href = '/adminoverview.html';
+    document.getElementById('my-managestudent').href = '/adminmanagestudent.html';
+    document.getElementById('reports').href = '/adminreports.html';
   } else {
-    document.getElementById('my-overview').href = 'overview.html';
-    document.getElementById('my-managestudent').href = 'managestudent.html';
-    document.getElementById('reports').href = 'reports.html';
+    document.getElementById('my-overview').href = '/overview.html';
+    document.getElementById('my-managestudent').href = '/managestudent.html';
+    document.getElementById('reports').href = '/reports.html';
   }
 
   var sidebarItems = $('.sidebar-item').addClass('list-group-item');

@@ -31,6 +31,7 @@ function recentActivity() {
     function(xhr){
       // clear table
       var tableContent = document.getElementById('recentActivityContent');
+      var apiKey = Cookies.getJSON('apiKey');
       table.innerHTML = '';
 
       var sessions = JSON.parse(xhr.responseText);
@@ -40,7 +41,11 @@ function recentActivity() {
         table.insertRow(0).innerHTML=
           ('<tr>' +
             '<td>' + (sessions.length - i) + '</td>' +
-            '<td>' + session.inEncounter.student.name + '</td>' +
+            '<td>' + 
+              '<a href="' + thisUrl() + 
+                '/studentprofile.html/?apiKey=' + apiKey.key + 
+                '&studentId=' + session.inEncounter.student.id+ '">'+
+              session.inEncounter.student.name + '</a></td>' +
             '<td>' + session.inEncounter.student.id + '</td>' +
             '<td>' + session.course.period + '</td>' +
             '<td>' + session.course.teacher.name + '</td>' +

@@ -47,18 +47,16 @@ function loadData() {
       var classTable = document.getElementById('user-courses');
       coursePeriods.sort(function (a, b) {
         if (a != null && b != null) {
-          return b.period-a.period
-        } else {
-          return -1
-        };
+          return b.period-a.period;
+        } else {return -1};
       });
       coursePeriods.forEach(function (course) {
         if (course != null) {
           var newrow = classTable.insertRow(0);
           newrow.innerHTML =
             ('<td>' + course.period + '</td>' +
-              '<td>' + course.subject + '</td>' +
-              '<td>' + course.location.name + '</td>');
+             '<td>' + course.subject + '</td>' +
+             '<td>' + course.location.name + '</td>');
         }
       });
     },

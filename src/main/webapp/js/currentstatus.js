@@ -58,7 +58,11 @@ function currentStatus() {
             // put values in table
             var newrow = table.insertRow(0);
             newrow.innerHTML =
-              ('<td>' + student.name + '</td>' +
+              ('<td>' + 
+                '<a href="' + thisUrl() + 
+                  '/studentprofile.html/?apiKey=' + apiKey.key + 
+                  '&studentId=' + student.id+ '">' + 
+                  student.name + '</a></td>' +
                 '<td>' + student.id + '</td>' +
                 '<td style="background-color:' + bgcolor + ';color:' + fgcolor + '">' + text + '</td>');
             newrow.className = 'id-' + student.id;

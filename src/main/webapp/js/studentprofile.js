@@ -109,14 +109,23 @@ function loadStudentProfile() {
         var currentPeriodList = studentCourses.filter(c => c.period == p);
         coursePeriods.push(currentPeriodList.length == 0 ? null : currentPeriodList[0])
       }
+      coursePeriods.sort(function (a, b) {
+        if (a != null && b != null) {
+          return b.period-a.period;
+        } else {return -1};
+      });
       var classTable = document.getElementById('studentprofile-courses');
       coursePeriods.forEach(function (course) {
         if (course != null) {
           var newrow = classTable.insertRow(0);
           newrow.innerHTML =
-            ('<td>' + course.subject + '</td>' +
-              '<td>' + course.teacher.name + '</td>' +
-              '<td>' + course.location.name + '</td>');
+            ('<td>' + course.period + '</td>' +
+             '<td>' + course.subject + '</td>' +
+             '<td>' + '<a href="' + thisUrl() + 
+                '/userprofile.html/?apiKey=' + apiKey.key + 
+                '&userId=' + course.teacher.id+ '">' + 
+                course.teacher.name + '</a></td>' +
+             '<td>' + course.location.name + '</td>');
         }
       });
     },
