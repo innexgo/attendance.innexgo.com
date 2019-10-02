@@ -5,7 +5,7 @@ function loadData() {
   var searchParams = new URLSearchParams(window.location.search);
 
   if (!searchParams.has('userId')) {
-    giveAlert('No user query')
+    giveAlert('No user query');
     return;
   }
 

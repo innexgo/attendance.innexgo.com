@@ -20,7 +20,7 @@ function getIrregularities(chartName) {
 
   var studentId = searchParams.get('studentId');
 
-  return request(thisUrl() + '/irregularity/' +
+  request(thisUrl() + '/irregularity/' +
     '?studentId=' + studentId +
     '&minTime=' + String(moment().subtract(14, 'd').format('X')) +
     '&maxTime=' + String(moment().unix()) +
@@ -144,7 +144,6 @@ for (i = 0; i < 14; i++) {
 };
 
 $(document).ready(function () {
-  console.log(thisUrl())
   //var chartOne = document.getElementById('chart-one');
   var chartTwo = document.getElementById('chart-two');
 

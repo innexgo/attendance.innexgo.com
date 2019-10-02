@@ -1,5 +1,5 @@
 .table-height-standard {
-  height: 24rem;
+  height: 22rem;
   overflow: scroll;
 }
 
@@ -20,4 +20,3 @@ a, a:hover {
   border-left-width: 0px;
   border-bottom-width: 0px;
 }
-

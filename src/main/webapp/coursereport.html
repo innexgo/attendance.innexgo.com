@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <!--Background Information -->
+  <title>Course Report</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- CSS References -->
+  <link rel="stylesheet" href="/vendor/bootstrap/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="/vendor/fontawesome-free/css/all.min.css" />
+  <link rel="stylesheet" href="/css/common.css" />
+  <link rel="stylesheet" href="/css/sidebar.css" />
+  <link rel="stylesheet" href="/vendor/chart/css/Chart.min.css" />
+
+
+  <!-- JS References -->
+  <script src="/vendor/jquery/jquery.min.js"></script>
+  <script src="/vendor/bootstrap/js/bootstrap.bundle.js"></script>
+  <script src="/vendor/scannerdetection/jquery.scannerdetection.min.js"></script>
+  <script src="/vendor/js-cookie/js.cookie.js"></script>
+  <script src="/vendor/moment/moment.min.js"></script>
+  <script src="/vendor/chart/js/Chart.min.js"></script>
+  <script src="/js/common.js"></script>
+  <script src="/js/signedin.js"></script>
+  <script src="/js/loadprefs.js"></script>
+  <script src="/js/sidebar.js"></script>
+  <script src="/js/coursereport.js"></script>
+</head>
+
+<body class="palette-level-one">
+  <!-- Sidebar -->
+  <nav style="height:100%" id="sidebar" class="navbar-palette">
+    <nav class="navbar sidebar-top">
+      <button type="button" onclick="closeSidebar()" class="btn btn-icon sidebar-button">
+        <i class="fa fa-bars navbar-palette"></i>
+      </button>
+      <div style="margin:auto;display:block">
+        <h6 id="info-time">Current Time</h6>
+      </div>
+    </nav>
+    <div class="sidebar-item sidebar-info-list navbar-palette" style="border:none;display:block;">
+      <h6 id="info-name">Teacher Name</h6>
+      <h6 id="info-period">Current Period</h6>
+      <h6 id="info-location">Current Location</h6>
+    </div>
+    <div id="sidebar-navigation">
+      <a class="sidebar-item navbar-palette" href="#" id="my-overview">Overview</a>
+      <a class="sidebar-item navbar-palette" href="/history.html">History</a>
+      <a class="sidebar-item navbar-palette" href="/recentactivity.html">Recent Activity</a>
+      <a class="sidebar-item navbar-palette" href="#" id="my-managestudent">Manage Students</a>
+      <a class="sidebar-item navbar-palette" href="#" id="reports">Reports</a>
+    </div>
+    <div class="sidebar-bottom">
+      <a class="sidebar-item navbar-palette" href="/settings.html"><i class="fa fa-cog"></i> Settings</a>
+      <a class="sidebar-item navbar-palette" href="/login.html"><i class="fa fa-sign-out-alt"></i> Sign out</a>
+    </div>
+  </nav>
+  <!-- Overlay -->
+  <div id="overlay" onclick="closeSidebar()"></div>
+  <!-- Top Navbar -->
+  <nav class="navbar navbar-expand-md navbar-palette">
+    <div class="order-0">
+      <button type="button" onclick="openSidebar()" class="btn btn-icon sidebar-button">
+        <i class="fa fa-bars navbar-palette"></i>
+      </button>
+    </div>
+    <!-- Center Logo -->
+    <div class="mx-auto order-0">
+      <a id="navbar-brand" class="navbar-brand navbar-palette" href="index.html"></a>
+    </div>
+  </nav>
+
+
+  <!-- Content -->
+  <div id="not-sidebar" class="container-fluid">
+    <div class="row my-3 px-3">
+
+      <!-- Student Stats -->
+      <div class="card col-sm mx-3 card-no-border palette-level-two">
+        <div class="card-body">
+          <div>
+            <h5 id="course-name" class="card-title text-center">Course Name</h5>
+          </div>
+          <div class="card-text">
+            <h6>
+              <table style='width:100%'>
+                <tr>
+                  <td id="course-period" style='width:50%'>Period: </td>
+                  <td id="course-teacher" style='text-align: left; width:50%'>Teacher: </td>
+                </tr>
+                <tr>
+                  <td id="course-tags">Tags: </td>
+                  <td id="course-student-count" style='text-align: left'>Total Students: </td>
+                </tr>
+              </table>
+            </h6>
+            <hr>
+            <div class="table-height-standard">
+              <table class="table striped white">
+                <thead>
+                  <tr class="table-header">
+                    <td>Name</td>
+                    <td>ID</td>
+                    <td>Grad. Year</td>
+                  </tr>
+                </thead>
+                <tbody id="course-students" class="table-height-standard"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card col-sm card-no-border palette-level-two">
+        <canvas id="chart-one" height="50%" width="50%"></canvas>
+        <table style='width:100%'>
+          <tr>
+            <td id="course-total-tardies" style='width:50%'>Total Tardies: </td>
+            <td id="course-total-absences" style='text-align: left; width:50%'>Total Absences: </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>
