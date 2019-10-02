@@ -145,7 +145,7 @@ for (i = 0; i < 14; i++) {
 
 $(document).ready(function () {
   console.log(thisUrl())
-  var chartOne = document.getElementById('chart-one');
+  //var chartOne = document.getElementById('chart-one');
   var chartTwo = document.getElementById('chart-two');
 
   var dates = [];

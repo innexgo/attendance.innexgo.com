@@ -65,7 +65,7 @@ function currentStatus() {
                   student.name + '</a></td>' +
                 '<td>' + student.id + '</td>' +
                 '<td style="background-color:' + bgcolor + ';color:' + fgcolor + '">' + text + '</td>');
-            newrow.className = 'id-' + student.id;
+            newrow.id = 'id-' + student.id;
           }
         },
         //failure
