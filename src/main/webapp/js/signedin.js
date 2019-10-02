@@ -61,6 +61,17 @@ $(document).ready(function(){
   userInfo();
   var apiKey = Cookies.getJSON('apiKey');
   var period = Cookies.getJSON('period');
-  doTimer(apiKey.expirationTime - moment().valueOf(), 1, function(){}, ensureSignedIn());
-  doTimer(period.endTime -moment().valueOf(), 1, function(){}, userInfo());
+  doTimer(apiKey.expirationTime - moment().valueOf(), 1, function(){
+    if (apiKey.expirationTime-moment().valueOf() < 0){
+      ensureSignedIn();
+    };
+  }, ensureSignedIn());
+  doTimer(period.endTime-moment().valueOf(), 1, function(){
+    if (period == null) {
+      setInterval(userInfo(), 10000)
+    }
+    if (period.endTime-moment().valueOf() < 0){
+      userInfo();
+    };
+  }, userInfo());
 });
