@@ -119,8 +119,8 @@ function loadStudentProfile() {
           newrow.innerhtml =
             ('<td>' + course.period + '</td>' +
              '<td>' + relativeLink(course.subject,'/coursereport.html?courseId=' + course.id) + '</td>' +
-             '<td>' + relativeLink(course.teacher.name, '/userreport.html?userId='+course.teacher.id)+'</td>' +
-             '<td>' + relativeLink(course.location.name, '/locationreport.hml?locationId='+course.location.id)+ '</td>');
+             '<td>' + relativeLink(course.teacher.name, '/userprofile.html?userId='+course.teacher.id)+'</td>' +
+             '<td>' + relativeLink(course.location.name, '/locationreport.html?locationId='+course.location.id)+ '</td>');
         }
       });
     },
