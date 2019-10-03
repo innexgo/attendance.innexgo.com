@@ -21,8 +21,8 @@ function loadStudentIrregularities() {
   var courseId = searchParams.get('courseId');
 
   request(thisUrl() +  '/student/' +
-    '?courseId='+courseId +
-    '&apiKey='apiKey.key,
+    '?courseId=' + courseId +
+    '&apiKey=' + apiKey.key,
     function(xhr) {
       courseIrregularities = JSON.parse(xhr.responseText);
     },
