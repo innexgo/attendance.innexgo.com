@@ -59,11 +59,7 @@ function loadGraph(chartName) {
         var newrow = table.insertRow(0);
         var student = students[i];
         newrow.innerHTML =
-<<<<<<< HEAD
-          ('<td>' + linkRelative(student.name, '/studentprofile.html/?studentId=' + student.id) + '</td>' +
-=======
-          ('<td>' + linkRelative(student.name, '/studentreport.html?studentId='+student.id) + '</td>' +
->>>>>>> 4879b9ce68ea36fe91298504a865c13d69c0f95d
+          ('<td>' + linkRelative(student.name, '/studentprofile.html?studentId='+student.id) + '</td>' +
             '<td>' + student.id + '</td>' +
             '<td>' + student.graduatingYear + '</td>')
         newrow.id = 'id-' + student.id;

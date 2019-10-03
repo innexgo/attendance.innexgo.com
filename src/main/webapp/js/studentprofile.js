@@ -118,9 +118,9 @@ function loadStudentProfile() {
           var newrow = classtable.insertrow(0);
           newrow.innerhtml =
             ('<td>' + course.period + '</td>' +
-             '<td>' + relativeLink(course.subject,'/coursereport.html?courseId=' + course.id) + '</td>' +
+             '<td>' + relativeLink(course.subject,'/courseprofile.html?courseId='+course.id) + '</td>' +
              '<td>' + relativeLink(course.teacher.name, '/userprofile.html?userId='+course.teacher.id)+'</td>' +
-             '<td>' + relativeLink(course.location.name, '/locationreport.html?locationId='+course.location.id)+ '</td>');
+             '<td>' + relativeLink(course.location.name, '/locationprofile.html?locationId='+course.location.id)+ '</td>');
         }
       });
     },

@@ -125,7 +125,7 @@ function submitQuery(encounterId, userId, userName, locationId, type, minDate, m
         var encounter = encounters[i];
         table.insertRow(0).innerHTML=
           ('<tr>' +
-            '<td>' + linkRelative(encounter.student.name, '/studentprofile.html/?studentId=' + session.inEncounter.student.id) + '</td>' +
+            '<td>' + linkRelative(encounter.student.name, '/studentprofile.html?studentId=' + session.inEncounter.student.id) + '</td>' +
             '<td>' + encounter.type + '</td>' +
             '<td>' + moment(encounter.time).fromNow() + '</td>' +
             '<td>' + encounter.location.name + '</td>' +

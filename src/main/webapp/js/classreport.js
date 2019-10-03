@@ -1,7 +1,7 @@
 "use strict"
 
 
-function loadClassReport() {
+function loadClassProfile() {
   var apiKey = Cookies.getJSON('apiKey');
 
   if(apiKey == null) {
@@ -9,7 +9,7 @@ function loadClassReport() {
     return;
   }
 
-  var table = document.getElementById('classreport-table');
+  var table = document.getElementById('classprofile-table');
 
   var searchParams = new URLSearchParams(window.location.search);
 
@@ -67,11 +67,7 @@ function loadClassReport() {
             // put values in table
             var newrow = table.insertRow(0);
             newrow.innerHTML =
-<<<<<<< HEAD
-              ('<td>' + linkRelative(student.name, '/studentprofile.html/?studentId=' + student.id) + '</td>' +
-=======
-              ('<td>' + linkRelative(student.name, '/studentreport.html?studentId='+student.id)+ '</td>' +
->>>>>>> 4879b9ce68ea36fe91298504a865c13d69c0f95d
+              ('<td>' + linkRelative(student.name, '/studentprofile.html?studentId='+student.id)+ '</td>' +
                 '<td>' + student.id + '</td>' +
                 '<td style="background-color:' + bgcolor + ';color:' + fgcolor + '">' + text + '</td>');
             newrow.className = 'id-' + student.id;
@@ -98,7 +94,7 @@ function loadClassText() {
     return;
   }
 
-  var table = document.getElementById('classreport-table');
+  var table = document.getElementById('classprofile-table');
 
   var searchParams = new URLSearchParams(window.location.search);
 
@@ -110,7 +106,7 @@ function loadClassText() {
   var courseId = searchParams.get('courseId');
   var periodId = searchParams.get('periodId');
 
-  var text = document.getElementById('classreport-text');
+  var text = document.getElementById('classprofile-text');
 
   request(thisUrl() + '/course/' +
     '?courseId='+courseId +
@@ -160,6 +156,6 @@ function loadClassText() {
 
 $(document).ready(function () {
   loadClassText();
-  loadClassReport();
+  loadClassProfile();
 })
 
