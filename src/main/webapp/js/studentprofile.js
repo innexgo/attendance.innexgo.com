@@ -121,12 +121,10 @@ function loadStudentProfile() {
           newrow.innerHTML =
             ('<td>' + course.period + '</td>' +
              '<td>' + '<a href="' + thisUrl() + 
-                '/coursereport.html/?apiKey=' + apiKey.key + 
-                '&courseId=' + course.id+ '">' + 
+                '/coursereport.html/?&courseId=' + course.id+ '">' + 
                 course.subject + '</a></td>' +
              '<td>' + '<a href="' + thisUrl() + 
-                '/userprofile.html/?apiKey=' + apiKey.key + 
-                '&userId=' + course.teacher.id+ '">' + 
+                '/userprofile.html/?userId=' + course.teacher.id+ '">' + 
                 course.teacher.name + '</a></td>' +
              '<td>' + course.location.name + '</td>');
         }

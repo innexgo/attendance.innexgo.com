@@ -56,8 +56,7 @@ function loadData() {
           newrow.innerHTML =
             ('<td>' + course.period + '</td>' +
              '<td>' + '<a href="' + thisUrl() + 
-                '/coursereport.html/?apiKey=' + apiKey.key + 
-                '&courseId=' + course.id+ '">' + 
+                '/coursereport.html/?courseId=' + course.id+ '">' + 
                 course.subject + '</a></td>' + 
              '<td>' + course.location.name + '</td>');
         }
