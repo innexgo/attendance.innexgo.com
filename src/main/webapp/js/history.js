@@ -125,14 +125,11 @@ function submitQuery(encounterId, userId, userName, locationId, type, minDate, m
         var encounter = encounters[i];
         table.insertRow(0).innerHTML=
           ('<tr>' +
-            '<td>'+
-              '<a href="' + thisUrl() + 
-                '/studentprofile.html/?studentId=' + session.inEncounter.student.id+ '">'+
-              encounter.student.name + '</a></td>' +
+            '<td>' + linkRelative(encounter.student.name, '/studentprofile.html/?studentId=' + session.inEncounter.student.id) + '</td>' +
             '<td>' + encounter.type + '</td>' +
             '<td>' + moment(encounter.time).fromNow() + '</td>' +
             '<td>' + encounter.location.name + '</td>' +
-            '</tr>');
+          '</tr>');
       }
     },
     function(xhr) {

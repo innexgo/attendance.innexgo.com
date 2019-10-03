@@ -55,9 +55,7 @@ function loadData() {
           var newrow = classTable.insertRow(0);
           newrow.innerHTML =
             ('<td>' + course.period + '</td>' +
-             '<td>' + '<a href="' + thisUrl() + 
-                '/coursereport.html/?courseId=' + course.id+ '">' + 
-                course.subject + '</a></td>' + 
+             '<td>' + linkRelative(course.subject, '/coursereport.html/?courseId=' + course.id) + '</td>' +
              '<td>' + course.location.name + '</td>');
         }
       });

@@ -41,10 +41,7 @@ function recentActivity() {
         table.insertRow(0).innerHTML=
           ('<tr>' +
             '<td>' + (sessions.length - i) + '</td>' +
-            '<td>' + 
-              '<a href="' + thisUrl() + 
-                '/studentprofile.html/?studentId=' + session.inEncounter.student.id+ '">'+
-              session.inEncounter.student.name + '</a></td>' +
+            '<td>' + linkRelative(session.inEncounter.student.name, '/studentprofile.html/?studentId=' + session.inEncounter.student.id) + '</td>' +
             '<td>' + session.inEncounter.student.id + '</td>' +
             '<td>' + session.course.period + '</td>' +
             '<td>' + session.course.teacher.name + '</td>' +

@@ -15,9 +15,7 @@ function loadDataOne() {
     function (xhr) {
       var courseResponse = JSON.parse(xhr.responseText)[0];
       document.getElementById('course-name').innerHTML = courseResponse.subject;
-      document.getElementById('course-teacher').innerHTML = 'Teacher: ' + '<a href="' + thisUrl() +
-                '&userId=' + courseResponse.teacher.id+ '">' +
-                courseResponse.teacher.name + '</a>';
+      document.getElementById('course-teacher').innerHTML = 'Teacher: ' + linkRelative(courseResponse.teacher.name, 'userprofile.html/&userId=' + courseResponse.teacher.id);
       document.getElementById('course-period').innerHTML = 'Period: ' + courseResponse.period;
     },
     function (xhr) {
@@ -59,10 +57,7 @@ function loadGraph(chartName) {
         var newrow = table.insertRow(0);
         var student = students[i];
         newrow.innerHTML =
-          ('<td>' +
-            '<a href="' + thisUrl() +
-              '&studentId=' + student.id+ '">' +
-              student.name + '</a></td>' +
+          ('<td>' + linkRelative(student.name, '/studentprofile.html/?studentId=' + student.id) + '</td>' +
             '<td>' + student.id + '</td>' +
             '<td>' + student.graduatingYear + '</td>')
         newrow.id = 'id-' + student.id;
