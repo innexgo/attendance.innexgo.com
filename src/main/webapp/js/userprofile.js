@@ -20,7 +20,7 @@ function loadData() {
     function (xhr) {
       var userResponse = JSON.parse(xhr.responseText)[0];
       document.getElementById('user-name').innerHTML = userResponse.name;
-      document.getElementById('user-email').innerHTML = 'Email: ' + userResponse.email;
+      document.getElementById('user-email').innerHTML = 'Email: ' + linkAbsolute(userResponse.email, 'mailto:' + userResponse.email);
       document.getElementById('user-position').innerHTML = position[userResponse.ring];
       if (userResponse.ring == 0){
       var element = document.getElementById('user-courses-table');

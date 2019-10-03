@@ -15,8 +15,9 @@ function loadDataOne() {
     function (xhr) {
       var courseResponse = JSON.parse(xhr.responseText)[0];
       document.getElementById('course-name').innerHTML = courseResponse.subject;
-      document.getElementById('course-teacher').innerHTML = 'Teacher: ' + linkRelative(courseResponse.teacher.name, 'userprofile.html/&userId=' + courseResponse.teacher.id);
+      document.getElementById('course-teacher').innerHTML = 'Teacher: ' + linkRelative(courseResponse.teacher.name, '/userprofile.html?userId=' + courseResponse.teacher.id);
       document.getElementById('course-period').innerHTML = 'Period: ' + courseResponse.period;
+      document.getElementById('course-room').innerHTML = linkRelative(courseResponse.location.name, '/locationprofile.html?locationId='+courseResponse.location.id);
     },
     function (xhr) {
       //failure

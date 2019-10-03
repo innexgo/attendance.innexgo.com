@@ -10,12 +10,14 @@ function closeSidebar() {
 
 $(document).ready(function(){
   var prefs = Cookies.getJSON('prefs');
-  var userType = Cookies.getJSON('apiKey').user.ring;
+  var apiKey = Cookies.getJSON('apiKey')  
   var sidebar = prefs.sidebarStyle;
   var colour = prefs.colourTheme;
   var sidebarInfo = prefs.sidebarInfo;
 
-  if (userType == 0) {
+  document.getElementById('info-name').innerHTML = linkRelative(apiKey.user.name, '/userprofile.html?userId='+apiKey.user.id);
+
+  if (apiKey.user.ring == 0) {
     document.getElementById('my-overview').href = '/adminoverview.html';
     document.getElementById('my-managestudent').href = '/adminmanagestudent.html';
     document.getElementById('reports').href = '/adminreports.html';
@@ -93,7 +95,6 @@ function displayInfo() {
 
 
   document.getElementById('info-time').innerHTML = moment().format('dddd, MMMM D');
-  document.getElementById('info-name').innerHTML = apiKey.user.name;
 
   document.getElementById('info-period').innerHTML =
     (period == null
@@ -110,5 +111,13 @@ function displayInfo() {
 
 $(document).ready(function() {
   displayInfo();
-  setInterval(displayInfo, 1000);
+  var period = Cookies.getJSON('period');
+  setInterval(function(){
+    if (period == null) {
+      displayInfo();
+    }
+    else if (period.endTime-moment().valueOf() < 0){
+      displayInfo();
+    };
+  }, 1000);
 })

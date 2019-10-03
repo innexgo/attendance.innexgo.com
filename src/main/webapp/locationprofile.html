@@ -1,18 +1,17 @@
 <!DOCTYPE html>
 <html>
-
   <head>
     <!--Background Information -->
-    <title>Course Profile</title>
+    <title>Location Profile</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- CSS References -->
-    <link rel="stylesheet" href="/vendor/bootstrap/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="/vendor/fontawesome-free/css/all.min.css" />
-    <link rel="stylesheet" href="/css/common.css" />
-    <link rel="stylesheet" href="/css/sidebar.css" />
-    <link rel="stylesheet" href="/vendor/chart/css/Chart.min.css" />
+    <link rel="stylesheet" href="/vendor/bootstrap/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/vendor/fontawesome-free/css/all.min.css"/>
+    <link rel="stylesheet" href="/css/common.css"/>
+    <link rel="stylesheet" href="/css/sidebar.css"/>
+    <link rel="stylesheet" href="/vendor/chart/css/Chart.min.css"/>
 
 
     <!-- JS References -->
@@ -26,9 +25,8 @@
     <script src="/js/signedin.js"></script>
     <script src="/js/loadprefs.js"></script>
     <script src="/js/sidebar.js"></script>
-    <script src="/js/courseprofile.js"></script>
+    <script src="/js/locationprofile.js"></script>
   </head>
-
   <body class="palette-level-one">
     <!-- Sidebar -->
     <nav style="height:100%" id="sidebar" class="navbar-palette">
@@ -77,54 +75,24 @@
     <div id="not-sidebar" class="container-fluid">
       <div class="row my-3 px-3">
 
-        <!-- Student Stats -->
+        <!-- Teacher Stats -->
         <div class="card col-sm mx-3 card-no-border palette-level-two">
           <div class="card-body">
             <div>
-              <h5 id="course-name" class="card-title text-center">Course Name</h5>
+              <h5 id="location-name" class="card-title text-center">Location Name</h5>
             </div>
             <div class="card-text">
-              <h6>
-                <table style='width:100%'>
-                  <tr>
-                    <td id="course-period" style='width:50%'>Period: </td>
-                    <td id="course-teacher" style='text-align: left; width:50%'>Teacher: </td>
+              <table id='locaiton-courses-table' class="table">
+                <thead>
+                  <tr class='table-header'>
+                    <td>Period</td>
+                    <td>Course Name</td>
+                    <td>Teacher</td>
                   </tr>
-                  <tr>
-                    <td id="course-room">Room </td>
-                    <td id="course-student-count" style='text-align: left'>Total Students: </td>
-                  </tr>
-                </table>
-              </h6>
-              <hr>
-              <div class="table-height-standard">
-                <table class="table striped white">
-                  <thead>
-                    <tr class="table-header">
-                      <td>Name</td>
-                      <td>ID</td>
-                      <td>Grad. Year</td>
-                    </tr>
-                  </thead>
-                  <tbody id="course-students" class="table-height-standard"></tbody>
-                </table>
-              </div>
+                </thead>
+                <tbody id="location-courses"></tbody>
+              </table>
             </div>
-          </div>
-        </div>
-
-        <div class="card col-sm card-no-border palette-level-two">
-          <div class="card-body">
-            <div>
-              <h5 class="card-title text-center">Student Time Missing</h5>
-            </div>
-            <canvas id="chart-one" height="50%" width="50%"></canvas>
-            <table style='width:100%'>
-              <tr>
-                <td id="course-total-tardies" style='width:50%'>Total Tardies: </td>
-                <td id="course-total-absences" style='text-align: left; width:50%'>Total Absences: </td>
-              </tr>
-            </table>
           </div>
         </div>
       </div>

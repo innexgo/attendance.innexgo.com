@@ -29,6 +29,6 @@ tr.table-header {
 	border: 1px solid #eaeef1;
 }
 
-a {
+:not(#info-name) > a {
   color: #212529;
 }

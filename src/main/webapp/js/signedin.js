@@ -66,12 +66,13 @@ $(document).ready(function(){
       ensureSignedIn();
     };
   }, ensureSignedIn());
-  doTimer(period.endTime-moment().valueOf(), 1, function(){
+
+  setInterval(function(){
     if (period == null) {
-      setInterval(userInfo(), 10000)
+      userInfo();
     }
-    if (period.endTime-moment().valueOf() < 0){
+    else if (period.endTime-moment().valueOf() < 0){
       userInfo();
     };
-  }, userInfo());
+  }, 10000);
 });
