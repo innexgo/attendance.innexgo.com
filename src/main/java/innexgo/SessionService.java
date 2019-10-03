@@ -92,10 +92,13 @@ public class SessionService {
       Long outEncounterId,
       Long anyEncounterId,
       Long courseId,
+      Long teacherId,
+      String teacherName,
       Boolean complete,
       Boolean hasOut,
       Long locationId,
       Long studentId,
+      String studentName,
       Long time,
       Long inTimeBegin,
       Long inTimeEnd,
@@ -105,11 +108,16 @@ public class SessionService {
     boolean outEncounterUnused =
         outEncounterId == null && outTimeBegin == null && outTimeEnd == null && time == null;
 
+    boolean courseUnused = teacherId == null && teacherName == null;
+    boolean userUnused = teacherName == null;
+
     String sql =
         "SELECT ses.id, ses.student_id, ses.in_encounter_id, ses.out_encounter_id, ses.course_id, ses.has_out, ses.complete"
             + " FROM session ses"
             + " JOIN encounter inen ON ses.in_encounter_id = inen.id"
             + (outEncounterUnused ? "" : " JOIN encounter outen ON ses.out_encounter_id = outen.id")
+            + (courseUnused ? "" : " JOIN course c ON c.teacher_id = c.id")
+            + (userUnused ? "" : " JOIN user u ON u.id = c.id")
             + " WHERE 1=1 "
             + (id == null ? "" : " AND ses.id = " + id)
             + (inEncounterId == null ? "" : " AND ses.in_encounter_id = " + inEncounterId)
