@@ -22,8 +22,8 @@ function getIrregularities(chartName) {
 
   request(thisUrl() + '/irregularity/' +
     '?studentId=' + studentId +
-    '&minTime=' + String(moment().subtract(14, 'd').format('X')) +
-    '&maxTime=' + String(moment().unix()) +
+    '&minTime=' + moment().subtract(14, 'd').format('X') +
+    '&maxTime=' + moment().unix() +
     '&apiKey=' + apiKey.key,
     function (xhr) {
       var irregResponse = JSON.parse(xhr.responseText);
