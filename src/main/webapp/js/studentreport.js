@@ -109,24 +109,18 @@ function loadStudentProfile() {
         var currentPeriodList = studentCourses.filter(c => c.period == p);
         coursePeriods.push(currentPeriodList.length == 0 ? null : currentPeriodList[0])
       }
-      coursePeriods.sort(function (a, b) {
-        if (a != null && b != null) {
-          return b.period-a.period;
-        } else {return -1};
-      });
+      // sort in reverse order by period
+      coursePeriods.sort((a, b) => b.period-a.period);
+
       var classTable = document.getElementById('studentprofile-courses');
-      coursePeriods.forEach(function (course) {
+      courseperiods.foreach(function (course) {
         if (course != null) {
-          var newrow = classTable.insertRow(0);
-          newrow.innerHTML =
+          var newrow = classtable.insertrow(0);
+          newrow.innerhtml =
             ('<td>' + course.period + '</td>' +
-             '<td>' + '<a href="' + thisUrl() + 
-                '/coursereport.html/?&courseId=' + course.id+ '">' + 
-                course.subject + '</a></td>' +
-             '<td>' + '<a href="' + thisUrl() + 
-                '/userprofile.html/?userId=' + course.teacher.id+ '">' + 
-                course.teacher.name + '</a></td>' +
-             '<td>' + course.location.name + '</td>');
+             '<td>' + relativeLink(course.subject,'/coursereport.html?courseId=' + course.id) + '</td>' +
+             '<td>' + relativeLink(course.teacher.name, '/userreport.html?userId='+course.teacher.id)+'</td>' +
+             '<td>' + relativeLink(course.location.name, '/locationreport.hml?locationId='+course.location.id)+ '</td>');
         }
       });
     },

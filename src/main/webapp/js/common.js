@@ -94,6 +94,10 @@ function toGraduatingYear(grade) {
   return currentYear;
 }
 
-function link(text, url) {
+function linkAbsolute(text, url) {
   return '<a href="'+url+'">'+text+'</a>';
+}
+
+function linkRelative(text, url) {
+  return linkAbsolute(text, thisUrl()+url);
 }
