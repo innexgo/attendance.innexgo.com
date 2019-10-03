@@ -94,3 +94,6 @@ function toGraduatingYear(grade) {
   return currentYear;
 }
 
+function link(text, url) {
+  return '<a href="'+url+'">'+text+'</a>';
+}

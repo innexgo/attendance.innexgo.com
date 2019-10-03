@@ -15,9 +15,8 @@ function loadDataOne() {
     function (xhr) {
       var courseResponse = JSON.parse(xhr.responseText)[0];
       document.getElementById('course-name').innerHTML = courseResponse.subject;
-      document.getElementById('course-teacher').innerHTML = 'Teacher: ' + '<a href="' + thisUrl() + 
-                '/userprofile.html/?apiKey=' + apiKey.key + 
-                '&userId=' + courseResponse.teacher.id+ '">' + 
+      document.getElementById('course-teacher').innerHTML = 'Teacher: ' + '<a href="' + thisUrl() +
+                '&userId=' + courseResponse.teacher.id+ '">' +
                 courseResponse.teacher.name + '</a>';
       document.getElementById('course-period').innerHTML = 'Period: ' + courseResponse.period;
     },
@@ -60,10 +59,9 @@ function loadGraph(chartName) {
         var newrow = table.insertRow(0);
         var student = students[i];
         newrow.innerHTML =
-          ('<td>' + 
-            '<a href="' + thisUrl() + 
-              '/studentprofile.html/?apiKey=' + apiKey.key + 
-              '&studentId=' + student.id+ '">' + 
+          ('<td>' +
+            '<a href="' + thisUrl() +
+              '&studentId=' + student.id+ '">' +
               student.name + '</a></td>' +
             '<td>' + student.id + '</td>' +
             '<td>' + student.graduatingYear + '</td>')
@@ -119,7 +117,7 @@ function loadGraph(chartName) {
     }
   );
 };
-  
+
 
 $(document).ready(function() {
   loadDataOne();
