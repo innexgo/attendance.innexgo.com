@@ -33,7 +33,7 @@ function loadData() {
       return
     }
   );
-  
+
   request(thisUrl() + '/course/' +
     '?teacherId=' + userId +
     '&apiKey=' + apiKey.key,
@@ -55,8 +55,8 @@ function loadData() {
           var newrow = classTable.insertRow(0);
           newrow.innerHTML =
             ('<td>' + course.period + '</td>' +
-             '<td>' + linkRelative(course.subject, '/coursereport.html/?courseId=' + course.id) + '</td>' +
-             '<td>' + course.location.name + '</td>');
+             '<td>' + relativeLink(course.subject, '/coursereport.html?courseId='+course.id) + '</td>' +
+             '<td>' + relativeLink(course.location.name, 'locationreport.html?locationId='+location.id) + '</td>');
         }
       });
     },

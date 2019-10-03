@@ -41,6 +41,7 @@ function loadGraph(chartName) {
     function (xhr) {
       var students = JSON.parse(xhr.responseText);
       var table = document.getElementById('course-students');
+      // sort alphabetically
       students.sort(function(a, b) {
         var nameA = a.name.toUpperCase();
         var nameB = b.name.toUpperCase();
@@ -53,11 +54,16 @@ function loadGraph(chartName) {
         return 0;
       });
       document.getElementById('course-student-count').innerHTML = 'Total Students: ' + students.length;
+
       for (var i = 0; i < students.length; i++) {
         var newrow = table.insertRow(0);
         var student = students[i];
         newrow.innerHTML =
+<<<<<<< HEAD
           ('<td>' + linkRelative(student.name, '/studentprofile.html/?studentId=' + student.id) + '</td>' +
+=======
+          ('<td>' + linkRelative(student.name, '/studentreport.html?studentId='+student.id) + '</td>' +
+>>>>>>> 4879b9ce68ea36fe91298504a865c13d69c0f95d
             '<td>' + student.id + '</td>' +
             '<td>' + student.graduatingYear + '</td>')
         newrow.id = 'id-' + student.id;

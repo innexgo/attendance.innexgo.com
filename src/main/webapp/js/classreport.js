@@ -67,7 +67,11 @@ function loadClassReport() {
             // put values in table
             var newrow = table.insertRow(0);
             newrow.innerHTML =
+<<<<<<< HEAD
               ('<td>' + linkRelative(student.name, '/studentprofile.html/?studentId=' + student.id) + '</td>' +
+=======
+              ('<td>' + linkRelative(student.name, '/studentreport.html?studentId='+student.id)+ '</td>' +
+>>>>>>> 4879b9ce68ea36fe91298504a865c13d69c0f95d
                 '<td>' + student.id + '</td>' +
                 '<td style="background-color:' + bgcolor + ';color:' + fgcolor + '">' + text + '</td>');
             newrow.className = 'id-' + student.id;
