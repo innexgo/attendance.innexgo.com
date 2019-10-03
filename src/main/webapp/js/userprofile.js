@@ -55,8 +55,8 @@ function loadData() {
           var newrow = classTable.insertRow(0);
           newrow.innerHTML =
             ('<td>' + course.period + '</td>' +
-             '<td>' + relativeLink(course.subject, '/courseprofile.html?courseId='+course.id) + '</td>' +
-             '<td>' + relativeLink(course.location.name, 'locationprofile.html?locationId='+location.id) + '</td>');
+             '<td>' + linkRelative(course.subject, '/courseprofile.html?courseId='+course.id) + '</td>' +
+             '<td>' + linkRelative(course.location.name, '/locationprofile.html?locationId='+location.id) + '</td>');
         }
       });
     },
