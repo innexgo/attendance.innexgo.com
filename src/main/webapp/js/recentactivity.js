@@ -43,8 +43,7 @@ function recentActivity() {
             '<td>' + (sessions.length - i) + '</td>' +
             '<td>' + 
               '<a href="' + thisUrl() + 
-                '/studentprofile.html/?apiKey=' + apiKey.key + 
-                '&studentId=' + session.inEncounter.student.id+ '">'+
+                '/studentprofile.html/?studentId=' + session.inEncounter.student.id+ '">'+
               session.inEncounter.student.name + '</a></td>' +
             '<td>' + session.inEncounter.student.id + '</td>' +
             '<td>' + session.course.period + '</td>' +

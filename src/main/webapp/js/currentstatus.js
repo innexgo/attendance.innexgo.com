@@ -70,8 +70,7 @@ function currentStatus() {
             newrow.innerHTML =
               ('<td>' + 
                 '<a href="' + thisUrl() + 
-                  '/studentprofile.html/?apiKey=' + apiKey.key + 
-                  '&studentId=' + student.id+ '">' + 
+                  '/studentprofile.html/?studentId=' + student.id+ '">' + 
                   student.name + '</a></td>' +
                 '<td>' + student.id + '</td>' +
                 '<td style="background-color:' + bgcolor + ';color:' + fgcolor + '">' + text + '</td>');
