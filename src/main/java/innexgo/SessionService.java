@@ -103,7 +103,8 @@ public class SessionService {
       Long inTimeBegin,
       Long inTimeEnd,
       Long outTimeBegin,
-      Long outTimeEnd) {
+      Long outTimeEnd,
+      Long count) {
 
     boolean outEncounterUnused =
         outEncounterId == null && outTimeBegin == null && outTimeEnd == null && time == null;
@@ -143,6 +144,8 @@ public class SessionService {
             + (inTimeEnd == null ? "" : " AND inen.time <= " + inTimeEnd)
             + (outTimeBegin == null ? "" : " AND outen.time >= " + outTimeBegin)
             + (outTimeEnd == null ? "" : " AND outen.time <= " + outTimeEnd)
+            + " ORDER BY inen.time"
+            + (count == null ? "" : " LIMIT " + count)
             + ";";
 
     RowMapper<Session> rowMapper = new SessionRowMapper();

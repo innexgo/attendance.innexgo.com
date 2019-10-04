@@ -521,7 +521,8 @@ public class ApiController {
                   null, // in time begin
                   null, // in time end
                   null, // out time begin
-                  null // out time end
+                  null, // out time end
+                  null // count
                   );
 
           if(openSessions.size() == 0) {
@@ -1151,7 +1152,8 @@ public class ApiController {
                   parseLong(allRequestParam.get("inTimeBegin")),
                   parseLong(allRequestParam.get("inTimeEnd")),
                   parseLong(allRequestParam.get("outTimeBegin")),
-                  parseLong(allRequestParam.get("outTimeEnd")))
+                  parseLong(allRequestParam.get("outTimeEnd")),
+                  parseLong(allRequestParam.get("count")))
               .stream()
               .map(x -> fillSession(x))
               .collect(Collectors.toList());
