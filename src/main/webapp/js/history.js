@@ -6,22 +6,19 @@ function getFromDocument(id, name) {
     return '';
   } else {
     var value = element.value;
-    if (isEmpty(name)) {
-      if (isEmpty(value)) {
-        return ''
-      } else {
-        return value;
-      }
+    if (value === '') {
+      return ''
     } else {
-      if (isEmpty(value)) {
-        return '';
+      if (name === null) {
+        return value;
+      } else {
+        return '&' + name + '=' + value;
       }
-      return '&' + name + '=' + value;
-    }
+    };
   };
 };
 //gets new data from server and inserts it at the beginning
-function recentActivity() {
+function getHistory() {
   var apiKey = Cookies.getJSON('apiKey');
 
   if (apiKey == null) {
@@ -36,23 +33,29 @@ function recentActivity() {
     getFromDocument('student-id', 'studentId') +
     getFromDocument('teacher-name', 'teacherName') +
     getFromDocument('period', 'period') +
-    getFromDocument('entry-count', 'count') +
-    getFromDocument('startTime', 'inTimeBegin') +
-    getFromDocument('startTime', 'outTimeBegin') +
-    getFromDocument('endTime', 'inTimeEnd') +
-    getFromDocument('endTime', 'outTimeEnd');
+    getFromDocument('entry-count', 'count');
 
-  if (getFromDocument('room-number') !== null) {
+  if (getFromDocument('room-number') !== null && getFromDocument('room-number') !== ''){
     url = url + '&locationId=Room' + getFromDocument('room-number');
-  }
+  };
+
+  var times = {
+    '&inTimeBegin=': $('#start-time'),
+    '&outTimeBegin=': $('#start-time'),
+    '&inTimeEnd=': $('#end-time'),
+    '&outTimeEnd=': $('#end-time')
+  };
+
+  for (const [key, value] of Object.entries(times)) {
+    if (value.val() !== null && value.val() !== undefined && value.val() !== '') {
+      url = url + key + value.datetimepicker('viewDate').valueOf();
+    }
+  };
 
   request(url, function (xhr) {
-    // clear table
-    console.log(url)
     var table = document.getElementById('response-table-body');
     table.innerHTML = '';
     var sessions = JSON.parse(xhr.responseText);
-    console.log(sessions);
     //go backwards to maintain order
     for (var i = sessions.length - 1; i >= 0; i--) {
       var session = sessions[i];
