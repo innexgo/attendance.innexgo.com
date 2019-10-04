@@ -1,139 +1,102 @@
 "use strict"
 
-window.onload = function() {
-  var ID = document.getElementById("ID-input");
-  var name = document.getElementById("name-input");
-
-  name.addEventListener("keydown", function(event) {
-    if (event.keyCode === 13) {
-      event.preventDefault();
-      onQueryClick();
-    }
-  });
-
-  ID.addEventListener("keydown", function(event) {
-    if (event.keyCode === 13) {
-      event.preventDefault();
-      onQueryClick();
-    }
-  });
-}
-
-$(document).ready(function(){
-  var minDateField = document.getElementById("min-date");
-  var maxDateField = document.getElementById("max-date");
-
-  var minTimeField = document.getElementById("min-time");
-  var maxTimeField = document.getElementById("max-time");
-
-  var calcDate = moment().format("YYYY-MM-DD");
-
-  minDateField.value = calcDate;
-  maxDateField.value = calcDate;
-
-  $("#min-date").change(function() {
-    checkValidRange("minField", minDateField, maxDateField, "date");
-  });
-
-  $("#max-date").change(function() {
-    checkValidRange("maxField", minDateField, maxDateField, "date");
-  });
-
-  $("#min-time").change(function() {
-    if(minDateField.value == maxDateField.value) {
-      checkValidRange("minField", minTimeField, maxTimeField, "time");
-    }
-  });
-
-  $("#max-time").change(function() {
-    if(minDateField.value == maxDateField.value) {
-      checkValidRange("maxField", minTimeField, maxTimeField, "time");
-    }
-  });
-});
-
-var calcDate = moment().format("YYYY-MM-DD");
-
-function checkValidRange(which, minField, maxField, type){
-  if (!isEmpty(minField.value) && !isEmpty(maxField.value)) {
-    if (minField.value > maxField.value) {
-      switch (which) {
-        case "minField":
-          maxField.value = minField.value;
-          break;
-
-        case "maxField":
-          minField.value = maxField.value;
-          break;
+function getFromDocument(id, name) {
+  var element = document.getElementById(id);
+  if (element === null) {
+    return '';
+  } else {
+    var value = element.value;
+    if (isEmpty(name)) {
+      if (isEmpty(value)) {
+        return ''
+      } else {
+        return value;
       }
-    }
-    if (type == "date"){
-      if ((maxField.value > calcDate) || (minField.value > calcDate)) {
-        maxField.value = calcDate;
-        minField.value = calcDate;
+    } else {
+      if (isEmpty(value)) {
+        return '';
       }
-      if (minField.value == maxField.value) {
-        checkValidRange("maxField", minTimeField, maxTimeField, "time");
-      }
+      return '&' + name + '=' + value;
     }
-  }
-}
-
-function onQueryClick() {
-  var encounterId = undefined; //TODO add query box
-  var userId = parseInt(document.getElementById("ID-input").value, 10);
-  var userName = document.getElementById("name-input").value;
-  var locationId = undefined;//document.getElementById('locationId').value;
-  var type = undefined;
-  var minDate = new Date(document.getElementById("min-date").value+"T"+document.getElementById("min-time").value+":00"); //TODO there's gotta be a better way then this
-  var maxDate = new Date(document.getElementById("max-date").value+"T"+document.getElementById("max-time").value+":00");
-  var count = 100;
-  submitQuery(encounterId, userId, userName, locationId, type, minDate, maxDate, count);
-}
-
-function normTimestamp(time){
-  return moment(time).format("MM/DD/YYYY HH:mm");
-}
-
+  };
+};
 //gets new data from server and inserts it at the beginning
-function submitQuery(encounterId, userId, userName, locationId, type, minDate, maxDate, count) {
+function recentActivity() {
   var apiKey = Cookies.getJSON('apiKey');
-  var course = Cookies.getJSON('course');
 
-  if(apiKey == null || course == null) {
+  if (apiKey == null) {
     console.log('not enough cookies for recentActivity');
     return;
   }
 
-  var url = thisUrl() + '/encounter/?apiKey=' + Cookies.getJSON('apiKey').key +
-    (isNaN(encounterId) ?       '' : '&encounterId='+encounterId) +
-    (isNaN(userId) ?            '' : '&userId='+userId) +
-    (isEmpty(userName) ?        '' : '&userName='+userName) +
-    (isNaN(locationId) ?        '' : '&locationId='+locationId) +
-    (isEmpty(type) ?            '' : '&type='+encodeURIComponent(type)) +
-    (isEmpty(minDate) ?         '' : '&minTime='+moment(minDate).valueOf()) +
-    (isEmpty(maxDate) ?         '' : '&maxTime='+moment(maxDate).valueOf()) +
-    (isNaN(count) ?             '' : '&count='+count);
-  request(url,
-    function(xhr){
-      // clear table
-      var table = document.getElementById('history-table');
-      table.innerHTML = '';
-      var encounters = JSON.parse(xhr.responseText);
-      //go backwards to maintain order
-      for(var i = encounters.length-1; i >= 0; i--) {
-        var encounter = encounters[i];
-        table.insertRow(0).innerHTML=
-          ('<tr>' +
-            '<td>' + linkRelative(encounter.student.name, '/studentprofile.html?studentId=' + session.inEncounter.student.id) + '</td>' +
-            '<td>' + encounter.type + '</td>' +
-            '<td>' + moment(encounter.time).fromNow() + '</td>' +
-            '<td>' + encounter.location.name + '</td>' +
+  var url = thisUrl() +
+    '/session/' +
+    '?apiKey=' + apiKey.key +
+    getFromDocument('name', 'studentName') +
+    getFromDocument('student-id', 'studentId') +
+    getFromDocument('teacher-name', 'teacherName') +
+    getFromDocument('period', 'period') +
+    getFromDocument('entry-count', 'count') +
+    getFromDocument('startTime', 'inTimeBegin') +
+    getFromDocument('startTime', 'outTimeBegin') +
+    getFromDocument('endTime', 'inTimeEnd') +
+    getFromDocument('endTime', 'outTimeEnd');
+
+  if (getFromDocument('room-number') !== null) {
+    url = url + '&locationId=Room' + getFromDocument('room-number');
+  }
+
+  request(url, function (xhr) {
+    // clear table
+    console.log(url)
+    var table = document.getElementById('response-table-body');
+    table.innerHTML = '';
+    var sessions = JSON.parse(xhr.responseText);
+    console.log(sessions);
+    //go backwards to maintain order
+    for (var i = sessions.length - 1; i >= 0; i--) {
+      var session = sessions[i];
+      var outEncounterTime = (session.outEncounter === null) ? '' : moment(session.outEncounter.time, 'x').format('L LTS');
+      table.insertRow(0).innerHTML =
+        ('<tr>' +
+          '<td>' + (sessions.length - i) + '</td>' +
+          '<td>' + linkRelative(session.inEncounter.student.name, '/studentprofile.html/?studentId=' + session.inEncounter.student.id) + '</td>' +
+          '<td>' + session.inEncounter.student.id + '</td>' +
+          '<td>' + session.course.period + '</td>' +
+          '<td>' + linkRelative(session.course.teacher.name, '/userprofile.html/?userId=' + session.course.teacher.id) + '</td>' +
+          '<td>' + session.course.location.name + '</td>' +
+          '<td>' + moment(session.inEncounter.time, 'x').format('L LTS') + '</td>' +
+          '<td>' + outEncounterTime + '</td>' +
           '</tr>');
-      }
-    },
-    function(xhr) {
+    }
+  },
+    function (xhr) {
       console.log(xhr);
     }
   );
 }
+
+$(document).ready(function () {
+  /* REQUIRED FOR TEMPUS DOMINUS ON PAIN OF DEATH BY RECURSION*/
+  $('#start-time').val('');
+  $('#end-time').val('');
+  $('*[data-toggle="datetimepicker"]').removeClass('datetimepicker-input');
+
+  // Add class back to Tempus Dominus date picker
+  $(document).on('toggle change hide keydown keyup focus', '*[data-toggle="datetimepicker"]', function () {
+    $(this).addClass('datetimepicker-input').datetimepicker({
+      icons: {
+        time: 'far fa-clock',
+        date: 'far fa-calendar-alt',
+        up: 'fas fa-arrow-up',
+        down: 'fas fa-arrow-down',
+        previous: 'fas fa-chevron-left',
+        next: 'fas fa-chevron-right',
+        today: 'far fa-calendar-check',
+        clear: 'far fa-trash',
+        close: 'far fa-times'
+      },
+      maxDate: moment().endOf('day')
+    });
+  });
+});

@@ -20,3 +20,13 @@ a, a:hover {
   border-left-width: 0px;
   border-bottom-width: 0px;
 }
+
+input::-webkit-outer-spin-button.ignore-spinner,
+input::-webkit-inner-spin-button.ignore-spinner {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type=number].ignore-spinner {
+    -moz-appearance:textfield; /* Firefox */
+}
