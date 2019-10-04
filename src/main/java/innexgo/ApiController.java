@@ -514,6 +514,9 @@ public class ApiController {
                   null, // hasOut
                   null, // location id
                   student.id, // student id
+                  null, // student name
+                  null, // teacher id
+                  null, // teacher name
                   null, // time
                   null, // in time begin
                   null, // in time end
@@ -1141,6 +1144,9 @@ public class ApiController {
                   parseBoolean(allRequestParam.get("hasOut")),
                   parseLong(allRequestParam.get("locationId")),
                   parseLong(allRequestParam.get("studentId")),
+                  allRequestParam.get("studentName"),
+                  parseLong(allRequestParam.get("teacherId")),
+                  allRequestParam.get("teacherName"),
                   parseLong(allRequestParam.get("time")),
                   parseLong(allRequestParam.get("inTimeBegin")),
                   parseLong(allRequestParam.get("inTimeEnd")),

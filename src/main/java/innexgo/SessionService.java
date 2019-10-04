@@ -96,6 +96,9 @@ public class SessionService {
       Boolean hasOut,
       Long locationId,
       Long studentId,
+      String studentName,
+      Long teacherId,
+      String teacherName,
       Long time,
       Long inTimeBegin,
       Long inTimeEnd,
@@ -105,11 +108,17 @@ public class SessionService {
     boolean outEncounterUnused =
         outEncounterId == null && outTimeBegin == null && outTimeEnd == null && time == null;
 
+    boolean studentUnused = studentName == null;
+    boolean courseUnused = teacherId == null && teacherName == null;
+    boolean userUnused = teacherName == null;
 
     String sql =
         "SELECT ses.id, ses.student_id, ses.in_encounter_id, ses.out_encounter_id, ses.course_id, ses.has_out, ses.complete"
             + " FROM session ses"
             + " JOIN encounter inen ON ses.in_encounter_id = inen.id"
+            + (studentUnused ? "" : " JOIN student stu ON stu.id = ses.student_id")
+            + (courseUnused ? "" : " JOIN course crs ON crs.id = ses.course_id")
+            + (userUnused ? "" : " JOIN user usr ON usr.id = crs.teacher_id")
             + (outEncounterUnused ? "" : " JOIN encounter outen ON ses.out_encounter_id = outen.id")
             + (id == null ? "" : " AND ses.id = " + id)
             + (inEncounterId == null ? "" : " AND ses.in_encounter_id = " + inEncounterId)
@@ -125,6 +134,9 @@ public class SessionService {
             + (hasOut == null ? "" : " AND ses.has_out = " + hasOut)
             + (courseId == null ? "" : " AND ses.course_id = " + courseId)
             + (studentId == null ? "" : " AND ses.student_id = " + studentId)
+            + (studentName == null ? "" : " AND stu.name = " + Utils.escape(studentName))
+            + (teacherId == null ? "" : " AND crs.teacher_id = " + teacherId)
+            + (teacherName == null ? "" : " AND usr.name = " + Utils.escape(teacherName))
             + (locationId == null ? "" : " AND inen.location_id = " + locationId)
             + (time == null ? "" : " AND " + time + " BETWEEN inen.time AND outen.time")
             + (inTimeBegin == null ? "" : " AND inen.time >= " + inTimeBegin)
