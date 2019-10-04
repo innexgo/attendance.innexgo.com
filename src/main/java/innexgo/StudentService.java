@@ -22,7 +22,6 @@ public class StudentService {
     return student;
   }
 
-
   public List<Student> getAll() {
     String sql = "SELECT id, graduating_year, name, tags FROM student";
     RowMapper<Student> rowMapper = new StudentRowMapper();
