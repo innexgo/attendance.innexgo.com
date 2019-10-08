@@ -2,13 +2,13 @@
 function ensureSignedIn() {
   // check if sign in cookie exists and is logged in
   var apiKey = Cookies.getJSON('apiKey');
-  if(apiKey == null) {
+  if (apiKey == null) {
     window.location.replace(thisUrl() + '/login.html');
     return;
   }
 
   // now check if the cookie is expired
-  if(apiKey.expirationTime < moment().unix()) {
+  if (apiKey.expirationTime < moment().unix()) {
     alert('Session has expired');
     window.location.replace(thisUrl() + '/login.html');
     return;
@@ -19,9 +19,9 @@ function ensureSignedIn() {
   var url = thisUrl() + '/validate/?apiKey=' + apiKey.key;
   request(url,
     // on success
-    function(xhr) {},
+    function (xhr) { },
     // on failure
-    function(xhr) {
+    function (xhr) {
       alert('Current session invalid, refresh the page.');
       Cookies.remove('apiKey');
     }
@@ -30,16 +30,16 @@ function ensureSignedIn() {
 
 function userInfo() {
   var apiKey = Cookies.getJSON('apiKey');
-  if(apiKey != null) {
+  if (apiKey != null) {
     var getPeriodUrl = thisUrl() + '/period/' +
       '?time=' + moment().valueOf() +
-      '&apiKey='  + apiKey.key;
+      '&apiKey=' + apiKey.key;
 
     request(getPeriodUrl,
-      function(xhr) {
+      function (xhr) {
         var period = JSON.parse(xhr.responseText)[0];
         // if class has ended, or not yet begun, delete the relevant cookies
-        if(period == null) {
+        if (period == null) {
           Cookies.remove('period');
           console.log('could not determine period: school not in session');
           return;
@@ -48,7 +48,7 @@ function userInfo() {
         }
       },
       //failure
-      function(xhr) {
+      function (xhr) {
         console.log('error has no school');
         return;
       }
@@ -56,22 +56,44 @@ function userInfo() {
   }
 }
 
-$(document).ready(function(){
+function validPrefs() {
+  var isValid = true;
+  try {
+    var a = JSON.parse(Cookies.get('prefs'));
+    var colours = ['dark', 'default'];
+    if (!colours.includes(a.colourTheme)) {
+      throw Error('Invalid Prefs');
+    }
+  } catch (e) {
+    isValid = false;
+  }
+  try {
+    var styles = ['collapsed', 'fixed'];
+    if (!styles.includes(a.colourTheme)) {
+      throw Error('Invalid Prefs');
+    }
+  } catch (e) {
+    isValid = false;
+  }
+  return isValid;
+}
+
+$(document).ready(function () {
   ensureSignedIn();
   userInfo();
   var apiKey = Cookies.getJSON('apiKey');
   var period = Cookies.getJSON('period');
-  doTimer(apiKey.expirationTime - moment().valueOf(), 1, function(){
-    if (apiKey.expirationTime-moment().valueOf() < 0){
+  doTimer(apiKey.expirationTime - moment().valueOf(), 1, function () {
+    if (apiKey.expirationTime - moment().valueOf() < 0) {
       ensureSignedIn();
     };
   }, ensureSignedIn());
 
-  setInterval(function(){
+  setInterval(function () {
     if (period == null) {
       userInfo();
     }
-    else if (period.endTime-moment().valueOf() < 0){
+    else if (period.endTime - moment().valueOf() < 0) {
       userInfo();
     };
   }, 10000);

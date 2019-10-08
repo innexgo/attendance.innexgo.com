@@ -23,11 +23,11 @@ function escapeHtml(unsafe) {
 
 function doTimer(length, resolution, oninstance, oncomplete) {
   var steps = (length / 100) * (resolution / 10),
-      speed = length / steps,
-      count = 0,
-      start = new Date().getTime();
+    speed = length / steps,
+    count = 0,
+    start = new Date().getTime();
   function instance() {
-    if(count++ == steps) {
+    if (count++ == steps) {
       oncomplete(steps, count);
     } else {
       oninstance(steps, count);
@@ -68,17 +68,17 @@ function ordinal_suffix_of(i) {
 
 var alertCounter = 0;
 function giveAlert(innerHTML, type, permanent) {
-  var alertId ='alert'+alertCounter;
+  var alertId = 'alert' + alertCounter;
   document.getElementById('alert-zone').innerHTML +=
-    '<div id="'+alertId+'" class="alert alert-dismissable ' + type + '" role="alert">' +
+    '<div id="' + alertId + '" class="alert alert-dismissable ' + type + '" role="alert">' +
     innerHTML +
     '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
     '<span aria-hidden="true">&times;</span>' +
     '</button>' +
     '</div>';
-  if(!permanent) {
-    $('#'+alertId).fadeTo(3000, 500).slideUp(500, function () {
-      $('#'+alertId).slideUp(500);
+  if (!permanent) {
+    $('#' + alertId).fadeTo(3000, 500).slideUp(500, function () {
+      $('#' + alertId).slideUp(500);
       this.parentNode.removeChild(this);
     });
   }
@@ -95,9 +95,9 @@ function toGraduatingYear(grade) {
 }
 
 function linkAbsolute(text, url) {
-  return '<a href="'+url+'">'+text+'</a>';
+  return '<a href="' + url + '">' + text + '</a>';
 }
 
 function linkRelative(text, url) {
-  return linkAbsolute(text, thisUrl()+url);
+  return linkAbsolute(text, thisUrl() + url);
 }

@@ -13,13 +13,23 @@ function getRecentActivity() {
   var url = thisUrl() +
     '/session/' +
     '?apiKey=' + apiKey.key +
-    '&teacherName=' + apiKey.user.name;
+    '&teacherId=' + apiKey.user.id +
+    '&count=' + '100';
 
   request(url, function (xhr) {
     var table = document.getElementById('response-table-body');
     table.innerHTML = '';
-    var sessions = JSON.parse(xhr.responseText);
+    var sessionList = JSON.parse(xhr.responseText);
     //go backwards to maintain order
+    sessionList.reduce((accumulator, currentValue) => {
+      console.log(currentValue.inEncounter);
+      accumulator.push(currentValue.inEncounter);
+      if (currentValue.hasOut) {
+        accumulator.push(currentValue.outEncounter);
+      }
+      return accumulator;
+    }, 0);
+    console.log(accumulator);
     for (var i = sessions.length - 1; i >= 0; i--) {
       var session = sessions[i];
       var outEncounterTime = (session.outEncounter === null) ? '' : moment(session.outEncounter.time, 'x').format('L LTS');

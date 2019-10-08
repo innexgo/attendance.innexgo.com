@@ -3,7 +3,6 @@
 $(document).ready(function(){
   const idToPref = {
     "sidebar-style": "sidebarStyle",
-    "sidebar-info": "sidebarInfo",
     "colour-theme": "colourTheme",
   }
 
