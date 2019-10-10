@@ -56,28 +56,6 @@ function userInfo() {
   }
 }
 
-function validPrefs() {
-  var isValid = true;
-  try {
-    var a = JSON.parse(Cookies.get('prefs'));
-    var colours = ['dark', 'default'];
-    if (!colours.includes(a.colourTheme)) {
-      throw Error('Invalid Prefs');
-    }
-  } catch (e) {
-    isValid = false;
-  }
-  try {
-    var styles = ['collapsed', 'fixed'];
-    if (!styles.includes(a.colourTheme)) {
-      throw Error('Invalid Prefs');
-    }
-  } catch (e) {
-    isValid = false;
-  }
-  return isValid;
-}
-
 $(document).ready(function () {
   ensureSignedIn();
   userInfo();

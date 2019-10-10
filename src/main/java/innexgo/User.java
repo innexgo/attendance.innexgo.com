@@ -7,5 +7,5 @@ public class User {
   // not public so they don't get serialized to jackson
   String passwordHash;
   public int ring;
-  public String prefstring;
+  String prefstring;
 }
