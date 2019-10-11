@@ -14,7 +14,7 @@ function staticUrl() {
 
 function apiUrl() {
   // TODO change this to server
-  return staticUrl();
+  return 'http://99.103.193.239:8080/';
 }
 
 function escapeHtml(unsafe) {
