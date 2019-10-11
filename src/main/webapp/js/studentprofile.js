@@ -20,7 +20,7 @@ function getIrregularities(chartName) {
 
   var studentId = searchParams.get('studentId');
 
-  request(thisUrl() + '/irregularity/' +
+  request(apiUrl() + '/irregularity/' +
     '?studentId=' + studentId +
     '&minTime=' + moment().subtract(14, 'd').format('X') +
     '&maxTime=' + moment().unix() +
@@ -84,7 +84,7 @@ function loadStudentProfile() {
 
   var studentId = searchParams.get('studentId');
 
-  request(thisUrl() + '/student/' +
+  request(apiUrl() + '/student/' +
     '?studentId=' + studentId +
     '&apiKey=' + apiKey.key,
     function (xhr) {
@@ -99,7 +99,7 @@ function loadStudentProfile() {
     }
   );
 
-  request(thisUrl() + '/course/' +
+  request(apiUrl() + '/course/' +
     '?studentId=' + studentId +
     '&apiKey=' + apiKey.key,
     function (xhr) {

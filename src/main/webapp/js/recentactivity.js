@@ -6,17 +6,16 @@ function getRecentActivity() {
 
   if (apiKey == null) {
     console.log('apiKey not present. Sending to login page.');
-    window.location.replace(thisUrl() + '/login.html');
+    window.location.replace(staticUrl() + '/login.html');
     return;
   }
 
-  var url = thisUrl() +
+  request(apiUrl() +
     '/session/' +
     '?apiKey=' + apiKey.key +
     '&teacherId=' + apiKey.user.id +
-    '&count=' + '100';
-
-  request(url, function (xhr) {
+    '&count=' + '100',
+    function (xhr) {
     var table = document.getElementById('response-table-body');
     table.innerHTML = '';
     var sessionList = JSON.parse(xhr.responseText);

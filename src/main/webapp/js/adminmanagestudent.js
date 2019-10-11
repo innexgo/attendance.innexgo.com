@@ -27,7 +27,7 @@ function singleUploadStudent() {
   }
 
 
-  request(thisUrl() + '/student/new/' +
+  request(apiUrl() + '/student/new/' +
     '?studentId='+encodeURI(studentId) +
     '&graduatingYear='+ encodeURI(graduatingYear) +
     '&name='+name+
@@ -52,7 +52,7 @@ function batchUploadStudent() {
     return;
   }
 
-  var url = thisUrl() + '/batchUploadStudent/' +
+  var url = apiUrl() + '/batchUploadStudent/' +
     '?apiKey=' + Cookies.getJSON('apiKey').key;
 
   var files = document.getElementById('adminmanagestudent-teacher-file').files;

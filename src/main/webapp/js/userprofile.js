@@ -14,7 +14,7 @@ function loadData() {
     0:'Administrator',
     1:'Teacher'
   }
-  request(thisUrl() + '/user/' +
+  request(apiUrl() + '/user/' +
     '?userId=' + userId +
     '&apiKey=' + apiKey.key,
     function (xhr) {
@@ -34,7 +34,7 @@ function loadData() {
     }
   );
 
-  request(thisUrl() + '/course/' +
+  request(apiUrl() + '/course/' +
     '?teacherId=' + userId +
     '&apiKey=' + apiKey.key,
     function (xhr) {

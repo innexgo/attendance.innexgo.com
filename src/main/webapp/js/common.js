@@ -8,8 +8,13 @@ function isEmpty(str) {
   return (!str || 0 === str.length);
 }
 
-function thisUrl() {
+function staticUrl() {
   return window.location.protocol + "//" + window.location.host;
+}
+
+function apiUrl() {
+  // TODO change this to server
+  return staticUrl();
 }
 
 function escapeHtml(unsafe) {

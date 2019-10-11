@@ -13,13 +13,13 @@ function currentStatus() {
   }
 
   // get students
-  request(thisUrl() + '/student/' +
+  request(apiUrl() + '/student/' +
     '?courseId=' + course.id +
     '&apiKey=' + apiKey.key,
     function (xhr) {
       var students = JSON.parse(xhr.responseText);
       // get irregularities
-      request(thisUrl() + '/irregularity/' +
+      request(apiUrl() + '/irregularity/' +
         '?courseId=' + course.id +
         '&periodId=' + period.id +
         '&apiKey=' + apiKey.key,

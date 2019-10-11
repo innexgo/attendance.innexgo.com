@@ -9,7 +9,7 @@ function loadDataOne() {
   }
   var courseId = searchParams.get('courseId');
 
-  request(thisUrl() + '/course/' +
+  request(apiUrl() + '/course/' +
     '?apiKey=' + apiKey.key +
     '&courseId=' + courseId,
     function (xhr) {
@@ -36,7 +36,7 @@ function loadGraph(chartName) {
   }
   var courseId = searchParams.get('courseId');
 
-  request(thisUrl() + '/student/' +
+  request(apiUrl() + '/student/' +
     '?apiKey=' + apiKey.key +
     '&courseId=' + courseId,
     function (xhr) {
@@ -71,7 +71,7 @@ function loadGraph(chartName) {
       return;
     });
 
-    request(thisUrl() + '/irregularity/' +
+    request(apiUrl() + '/irregularity/' +
     '?apiKey=' + apiKey.key +
     '&courseId=' + courseId,
     function (xhr) {
