@@ -104,5 +104,5 @@ function linkAbsolute(text, url) {
 }
 
 function linkRelative(text, url) {
-  return linkAbsolute(text, thisUrl() + url);
+  return linkAbsolute(text, staticUrl() + url);
 }
