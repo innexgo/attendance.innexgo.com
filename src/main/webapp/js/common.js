@@ -9,14 +9,12 @@ function isEmpty(str) {
 }
 
 function staticUrl() {
-  return 'file:///home/fidgetsinner/workspace/innexgo/src/main/webapp';
-  //return window.location.protocol + "//" + window.location.host;
+  return window.location.protocol + "//" + window.location.host;
 }
 
 function apiUrl() {
   // TODO change this to server
-  return 'http://99.103.193.239:8080';
-  //return staticUrl();
+  return staticUrl();
 }
 
 function escapeHtml(unsafe) {
