@@ -21,7 +21,7 @@ function submitEncounter(studentId) {
     return;
   }
 
-  var addEncounterUrl = thisUrl() + '/encounter/new/' +
+  var addEncounterUrl = apiUrl() + '/encounter/new/' +
     '?studentId=' + studentId +
     '&locationId=' + course.location.id +
     '&courseId=' + course.id +
@@ -33,12 +33,9 @@ function submitEncounter(studentId) {
       var encounter = JSON.parse(xhr.responseText);
 
       //now check if it was a sign in or a sign out
-
-      var getSessionUrl = thisUrl() + '/session/' +
+      request(apiUrl() + '/session/' +
         '?inEncounterId=' + encounter.id +
-        '&apiKey=' + apiKey.key;
-
-      request(getSessionUrl,
+        '&apiKey=' + apiKey.key,
         //success
         function (xhr) {
           var sessionList = JSON.parse(xhr.responseText);
@@ -72,7 +69,7 @@ $(document).ready(function () {
   $(document).scannerDetection(function (e, data) {
     console.log(e);
     if (!(document.activeElement === tbox)) {
-      console.log('doing scanner')    
+      console.log('doing scanner')
         submitEncounter(parseInt(e));
     }
   });

@@ -30,7 +30,7 @@ function loginattempt() {
   // get date 30 min into the future
   var apiKeyExpirationTime = moment().add(30, 'hours').valueOf();
 
-  request(thisUrl() + '/apiKey/new/' +
+  request(apiUrl() + '/apiKey/new/' +
     '?email=' + encodeURIComponent(userName) +
     '&password=' + encodeURIComponent(password) +
     '&expirationTime=' + encodeURIComponent(apiKeyExpirationTime),
@@ -44,16 +44,16 @@ function loginattempt() {
 
       // now jump to next page
       if(apiKey.user.ring == 0) {
-        window.location.assign(thisUrl() + '/adminoverview.html');
+        window.location.assign(staticUrl() + '/adminoverview.html');
       } else if(apiKey.user.ring == 1) {
         // if they're a teacher, get courses
-        request(thisUrl() + '/course/' +
+        request(apiUrl() + '/course/' +
           '?teacherId='+encodeURIComponent(apiKey.user.id)+
           '&apiKey='+encodeURIComponent(apiKey.key),
           //success
           function(xhr) {
             Cookies.set('courses', JSON.parse(xhr.responseText));
-            window.location.assign(thisUrl() + '/overview.html');
+            window.location.assign(staticUrl() + '/overview.html');
           },
           // failure
           function(xhr) {

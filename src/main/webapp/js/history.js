@@ -26,7 +26,7 @@ function getHistory() {
     return;
   }
 
-  var url = thisUrl() +
+  var url = apiUrl() +
     '/session/' +
     '?apiKey=' + apiKey.key +
     getFromDocument('name', 'studentName') +

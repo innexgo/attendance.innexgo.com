@@ -22,13 +22,13 @@ function loadClassProfile() {
   var periodId = searchParams.get('periodId');
 
   // get students
-  request(thisUrl() + '/student/' +
+  request(apiUrl() + '/student/' +
     '?courseId=' + courseId +
     '&apiKey=' + apiKey.key,
     function (xhr) {
       var students = JSON.parse(xhr.responseText);
       // get irregularities
-      request(thisUrl() + '/irregularity/' +
+      request(apiUrl() + '/irregularity/' +
         '?courseId=' + courseId +
         '&periodId=' + periodId +
         '&apiKey=' + apiKey.key,
@@ -108,7 +108,7 @@ function loadClassText() {
 
   var text = document.getElementById('classprofile-text');
 
-  request(thisUrl() + '/course/' +
+  request(apiUrl() + '/course/' +
     '?courseId='+courseId +
     '&apiKey='+apiKey.key,
     function(xhr) {
@@ -123,7 +123,7 @@ function loadClassText() {
       var course = courses[0];
 
       // now get the period
-      request(thisUrl() + '/period/' +
+      request(apiUrl() + '/period/' +
         '?apiKey='+apiKey.key +
         '&periodId='+periodId,
         function(xhr) {

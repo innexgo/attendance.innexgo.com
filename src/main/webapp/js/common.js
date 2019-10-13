@@ -8,8 +8,13 @@ function isEmpty(str) {
   return (!str || 0 === str.length);
 }
 
-function thisUrl() {
+function staticUrl() {
   return window.location.protocol + "//" + window.location.host;
+}
+
+function apiUrl() {
+  // TODO change this to server
+  return 'http://99.103.193.239:8080/';
 }
 
 function escapeHtml(unsafe) {
@@ -99,5 +104,5 @@ function linkAbsolute(text, url) {
 }
 
 function linkRelative(text, url) {
-  return linkAbsolute(text, thisUrl() + url);
+  return linkAbsolute(text, staticUrl() + url);
 }

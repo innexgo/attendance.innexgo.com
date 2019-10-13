@@ -10,7 +10,7 @@ function loadData() {
   }
   var locationId = searchParams.get('locationId');
 
-  request(thisUrl() + '/course/' +
+  request(apiUrl() + '/course/' +
     '?locationId=' + locationId +
     '&apiKey=' + apiKey.key,
     function (xhr) {

@@ -58,10 +58,10 @@ $(document).ready(function(){
 function setPrefs(prefs) {
   var apiKey = Cookies.getJSON('apiKey');
 
-  var url = thisUrl() + '/user/updatePrefs/' +
-    '?userId=' + encodeURIComponent(apiKey.user.id) +
+  var url = apiUrl() + '/user/updatePrefs/' +
+    '?userId=' + apiKey.user.id +
     '&prefstring=' + encodeURIComponent(JSON.stringify(prefs)) +
-    '&apiKey=' + encodeURIComponent(apiKey.key);
+    '&apiKey=' + apiKey.key;
 
   request(url,
     //success

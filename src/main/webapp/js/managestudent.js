@@ -16,7 +16,7 @@ function batchSetSchedule() {
 
   var courseId = courseList.filter(c => c.period==$("#managestudent-teacher-courseselection :selected").val())[0].id;
 
-  var url = thisUrl() + '/batchSetSchedule/' +
+  var url = apiUrl() + '/batchSetSchedule/' +
     '?courseId=' + courseId +
     '&apiKey=' + Cookies.getJSON('apiKey').key;
 
@@ -42,7 +42,7 @@ function updateClassList() {
   var courseId = courseList.filter(c => c.period==$("#managestudent-teacher-courseselection :selected").val())[0].id;
   var apiKey = Cookies.getJSON('apiKey');
   request(
-    thisUrl() + '/student/' +
+    apiUrl() + '/student/' +
     '?courseId=' + courseId +
     '&apiKey=' + apiKey.key,
     //success
@@ -71,7 +71,7 @@ $(document).ready(function() {
   var selectCourseDropdownClassList = document.getElementById('managestudent-select-course');
 
   request(
-    thisUrl() + '/course/' +
+    apiUrl() + '/course/' +
     '?teacherId=' + apiKey.user.id +
     '&apiKey=' + apiKey.key,
     function(xhr) {
