@@ -77,13 +77,15 @@
     <!-- Center Screen -->
     <div id="not-sidebar" class="container-fluid">
       <div class="px-3 my-3">
-        <div id="alert-zone"></div>
         <div class="card-deck">
           <!-- Current Status -->
           <div class="card col-sm-8 palette-level-two">
             <div class="card-body">
-              <div>
-                <h5 class="card-title text-center">Current Status</h5>
+              <div class="input-group">
+                <h5 class="card-title">Current Status</h5>
+                <span class="input-group-btn ml-auto">
+                  <button type="button" class="btn btn-sm fa fa-question-circle" data-toggle="popover" title="Current Status" data-placement="top" data-content="Test"></button>
+                </span>
               </div>
               <p class="card-text">View the status of students in your class this period</p>
               <div class="table-height-standard">
@@ -104,8 +106,11 @@
           <!-- Manual Attendance -->
           <div class="card col-sm-4 palette-level-two">
             <div class="card-body">
-              <div>
-                <h5 class="card-title text-center">Take Attendance</h5>
+              <div class="input-group">
+                <h5 class="card-title text-center">Manual Attendance</h5>
+                <span class="input-group-btn ml-auto">
+                  <button type="button" class="btn btn-sm fa fa-question-circle" data-toggle="popover" title="Manual Attendance" data-placement="top" data-content="Test"></button>
+                </span>
               </div>
               <p class="card-text">Sign in students manually.</p>
               <div class="input-group mb-3">

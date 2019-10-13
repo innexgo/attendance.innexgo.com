@@ -54,3 +54,10 @@ function getRecentActivity() {
 $(document).ready(function () {
   setInterval(getRecentActivity(), 5000);
 });
+
+//Bootstrap Popover - Alert Zones/Qucik Helps for Card(s)
+$(document).ready(function(){
+  $('[data-toggle="popover"]').popover({
+      trigger : 'hover'
+  });
+});
