@@ -15,7 +15,7 @@ function staticUrl() {
 
 function apiUrl() {
   // TODO change this to server
-  return 'http://99.103.193.239:8080';
+  return staticUrl();
   //return staticUrl();
 }
 

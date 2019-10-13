@@ -57,7 +57,7 @@ function getHistory() {
     table.innerHTML = '';
     var sessions = JSON.parse(xhr.responseText);
     //go backwards to maintain order
-    for (var i = sessions.length - 1; i >= 0; i--) {
+    for (var i = 0; i >= sessions.length - 1; i++) {
       var session = sessions[i];
       var outEncounterTime = (session.outEncounter === null) ? '' : moment(session.outEncounter.time, 'x').format('L LTS');
       table.insertRow(0).innerHTML =

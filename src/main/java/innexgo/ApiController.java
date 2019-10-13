@@ -13,9 +13,11 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
+@CrossOrigin
 public class ApiController {
 
   @Autowired ApiKeyService apiKeyService;
@@ -741,43 +743,7 @@ public class ApiController {
     }
   }
 
-  @RequestMapping("student/update")
-  public ResponseEntity<?> updateStudent(@RequestParam Map<String, String> allRequestParam) {
-    // make sure changer is admin
-    if (isAdministrator(allRequestParam.getOrDefault("apiKey", "invalid"))) {
-      // make sure student exists
-      // if they are trying to set a name, it cannot be blank
-      // if they are setting the graduating year, it must be a valid integer
-      if(studentService.existsById(parseInteger(allRequestParam.getOrDefault("studentId", "-1")))
-          && !Utils.isEmpty(allRequestParam.getOrDefault("studentName", "default"))
-          && parseLong(allRequestParam.getOrDefault("graduatingYear", "0")) != null) {
-        Student student = studentService.getById(parseLong(allRequestParam.get("studentId")));
-
-        // if it is specified, set the name
-        if (allRequestParam.containsKey("studentName")) {
-          student.name = allRequestParam.get("studentName");
-        }
-
-        // if it is specified, set the tags
-        if (allRequestParam.containsKey("tags")) {
-          student.tags = allRequestParam.get("tags");
-        }
-
-        // if it is specified, set the graduatingYear
-        if (allRequestParam.containsKey("graduatingYear")) {
-          student.graduatingYear = parseInteger(allRequestParam.get("graduatingYear"));
-        }
-
-        studentService.update(student);
-        return new ResponseEntity<>(fillStudent(student), HttpStatus.OK);
-      } else {
-        return BAD_REQUEST;
-      }
-    } else {
-      return UNAUTHORIZED;
-    }
-  }
-
+ 
   // This method updates the password for same user only
   @RequestMapping("user/updatePassword/")
   public ResponseEntity<?> updatePassword(
