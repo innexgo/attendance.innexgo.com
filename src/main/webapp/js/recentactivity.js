@@ -20,21 +20,25 @@ function getRecentActivity() {
     table.innerHTML = '';
     var sessionList = JSON.parse(xhr.responseText);
     //go backwards to maintain order
+    var accumulator = [];
     sessionList.reduce((accumulator, currentValue) => {
-      console.log(currentValue.inEncounter);
-      accumulator.push(currentValue.inEncounter);
+      accumulator += currentValue.inEncounter;
       if (currentValue.hasOut) {
-        accumulator.push(currentValue.outEncounter);
+        accumulator += currentValue.outEncounter;
       }
       return accumulator;
     }, 0);
-    console.log(accumulator);
-    for (var i = sessions.length - 1; i >= 0; i--) {
-      var session = sessions[i];
+    sessionList.sort((a,b) => {
+      var valueA = a.hasOut ? a.outEncounter.time : a.inEncounter.time;
+      var valueB = b.hasOut ? b.outEncounter.time : b.inEncounter.time;
+      return valueA - valueB;
+    });
+    console.log(sessionList);
+    sessionList.forEach((session, index) => {
       var outEncounterTime = (session.outEncounter === null) ? '' : moment(session.outEncounter.time, 'x').format('L LTS');
       table.insertRow(0).innerHTML =
         ('<tr>' +
-          '<td>' + (sessions.length - i) + '</td>' +
+          '<td>' + (index+1) + '</td>' +
           '<td>' + linkRelative(session.inEncounter.student.name, '/studentprofile.html/?studentId=' + session.inEncounter.student.id) + '</td>' +
           '<td>' + session.inEncounter.student.id + '</td>' +
           '<td>' + session.course.period + '</td>' +
@@ -44,7 +48,7 @@ function getRecentActivity() {
           '<td>' + outEncounterTime + '</td>' +
           '</tr>');
     }
-  },
+    )},
     function (xhr) {
       console.log(xhr);
     }

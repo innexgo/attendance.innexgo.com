@@ -19,23 +19,26 @@ function giveError(errormsg) {
 }
 
 function loginattempt() {
+  console.log('attempt');
   var userName = document.getElementById('username').value;
   var password = document.getElementById('password').value;
 
   if(!validateattempt(userName, password)) {
     // failed attempt.
+    console.log('fail1');
     return;
   }
 
   // get date 30 min into the future
   var apiKeyExpirationTime = moment().add(30, 'hours').valueOf();
-
+  console.log(apiUrl());
   request(apiUrl() + '/apiKey/new/' +
     '?email=' + encodeURIComponent(userName) +
     '&password=' + encodeURIComponent(password) +
     '&expirationTime=' + encodeURIComponent(apiKeyExpirationTime),
     // success function
     function(xhr) {
+      console.log('succ1');
       var apiKey = JSON.parse(xhr.responseText);
       // store info
       Cookies.set('apiKey', apiKey);
@@ -57,6 +60,7 @@ function loginattempt() {
           },
           // failure
           function(xhr) {
+            console.log('fail2');
             giveError('An error occurred while logging in');
           }
         );
@@ -64,6 +68,7 @@ function loginattempt() {
     },
     // failure function
     function(xhr) {
+      console.log('fail3');
       console.log('authentication failure!');
       giveError('Your email or password doesn\'t match our records.');
     }
