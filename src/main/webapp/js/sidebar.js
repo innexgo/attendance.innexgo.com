@@ -76,7 +76,18 @@ function loadSidebar() {
       document.getElementById('navbar-brand').appendChild(brandImage);
       document.getElementById('navbar-brand').append(' Innexgo');
 
-      $('.navbar-palette').addClass('text-light').addClass('sidebar-blue')
+      $('.navbar-palette').addClass('text-light').addClass('sidebar-blue');
+      break;
+
+    case 'default':
+      var brandImage = document.createElement('img');
+      brandImage.src = '/img/innexgo_logo.png';
+
+      document.getElementById('navbar-brand').appendChild(brandImage);
+      document.getElementById('navbar-brand').append(' Innexgo');
+
+      $('.navbar-palette').addClass('text-light');
+      break;
   };
 };
 
