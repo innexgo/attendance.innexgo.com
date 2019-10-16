@@ -54,30 +54,10 @@ $(document).ready(function(){
   });
 });
 
-// Sets the preferences cookie and updates the server
-function setPrefs(prefs) {
-  var apiKey = Cookies.getJSON('apiKey');
-
-  var url = apiUrl() + '/user/updatePrefs/' +
-    '?userId=' + apiKey.user.id +
-    '&prefstring=' + encodeURIComponent(JSON.stringify(prefs)) +
-    '&apiKey=' + apiKey.key;
-
-  request(url,
-    //success
-    function() {
-      Cookies.set('prefs', prefs);
-      document.location.reload();
-    },
-    //failure
-    function() {
-      alert('Failed to send preferences to server')
-    }
-  );
-}
-
 function changePref(prefName, value) {
   var prefs = Cookies.getJSON('prefs');
   prefs[prefName] = value;
-  setPrefs(prefs);
+  console.log(prefs);
+  Cookies.set('prefs', prefs);
+  document.location.reload();
 }

@@ -86,7 +86,7 @@ function loadSidebar() {
       document.getElementById('navbar-brand').appendChild(brandImage);
       document.getElementById('navbar-brand').append(' Innexgo');
 
-      $('.navbar-palette').addClass('text-light');
+      $('.navbar-palette').addClass('text-dark');
       break;
   };
 };
