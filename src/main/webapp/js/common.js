@@ -99,7 +99,7 @@ function toGraduatingYear(grade) {
 }
 
 function linkAbsolute(text, url) {
-  return '<a href="' + url + '">' + text + '</a>';
+  return '<a style="display: inline-block;" href="' + url + '">' + text + '</a>';
 }
 
 function linkRelative(text, url) {

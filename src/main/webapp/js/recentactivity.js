@@ -33,12 +33,11 @@ function getRecentActivity() {
       var valueB = b.hasOut ? b.outEncounter.time : b.inEncounter.time;
       return valueA - valueB;
     });
-    console.log(sessionList);
     sessionList.forEach((session, index) => {
       var outEncounterTime = (session.outEncounter === null) ? '' : moment(session.outEncounter.time, 'x').format('L LTS');
       table.insertRow(0).innerHTML =
         ('<tr>' +
-          '<td>' + (index+1) + '</td>' +
+          '<td>' + (sessionList.length-index) + '</td>' +
           '<td>' + linkRelative(session.inEncounter.student.name, '/studentprofile.html/?studentId=' + session.inEncounter.student.id) + '</td>' +
           '<td>' + session.inEncounter.student.id + '</td>' +
           '<td>' + session.course.period + '</td>' +
