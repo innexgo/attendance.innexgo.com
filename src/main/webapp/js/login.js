@@ -29,7 +29,7 @@ function loginattempt() {
 
   // get date 30 min into the future
   var apiKeyExpirationTime = moment().add(30, 'hours').valueOf();
-
+  console.log(apiUrl());
   request(apiUrl() + '/apiKey/new/' +
     '?email=' + encodeURIComponent(userName) +
     '&password=' + encodeURIComponent(password) +
@@ -39,8 +39,11 @@ function loginattempt() {
       var apiKey = JSON.parse(xhr.responseText);
       // store info
       Cookies.set('apiKey', apiKey);
-      Cookies.set('prefs', apiKey.user.prefstring);
 
+      if (Cookies.getJSON('prefs') == null) {
+        console.log('resetTheme login');
+        Cookies.set('prefs', {colourTheme: 'default', sidebarStyle: 'fixed'});
+      };
 
       // now jump to next page
       if(apiKey.user.ring == 0) {
