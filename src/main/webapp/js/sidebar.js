@@ -1,13 +1,3 @@
-function openSidebar() {
-  document.getElementById('sidebar').style.width = '20%';
-  //document.getElementById('overlay').style.display = 'block'
-}
-
-function closeSidebar() {
-  document.getElementById('sidebar').style.width = '0%';
-  //document.getElementById('overlay').style.display = 'none';
-}
-
 $(document).ready(function () {
   var apiKey = Cookies.getJSON('apiKey');
 

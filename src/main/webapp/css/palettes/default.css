@@ -3,7 +3,7 @@
 }
 
 .palette-level-two {
-  background-color: #ffffff;
+  background-color: #CECECE;
 }
 
 .form-control {
@@ -31,5 +31,5 @@ tr.table-header {
 }
 
 :not(#info-name) > a {
-  color: #000;
+  color: #212529;
 }

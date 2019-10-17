@@ -3,19 +3,10 @@
 function validPrefs() {
   var isValid = true;
   try {
-    var a = JSON.parse(Cookies.get('prefs'));
-    var colours = ['dark', 'default', 'blue'];
-    if (!colours.includes(a.colourTheme)) {
-      console.log('colourPrefError');
-      throw Error('Invalid Prefs');
-    }
-  } catch (e) {
-    isValid = false;
-  }
-  try {
-    var styles = ['collapsed', 'fixed'];
-    if (!styles.includes(a.sidebarStyle)) {
-      console.log('stylePrefError')
+    var prefcookie = JSON.parse(Cookies.get('prefs'));
+    var validColorSchemes = ['dark', 'default', 'blue'];
+    if (!validColorSchemes.includes(prefcookie.colorScheme)) {
+      console.log('BAD COLORSCHEME');
       throw Error('Invalid Prefs');
     }
   } catch (e) {
@@ -26,24 +17,24 @@ function validPrefs() {
 
 function loadPref() {
   var prefs = Cookies.getJSON('prefs');
-  var colour = prefs.colourTheme;
+  var colorScheme = prefs.colorScheme;
   var palette = document.createElement("link");
 
   palette.rel = "stylesheet"
   palette.type = "text/css"
 
-  switch (colour) {
+  switch (colorScheme) {
     case "default":
-      palette.href = "../css/palettes/default.css?version=1.0";
+      palette.href = "../css/palettes/default.css";
       break;
     case "dark":
-      palette.href = "../css/palettes/dark.css?version=1.5";
+      palette.href = "../css/palettes/dark.css";
       break;
     case "light":
-      palette.href = "../css/palettes/light.css?version=1.1";
+      palette.href = "../css/palettes/light.css";
       break;
     case "blue":
-      palette.href = "../css/palettes/blue.css?version=1.2";
+      palette.href = "../css/palettes/blue.css";
       break;
   }
   document.getElementsByTagName('head')[0].appendChild(palette);
@@ -57,8 +48,7 @@ $(document).ready(function () {
     Cookies.set(
       'prefs',
       {
-        colourTheme: 'default',
-        sidebarStyle: 'fixed'
+        colorScheme: 'default',
       }
     )
     loadPref();
