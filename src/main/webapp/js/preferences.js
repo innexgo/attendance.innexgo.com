@@ -2,8 +2,7 @@
 
 $(document).ready(function(){
   const idToPref = {
-    "sidebar-style": "sidebarStyle",
-    "colour-theme": "colourTheme",
+    "color-scheme": "colorScheme",
   }
 
   var prefs = Cookies.getJSON('prefs');
@@ -46,7 +45,6 @@ $(document).ready(function(){
     else {
       var prefVal = selectedElement.innerHTML.toLowerCase();
     }
-    
     changePref(
       idToPref[this.id],
       prefVal

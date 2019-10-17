@@ -37,6 +37,8 @@ function loadPref() {
       palette.href = "../css/palettes/blue.css";
       break;
   }
+
+  console.log(palette.href)
   document.getElementsByTagName('head')[0].appendChild(palette);
 };
 

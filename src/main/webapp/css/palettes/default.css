@@ -3,11 +3,11 @@
 }
 
 .palette-level-two {
-  background-color: #CECECE;
+  background-color: #ffffff;
 }
 
 .form-control {
-  background-color: #ffffff;
+  background-color: #CECECE;
 }
 
 /* #343a40 #f8f9fa */
@@ -25,7 +25,6 @@ tr.table-header {
   color: #000000;
 }
 
-/**What's this class for? I can't find its elements in the website **/
 .palette-border:not(.active) {
 	border: 1px solid #eaeef1;
 }

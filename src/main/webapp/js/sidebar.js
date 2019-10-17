@@ -23,22 +23,15 @@ $(document).ready(function () {
 function loadSidebar() {
   var prefs = Cookies.getJSON('prefs');
   var sidebar = prefs.sidebarStyle;
-  var colour = prefs.colourTheme;
+  var color = prefs.colorScheme;
 
-  switch (sidebar) {
-    case 'collapsed':
-      $('#sidebar').addClass('sidebar-collapsable');
-      break;
+  // TODO please add this as default everywhere thanks
+  $('#sidebar').addClass('sidebar-fixed');
+  $('#not-sidebar').css('padding-left', '20%');
+  $('.sidebar-button').remove();
+  document.getElementById('overlay').remove();
 
-    case 'fixed':
-      $('#sidebar').addClass('sidebar-fixed');
-      $('#not-sidebar').css('padding-left', '20%');
-      $('.sidebar-button').remove();
-      document.getElementById('overlay').remove();
-      break;
-  };
-
-  switch (colour) {
+  switch (color) {
     case 'dark':
       var brandImage = document.createElement('img');
       brandImage.src = '/img/innexgo_logo.png';
@@ -76,7 +69,7 @@ function loadSidebar() {
       document.getElementById('navbar-brand').appendChild(brandImage);
       document.getElementById('navbar-brand').append(' Innexgo');
 
-      $('.navbar-palette').addClass('text-dark');
+      $('.navbar-palette').addClass('text-light').addClass('bg-dark');
       break;
   };
 };
