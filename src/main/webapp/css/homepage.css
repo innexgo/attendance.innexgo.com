@@ -325,6 +325,11 @@ footer .logo img {
 	text-align: center;
 }
 
+.logoicon {
+  margin-top: 5px;
+  margin-left: 5px;
+}
+
 @media (min-width: 768px) and (max-width: 979px) {
 	div nav ul {
 		display:none;
@@ -342,6 +347,10 @@ footer .logo img {
 	#intro h2 {
 		line-height:1.5em;
 	}
+
+  .logoicon {
+    margin-left: -0.5px;
+  }
 }
 
 @media (max-width: 767px) {
@@ -437,6 +446,10 @@ footer .logo img {
 		float:none;
 		text-align:center;
 	}
+
+  .logoicon {
+    margin-top: -15px;
+  }
 }
 
 @media (max-width: 480px) {
