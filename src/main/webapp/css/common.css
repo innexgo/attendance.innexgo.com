@@ -1,3 +1,12 @@
+body {
+  font-family: 'Ubuntu', sans-serif !important;
+  font-style: normal !important;
+}
+
+h1, h2, h3 {
+  font-family: 'Exo', sans-serif !important;
+}
+
 .table-height-standard {
   height: 22rem;
   overflow: scroll;

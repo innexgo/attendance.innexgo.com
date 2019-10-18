@@ -36,18 +36,12 @@ function loadSidebar() {
       var brandImage = document.createElement('img');
       brandImage.src = '/img/innexgo_logo.png';
 
-      document.getElementById('navbar-brand').appendChild(brandImage);
-      document.getElementById('navbar-brand').append(' Innexgo');
-
       $('.navbar-palette').addClass('text-light').addClass('bg-dark');
       break;
 
     case 'light':
       var brandImage = document.createElement('img');
       brandImage.src = '/img/innexgo_logo_dark.png';
-
-      document.getElementById('navbar-brand').appendChild(brandImage);
-      document.getElementById('navbar-brand').append(' Innexgo');
 
       $('.navbar-palette').addClass('text-dark').addClass('sidebar-light');
       break;
@@ -56,18 +50,12 @@ function loadSidebar() {
       var brandImage = document.createElement('img');
       brandImage.src = '/img/innexgo_logo.png';
 
-      document.getElementById('navbar-brand').appendChild(brandImage);
-      document.getElementById('navbar-brand').append(' Innexgo');
-
       $('.navbar-palette').addClass('text-light').addClass('sidebar-blue');
       break;
 
     case 'default':
       var brandImage = document.createElement('img');
       brandImage.src = '/img/innexgo_logo.png';
-
-      document.getElementById('navbar-brand').appendChild(brandImage);
-      document.getElementById('navbar-brand').append(' Innexgo');
 
       $('.navbar-palette').addClass('text-light').addClass('bg-dark');
       break;
@@ -79,7 +67,7 @@ function displayInfo() {
   var course = period == null ? null : Cookies.getJSON('courses').filter(c => c.period == period.period)[0];
 
 
-  document.getElementById('info-time').innerHTML = moment().format('dddd, MMMM D');
+  document.getElementById('info-time').innerHTML = moment().format('dddd (MM/DD/YYYY)');
 
   document.getElementById('info-period').innerHTML =
     (period == null

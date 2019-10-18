@@ -26,9 +26,18 @@
   <script src="js/loadprefs.js"></script>
   <script src="js/sidebar.js"></script>
   <script src="js/managestudent.js"></script>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Exo&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Ubuntu&display=swap" rel="stylesheet">
+
+  <!-- Favicon -->
+  <link rel='icon' href='img/innexgo_gold_brandmark.png' type='image/png'/ >
+
 </head>
 
 <body class="palette-level-one">
+
   <!-- Sidebar -->
   <nav style="height:100%" id="sidebar" class="navbar-palette">
     <nav class="navbar sidebar-top">
@@ -36,7 +45,7 @@
         <i class="fa fa-bars navbar-palette"></i>
       </button>
       <div style="margin:auto;display:block">
-        <h6 id="info-time">Current Time</h6>
+        <h6 id="info-time" style="font-family:'Exo', sans-serif;">Current Time</h6>
       </div>
     </nav>
     <div class="sidebar-item sidebar-info-list navbar-palette" style="border:none;display:block;">
@@ -45,19 +54,20 @@
       <h6 id="info-location">Current Location</h6>
     </div>
     <div id="sidebar-navigation">
-      <a class="sidebar-item navbar-palette" href="#" id="my-overview">Overview</a>
-      <a class="sidebar-item navbar-palette" href="history.html">History</a>
-      <a class="sidebar-item navbar-palette" href="recentactivity.html">Recent Activity</a>
-      <a class="sidebar-item navbar-palette" href="#" id="my-managestudent">Manage Students</a>
-      <a class="sidebar-item navbar-palette" href="#" id="reports">Reports</a>
+      <a class="sidebar-item navbar-palette" href="#" id="my-overview"><i class="fa fa-tachometer-alt"></i>  Overview</a>
+      <a class="sidebar-item navbar-palette" href="recentactivity.html"><i class="fa fa-history"></i> Recent Activity</a>
+      <a class="sidebar-item navbar-palette active" href="managestudent.html" id="my-managestudent"><i class="fa fa-tasks"></i> Manage Students</a>
+      <a class="sidebar-item navbar-palette" href="#" id="reports"><i class="fa fa-chart-bar"></i> Reports</a>
     </div>
     <div class="sidebar-bottom">
-      <a class="sidebar-item navbar-palette" href="settings.html"><i class="fa fa-cog"></i> Settings</a>
-      <a class="sidebar-item navbar-palette" href="login.html"><i class="fa fa-sign-out-alt"></i> Sign out</a>
+      <a class="sidebar-item navbar-palette" href="settings.html"><i class="fa fa-cog"></i>  Settings</a>
+      <a class="sidebar-item navbar-palette" href="index.html"><i class="fa fa-sign-out-alt"></i>  Sign out</a>
     </div>
   </nav>
+
   <!-- Overlay -->
   <div id="overlay" onclick="closeSidebar()"></div>
+
   <!-- Top Navbar -->
   <nav class="navbar navbar-expand-md navbar-palette">
     <div class="order-0">
@@ -65,10 +75,13 @@
         <i class="fa fa-bars navbar-palette"></i>
       </button>
     </div>
+
     <!-- Center Logo -->
     <div class="mx-auto order-0">
-      <a id="navbar-brand" class="navbar-brand navbar-palette" href="index.html"></a>
+      <img class="logoicon" src="img/innexgo_transparent_icon.png" alt="" style="" />
+      <h1 class="navbar-brand navbar-palette" style="font-size: 25px; margin-left: 5px;">Innexgo</h1>
     </div>
+
   </nav>
 
   <!-- Content -->
@@ -83,7 +96,10 @@
             <div class="input-group">
               <h5 class="card-title">Upload Student Batch</h5>
               <span class="input-group-btn ml-auto">
-                <button type="button" class="btn btn-sm fa fa-question-circle" data-toggle="popover" title="Upload Student Batch" data-placement="top" data-content="Test"></button>
+                <button type="button" class="btn btn-sm" data-html="true" data-toggle="popover" title="Upload Student Batch" data-placement="top"
+                data-content="Update student information into the Innexgo system. Select a .CSV file and click the upload button.">
+                  <i class="fa fa-question"></i>
+                </button>
               </span>
             </div>
             <p class="card-text">Select class to upload students to.</p>
@@ -104,7 +120,10 @@
             <div class="input-group">
               <h5 class="card-title">View Courses</h5>
               <span class="input-group-btn ml-auto">
-                <button type="button" class="btn btn-sm fa fa-question-circle" data-toggle="popover" title="View Courses" data-placement="top" data-content="Test"></button>
+                <button type="button" class="btn btn-sm" data-html="true" data-toggle="popover" title="View Courses" data-placement="top"
+                data-content="View all of your class rosters, which includes student names, IDs, graduating years, and tags.">
+                  <i class="fa fa-question"></i>
+                </button>
               </span>
             </div>
             <div class="card-text">
