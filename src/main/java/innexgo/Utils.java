@@ -18,6 +18,58 @@ public class Utils {
   static final Base64.Encoder base64Encoder = Base64.getUrlEncoder();
   static final Base64.Decoder base64Decoder = Base64.getUrlDecoder();
 
+  /**
+   * Parses string for Integer
+   * @param   str - string to be parsed
+   * @return        Integer parsed from str; null if the string is null or cannot be parsed
+   */
+  public static Integer parseInteger(String str) {
+    if (str == null) {
+      return null;
+    } else {
+      try {
+        return Integer.parseInt(str);
+      } catch (NumberFormatException e) {
+        return null;
+      }
+    }
+  }
+  /**
+   * Parses string for Long
+   * @param   str - string to be parsed
+   * @return        Long parsed from str; null if string is null or cannot be parsed
+   */
+  public static Long parseLong(String str) {
+    if (str == null) {
+      return null;
+    } else {
+      try {
+        return Long.parseLong(str);
+      } catch (NumberFormatException e) {
+        return null;
+      }
+    }
+  }
+
+  /**
+   * Parses string for Boolean
+   * @param   str - string to be parsed
+   * @return        Boolean parsed from str; null if string is null or cannot be parsed
+   */
+  public static Boolean parseBoolean(String str) {
+    if (str == null) {
+      return null;
+    } else {
+      try {
+        return Boolean.parseBoolean(str);
+      } catch (NumberFormatException e) {
+        return null;
+      }
+    }
+  }
+
+
+
   static MessageDigest getDigester() {
     try {
       return MessageDigest.getInstance("SHA-256");

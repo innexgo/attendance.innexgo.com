@@ -16,8 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.multipart.MultipartFile;
 
-@RestController
 @CrossOrigin
+@RestController
+@RequestMapping(value = {"/api"})
 public class ApiController {
 
   @Autowired ApiKeyService apiKeyService;
@@ -38,56 +39,6 @@ public class ApiController {
   static final ResponseEntity<?> OK = new ResponseEntity<>(HttpStatus.OK);
   static final ResponseEntity<?> UNAUTHORIZED = new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
   static final ResponseEntity<?> NOT_FOUND = new ResponseEntity<>(HttpStatus.NOT_FOUND);
-
-  /**
-   * Parses string for Integer
-   * @param   str - string to be parsed
-   * @return        Integer parsed from str; null if the string is null or cannot be parsed
-   */
-  Integer parseInteger(String str) {
-    if (str == null) {
-      return null;
-    } else {
-      try {
-        return Integer.parseInt(str);
-      } catch (NumberFormatException e) {
-        return null;
-      }
-    }
-  }
-  /**
-   * Parses string for Long
-   * @param   str - string to be parsed
-   * @return        Long parsed from str; null if string is null or cannot be parsed
-   */
-  Long parseLong(String str) {
-    if (str == null) {
-      return null;
-    } else {
-      try {
-        return Long.parseLong(str);
-      } catch (NumberFormatException e) {
-        return null;
-      }
-    }
-  }
-  /**
-   * Parses string for Boolean
-   * @param   str - string to be parsed
-   * @return        Boolean parsed from str; null if string is null or cannot be parsed
-   */
-  Boolean parseBoolean(String str) {
-    if (str == null) {
-      return null;
-    } else {
-      try {
-        return Boolean.parseBoolean(str);
-      } catch (NumberFormatException e) {
-        return null;
-      }
-    }
-  }
-
   /**
    * Fills in jackson objects (User) for ApiKey
    * @param     apiKey - ApiKey object
@@ -339,7 +290,7 @@ public class ApiController {
    * @throws ResponseEntity with HttpStatus.UNAUTHORIZED if the User is unauthorized
    * @throws ResponseEntity with HttpStatus.BAD_REQUEST if the process is unsuccessful
    */
-  @RequestMapping("apiKey/new/")
+  @RequestMapping("/apiKey/new/")
   public ResponseEntity<?> newApiKey(
       @RequestParam(value = "userId", defaultValue = "-1") Long userId,
       @RequestParam(value = "email", defaultValue = "") String email,
@@ -384,11 +335,11 @@ public class ApiController {
    * @throws ResponseEntity with HttpStatus.UNAUTHORIZED if the User is unauthorized
    * @throws ResponseEntity with HttpStatus.BAD_REQUEST if the process if unsuccessful
    */
-  @RequestMapping("card/new/")
+  @RequestMapping("/card/new/")
   public ResponseEntity<?> newCard(
       @RequestParam("cardId") Long cardId,
       @RequestParam("studentId") Long studentId,
-      @RequestParam("apiKey") String apiKey) {
+      @RequestParam("Key") String apiKey) {
     if(isTrusted(apiKey)) {
       if (studentService.existsById(studentId)
           && !cardService.existsById(cardId)) {
@@ -416,13 +367,13 @@ public class ApiController {
    * @throws ResponseEntity with HttpStatus.UNAUTHORIZED if the User is not an administrator
    * @throws ResponseEntity with HttpStatus.BAD_REQUEST if the process if unsuccessful
    */
-  @RequestMapping("course/new/")
+  @RequestMapping("/course/new/")
   public ResponseEntity<?> newCourse(
       @RequestParam("userId") Long teacherId,
       @RequestParam("locationId") Long locationId,
       @RequestParam("period") Integer period,
       @RequestParam("subject") String subject,
-      @RequestParam("apiKey") String apiKey) {
+      @RequestParam("Key") String apiKey) {
     if(isAdministrator(apiKey)) {
       if (!Utils.isEmpty(subject)
           && locationService.existsById(locationId)
@@ -455,13 +406,13 @@ public class ApiController {
    * @throws ResponseEntity with HttpStatus.BAD_REQUEST if process is unsuccessful
    * @throws ResponseEntity with HttpStatus.UNAUTHORIZED if the User is not trusted
    */
-  @RequestMapping("encounter/new/")
+  @RequestMapping("/encounter/new/")
   public ResponseEntity<?> newEncounter(
       @RequestParam(value = "studentId", defaultValue = "-1") Long studentId,
       @RequestParam(value = "cardId", defaultValue = "-1") Long cardId,
       @RequestParam("locationId") Long locationId,
       @RequestParam(value = "courseId", defaultValue = "-1") Long courseId,
-      @RequestParam("apiKey") String apiKey) {
+      @RequestParam("Key") String apiKey) {
     if (isTrusted(apiKey)) {
       Student student;
       if (cardService.existsById(cardId)) {
@@ -626,11 +577,11 @@ public class ApiController {
    * @throws ResponseEntity with HttpStatus.BAD_REQUEST if process if unsuccessful
    * @throws ResponseEntity with HttpStatus.UNAUTHORIZED if the User is not an administrator
    */
-  @RequestMapping("location/new/")
+  @RequestMapping("/location/new/")
   public ResponseEntity<?> newLocation(
       @RequestParam("name") String name,
       @RequestParam("tags") String tags,
-      @RequestParam("apiKey") String apiKey) {
+      @RequestParam("Key") String apiKey) {
     if(isAdministrator(apiKey)) {
       if (!Utils.isEmpty(name) && !Utils.isEmpty(tags)) {
         Location location = new Location();
@@ -646,13 +597,13 @@ public class ApiController {
     }
   }
 
-  @RequestMapping("period/new/")
+  @RequestMapping("/period/new/")
   public ResponseEntity<?> newPeriod(
       @RequestParam("initialTime") Long initialTime,
       @RequestParam("startTime") Long startTime,
       @RequestParam("endTime") Long endTime,
       @RequestParam("period") Integer period,
-      @RequestParam("apiKey") String apiKey) {
+      @RequestParam("Key") String apiKey) {
     if (isAdministrator(apiKey)) {
       Period p = new Period();
       p.initialTime = initialTime;
@@ -666,11 +617,11 @@ public class ApiController {
     }
   }
 
-  @RequestMapping("schedule/new/")
+  @RequestMapping("/schedule/new/")
   public ResponseEntity<?> newSchedule(
       @RequestParam("studentId") Long studentId,
       @RequestParam("courseId") Long courseId,
-      @RequestParam("apiKey") String apiKey) {
+      @RequestParam("Key") String apiKey) {
     if (isTrusted(apiKey)) {
       if (studentService.existsById(studentId)
           && courseService.existsById(courseId)
@@ -691,13 +642,13 @@ public class ApiController {
     }
   }
 
-  @RequestMapping("student/new/")
+  @RequestMapping("/student/new/")
   public ResponseEntity<?> newStudent(
       @RequestParam("studentId") Long id,
       @RequestParam("graduatingYear") Integer graduatingYear,
       @RequestParam("name") String name,
       @RequestParam(value = "tags", defaultValue = "") String tags,
-      @RequestParam("apiKey") String apiKey) {
+      @RequestParam("Key") String apiKey) {
     if(isAdministrator(apiKey)) {
       if (!studentService.existsById(id) && !Utils.isEmpty(name)) {
         Student student = new Student();
@@ -715,13 +666,13 @@ public class ApiController {
     }
   }
 
-  @RequestMapping("user/new/")
+  @RequestMapping("/user/new/")
   public ResponseEntity<?> newUser(
       @RequestParam("userName") String name,
       @RequestParam("email") String email,
       @RequestParam("password") String password,
       @RequestParam("ring") Integer ring,
-      @RequestParam("apiKey") String apiKey) {
+      @RequestParam("Key") String apiKey) {
     if (!isAdministrator(apiKey)) {
       if (!Utils.isEmpty(name)
           && !Utils.isEmpty(password)
@@ -745,7 +696,7 @@ public class ApiController {
 
  
   // This method updates the password for same user only
-  @RequestMapping("user/updatePassword/")
+  @RequestMapping("/user/updatePassword/")
   public ResponseEntity<?> updatePassword(
       @RequestParam("userId") Long userId,
       @RequestParam("oldPassword") String oldPassword,
@@ -768,11 +719,11 @@ public class ApiController {
   }
 
   // This method updates the prefstring for same user only
-  @RequestMapping("user/updatePrefs/")
+  @RequestMapping("/user/updatePrefs/")
   public ResponseEntity<?> updatePrefs(
       @RequestParam("userId") Long userId,
       @RequestParam("prefstring") String prefstring,
-      @RequestParam("apiKey") String apiKey) {
+      @RequestParam("Key") String apiKey) {
     if (!Utils.isEmpty(apiKey) && userService.existsById(userId)) {
       User apiUser = getUserIfValid(apiKey);
       User user = userService.getById(userId);
@@ -785,9 +736,9 @@ public class ApiController {
     return UNAUTHORIZED;
   }
 
-  @RequestMapping("apiKey/delete/")
+  @RequestMapping("/apiKey/delete/")
   public ResponseEntity<?> deleteApiKey(
-      @RequestParam("apiKeyId") Long apiKeyId, @RequestParam("apiKey") String apiKey) {
+      @RequestParam("KeyId") Long apiKeyId, @RequestParam("Key") String apiKey) {
     if (isAdministrator(apiKey)) {
       if (apiKeyService.existsById(apiKeyId)) {
         return new ResponseEntity<>(fillApiKey(apiKeyService.deleteById(apiKeyId)), HttpStatus.OK);
@@ -799,9 +750,9 @@ public class ApiController {
     }
   }
 
-  @RequestMapping("card/delete/")
+  @RequestMapping("/card/delete/")
   public ResponseEntity<?> deleteCard(
-      @RequestParam("cardId") Long cardId, @RequestParam("apiKey") String apiKey) {
+      @RequestParam("cardId") Long cardId, @RequestParam("Key") String apiKey) {
     if (isAdministrator(apiKey)) {
       if (cardService.existsById(cardId)) {
         return new ResponseEntity<>(fillCard(cardService.deleteById(cardId)), HttpStatus.OK);
@@ -813,9 +764,9 @@ public class ApiController {
     }
   }
 
-  @RequestMapping("course/delete/")
+  @RequestMapping("/course/delete/")
   public ResponseEntity<?> deleteCourse(
-      @RequestParam("courseId") Long courseId, @RequestParam("apiKey") String apiKey) {
+      @RequestParam("courseId") Long courseId, @RequestParam("Key") String apiKey) {
     if (isAdministrator(apiKey)) {
       if (courseService.existsById(courseId)) {
         return new ResponseEntity<>(fillCourse(courseService.deleteById(courseId)), HttpStatus.OK);
@@ -827,10 +778,10 @@ public class ApiController {
     }
   }
 
-  @RequestMapping("irregularity/delete/")
+  @RequestMapping("/irregularity/delete/")
   public ResponseEntity<?> deleteIrregularity(
       @RequestParam("irregularityId") Long irregularityId,
-      @RequestParam("apiKey") String apiKey) {
+      @RequestParam("Key") String apiKey) {
     if (isAdministrator(apiKey)) {
       if (irregularityService.existsById(irregularityId)) {
         return new ResponseEntity<>(
@@ -843,9 +794,9 @@ public class ApiController {
     }
   }
 
-  @RequestMapping("location/delete/")
+  @RequestMapping("/location/delete/")
   public ResponseEntity<?> deleteLocation(
-      @RequestParam("locationId") Long locationId, @RequestParam("apiKey") String apiKey) {
+      @RequestParam("locationId") Long locationId, @RequestParam("Key") String apiKey) {
     if (isAdministrator(apiKey)) {
       if (locationService.existsById(locationId)) {
         return new ResponseEntity<>(
@@ -858,9 +809,9 @@ public class ApiController {
     }
   }
 
-  @RequestMapping("period/delete/")
+  @RequestMapping("/period/delete/")
   public ResponseEntity<?> deletePeriod(
-      @RequestParam("periodId") Long periodId, @RequestParam("apiKey") String apiKey) {
+      @RequestParam("periodId") Long periodId, @RequestParam("Key") String apiKey) {
     if (isAdministrator(apiKey)) {
       if (periodService.existsById(periodId)) {
         return new ResponseEntity<>(fillPeriod(periodService.deleteById(periodId)), HttpStatus.OK);
@@ -872,9 +823,9 @@ public class ApiController {
     }
   }
 
-  @RequestMapping("schedule/delete/")
+  @RequestMapping("/schedule/delete/")
   public ResponseEntity<?> deleteSchedule(
-      @RequestParam("scheduleId") Integer scheduleId, @RequestParam("apiKey") String apiKey) {
+      @RequestParam("scheduleId") Integer scheduleId, @RequestParam("Key") String apiKey) {
     if (isAdministrator(apiKey)) {
       if (scheduleService.existsById(scheduleId)) {
         return new ResponseEntity<>(
@@ -887,9 +838,9 @@ public class ApiController {
     }
   }
 
-  @RequestMapping("student/delete/")
+  @RequestMapping("/student/delete/")
   public ResponseEntity<?> deleteStudent(
-      @RequestParam("studentId") Integer studentId, @RequestParam("apiKey") String apiKey) {
+      @RequestParam("studentId") Integer studentId, @RequestParam("Key") String apiKey) {
     if (isAdministrator(apiKey)) {
       if (studentService.existsById(studentId)) {
         return new ResponseEntity<>(fillStudent(studentService.deleteById(studentId)), HttpStatus.OK);
@@ -901,9 +852,9 @@ public class ApiController {
     }
   }
 
-  @RequestMapping("user/delete/")
+  @RequestMapping("/user/delete/")
   public ResponseEntity<?> deleteUser(
-      @RequestParam("userId") Integer userId, @RequestParam("apiKey") String apiKey) {
+      @RequestParam("userId") Integer userId, @RequestParam("Key") String apiKey) {
     if (isAdministrator(apiKey)) {
       if (userService.existsById(userId)) {
         return new ResponseEntity<>(fillUser(userService.deleteById(userId)), HttpStatus.OK);
@@ -915,18 +866,18 @@ public class ApiController {
     }
   }
 
-  @RequestMapping("apiKey/")
+  @RequestMapping("/apiKey/")
   public ResponseEntity<?> viewApiKey(@RequestParam Map<String, String> allRequestParam) {
-    if (allRequestParam.containsKey("apiKey") && isTrusted(allRequestParam.get("apiKey"))) {
+    if (allRequestParam.containsKey("Key") && isTrusted(allRequestParam.get("Key"))) {
       List<ApiKey> list =
           apiKeyService
               .query(
-                  parseLong(allRequestParam.get("apiKeyId")),
-                  parseLong(allRequestParam.get("userId")),
-                  parseLong(allRequestParam.get("minCreationTime")),
-                  parseLong(allRequestParam.get("maxCreationTime")),
-                  allRequestParam.containsKey("apiKeyData")
-                      ? Utils.encodeApiKey(allRequestParam.get("apiKeyData"))
+                  Utils.parseLong(allRequestParam.get("KeyId")),
+                  Utils.parseLong(allRequestParam.get("userId")),
+                  Utils.parseLong(allRequestParam.get("minCreationTime")),
+                  Utils.parseLong(allRequestParam.get("maxCreationTime")),
+                  allRequestParam.containsKey("KeyData")
+                      ? Utils.encodeApiKey(allRequestParam.get("KeyData"))
                       : null)
               .stream()
               .map(x -> fillApiKey(x))
@@ -937,14 +888,14 @@ public class ApiController {
     }
   }
 
-  @RequestMapping("card/")
+  @RequestMapping("/card/")
   public ResponseEntity<?> viewCard(@RequestParam Map<String, String> allRequestParam) {
-    if (allRequestParam.containsKey("apiKey") && isTrusted(allRequestParam.get("apiKey"))) {
+    if (allRequestParam.containsKey("Key") && isTrusted(allRequestParam.get("Key"))) {
       List<Card> list =
           cardService
               .query(
-                  parseLong(allRequestParam.get("cardId")),
-                  parseLong(allRequestParam.get("studentId")))
+                  Utils.parseLong(allRequestParam.get("cardId")),
+                  Utils.parseLong(allRequestParam.get("studentId")))
               .stream()
               .map(x -> fillCard(x))
               .collect(Collectors.toList());
@@ -954,22 +905,22 @@ public class ApiController {
     }
   }
 
-  @RequestMapping("course/")
+  @RequestMapping("/course/")
   public ResponseEntity<?> viewCourse(@RequestParam Map<String, String> allRequestParam) {
-    String apiKey = allRequestParam.get("apiKey");
+    String apiKey = allRequestParam.get("Key");
     if (isTrusted(apiKey)) {
 
       List<Course> els =
           courseService
               .query(
-                  parseLong(allRequestParam.get("courseId")),
-                  parseLong(allRequestParam.get("teacherId")),
-                  parseLong(allRequestParam.get("locationId")),
-                  parseLong(allRequestParam.get("studentId")),
-                  parseInteger(allRequestParam.get("period")),
+                  Utils.parseLong(allRequestParam.get("courseId")),
+                  Utils.parseLong(allRequestParam.get("teacherId")),
+                  Utils.parseLong(allRequestParam.get("locationId")),
+                  Utils.parseLong(allRequestParam.get("studentId")),
+                  Utils.parseInteger(allRequestParam.get("period")),
                   allRequestParam.get("subject"),
-                  parseLong(allRequestParam.get("time")),
-                  parseInteger(
+                  Utils.parseLong(allRequestParam.get("time")),
+                  Utils.parseInteger(
                       allRequestParam.getOrDefault(
                           "year", Integer.toString(Utils.getCurrentGraduatingYear()))))
               .stream()
@@ -981,19 +932,19 @@ public class ApiController {
     }
   }
 
-  @RequestMapping("encounter/")
+  @RequestMapping("/encounter/")
   public ResponseEntity<?> viewEncounter(@RequestParam Map<String, String> allRequestParam) {
-    String apiKey = allRequestParam.get("apiKey");
+    String apiKey = allRequestParam.get("Key");
     if (isTrusted(apiKey)) {
       List<Encounter> els =
           encounterService
               .query(
-                  parseInteger(allRequestParam.get("count")),
-                  parseLong(allRequestParam.get("encounterId")),
-                  parseLong(allRequestParam.get("studentId")),
-                  parseLong(allRequestParam.get("locationId")),
-                  parseLong(allRequestParam.get("minTime")),
-                  parseLong(allRequestParam.get("maxTime")),
+                  Utils.parseInteger(allRequestParam.get("count")),
+                  Utils.parseLong(allRequestParam.get("encounterId")),
+                  Utils.parseLong(allRequestParam.get("studentId")),
+                  Utils.parseLong(allRequestParam.get("locationId")),
+                  Utils.parseLong(allRequestParam.get("minTime")),
+                  Utils.parseLong(allRequestParam.get("maxTime")),
                   allRequestParam.get("studentName"))
               .stream()
               .map(x -> fillEncounter(x))
@@ -1004,21 +955,21 @@ public class ApiController {
     }
   }
 
-  @RequestMapping("irregularity/")
+  @RequestMapping("/irregularity/")
   public ResponseEntity<?> viewIrregularity(@RequestParam Map<String, String> allRequestParam) {
-    String apiKey = allRequestParam.get("apiKey");
+    String apiKey = allRequestParam.get("Key");
     if (isTrusted(apiKey)) {
       List<Irregularity> els =
           irregularityService
               .query(
-                  parseLong(allRequestParam.get("irregularityId")),
-                  parseLong(allRequestParam.get("studentId")),
-                  parseLong(allRequestParam.get("courseId")),
-                  parseLong(allRequestParam.get("periodId")),
-                  parseLong(allRequestParam.get("teacherId")),
+                  Utils.parseLong(allRequestParam.get("irregularityId")),
+                  Utils.parseLong(allRequestParam.get("studentId")),
+                  Utils.parseLong(allRequestParam.get("courseId")),
+                  Utils.parseLong(allRequestParam.get("periodId")),
+                  Utils.parseLong(allRequestParam.get("teacherId")),
                   allRequestParam.get("type"),
-                  parseLong(allRequestParam.get("time")),
-                  parseLong(allRequestParam.get("timeMissing")))
+                  Utils.parseLong(allRequestParam.get("time")),
+                  Utils.parseLong(allRequestParam.get("timeMissing")))
               .stream()
               .map(x -> fillIrregularity(x))
               .collect(Collectors.toList());
@@ -1028,13 +979,13 @@ public class ApiController {
     }
   }
 
-  @RequestMapping("location/")
+  @RequestMapping("/location/")
   public ResponseEntity<?> viewLocation(@RequestParam Map<String, String> allRequestParam) {
-    if (allRequestParam.containsKey("apiKey") && isTrusted(allRequestParam.get("apiKey"))) {
+    if (allRequestParam.containsKey("Key") && isTrusted(allRequestParam.get("Key"))) {
       List<Location> list =
           locationService
               .query(
-                  parseLong(allRequestParam.get("locationId")),
+                  Utils.parseLong(allRequestParam.get("locationId")),
                   allRequestParam.get("name"),
                   allRequestParam.get("tags"))
               .stream()
@@ -1046,26 +997,26 @@ public class ApiController {
     }
   }
 
-  @RequestMapping("period/")
+  @RequestMapping("/period/")
   public ResponseEntity<?> viewPeriod(@RequestParam Map<String, String> allRequestParam) {
-    String apiKey = allRequestParam.get("apiKey");
+    String apiKey = allRequestParam.get("Key");
     if (isTrusted(apiKey)) {
       List<Period> els =
           periodService
               .query(
-                  parseLong(allRequestParam.get("periodId")),
-                  parseLong(allRequestParam.get("time")),
-                  parseLong(allRequestParam.get("minDuration")),
-                  parseLong(allRequestParam.get("maxDuration")),
-                  parseLong(allRequestParam.get("initialTimeBegin")),
-                  parseLong(allRequestParam.get("initialTimeEnd")),
-                  parseLong(allRequestParam.get("startTimeBegin")),
-                  parseLong(allRequestParam.get("startTimeEnd")),
-                  parseLong(allRequestParam.get("endTimeBegin")),
-                  parseLong(allRequestParam.get("endTimeEnd")),
-                  parseInteger(allRequestParam.get("period")),
-                  parseLong(allRequestParam.get("courseId")),
-                  parseLong(allRequestParam.get("teacherId")))
+                  Utils.parseLong(allRequestParam.get("periodId")),
+                  Utils.parseLong(allRequestParam.get("time")),
+                  Utils.parseLong(allRequestParam.get("minDuration")),
+                  Utils.parseLong(allRequestParam.get("maxDuration")),
+                  Utils.parseLong(allRequestParam.get("initialTimeBegin")),
+                  Utils.parseLong(allRequestParam.get("initialTimeEnd")),
+                  Utils.parseLong(allRequestParam.get("startTimeBegin")),
+                  Utils.parseLong(allRequestParam.get("startTimeEnd")),
+                  Utils.parseLong(allRequestParam.get("endTimeBegin")),
+                  Utils.parseLong(allRequestParam.get("endTimeEnd")),
+                  Utils.parseInteger(allRequestParam.get("period")),
+                  Utils.parseLong(allRequestParam.get("courseId")),
+                  Utils.parseLong(allRequestParam.get("teacherId")))
               .stream()
               .map(x -> fillPeriod(x))
               .collect(Collectors.toList());
@@ -1075,18 +1026,18 @@ public class ApiController {
     }
   }
 
-  @RequestMapping("schedule/")
+  @RequestMapping("/schedule/")
   public ResponseEntity<?> viewSchedule(@RequestParam Map<String, String> allRequestParam) {
-    if (allRequestParam.containsKey("apiKey") && isTrusted(allRequestParam.get("apiKey"))) {
+    if (allRequestParam.containsKey("Key") && isTrusted(allRequestParam.get("Key"))) {
       List<Schedule> list =
           scheduleService
               .query(
-                  parseLong(allRequestParam.get("scheduleId")),
-                  parseLong(allRequestParam.get("studentId")),
-                  parseLong(allRequestParam.get("courseId")),
-                  parseLong(allRequestParam.get("teacherId")),
-                  parseLong(allRequestParam.get("locationId")),
-                  parseInteger(allRequestParam.get("period")))
+                  Utils.parseLong(allRequestParam.get("scheduleId")),
+                  Utils.parseLong(allRequestParam.get("studentId")),
+                  Utils.parseLong(allRequestParam.get("courseId")),
+                  Utils.parseLong(allRequestParam.get("teacherId")),
+                  Utils.parseLong(allRequestParam.get("locationId")),
+                  Utils.parseInteger(allRequestParam.get("period")))
               .stream()
               .map(x -> fillSchedule(x))
               .collect(Collectors.toList());
@@ -1096,30 +1047,30 @@ public class ApiController {
     }
   }
 
-  @RequestMapping("session/")
+  @RequestMapping("/session/")
   public ResponseEntity<?> viewSession(@RequestParam Map<String, String> allRequestParam) {
-    if (allRequestParam.containsKey("apiKey") && isTrusted(allRequestParam.get("apiKey"))) {
+    if (allRequestParam.containsKey("Key") && isTrusted(allRequestParam.get("Key"))) {
       List<Session> list =
           sessionService
               .query(
-                  parseLong(allRequestParam.get("id")),
-                  parseLong(allRequestParam.get("inEncounterId")),
-                  parseLong(allRequestParam.get("outEncounterId")),
-                  parseLong(allRequestParam.get("anyEncounterId")),
-                  parseLong(allRequestParam.get("courseId")),
-                  parseBoolean(allRequestParam.get("complete")),
-                  parseBoolean(allRequestParam.get("hasOut")),
-                  parseLong(allRequestParam.get("locationId")),
-                  parseLong(allRequestParam.get("studentId")),
+                  Utils.parseLong(allRequestParam.get("id")),
+                  Utils.parseLong(allRequestParam.get("inEncounterId")),
+                  Utils.parseLong(allRequestParam.get("outEncounterId")),
+                  Utils.parseLong(allRequestParam.get("anyEncounterId")),
+                  Utils.parseLong(allRequestParam.get("courseId")),
+                  Utils.parseBoolean(allRequestParam.get("complete")),
+                  Utils.parseBoolean(allRequestParam.get("hasOut")),
+                  Utils.parseLong(allRequestParam.get("locationId")),
+                  Utils.parseLong(allRequestParam.get("studentId")),
                   allRequestParam.get("studentName"),
-                  parseLong(allRequestParam.get("teacherId")),
+                  Utils.parseLong(allRequestParam.get("teacherId")),
                   allRequestParam.get("teacherName"),
-                  parseLong(allRequestParam.get("time")),
-                  parseLong(allRequestParam.get("inTimeBegin")),
-                  parseLong(allRequestParam.get("inTimeEnd")),
-                  parseLong(allRequestParam.get("outTimeBegin")),
-                  parseLong(allRequestParam.get("outTimeEnd")),
-                  parseLong(allRequestParam.get("count")))
+                  Utils.parseLong(allRequestParam.get("time")),
+                  Utils.parseLong(allRequestParam.get("inTimeBegin")),
+                  Utils.parseLong(allRequestParam.get("inTimeEnd")),
+                  Utils.parseLong(allRequestParam.get("outTimeBegin")),
+                  Utils.parseLong(allRequestParam.get("outTimeEnd")),
+                  Utils.parseLong(allRequestParam.get("count")))
               .stream()
               .map(x -> fillSession(x))
               .collect(Collectors.toList());
@@ -1129,16 +1080,16 @@ public class ApiController {
     }
   }
 
-  @RequestMapping("student/")
+  @RequestMapping("/student/")
   public ResponseEntity<?> viewStudent(@RequestParam Map<String, String> allRequestParam) {
-    if (allRequestParam.containsKey("apiKey") && isTrusted(allRequestParam.get("apiKey"))) {
+    if (allRequestParam.containsKey("Key") && isTrusted(allRequestParam.get("Key"))) {
       List<Student> list =
           studentService
               .query(
-                  parseLong(allRequestParam.get("studentId")),
-                  parseLong(allRequestParam.get("cardId")),
-                  parseLong(allRequestParam.get("courseId")),
-                  parseInteger(allRequestParam.get("graduatingYear")),
+                  Utils.parseLong(allRequestParam.get("studentId")),
+                  Utils.parseLong(allRequestParam.get("cardId")),
+                  Utils.parseLong(allRequestParam.get("courseId")),
+                  Utils.parseInteger(allRequestParam.get("graduatingYear")),
                   allRequestParam.get("name"),
                   allRequestParam.get("tags"))
               .stream()
@@ -1150,16 +1101,16 @@ public class ApiController {
     }
   }
 
-  @RequestMapping("user/")
+  @RequestMapping("/user/")
   public ResponseEntity<?> viewUser(@RequestParam Map<String, String> allRequestParam) {
-    if (allRequestParam.containsKey("apiKey") && isTrusted(allRequestParam.get("apiKey"))) {
+    if (allRequestParam.containsKey("Key") && isTrusted(allRequestParam.get("Key"))) {
       List<User> list =
           userService
               .query(
-                  parseLong(allRequestParam.get("userId")),
+                  Utils.parseLong(allRequestParam.get("userId")),
                   allRequestParam.get("name"),
                   allRequestParam.get("email"),
-                  parseInteger(allRequestParam.get("ring")))
+                  Utils.parseInteger(allRequestParam.get("ring")))
               .stream()
               .map(x -> fillUser(x))
               .collect(Collectors.toList());
@@ -1170,217 +1121,8 @@ public class ApiController {
   }
 
   /* SPECIAL METHODS */
-
-  @RequestMapping("validate/")
-  public ResponseEntity<?> validateTrusted(@RequestParam("apiKey") String apiKey) {
+  @RequestMapping("/validate/")
+  public ResponseEntity<?> validateTrusted(@RequestParam("Key") String apiKey) {
     return isTrusted(apiKey) ? OK : UNAUTHORIZED;
-  }
-
-  @RequestMapping("batchUploadStudent/")
-  public ResponseEntity<?> batchUploadStudent(
-      @RequestParam("file") MultipartFile file, @RequestParam("apiKey") String apiKey) {
-    if (isAdministrator(apiKey)) {
-      try {
-        CSVParser parser =
-            CSVFormat.DEFAULT.parse(
-                new InputStreamReader(new ByteArrayInputStream(file.getBytes()), "UTF8"));
-        int currentGraduatingYear = Utils.getCurrentGraduatingYear();
-        for (CSVRecord record : parser) {
-          Integer id = parseInteger(record.get(2));
-          if (id != null && !studentService.existsById(id)) {
-            Integer graduatingYear = currentGraduatingYear + (12 - parseInteger(record.get(4)));
-            String name = record.get(0) + ' ' + record.get(1);
-            if (graduatingYear != null && name != null) {
-              Student student = new Student();
-              student.id = id;
-              student.graduatingYear = graduatingYear;
-              student.name = name;
-              student.tags = "";
-              studentService.add(student);
-            }
-          }
-        }
-      } catch (Exception e) {
-        e.printStackTrace();
-      }
-      return OK;
-    } else {
-      return UNAUTHORIZED;
-    }
-  }
-
-  @RequestMapping("batchSetSchedule/")
-  public ResponseEntity<?> batchSetSchedule(
-      @RequestParam("courseId") Integer courseId,
-      @RequestParam("file") MultipartFile file,
-      @RequestParam("apiKey") String apiKey,
-      @RequestParam(value="remove", defaultValue="false") Boolean remove) {
-    if (isTrusted(apiKey)) {
-      if (courseService.existsById(courseId)) {
-        try {
-          CSVParser parser =
-              CSVFormat.DEFAULT.parse(
-                  new InputStreamReader(new ByteArrayInputStream(file.getBytes()), "UTF8"));
-          int currentGraduatingYear = Utils.getCurrentGraduatingYear();
-          for (CSVRecord record : parser) {
-            Long studentId = parseLong(record.get(2));
-            if (studentId != null && studentService.existsById(studentId)) {
-              if (scheduleService
-                      .query(
-                          null, studentId, null, null, null, courseService.getById(courseId).period)
-                      .size()
-                  == 0) {
-                if(remove) {
-                  Schedule schedule = scheduleService.getScheduleByStudentIdCourseId(studentId, courseId);
-                  if(schedule != null) {
-                    scheduleService.deleteById(schedule.id);
-                  }
-                } else {
-                  Schedule schedule = new Schedule();
-                  schedule.studentId = studentId;
-                  schedule.courseId = courseId;
-                  scheduleService.add(schedule);
-                }
-              }
-            }
-          }
-          return OK;
-        } catch (Exception e) {
-          e.printStackTrace();
-          return INTERNAL_SERVER_ERROR;
-        }
-      } else {
-        return BAD_REQUEST;
-      }
-    } else {
-      return UNAUTHORIZED;
-    }
-  }
-
-  /* TESTING */
-  @RequestMapping("populateTestingPeriods")
-  public ResponseEntity<?> populateTestingPeriods() {
-    LocalDate today =
-        ZonedDateTime.now(Utils.TIMEZONE).toLocalDate();
-
-    long minute = 1*60*1000;
-    long initialTime = System.currentTimeMillis();
-    for(int i = 3; i < 7; i++) {
-      Period period = new Period();
-      period.period = i;
-      period.initialTime = initialTime;
-      period.startTime = initialTime + minute;
-      period.endTime = initialTime + minute*3;
-      initialTime += minute*3;
-      periodService.add(period);
-    }
-    return OK;
-  }
-
-  // deletes periods with a length of less than 10 min
-  @RequestMapping("deleteTestingPeriods")
-  public ResponseEntity<?> deleteTestingPeriods() {
-    long maxDuration = 10*60*1000;
-    List<Period> periodList =
-        periodService.query(
-            null, // id
-            null, // time
-            null, // minDuration
-            maxDuration, // maxDuration
-            null, // initialTimeBegin
-            null, // initialTimeEnd
-            null, // startTimeBegin
-            null, // startTimeEnd
-            null, // endTimeBegin
-            null, // endTimeEnd
-            null, // period
-            null, // courseId
-            null // teacherId
-          );
-    for(Period period : periodList) {
-      periodService.deleteById(period.id);
-    }
-    return OK;
-  }
-
-
-  @RequestMapping("populatePeriods")
-  public ResponseEntity<?> populatePeriods() {
-    periodService.deleteAll();
-    LocalDate sunday =
-        ZonedDateTime.now(Utils.TIMEZONE).toLocalDate().plusWeeks(-1).with(DayOfWeek.SUNDAY);
-
-    // get weekdays
-    LocalDate monday = sunday.plusDays(1);
-    LocalDate tuesday = sunday.plusDays(2);
-    LocalDate wednesday = sunday.plusDays(3);
-    LocalDate thursday = sunday.plusDays(4);
-    LocalDate friday = sunday.plusDays(5);
-    LocalDate saturday = sunday.plusDays(6);
-
-    for (int week = 0; week < 10; week++) {
-      // collab
-      LocalDate thisMonday = monday.plusWeeks(week);
-      addPeriod(thisMonday, 1, "6:00", "7:15", "7:55");
-      addPeriod(thisMonday, 2, "7:55", "8:00", "8:40");
-      addPeriod(thisMonday, 3, "8:40", "8:45", "9:25");
-      addPeriod(thisMonday, 4, "9:25", "9:45", "10:25");
-      addPeriod(thisMonday, 0, "10:25", "10:25", "10:55");
-      addPeriod(thisMonday, 5, "10:55", "11:00", "11:40");
-      addPeriod(thisMonday, 6, "11:40", "12:15", "12:55");
-      addPeriod(thisMonday, 7, "12:55", "13:00", "13:40");
-
-      // S Day
-      LocalDate thisTuesday = tuesday.plusWeeks(week);
-      addPeriod(thisTuesday, 1, "6:00", "7:15", "8:55");
-      addPeriod(thisTuesday, 3, "8:55", "9:15", "10:55");
-      addPeriod(thisTuesday, 5, "10:55", "11:15", "12:55");
-      addPeriod(thisTuesday, 7, "12:55", "13:30", "15:10");
-
-      LocalDate thisThursday = thursday.plusWeeks(week);
-      addPeriod(thisThursday, 1, "6:00", "7:15", "8:55");
-      addPeriod(thisThursday, 3, "8:55", "9:15", "10:55");
-      addPeriod(thisThursday, 5, "10:55", "11:15", "12:55");
-      addPeriod(thisThursday, 7, "12:55", "13:30", "15:10");
-
-      // T Day
-      LocalDate thisWednesday = wednesday.plusWeeks(week);
-      addPeriod(thisWednesday, 2, "6:00", "8:00", "9:40");
-      addPeriod(thisWednesday, 4, "9:40", "10:00", "11:40");
-      addPeriod(thisWednesday, 0, "11:40", "11:40", "12:30");
-      addPeriod(thisWednesday, 6, "12:30", "13:05", "14:45");
-
-      LocalDate thisFriday = friday.plusWeeks(week);
-      addPeriod(thisFriday, 2, "6:00", "8:00", "9:40");
-      addPeriod(thisFriday, 4, "9:40", "10:00", "11:40");
-      addPeriod(thisFriday, 0, "11:40", "11:40", "12:30");
-      addPeriod(thisFriday, 6, "12:30", "13:05", "14:45");
-    }
-    return OK;
-  }
-
-
-  void addPeriod(LocalDate day, int p, String initialTime, String startTime, String endTime) {
-    String[] initialComponents = initialTime.split(":");
-    String[] startComponents = startTime.split(":");
-    String[] endComponents = endTime.split(":");
-    Period period = new Period();
-    period.period = p;
-    period.initialTime =
-        day.atTime(parseInteger(initialComponents[0]), parseInteger(initialComponents[1]))
-            .atZone(Utils.TIMEZONE)
-            .toInstant()
-            .toEpochMilli();
-    period.startTime =
-        day.atTime(parseInteger(startComponents[0]), parseInteger(startComponents[1]))
-            .atZone(Utils.TIMEZONE)
-            .toInstant()
-            .toEpochMilli();
-    period.endTime =
-        day.atTime(parseInteger(endComponents[0]), parseInteger(endComponents[1]))
-            .atZone(Utils.TIMEZONE)
-            .toInstant()
-            .toEpochMilli();
-    periodService.add(period);
   }
 }

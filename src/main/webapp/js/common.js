@@ -13,8 +13,7 @@ function staticUrl() {
 }
 
 function apiUrl() {
-  return staticUrl();
-  //return 'http://99.103.193.239:8080/';
+  return staticUrl() + '/api';
 }
 
 function escapeHtml(unsafe) {
