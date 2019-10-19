@@ -20,8 +20,9 @@ public class Utils {
 
   /**
    * Parses string for Integer
-   * @param   str - string to be parsed
-   * @return        Integer parsed from str; null if the string is null or cannot be parsed
+   *
+   * @param str - string to be parsed
+   * @return Integer parsed from str; null if the string is null or cannot be parsed
    */
   public static Integer parseInteger(String str) {
     if (str == null) {
@@ -36,8 +37,9 @@ public class Utils {
   }
   /**
    * Parses string for Long
-   * @param   str - string to be parsed
-   * @return        Long parsed from str; null if string is null or cannot be parsed
+   *
+   * @param str - string to be parsed
+   * @return Long parsed from str; null if string is null or cannot be parsed
    */
   public static Long parseLong(String str) {
     if (str == null) {
@@ -53,8 +55,9 @@ public class Utils {
 
   /**
    * Parses string for Boolean
-   * @param   str - string to be parsed
-   * @return        Boolean parsed from str; null if string is null or cannot be parsed
+   *
+   * @param str - string to be parsed
+   * @return Boolean parsed from str; null if string is null or cannot be parsed
    */
   public static Boolean parseBoolean(String str) {
     if (str == null) {
@@ -67,8 +70,6 @@ public class Utils {
       }
     }
   }
-
-
 
   static MessageDigest getDigester() {
     try {

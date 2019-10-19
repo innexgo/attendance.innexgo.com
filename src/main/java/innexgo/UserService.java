@@ -54,13 +54,7 @@ public class UserService {
         "SELECT id FROM user WHERE name=? AND email=? AND password_hash=? AND ring=? AND prefstring=?";
     long id =
         jdbcTemplate.queryForObject(
-            sql,
-            Long.class,
-            user.name,
-            user.email,
-            user.passwordHash,
-            user.ring,
-            user.prefstring);
+            sql, Long.class, user.name, user.email, user.passwordHash, user.ring, user.prefstring);
 
     // Set user id
     user.id = id;

@@ -30,21 +30,14 @@ public class StudentService {
 
   public void add(Student student) {
     // Add student
-    String sql =
-        "INSERT INTO student(id, graduating_year, name, tags) values (?, ?, ?, ?)";
-    jdbcTemplate.update(
-        sql, student.id, student.graduatingYear, student.name, student.tags);
+    String sql = "INSERT INTO student(id, graduating_year, name, tags) values (?, ?, ?, ?)";
+    jdbcTemplate.update(sql, student.id, student.graduatingYear, student.name, student.tags);
   }
 
   public void update(Student student) {
     String sql = "UPDATE student SET id=?, graduating_year=?, name=?, tags=? WHERE id=?";
     jdbcTemplate.update(
-        sql,
-        student.id,
-        student.graduatingYear,
-        student.name,
-        student.tags,
-        student.id);
+        sql, student.id, student.graduatingYear, student.name, student.tags, student.id);
   }
 
   public Student deleteById(long id) {
@@ -61,12 +54,7 @@ public class StudentService {
   }
 
   public List<Student> query(
-      Long id,
-      Long cardId,
-      Long courseId,
-      Integer graduatingYear,
-      String name,
-      String tags) {
+      Long id, Long cardId, Long courseId, Integer graduatingYear, String name, String tags) {
     String sql =
         "SELECT st.id, st.graduating_year, st.name, st.tags FROM student st"
             + (courseId == null ? "" : " INNER JOIN schedule sc ON st.id = sc.student_id ")

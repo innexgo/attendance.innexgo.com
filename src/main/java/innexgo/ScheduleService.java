@@ -21,7 +21,8 @@ public class ScheduleService {
   }
 
   public Schedule getScheduleByStudentIdCourseId(long studentId, long courseId) {
-    String sql = "SELECT id, student_id, course_id FROM schedule WHERE student_id=? AND course_id=?";
+    String sql =
+        "SELECT id, student_id, course_id FROM schedule WHERE student_id=? AND course_id=?";
     RowMapper<Schedule> rowMapper = new ScheduleRowMapper();
     List<Schedule> schedules = jdbcTemplate.query(sql, rowMapper, studentId, courseId);
     return schedules.size() == 0 ? null : schedules.get(0);
@@ -39,7 +40,6 @@ public class ScheduleService {
     return count != 0;
   }
 
-
   public List<Schedule> getAll() {
     String sql = "SELECT id, student_id, course_id FROM schedule";
     RowMapper<Schedule> rowMapper = new ScheduleRowMapper();
@@ -48,7 +48,7 @@ public class ScheduleService {
 
   public Schedule add(Schedule schedule) {
     // check if it doesnt exist yet
-    if(!existsByStudentIdCourseId(schedule.studentId, schedule.courseId)) {
+    if (!existsByStudentIdCourseId(schedule.studentId, schedule.courseId)) {
       // Add schedule
       String sql = "INSERT INTO schedule (id, student_id, course_id) values (?, ?, ?)";
       jdbcTemplate.update(sql, schedule.id, schedule.studentId, schedule.courseId);
@@ -97,5 +97,4 @@ public class ScheduleService {
     RowMapper<Schedule> rowMapper = new ScheduleRowMapper();
     return this.jdbcTemplate.query(sql, rowMapper);
   }
-
 }

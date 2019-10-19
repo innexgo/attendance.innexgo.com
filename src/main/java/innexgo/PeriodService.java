@@ -37,12 +37,7 @@ public class PeriodService {
     sql = "SELECT id FROM period WHERE initial_time=? AND start_time=? AND end_time=? AND period=?";
     long id =
         jdbcTemplate.queryForObject(
-            sql,
-            Long.class,
-            period.initialTime,
-            period.startTime,
-            period.endTime,
-            period.period);
+            sql, Long.class, period.initialTime, period.startTime, period.endTime, period.period);
 
     // Set period id
     period.id = id;
