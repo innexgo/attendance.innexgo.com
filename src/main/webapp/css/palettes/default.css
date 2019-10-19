@@ -26,9 +26,5 @@ tr.table-header {
 }
 
 .palette-border:not(.active) {
-	border: 1px solid #eaeef1;
-}
-
-:not(#info-name) > a {
-  color: #212529;
+  border: 1px solid #eaeef1;
 }

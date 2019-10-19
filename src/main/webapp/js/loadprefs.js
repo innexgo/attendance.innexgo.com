@@ -30,9 +30,6 @@ function loadPref() {
     case "dark":
       palette.href = "../css/palettes/dark.css";
       break;
-    case "light":
-      palette.href = "../css/palettes/light.css";
-      break;
     case "blue":
       palette.href = "../css/palettes/blue.css";
       break;

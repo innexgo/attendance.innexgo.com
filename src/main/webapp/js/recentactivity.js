@@ -41,8 +41,8 @@ function getRecentActivity() {
           '<td>' + linkRelative(session.inEncounter.student.name, '/studentprofile.html?studentId=' + session.inEncounter.student.id) + '</td>' +
           '<td>' + session.inEncounter.student.id + '</td>' +
           '<td>' + session.course.period + '</td>' +
-          '<td>' + linkRelative(session.course.teacher.name, '/userprofile.html/?userId=' + session.course.teacher.id) + '</td>' +
-          '<td>' + session.course.location.name + '</td>' +
+          '<td>' + linkRelative(session.course.teacher.name, '/userprofile.html?userId=' + session.course.teacher.id) + '</td>' +
+          '<td>' + linkRelative(session.course.location.name, '/locationprofile.html?locationId='+session.course.location.id) + '</td>' +
           '<td>' + moment(session.inEncounter.time, 'x').format('L LTS') + '</td>' +
           '<td>' + outEncounterTime + '</td>' +
           '</tr>');

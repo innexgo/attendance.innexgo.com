@@ -35,7 +35,7 @@ public class DevelopmentController {
   static final ResponseEntity<?> NOT_FOUND = new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
   /* TESTING */
-  @RequestMapping("/addTestingPeriods")
+  @RequestMapping("/populateTestingPeriods")
   public ResponseEntity<?> populateTestingPeriods() {
     LocalDate today = ZonedDateTime.now(Utils.TIMEZONE).toLocalDate();
 
