@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!--Background Information -->
+    <title>Innexgo</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- CSS References -->
+    <link rel="stylesheet" href="/vendor/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/vendor/fontawesome-free/css/all.min.css">
+    <link rel="stylesheet" href="/vendor/bootstrap4-toggle/css/bootstrap4-toggle.min.css">
+    <link rel="stylesheet" href="/css/common.css">
+    <link rel="stylesheet" href="/css/sidebar.css">
+
+    <!-- JS References -->
+    <script src="/vendor/jquery/jquery.min.js"></script>
+    <script src="/vendor/bootstrap/js/bootstrap.bundle.js"></script>
+    <script src="/vendor/bootstrap4-toggle/js/bootstrap4-toggle.min.js"></script>
+    <script src="/vendor/scannerdetection/jquery.scannerdetection.min.js"></script>
+    <script src="/vendor/js-cookie/js.cookie.js"></script>
+    <script src="/vendor/moment/moment.min.js"></script>
+    <script src="/js/common.js"></script>
+    <script src="/js/signedin.js"></script>
+    <script src="/js/loadprefs.js"></script>
+    <script src="/js/sidebar.js"></script>
+    <script src="/js/overview.js"></script>
+    <script src="/js/currentstatus.js"></script>
+    <script src="/js/manualattendance.js"></script>
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Exo&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Ubuntu&display=swap" rel="stylesheet">
+
+    <!-- Favicon -->
+    <link rel='icon' href='img/innexgo_gold_brandmark.png' type='image/png'/ >
+
+  </head>
+
+    <body class="palette-level-one">
+
+      <!-- Sidebar -->
+      <nav id="sidebar" class="navbar-palette sidebar-fixed">
+        <nav class="navbar sidebar-top">
+          <div style="margin:auto;display:block">
+            <h6 id="info-time" style="font-family:'Exo', sans-serif;">Current Time</h6>
+          </div>
+        </nav>
+        <div class="sidebar-item sidebar-info-list navbar-palette" style="">
+          <h6 id="info-name">Teacher Name</h6>
+          <h6 id="info-period">Current Period</h6>
+          <h6 id="info-location">Current Location</h6>
+        </div>
+        <div id="sidebar-navigation">
+          <a class="sidebar-item navbar-palette active" href="#" id="my-overview"><i class="fa fa-tachometer-alt"></i> Overview</a>
+          <a class="sidebar-item navbar-palette" href="recentactivity.html"><i class="fa fa-history"></i> Recent Activity</a>
+          <a class="sidebar-item navbar-palette" href="reports.html" id="my-reports"><i class="fa fa-chart-bar"></i> Reports</a>
+        </div>
+        <div class="sidebar-bottom">
+          <a class="sidebar-item navbar-palette" href="settings.html"><i class="fa fa-cog"></i>  Settings</a>
+          <a class="sidebar-item navbar-palette" href="index.html"><i class="fa fa-sign-out-alt"></i>  Sign out</a>
+        </div>
+      </nav>
+
+      <!-- Top Navbar -->
+      <nav class="navbar navbar-expand-md navbar-palette">
+        <!-- Center Logo -->
+        <div class="mx-auto order-0">
+          <img class="logoicon" src="img/innexgo_transparent_icon.png" alt="" style="" />
+          <h1 class="navbar-brand navbar-palette" style="font-size: 25px; margin-left: 5px;">Innexgo</h1>
+        </div>
+      </nav>
+
+      <!-- Content -->
+
+      <!-- Center Screen -->
+      <div id="not-sidebar" class="container-fluid">
+        <div class="px-3 my-3">
+          <div class="card-deck">
+
+            <!-- Current Status -->
+            <div class="card col-sm-8 palette-level-two">
+              <div class="card-body">
+                <div class="input-group">
+                  <h5 class="card-title">Current Status</h5>
+                  <span class="input-group-btn ml-auto">
+                    <button type="button" class="btn btn-sm" data-html="true" data-toggle="popover" title="Current Status" data-placement="top"
+                                                                                                                           data-content="View a student's current attendance status for this period. <br><br> A <strong>green checkmark</strong> means present and on-time. <br><br> A <strong>blue checkmark</strong> means present but late. <br><br> A <strong>red cross</strong> means not present.">
+                                                                                                                           <i class="fa fa-question"></i>
+                    </button>
+                  </span>
+                </div>
+                <p class="card-text">View the status of students in your class this period.</p>
+                <div class="table-height-standard">
+                  <table class="table striped white">
+                    <thead>
+                      <tr class="table-header">
+                        <td>Name</td>
+                        <td>ID</td>
+                        <td>Status</td>
+                      </tr>
+                    </thead>
+                    <tbody class="table-height-standard" id="current-status-table"></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <!-- Manual Attendance -->
+            <div class="card col-sm-4 palette-level-two">
+              <div class="card-body">
+                <div class="input-group">
+                  <h5 class="card-title text-center">Manual Attendance</h5>
+                  <span class="input-group-btn ml-auto">
+                    <button type="button" class="btn btn-sm" data-html="true" data-toggle="popover" title="Manual Attendance" data-placement="top"
+                                                                                                                              data-content="Manually enter a student ID to either scan-in or scan-out a student.">
+                      <i class="fa fa-question"></i>
+                    </button>
+                  </span>
+                </div>
+                <p class="card-text">Scan-in/out students manually.</p>
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text bg-innexgocrimson">
+                      Student ID
+                    </span>
+                  </div>
+                  <input id="manual-userid" type="text" class="form-control">
+                </div>
+                <button id="manual-submit" type="input-button" class="btn mt-3 btn-block btn-warning">
+                  Submit
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </body>
+</html>
