@@ -349,7 +349,7 @@ public class ApiController {
   public ResponseEntity<?> newCard(
       @RequestParam("cardId") Long cardId,
       @RequestParam("studentId") Long studentId,
-      @RequestParam("Key") String apiKey) {
+      @RequestParam("apiKey") String apiKey) {
     if (isTrusted(apiKey)) {
       if (studentService.existsById(studentId) && !cardService.existsById(cardId)) {
         Card card = new Card();
@@ -383,7 +383,7 @@ public class ApiController {
       @RequestParam("locationId") Long locationId,
       @RequestParam("period") Integer period,
       @RequestParam("subject") String subject,
-      @RequestParam("Key") String apiKey) {
+      @RequestParam("apiKey") String apiKey) {
     if (isAdministrator(apiKey)) {
       if (!Utils.isEmpty(subject)
           && locationService.existsById(locationId)
@@ -423,7 +423,7 @@ public class ApiController {
       @RequestParam(value = "cardId", defaultValue = "-1") Long cardId,
       @RequestParam("locationId") Long locationId,
       @RequestParam(value = "courseId", defaultValue = "-1") Long courseId,
-      @RequestParam("Key") String apiKey) {
+      @RequestParam("apiKey") String apiKey) {
     if (isTrusted(apiKey)) {
       Student student;
       if (cardService.existsById(cardId)) {
@@ -590,7 +590,7 @@ public class ApiController {
   public ResponseEntity<?> newLocation(
       @RequestParam("name") String name,
       @RequestParam("tags") String tags,
-      @RequestParam("Key") String apiKey) {
+      @RequestParam("apiKey") String apiKey) {
     if (isAdministrator(apiKey)) {
       if (!Utils.isEmpty(name) && !Utils.isEmpty(tags)) {
         Location location = new Location();
@@ -612,7 +612,7 @@ public class ApiController {
       @RequestParam("startTime") Long startTime,
       @RequestParam("endTime") Long endTime,
       @RequestParam("period") Integer period,
-      @RequestParam("Key") String apiKey) {
+      @RequestParam("apiKey") String apiKey) {
     if (isAdministrator(apiKey)) {
       Period p = new Period();
       p.initialTime = initialTime;
@@ -630,7 +630,7 @@ public class ApiController {
   public ResponseEntity<?> newSchedule(
       @RequestParam("studentId") Long studentId,
       @RequestParam("courseId") Long courseId,
-      @RequestParam("Key") String apiKey) {
+      @RequestParam("apiKey") String apiKey) {
     if (isTrusted(apiKey)) {
       if (studentService.existsById(studentId)
           && courseService.existsById(courseId)
@@ -657,7 +657,7 @@ public class ApiController {
       @RequestParam("graduatingYear") Integer graduatingYear,
       @RequestParam("name") String name,
       @RequestParam(value = "tags", defaultValue = "") String tags,
-      @RequestParam("Key") String apiKey) {
+      @RequestParam("apiKey") String apiKey) {
     if (isAdministrator(apiKey)) {
       if (!studentService.existsById(id) && !Utils.isEmpty(name)) {
         Student student = new Student();
@@ -681,7 +681,7 @@ public class ApiController {
       @RequestParam("email") String email,
       @RequestParam("password") String password,
       @RequestParam("ring") Integer ring,
-      @RequestParam("Key") String apiKey) {
+      @RequestParam("apiKey") String apiKey) {
     if (!isAdministrator(apiKey)) {
       if (!Utils.isEmpty(name)
           && !Utils.isEmpty(password)
@@ -731,7 +731,7 @@ public class ApiController {
   public ResponseEntity<?> updatePrefs(
       @RequestParam("userId") Long userId,
       @RequestParam("prefstring") String prefstring,
-      @RequestParam("Key") String apiKey) {
+      @RequestParam("apiKey") String apiKey) {
     if (!Utils.isEmpty(apiKey) && userService.existsById(userId)) {
       User apiUser = getUserIfValid(apiKey);
       User user = userService.getById(userId);
@@ -746,7 +746,7 @@ public class ApiController {
 
   @RequestMapping("/apiKey/delete/")
   public ResponseEntity<?> deleteApiKey(
-      @RequestParam("KeyId") Long apiKeyId, @RequestParam("Key") String apiKey) {
+      @RequestParam("apiKeyId") Long apiKeyId, @RequestParam("apiKey") String apiKey) {
     if (isAdministrator(apiKey)) {
       if (apiKeyService.existsById(apiKeyId)) {
         return new ResponseEntity<>(fillApiKey(apiKeyService.deleteById(apiKeyId)), HttpStatus.OK);
@@ -760,7 +760,7 @@ public class ApiController {
 
   @RequestMapping("/card/delete/")
   public ResponseEntity<?> deleteCard(
-      @RequestParam("cardId") Long cardId, @RequestParam("Key") String apiKey) {
+      @RequestParam("cardId") Long cardId, @RequestParam("apiKey") String apiKey) {
     if (isAdministrator(apiKey)) {
       if (cardService.existsById(cardId)) {
         return new ResponseEntity<>(fillCard(cardService.deleteById(cardId)), HttpStatus.OK);
@@ -774,7 +774,7 @@ public class ApiController {
 
   @RequestMapping("/course/delete/")
   public ResponseEntity<?> deleteCourse(
-      @RequestParam("courseId") Long courseId, @RequestParam("Key") String apiKey) {
+      @RequestParam("courseId") Long courseId, @RequestParam("apiKey") String apiKey) {
     if (isAdministrator(apiKey)) {
       if (courseService.existsById(courseId)) {
         return new ResponseEntity<>(fillCourse(courseService.deleteById(courseId)), HttpStatus.OK);
@@ -788,7 +788,7 @@ public class ApiController {
 
   @RequestMapping("/irregularity/delete/")
   public ResponseEntity<?> deleteIrregularity(
-      @RequestParam("irregularityId") Long irregularityId, @RequestParam("Key") String apiKey) {
+      @RequestParam("irregularityId") Long irregularityId, @RequestParam("apiKey") String apiKey) {
     if (isAdministrator(apiKey)) {
       if (irregularityService.existsById(irregularityId)) {
         return new ResponseEntity<>(
@@ -803,7 +803,7 @@ public class ApiController {
 
   @RequestMapping("/location/delete/")
   public ResponseEntity<?> deleteLocation(
-      @RequestParam("locationId") Long locationId, @RequestParam("Key") String apiKey) {
+      @RequestParam("locationId") Long locationId, @RequestParam("apiKey") String apiKey) {
     if (isAdministrator(apiKey)) {
       if (locationService.existsById(locationId)) {
         return new ResponseEntity<>(
@@ -818,7 +818,7 @@ public class ApiController {
 
   @RequestMapping("/period/delete/")
   public ResponseEntity<?> deletePeriod(
-      @RequestParam("periodId") Long periodId, @RequestParam("Key") String apiKey) {
+      @RequestParam("periodId") Long periodId, @RequestParam("apiKey") String apiKey) {
     if (isAdministrator(apiKey)) {
       if (periodService.existsById(periodId)) {
         return new ResponseEntity<>(fillPeriod(periodService.deleteById(periodId)), HttpStatus.OK);
@@ -832,7 +832,7 @@ public class ApiController {
 
   @RequestMapping("/schedule/delete/")
   public ResponseEntity<?> deleteSchedule(
-      @RequestParam("scheduleId") Integer scheduleId, @RequestParam("Key") String apiKey) {
+      @RequestParam("scheduleId") Integer scheduleId, @RequestParam("apiKey") String apiKey) {
     if (isAdministrator(apiKey)) {
       if (scheduleService.existsById(scheduleId)) {
         return new ResponseEntity<>(
@@ -847,7 +847,7 @@ public class ApiController {
 
   @RequestMapping("/student/delete/")
   public ResponseEntity<?> deleteStudent(
-      @RequestParam("studentId") Integer studentId, @RequestParam("Key") String apiKey) {
+      @RequestParam("studentId") Integer studentId, @RequestParam("apiKey") String apiKey) {
     if (isAdministrator(apiKey)) {
       if (studentService.existsById(studentId)) {
         return new ResponseEntity<>(
@@ -862,7 +862,7 @@ public class ApiController {
 
   @RequestMapping("/user/delete/")
   public ResponseEntity<?> deleteUser(
-      @RequestParam("userId") Integer userId, @RequestParam("Key") String apiKey) {
+      @RequestParam("userId") Integer userId, @RequestParam("apiKey") String apiKey) {
     if (isAdministrator(apiKey)) {
       if (userService.existsById(userId)) {
         return new ResponseEntity<>(fillUser(userService.deleteById(userId)), HttpStatus.OK);
@@ -876,16 +876,16 @@ public class ApiController {
 
   @RequestMapping("/apiKey/")
   public ResponseEntity<?> viewApiKey(@RequestParam Map<String, String> allRequestParam) {
-    if (allRequestParam.containsKey("Key") && isTrusted(allRequestParam.get("Key"))) {
+    if (allRequestParam.containsKey("apiKey") && isTrusted(allRequestParam.get("apiKey"))) {
       List<ApiKey> list =
           apiKeyService
               .query(
-                  Utils.parseLong(allRequestParam.get("KeyId")),
+                  Utils.parseLong(allRequestParam.get("apiKeyId")),
                   Utils.parseLong(allRequestParam.get("userId")),
                   Utils.parseLong(allRequestParam.get("minCreationTime")),
                   Utils.parseLong(allRequestParam.get("maxCreationTime")),
-                  allRequestParam.containsKey("KeyData")
-                      ? Utils.encodeApiKey(allRequestParam.get("KeyData"))
+                  allRequestParam.containsKey("apiKeyData")
+                      ? Utils.encodeApiKey(allRequestParam.get("apiKeyData"))
                       : null)
               .stream()
               .map(x -> fillApiKey(x))
@@ -898,7 +898,7 @@ public class ApiController {
 
   @RequestMapping("/card/")
   public ResponseEntity<?> viewCard(@RequestParam Map<String, String> allRequestParam) {
-    if (allRequestParam.containsKey("Key") && isTrusted(allRequestParam.get("Key"))) {
+    if (allRequestParam.containsKey("apiKey") && isTrusted(allRequestParam.get("apiKey"))) {
       List<Card> list =
           cardService
               .query(
@@ -915,7 +915,7 @@ public class ApiController {
 
   @RequestMapping("/course/")
   public ResponseEntity<?> viewCourse(@RequestParam Map<String, String> allRequestParam) {
-    String apiKey = allRequestParam.get("Key");
+    String apiKey = allRequestParam.get("apiKey");
     if (isTrusted(apiKey)) {
 
       List<Course> els =
@@ -942,7 +942,7 @@ public class ApiController {
 
   @RequestMapping("/encounter/")
   public ResponseEntity<?> viewEncounter(@RequestParam Map<String, String> allRequestParam) {
-    String apiKey = allRequestParam.get("Key");
+    String apiKey = allRequestParam.get("apiKey");
     if (isTrusted(apiKey)) {
       List<Encounter> els =
           encounterService
@@ -965,7 +965,7 @@ public class ApiController {
 
   @RequestMapping("/irregularity/")
   public ResponseEntity<?> viewIrregularity(@RequestParam Map<String, String> allRequestParam) {
-    String apiKey = allRequestParam.get("Key");
+    String apiKey = allRequestParam.get("apiKey");
     if (isTrusted(apiKey)) {
       List<Irregularity> els =
           irregularityService
@@ -989,7 +989,7 @@ public class ApiController {
 
   @RequestMapping("/location/")
   public ResponseEntity<?> viewLocation(@RequestParam Map<String, String> allRequestParam) {
-    if (allRequestParam.containsKey("Key") && isTrusted(allRequestParam.get("Key"))) {
+    if (allRequestParam.containsKey("apiKey") && isTrusted(allRequestParam.get("apiKey"))) {
       List<Location> list =
           locationService
               .query(
@@ -1007,7 +1007,7 @@ public class ApiController {
 
   @RequestMapping("/period/")
   public ResponseEntity<?> viewPeriod(@RequestParam Map<String, String> allRequestParam) {
-    String apiKey = allRequestParam.get("Key");
+    String apiKey = allRequestParam.get("apiKey");
     if (isTrusted(apiKey)) {
       List<Period> els =
           periodService
@@ -1036,7 +1036,7 @@ public class ApiController {
 
   @RequestMapping("/schedule/")
   public ResponseEntity<?> viewSchedule(@RequestParam Map<String, String> allRequestParam) {
-    if (allRequestParam.containsKey("Key") && isTrusted(allRequestParam.get("Key"))) {
+    if (allRequestParam.containsKey("apiKey") && isTrusted(allRequestParam.get("apiKey"))) {
       List<Schedule> list =
           scheduleService
               .query(
@@ -1057,7 +1057,7 @@ public class ApiController {
 
   @RequestMapping("/session/")
   public ResponseEntity<?> viewSession(@RequestParam Map<String, String> allRequestParam) {
-    if (allRequestParam.containsKey("Key") && isTrusted(allRequestParam.get("Key"))) {
+    if (allRequestParam.containsKey("apiKey") && isTrusted(allRequestParam.get("apiKey"))) {
       List<Session> list =
           sessionService
               .query(
@@ -1090,7 +1090,7 @@ public class ApiController {
 
   @RequestMapping("/student/")
   public ResponseEntity<?> viewStudent(@RequestParam Map<String, String> allRequestParam) {
-    if (allRequestParam.containsKey("Key") && isTrusted(allRequestParam.get("Key"))) {
+    if (allRequestParam.containsKey("apiKey") && isTrusted(allRequestParam.get("apiKey"))) {
       List<Student> list =
           studentService
               .query(
@@ -1111,7 +1111,7 @@ public class ApiController {
 
   @RequestMapping("/user/")
   public ResponseEntity<?> viewUser(@RequestParam Map<String, String> allRequestParam) {
-    if (allRequestParam.containsKey("Key") && isTrusted(allRequestParam.get("Key"))) {
+    if (allRequestParam.containsKey("apiKey") && isTrusted(allRequestParam.get("apiKey"))) {
       List<User> list =
           userService
               .query(
@@ -1130,7 +1130,7 @@ public class ApiController {
 
   /* SPECIAL METHODS */
   @RequestMapping("/validate/")
-  public ResponseEntity<?> validateTrusted(@RequestParam("Key") String apiKey) {
+  public ResponseEntity<?> validateTrusted(@RequestParam("apiKey") String apiKey) {
     return isTrusted(apiKey) ? OK : UNAUTHORIZED;
   }
 }
