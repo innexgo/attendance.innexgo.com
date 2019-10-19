@@ -38,7 +38,7 @@ function getRecentActivity() {
       table.insertRow(0).innerHTML =
         ('<tr>' +
           '<td>' + (sessionList.length-index) + '</td>' +
-          '<td>' + linkRelative(session.inEncounter.student.name, '/studentprofile.html/?studentId=' + session.inEncounter.student.id) + '</td>' +
+          '<td>' + linkRelative(session.inEncounter.student.name, '/studentprofile.html?studentId=' + session.inEncounter.student.id) + '</td>' +
           '<td>' + session.inEncounter.student.id + '</td>' +
           '<td>' + session.course.period + '</td>' +
           '<td>' + linkRelative(session.course.teacher.name, '/userprofile.html/?userId=' + session.course.teacher.id) + '</td>' +

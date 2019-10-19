@@ -333,7 +333,7 @@ public class ApiController {
    * Create a new apiKey for a User
    * @param userId the id of the User
    * @param email email of the User
-   * @param expirationTime  //TODO what is expiration time?
+   * @param expirationTime time in milliseconds since 1970 when this key is due to expire
    * @param password User password
    * @return ResponseEntity with ApiKey of User and HttpStatus.OK code if successful
    * @throws ResponseEntity with HttpStatus.UNAUTHORIZED if the User is unauthorized
@@ -409,8 +409,8 @@ public class ApiController {
    * Create a new course and can only be done by an administrator
    * @param teacherId - id of teacher that normally teaches the class
    * @param locationId - id of location where class is normally held
-   * @param period - period of the class //TODO what are the values of period?
-   * @param subject                      //TODO what are possible values of subject?
+   * @param period - period of the class (usually 1-7)
+   * @param subject - Subject of class, Ex. "Math 3"
    * @param apiKey - of User creating new Course
    * @return ResponseEntity with a Course and HttpStatus.OK
    * @throws ResponseEntity with HttpStatus.UNAUTHORIZED if the User is not an administrator
