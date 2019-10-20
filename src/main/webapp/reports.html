@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="/vendor/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="/vendor/fontawesome-free/css/all.min.css">
     <link rel="stylesheet" href="/vendor/bootstrap4-toggle/css/bootstrap4-toggle.min.css">
+    <link rel="stylesheet" href="/vendor/tempus-dominus/tempusdominus-bootstrap-4.min.css">
     <link rel="stylesheet" href="/css/common.css">
     <link rel="stylesheet" href="/css/sidebar.css">
 
@@ -17,16 +18,14 @@
     <script src="/vendor/jquery/jquery.min.js"></script>
     <script src="/vendor/bootstrap/js/bootstrap.bundle.js"></script>
     <script src="/vendor/bootstrap4-toggle/js/bootstrap4-toggle.min.js"></script>
-    <script src="/vendor/scannerdetection/jquery.scannerdetection.min.js"></script>
     <script src="/vendor/js-cookie/js.cookie.js"></script>
     <script src="/vendor/moment/moment.min.js"></script>
+    <script src="/vendor/tempus-dominus/tempusdominus-bootstrap-4.min.js"></script>
     <script src="/js/common.js"></script>
     <script src="/js/signedin.js"></script>
     <script src="/js/loadprefs.js"></script>
     <script src="/js/sidebar.js"></script>
-    <script src="/js/overview.js"></script>
-    <script src="/js/currentstatus.js"></script>
-    <script src="/js/manualattendance.js"></script>
+    <script src="/js/reports.js"></script>
 
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Exo&display=swap" rel="stylesheet">
@@ -52,9 +51,9 @@
           <h6 id="info-location">Current Location</h6>
         </div>
         <div id="sidebar-navigation">
-          <a class="sidebar-item navbar-palette active" href="#" id="my-overview"><i class="fa fa-tachometer-alt"></i> Overview</a>
+          <a class="sidebar-item navbar-palette" href="#" id="my-overview"><i class="fa fa-tachometer-alt"></i> Overview</a>
           <a class="sidebar-item navbar-palette" href="recentactivity.html"><i class="fa fa-history"></i> Recent Activity</a>
-          <a class="sidebar-item navbar-palette" href="reports.html" id="my-reports"><i class="fa fa-chart-bar"></i> Reports</a>
+          <a class="sidebar-item navbar-palette active" href="reports.html" id="my-reports"><i class="fa fa-chart-bar"></i> Reports</a>
         </div>
         <div class="sidebar-bottom">
           <a class="sidebar-item navbar-palette" href="settings.html"><i class="fa fa-cog"></i>  Settings</a>
@@ -78,58 +77,69 @@
         <div class="px-3 my-3">
           <div class="card-deck">
 
-            <!-- Current Status -->
-            <div class="card col-sm-8 palette-level-two">
-              <div class="card-body">
-                <div class="input-group">
-                  <h5 class="card-title">Current Status</h5>
-                  <span class="input-group-btn ml-auto">
-                    <button type="button" class="btn btn-sm" data-html="true" data-toggle="popover" title="Current Status" data-placement="top"
-                                                                                                                           data-content="View a student's current attendance status for this period. <br><br> A <strong>green checkmark</strong> means present and on-time. <br><br> A <strong>blue checkmark</strong> means present but late. <br><br> A <strong>red cross</strong> means not present.">
-                                                                                                                           <i class="fa fa-question"></i>
-                    </button>
-                  </span>
-                </div>
-                <p class="card-text">View the status of students in your class this period.</p>
-                <div class="table-height-standard">
-                  <table class="table striped white">
-                    <thead>
-                      <tr class="table-header">
-                        <td>Name</td>
-                        <td>ID</td>
-                        <td>Status</td>
-                      </tr>
-                    </thead>
-                    <tbody class="table-height-standard" id="current-status-table"></tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-
-            <!-- Manual Attendance -->
+            <!-- Reports Courses -->
             <div class="card col-sm-4 palette-level-two">
               <div class="card-body">
                 <div class="input-group">
-                  <h5 class="card-title text-center">Manual Attendance</h5>
+                  <h5 class="card-title">Course Reports</h5>
                   <span class="input-group-btn ml-auto">
-                    <button type="button" class="btn btn-sm" data-html="true" data-toggle="popover" title="Manual Attendance" data-placement="top"
-                                                                                                                              data-content="Manually enter a student ID to either scan-in or scan-out a student.">
+                    <button type="button" class="btn btn-sm" data-html="true" data-toggle="popover" title="Course Reports" data-placement="top"
+                                                                                                                           data-content="Click on the course name in the table to view a report for that course.">
                       <i class="fa fa-question"></i>
                     </button>
                   </span>
                 </div>
-                <p class="card-text">Scan-in/out students manually.</p>
-                <div class="input-group mb-3">
-                  <div class="input-group-prepend">
-                    <span class="input-group-text bg-innexgocrimson">
-                      Student ID
-                    </span>
-                  </div>
-                  <input id="manual-userid" type="text" class="form-control">
+                <p class="card-text">View reports for the classes you teach.</p>
+                <table class="table striped white">
+                  <thead>
+                    <tr class="table-header">
+                      <td>Period</td>
+                      <td>Course Name</td>
+                    </tr>
+                  </thead>
+                  <tbody id="reports-courses"></tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Reports Class Session -->
+            <div class="card col-sm-4 palette-level-two">
+              <div class="card-body">
+                <div class="input-group">
+                  <h5 class="card-title text-center">Class Session Reports</h5>
+                  <span class="input-group-btn ml-auto">
+                    <button type="button" class="btn btn-sm" data-html="true" data-toggle="popover" title="Manual Attendance" data-placement="top"
+                                                                                                                              data-content="Use the calendar to choose a day to view periods for. The default is today. Click on the period number to view a report for that period on that day.">
+                      <i class="fa fa-question"></i>
+                    </button>
+                  </span>
                 </div>
-                <button id="manual-submit" type="input-button" class="btn mt-3 btn-block btn-warning">
-                  Submit
-                </button>
+                <p class="card-text">View reports for class sessions.</p>
+                <div class="container">
+                  <div class="row">
+                    <div class="col-sm-6">
+                      <div class="form-group">
+                        <div class="input-group date" id="reports-datetimepicker" data-target-input="nearest">
+                          <input type="text" class="form-control datetimepicker-input" data-target="#reports-datetimepicker"/>
+                          <div class="input-group-append" data-target="#reports-datetimepicker" data-toggle="datetimepicker">
+                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="table-height-standard">
+                  <table class="table striped white">
+                    <thead>
+                      <tr class="table-header">
+                        <td>Period</td>
+                        <td>Course Name</td>
+                      </tr>
+                    </thead>
+                    <tbody class="table-height-standard" id="reports-courses"></tbody>
+                  </table>
+                </div>
               </div>
             </div>
           </div>

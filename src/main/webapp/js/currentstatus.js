@@ -13,32 +13,17 @@ function currentStatus() {
   }
 
   // get students
-  request(apiUrl() + '/student/' +
-    '?courseId=' + course.id +
-    '&apiKey=' + apiKey.key,
+  request(`${apiUrl()}/student/?courseId=${course.id}&apiKey=${apiKey.key}`,
     function (xhr) {
       var students = JSON.parse(xhr.responseText);
       // get irregularities
-      request(apiUrl() + '/irregularity/' +
-        '?courseId=' + course.id +
-        '&periodId=' + period.id +
-        '&apiKey=' + apiKey.key,
+      request(`${apiUrl()}/irregularity/?courseId=${course.id}&periodId=${period.id}&apiKey=${apiKey.key}`,
         function (xhr) {
           var irregularities = JSON.parse(xhr.responseText).sort((a, b) => (a.time > b.time) ? 1 : -1);
 
           //blank table
           table.innerHTML = '';
-          students.sort(function(a, b) {
-            var nameA = a.name.toUpperCase();
-            var nameB = b.name.toUpperCase();
-            if (nameA > nameB) {
-              return -1;
-            }
-            if (nameA < nameB) {
-              return 1;
-            }
-            return 0;
-          });
+          students.sort((a, b) => (a.name > b.name) ? 1 : -1);
           for (var i = 0; i < students.length; i++) {
             var text = '<span class="fa fa-check"></span>'
             var bgcolor = '#ccffcc';
@@ -68,9 +53,9 @@ function currentStatus() {
             // put values in table
             var newrow = table.insertRow(0);
             newrow.innerHTML =
-              ('<td>' + linkRelative(student.name, '/studentprofile.html?studentId='+student.id) + '</td>'+
-                '<td>' + student.id + '</td>' +
-                '<td style="background-color:' + bgcolor + ';color:' + fgcolor + '">' + text + '</td>');
+              `<td>${linkRelative(student.name, '/studentprofile.html?studentId='+student.id)}</td>
+               <td>${student.id}</td>' +
+               <td style="background-color:${bgcolor};color:${fgcolor}">${text}</td>`;
             newrow.id = 'id-' + student.id;
           }
         },
