@@ -89,14 +89,14 @@ function giveAlert(innerHTML, type, permanent) {
   alertCounter++;
 }
 
-function toGraduatingYear(grade) {
-  var currentTime = moment();
-  var currentYear = currentTime.year();
-  if (currentTime.month() >= 7) {
-    currentYear++;
+function momentToAcademicYear(momentDate) {
+  if(momentDate.month() >= 7) {
+    return momentDate.year()+1;
+  } else {
+    return momentDate.year();
   }
-  return currentYear;
 }
+
 
 function linkAbsolute(text, url) {
   return '<a style="display: inline-block;" href="' + url + '">' + text + '</a>';

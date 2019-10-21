@@ -42,10 +42,10 @@ function submitEncounter(studentId) {
           //curRow = $('#id-'+studentId)
           //curRow.insertBefore(curRow.parent().find('tr:first-child'));
           if (sessionList.length != 0) {
-            giveAlert('Sucessfully logged ' + encounter.student.name + ' in to ' + encounter.location.name, 'alert-success', false);
+            giveAlert(`Sucessfully logged ${encounter.student.name} in to ${encounter.location.name}`, 'alert-success', false);
             beepup.play();
           } else {
-            giveAlert('Sucessfully logged ' + encounter.student.name + ' out of ' + encounter.location.name, 'alert-info', false);
+            giveAlert(`Sucessfully logged ${encounter.student.name} out of ${encounter.location.name}`, 'alert-info', false);
             beepdown.play();
           }
         },

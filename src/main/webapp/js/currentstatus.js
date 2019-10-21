@@ -23,7 +23,7 @@ function currentStatus() {
 
           //blank table
           table.innerHTML = '';
-          students.sort((a, b) => (a.name > b.name) ? 1 : -1);
+          students.sort((a, b) => (a.name > b.name) ? 1 : -1)
           for (var i = 0; i < students.length; i++) {
             var text = '<span class="fa fa-check"></span>'
             var bgcolor = '#ccffcc';
