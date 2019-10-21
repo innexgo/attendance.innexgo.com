@@ -38,13 +38,16 @@ function loadClassSessionReports(date) {
   // For each period on that day, if there is a course with that period, add it to the table
 
   var apiKey = Cookies.getJSON('apiKey');
-  var dayBegin = date.startOf('day');
-  var dayEnd = date.endOf('day');
+  var dayBegin = moment(date).startOf('day');
+  var dayEnd = moment(date).endOf('day');
+
 
   if(moment().isBefore(dayEnd)) {
     dayEnd = moment();
   }
 
+  // clear
+  $('#reports-classes').empty();
 
   // Note this request is inclusive,
   // searching for end times that are after the beginning of the day, and initial times until the end of the day.
@@ -60,8 +63,8 @@ function loadClassSessionReports(date) {
             for(let course of courses.filter(c => c.period === period.period)) {
               $('#reports-classes').append(`
                   <tr>
-                    <td>${course.period}</td>
-                    <td>${linkRelative(course.subject, 'courseprofile.html?courseId='+course.id+'&periodId='+period.id)}</td>
+                    <td>${period.period}</td>
+                    <td>${linkRelative(course.subject, '/classprofile.html?courseId='+course.id+'&periodId='+period.id)}</td>
                   </tr>
                 `)
             }
