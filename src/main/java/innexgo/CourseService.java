@@ -80,7 +80,7 @@ public class CourseService {
       Long time,
       Integer year) {
     String sql =
-        "SELECT UNIQUE c.id, c.teacher_id, c.location_id, c.period, c.subject, c.year FROM course c"
+        "SELECT DISTINCT c.id, c.teacher_id, c.location_id, c.period, c.subject, c.year FROM course c"
             + (time == null ? "" : " RIGHT JOIN period p ON p.period = course.period")
             + (studentId == null ? "" : " JOIN schedule sc ON c.id = sc.course_id ")
             + " WHERE 1=1 "

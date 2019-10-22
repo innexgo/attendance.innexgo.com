@@ -104,7 +104,7 @@ public class SessionService {
     boolean periodUnused = courseUnused && periodId == null && period == null;
 
     String sql =
-        "SELECT UNIQUE ses.id, ses.student_id, ses.in_encounter_id, ses.out_encounter_id, ses.course_id, ses.complete"
+        "SELECT DISTINCT ses.id, ses.student_id, ses.in_encounter_id, ses.out_encounter_id, ses.complete"
             + " FROM session ses"
             + " INNER JOIN encounter inen ON ses.in_encounter_id = inen.id"
             + " LEFT JOIN encounter outen ON (ses.complete AND ses.out_encounter_id = outen.id)"
@@ -114,6 +114,7 @@ public class SessionService {
             + (inEncounterId == null ? "" : " AND ses.in_encounter_id = " + inEncounterId)
             + (outEncounterId == null ? "" : " AND ses.out_encounter_id = " + outEncounterId)
             + (anyEncounterId == null ? "" : " AND (ses.in_encounter_id =" + anyEncounterId + " OR ses.out_encounter_id = " + anyEncounterId + ")")
+            + " WHERE 1 = 1 "
             + (complete == null ? "" : " AND ses.complete = " + complete)
             + (courseId == null ? "" : " AND ses.course_id = " + courseId)
             + (studentId == null ? "" : " AND ses.student_id = " + studentId)

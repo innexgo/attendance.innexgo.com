@@ -9,22 +9,25 @@ function submitEncounter(studentId) {
   var checkBox = document.getElementById('manual-type-toggle');
   var apiKey = Cookies.getJSON('apiKey');
   var period = Cookies.getJSON('period');
+  if (course == null) {
+    giveAlert('No school at the moment to sign into.', 'alert-danger', false);
+    return;
+  }
   var course = Cookies.getJSON('courses').filter(c => c.period == period.period)[0];
+  if (course == null) {
+    giveAlert('No class at the moment to sign into.', 'alert-danger', false);
+    return;
+  }
 
   if (String(studentId) == String(NaN)) {
     giveAlert('What you entered wasn\'t a valid ID', 'alert-danger', false);
     return;
   }
 
-  if (course == null) {
-    giveAlert('No class at the moment to sign into.', 'alert-danger', false);
-    return;
-  }
 
   var addEncounterUrl = apiUrl() + '/encounter/new/' +
     '?studentId=' + studentId +
     '&locationId=' + course.location.id +
-    '&courseId=' + course.id +
     '&apiKey=' + apiKey.key;
 
   request(addEncounterUrl,
@@ -33,12 +36,11 @@ function submitEncounter(studentId) {
       var encounter = JSON.parse(xhr.responseText);
 
       //now check if it was a sign in or a sign out
-      request(apiUrl() + '/session/' +
-        '?inEncounterId=' + encounter.id +
-        '&apiKey=' + apiKey.key,
+      request(`${apiUrl()}/session/?inEncounterId=${encounter.id}&apiKey=${apiKey.key}`,
         //success
         function (xhr) {
           var sessionList = JSON.parse(xhr.responseText);
+          console.log(sessionList);
           //curRow = $('#id-'+studentId)
           //curRow.insertBefore(curRow.parent().find('tr:first-child'));
           if (sessionList.length != 0) {

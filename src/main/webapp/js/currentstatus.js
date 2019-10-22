@@ -54,7 +54,7 @@ function currentStatus() {
             var newrow = table.insertRow(0);
             newrow.innerHTML =
               `<td>${linkRelative(student.name, '/studentprofile.html?studentId='+student.id)}</td>
-               <td>${student.id}</td>' +
+               <td>${student.id}</td>
                <td style="background-color:${bgcolor};color:${fgcolor}">${text}</td>`;
             newrow.id = 'id-' + student.id;
           }

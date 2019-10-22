@@ -512,7 +512,8 @@ public class ApiController {
           for(Session openSession : openSessions) {
             Encounter inEncounter = encounterService.getById(openSession.inEncounterId);
             // if it's at the same location
-            if (locationId == inEncounter.id) {
+            if (locationId == inEncounter.locationId) {
+              System.out.println("Closing Session" + openSession.id);
               // Then close this session naturally
               openSession.outEncounterId = encounter.id;
               openSession.complete = true;
@@ -534,9 +535,10 @@ public class ApiController {
               // its not at the same location as the beginning
               // Virtually close session by generating a fake (virtual) encounter and insert it in.
               // We know they must have somehow left from here
+              System.out.println("Virtual Encounter!");
 
               Encounter virtualEncounter = new Encounter();
-              virtualEncounter.locationId = inEncounter.id;
+              virtualEncounter.locationId = inEncounter.locationId;
               virtualEncounter.studentId = student.id;
               virtualEncounter.time = System.currentTimeMillis();
               virtualEncounter.virtual = true;
