@@ -54,7 +54,6 @@ function loadClassSessionReports(date) {
   request(`${apiUrl()}/period/?endTimeBegin=${dayBegin.valueOf()}&initialTimeEnd=${dayEnd.valueOf()}&apiKey=${apiKey.key}`,
     function(xhr) {
       let periods = JSON.parse(xhr.responseText);
-          console.log(periods);
       request(`${apiUrl()}/course/?year=${momentToAcademicYear(date)}&teacherId=${apiKey.user.id}&apiKey=${apiKey.key}`,
         function(xhr) {
           let courses = JSON.parse(xhr.responseText);
@@ -85,4 +84,60 @@ function loadClassSessionReports(date) {
   );
 }
 
+// Search event listeners
+$(document).ready(function () {
+  let tbox = document.getElementById('reports-student-search');
+  tbox.addEventListener('keydown', function (event) {
+    if (event.keyCode === 13) {
+      console.log('doing enter key');
+      if (isEmpty(tbox.value)) {
+        console.log('Name is Empty');
+      }
+      else {
+        searchStudent(tbox.value);
+      }
+    }
+  });
 
+  let button = document.getElementById('reports-student-submit');
+  button.addEventListener('click', function(event) {
+    if(!isEmpty(tbox.value)) {
+      console.log('doing button');
+      searchStudent(tbox.value);
+    } else {
+      console.log('button pressed but name is empty');
+    }
+  });
+});
+
+function searchStudent(name) {
+  let apiKey = Cookies.getJSON('apiKey');
+  let validatedName = standardizeString(name);
+  if(isEmpty(validatedName)) {
+    giveAlert('Invalid Name', 'alert-danger', false);
+    return;
+  }
+
+  // clear
+  $('#reports-classes').empty();
+
+  request(`${apiUrl()}/student/?partialName=${validatedName}&apiKey=${apiKey.key}`,
+    function(xhr) {
+      let studentList = JSON.parse(xhr.responseText);
+      for(let student of studentList) {
+        $('#reports-students').append(`
+            <tr>
+              <td>${linkRelative(student.name, '/studentprofile.html?studentId='+student.id)}</td>
+              <td>${student.id}</td>
+              <td>${student.graduatingYear}</td>
+            </tr>
+          `);
+      }
+    },
+    // Failure
+    function(xhr) {
+      console.log('Failed to get students from server.');
+      giveAlert('Something went wrong while fetching students from the server.', 'alert-danger', false);
+    }
+  );
+}

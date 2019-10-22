@@ -25,6 +25,10 @@ function escapeHtml(unsafe) {
     .replace(/'/g, "&#039;");
 }
 
+function standardizeString(unsafe) {
+  return unsafe.trim().replace(/[^\w\s]/gi, '').toUpperCase();
+}
+
 function doTimer(length, resolution, oninstance, oncomplete) {
   var steps = (length / 100) * (resolution / 10),
     speed = length / steps,

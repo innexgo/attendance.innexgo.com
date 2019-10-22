@@ -143,6 +143,40 @@
                 </div>
               </div>
             </div>
+
+            <!-- Reports Search Student -->
+            <div class="card col-sm-4 palette-level-two">
+              <div class="card-body">
+                <div class="input-group">
+                  <h5 class="card-title">Search Student Report</h5>
+                  <span class="input-group-btn ml-auto">
+                    <button type="button" class="btn btn-sm" data-html="true" data-toggle="popover" title="Search Student Reports" data-placement="top"
+                                                                                                                           data-content="Enter part of a student name, and click the search button to view a list of all students who match part of this name. Click on the student names to access their reports. Names must be spelled correctly.">
+                      <i class="fa fa-question"></i>
+                    </button>
+                  </span>
+                </div>
+                <p class="card-text">View report for any student. Search by name.</p>
+                <div class="input-group mb-3">
+                  <input id='reports-student-search' style="text-transform: uppercase;"type="text" class="form-control" placeholder="Search">
+                  <div class="input-group-append">
+                    <button id="reports-student-submit" class="btn btn-success" type="button">Go</button>
+                  </div>
+                </div>
+                <div class="table-height-standard">
+                  <table class="table striped white">
+                    <thead>
+                      <tr class="table-header">
+                        <td>Name</td>
+                        <td>Student ID</td>
+                        <td>Grad. Year</td>
+                      </tr>
+                    </thead>
+                    <tbody id="reports-students"></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
