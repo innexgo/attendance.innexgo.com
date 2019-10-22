@@ -513,11 +513,12 @@ public class ApiController {
             Encounter inEncounter = encounterService.getById(openSession.inEncounterId);
             // if it's at the same location
             if (locationId == inEncounter.locationId) {
-              System.out.println("Closing Session" + openSession.id);
               // Then close this session naturally
               openSession.outEncounterId = encounter.id;
               openSession.complete = true;
               sessionService.update(openSession);
+
+              usedToClose = true;
 
               // if it is in the middle of class, add a leaveEarly irregularity
               if (System.currentTimeMillis() < currentPeriod.endTime) {
@@ -525,8 +526,9 @@ public class ApiController {
                 irregularity.studentId = student.id;
                 irregularity.courseId = currentCourse.id;
                 irregularity.periodId = currentPeriod.id;
+                // if before the period has actually started, make absent instead of left early
                 irregularity.type =
-                    System.currentTimeMillis() > currentPeriod.startTime ? "left_early" : "absent";
+                    System.currentTimeMillis() > currentPeriod.startTime ? "left_early" : "left_early";
                 irregularity.time = System.currentTimeMillis();
                 irregularity.timeMissing = currentPeriod.endTime - System.currentTimeMillis();
                 irregularityService.add(irregularity);
@@ -535,8 +537,6 @@ public class ApiController {
               // its not at the same location as the beginning
               // Virtually close session by generating a fake (virtual) encounter and insert it in.
               // We know they must have somehow left from here
-              System.out.println("Virtual Encounter!");
-
               Encounter virtualEncounter = new Encounter();
               virtualEncounter.locationId = inEncounter.locationId;
               virtualEncounter.studentId = student.id;

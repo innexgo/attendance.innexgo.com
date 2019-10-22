@@ -39,7 +39,7 @@ public class DevelopmentController {
   public ResponseEntity<?> populateTestingPeriods() {
     LocalDate today = ZonedDateTime.now(Utils.TIMEZONE).toLocalDate();
 
-    long minute = 1 * 60 * 1000;
+    long minute = 5 * 60 * 1000;
     long initialTime = System.currentTimeMillis();
     for (int i = 3; i < 7; i++) {
       Period period = new Period();
@@ -56,7 +56,7 @@ public class DevelopmentController {
   // deletes periods with a length of less than 10 min
   @RequestMapping("/deleteTestingPeriods")
   public ResponseEntity<?> deleteTestingPeriods() {
-    long maxDuration = 10 * 60 * 1000;
+    long maxDuration = 30 * 60 * 1000;
     List<Period> periodList =
         periodService.query(
             null, // id

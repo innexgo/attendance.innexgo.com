@@ -39,15 +39,15 @@ function currentStatus() {
             } else if (type == 'tardy') {
               text = '<span class="fa fa-check"></span>';
               bgcolor = '#ffffcc';
-              fgcolor = '#ffff00';
+              fgcolor = '#cccc00';
             } else if (type == 'left_early') {
-              text = '<span class="fa fa-sign-out-alt"></span>';
+              text = '<span class="fa fa-times"></span>';
               bgcolor = '#ccffff';
-              fgcolor = '#00ffff';
+              fgcolor = '#00cccc';
             } else if (type == 'left_temporarily') {
               text = '<span class="fa fa-check"></span>';
               bgcolor = '#ccffff';
-              fgcolor = '#00ffff';
+              fgcolor = '#00cccc';
             }
 
             // put values in table

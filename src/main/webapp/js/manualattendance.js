@@ -9,7 +9,7 @@ function submitEncounter(studentId) {
   var checkBox = document.getElementById('manual-type-toggle');
   var apiKey = Cookies.getJSON('apiKey');
   var period = Cookies.getJSON('period');
-  if (course == null) {
+  if (period == null) {
     giveAlert('No school at the moment to sign into.', 'alert-danger', false);
     return;
   }
@@ -23,7 +23,6 @@ function submitEncounter(studentId) {
     giveAlert('What you entered wasn\'t a valid ID', 'alert-danger', false);
     return;
   }
-
 
   var addEncounterUrl = apiUrl() + '/encounter/new/' +
     '?studentId=' + studentId +
