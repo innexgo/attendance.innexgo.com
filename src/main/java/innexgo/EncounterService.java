@@ -14,40 +14,14 @@ public class EncounterService {
   @Autowired private JdbcTemplate jdbcTemplate;
 
   public Encounter getById(long id) {
-    String sql = "SELECT id, time, location_id, student_id FROM encounter WHERE id=?";
+    String sql = "SELECT id, time, virtual, location_id, student_id FROM encounter WHERE id=?";
     RowMapper<Encounter> rowMapper = new EncounterRowMapper();
     Encounter encounter = jdbcTemplate.queryForObject(sql, rowMapper, id);
     return encounter;
   }
 
   public List<Encounter> getAll() {
-    String sql = "SELECT id, time, location_id, student_id, FROM encounter";
-    RowMapper<Encounter> rowMapper = new EncounterRowMapper();
-    return this.jdbcTemplate.query(sql, rowMapper);
-  }
-
-  public List<Encounter> query(
-      Integer count,
-      Long encounterId,
-      Long studentId,
-      Long locationId,
-      Long minTime,
-      Long maxTime,
-      String studentName) {
-    String sql =
-        "SELECT e.id, e.time, e.location_id, e.student_id "
-            + " FROM encounter e"
-            + " JOIN student s ON e.student_id = s.id"
-            + " WHERE 1=1 "
-            + (encounterId == null ? "" : " AND e.id=" + encounterId)
-            + (studentId == null ? "" : " AND e.student_id=" + studentId)
-            + (locationId == null ? "" : " AND e.location_id=" + locationId)
-            + (minTime == null ? "" : " AND e.time >= " + minTime)
-            + (maxTime == null ? "" : " AND e.time <= " + maxTime)
-            + (studentName == null ? "" : " AND s.name=" + Utils.escape(studentName))
-            + " ORDER BY e.time DESC"
-            + (count == null ? "" : " LIMIT " + count)
-            + ";";
+    String sql = "SELECT id, time, virtual, location_id, student_id, FROM encounter";
     RowMapper<Encounter> rowMapper = new EncounterRowMapper();
     return this.jdbcTemplate.query(sql, rowMapper);
   }
@@ -85,5 +59,33 @@ public class EncounterService {
     String sql = "SELECT count(*) FROM encounter WHERE id=?";
     int count = jdbcTemplate.queryForObject(sql, Integer.class, id);
     return count != 0;
+  }
+
+  public List<Encounter> query(
+      Long count,
+      Long encounterId,
+      Long studentId,
+      Long locationId,
+      Long minTime,
+      Long maxTime,
+      Boolean virtual,
+      String studentName) {
+    String sql =
+        "SELECT e.id, e.time, e.virtual, e.location_id, e.student_id "
+            + " FROM encounter e"
+            + " JOIN student s ON e.student_id = s.id"
+            + " WHERE 1=1 "
+            + (encounterId == null ? "" : " AND e.id=" + encounterId)
+            + (studentId == null ? "" : " AND e.student_id=" + studentId)
+            + (locationId == null ? "" : " AND e.location_id=" + locationId)
+            + (virtual == null ? "" : " AND e.virtual=" + virtual)
+            + (minTime == null ? "" : " AND e.time >= " + minTime)
+            + (maxTime == null ? "" : " AND e.time <= " + maxTime)
+            + (studentName == null ? "" : " AND s.name=" + Utils.escape(studentName))
+            + " ORDER BY e.time DESC"
+            + (count == null ? "" : " LIMIT " + count)
+            + ";";
+    RowMapper<Encounter> rowMapper = new EncounterRowMapper();
+    return this.jdbcTemplate.query(sql, rowMapper);
   }
 }

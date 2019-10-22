@@ -135,9 +135,8 @@ public class ApiController {
    */
   Session fillSession(Session session) {
     session.student = fillStudent(studentService.getById(session.studentId));
-    session.course = fillCourse(courseService.getById(session.courseId));
     session.inEncounter = fillEncounter(encounterService.getById(session.inEncounterId));
-    if (session.hasOut) {
+    if (session.complete) {
       session.outEncounter = fillEncounter(encounterService.getById(session.outEncounterId));
     }
     return session;
@@ -264,7 +263,17 @@ public class ApiController {
 
       // for all courses at this time
       for (Course course : courseList) {
-        List<Student> studentAbsentList = studentService.absent(course.id, period.id);
+        // subtract present students from all students taking the course
+        List<Student> studentAbsentList = studentService.query(
+            null, //Long id
+            null, //Long cardId
+            course.id, //Long courseId
+            null, //Integer graduatingYear
+            null, //String name
+            null  //String tags
+            );
+        studentAbsentList.removeAll(studentService.present(course.id, period.id));
+
         // mark all students not there as absent
         for (Student student : studentAbsentList) {
           boolean alreadyAbsent =
@@ -422,7 +431,7 @@ public class ApiController {
       @RequestParam(value = "studentId", defaultValue = "-1") Long studentId,
       @RequestParam(value = "cardId", defaultValue = "-1") Long cardId,
       @RequestParam("locationId") Long locationId,
-      @RequestParam(value = "courseId", defaultValue = "-1") Long courseId,
+      @RequestParam(value = "noSession", defaultValue = "false") Boolean noSession,
       @RequestParam("apiKey") String apiKey) {
     if (isTrusted(apiKey)) {
       Student student;
@@ -434,15 +443,18 @@ public class ApiController {
         return BAD_REQUEST;
       }
 
-      if (locationService.existsById(locationId)
-          && (courseId == -1 ? true : courseService.existsById(courseId))) {
+      if (locationService.existsById(locationId)) {
         Encounter encounter = new Encounter();
         encounter.locationId = locationId;
         encounter.studentId = student.id;
         encounter.time = System.currentTimeMillis();
+        encounter.virtual = false;
         encounterService.add(encounter);
 
-        List<Period> plist =
+        // Now we update sessions
+        if(!noSession) {
+
+          List<Period> currentPeriods =
             periodService.query(
                 null, // id,
                 System.currentTimeMillis(), // time,
@@ -456,56 +468,61 @@ public class ApiController {
                 null, // endTimeEnd,
                 null, // period,
                 null, // courseId,
-                null // teacherId
+                null  // teacherId
                 );
 
-        // get the current period if it exists
-        Period currentPeriod = plist.size() == 0 ? null : plist.get(0);
+          Period currentPeriod = currentPeriods.isEmpty() ? null : currentPeriods.get(0);
 
-        // check for sessions + irregularities
-        if (currentPeriod != null && courseId != -1) {
-          boolean newLogin = false;
+          List<Course> currentCourses = courseService.query(
+                null, // Long id
+                null, // Long teacherId
+                locationId, // Long locationId
+                null, // Long studentId
+                currentPeriod.period, // Integer period
+                null, // String subject
+                null, // Long time
+                Utils.getCurrentGraduatingYear()  // Integer year
+              );
 
-          // search for open session with this student at the course
-          List<Session> openSessions =
-              sessionService.query(
-                  null, // id
-                  null, // in encounter id
-                  null, // out encounter id
-                  null, // any encounter id
-                  courseId, // course id
-                  false, // complete
-                  null, // hasOut
-                  null, // location id
-                  student.id, // student id
-                  null, // student name
-                  null, // teacher id
-                  null, // teacher name
-                  null, // time
-                  null, // in time begin
-                  null, // in time end
-                  null, // out time begin
-                  null, // out time end
-                  null // count
-                  );
+          Course currentCourse = currentCourses.isEmpty() ? null : currentCourses.get(0);
 
-          if (openSessions.size() == 0) {
-            newLogin = true;
-          }
+          List<Session> openSessions = sessionService.query(
+                null, // Long id
+                null, // Long inEncounterId
+                null, // Long outEncounterId
+                null, // Long anyEncounterId
+                null, // Long periodId
+                null, // Long period
+                null, // Long courseId
+                false, // Boolean complete
+                null, // Long locationId
+                studentId, // Long studentId
+                null, // Long teacherId
+                null, // Long time
+                null, // Long inTimeBegin
+                null, // Long inTimeEnd
+                null, // Long outTimeBegin
+                null, // Long outTimeEnd
+                null  // Long count
+              );
 
-          for (Session openSession : openSessions) {
-            if (locationId == encounterService.getById(openSession.inEncounterId).locationId) {
-              // if it's at the same location
+          // If the encounter was used to close a session properly
+          boolean usedToClose = false;
+
+          for(Session openSession : openSessions) {
+            Encounter inEncounter = encounterService.getById(openSession.inEncounterId);
+            // if it's at the same location
+            if (locationId == inEncounter.id) {
+              // Then close this session naturally
               openSession.outEncounterId = encounter.id;
               openSession.complete = true;
-              openSession.hasOut = true;
               sessionService.update(openSession);
 
               // if it is in the middle of class, add a leaveEarly irregularity
               if (System.currentTimeMillis() < currentPeriod.endTime) {
                 Irregularity irregularity = new Irregularity();
                 irregularity.studentId = student.id;
-                irregularity.courseId = courseId;
+                irregularity.courseId = currentCourse.id;
                 irregularity.periodId = currentPeriod.id;
                 irregularity.type =
                     System.currentTimeMillis() > currentPeriod.startTime ? "left_early" : "absent";
@@ -515,20 +532,29 @@ public class ApiController {
               }
             } else {
               // its not at the same location as the beginning
-              // end that session
+              // Virtually close session by generating a fake (virtual) encounter and insert it in.
+              // We know they must have somehow left from here
+
+              Encounter virtualEncounter = new Encounter();
+              virtualEncounter.locationId = inEncounter.id;
+              virtualEncounter.studentId = student.id;
+              virtualEncounter.time = System.currentTimeMillis();
+              virtualEncounter.virtual = true;
+              encounterService.add(virtualEncounter);
+
+              openSession.outEncounterId = virtualEncounter.id;
               openSession.complete = true;
               sessionService.update(openSession);
-              newLogin = true;
             }
           }
 
-          if (newLogin) {
+
+          // If the encounter wasn't used to close, we must make a new one
+          if(!usedToClose) {
             // make new open session
             Session session = new Session();
             session.studentId = student.id;
-            session.courseId = courseId;
             session.complete = false;
-            session.hasOut = false;
             session.inEncounterId = encounter.id;
             session.outEncounterId = 0;
             sessionService.add(session);
@@ -538,7 +564,7 @@ public class ApiController {
                 irregularityService.query(
                     null, // id
                     student.id, // studentId
-                    courseId, // courseId
+                    currentCourse.id, // courseId
                     currentPeriod.id, // periodId
                     null, // teacherId
                     null, // type
@@ -947,12 +973,13 @@ public class ApiController {
       List<Encounter> els =
           encounterService
               .query(
-                  Utils.parseInteger(allRequestParam.get("count")),
+                  Utils.parseLong(allRequestParam.get("count")),
                   Utils.parseLong(allRequestParam.get("encounterId")),
                   Utils.parseLong(allRequestParam.get("studentId")),
                   Utils.parseLong(allRequestParam.get("locationId")),
                   Utils.parseLong(allRequestParam.get("minTime")),
                   Utils.parseLong(allRequestParam.get("maxTime")),
+                  Utils.parseBoolean(allRequestParam.get("virtual")),
                   allRequestParam.get("studentName"))
               .stream()
               .map(x -> fillEncounter(x))
@@ -1065,14 +1092,13 @@ public class ApiController {
                   Utils.parseLong(allRequestParam.get("inEncounterId")),
                   Utils.parseLong(allRequestParam.get("outEncounterId")),
                   Utils.parseLong(allRequestParam.get("anyEncounterId")),
+                  Utils.parseLong(allRequestParam.get("periodId")),
+                  Utils.parseLong(allRequestParam.get("period")),
                   Utils.parseLong(allRequestParam.get("courseId")),
                   Utils.parseBoolean(allRequestParam.get("complete")),
-                  Utils.parseBoolean(allRequestParam.get("hasOut")),
                   Utils.parseLong(allRequestParam.get("locationId")),
                   Utils.parseLong(allRequestParam.get("studentId")),
-                  allRequestParam.get("studentName"),
                   Utils.parseLong(allRequestParam.get("teacherId")),
-                  allRequestParam.get("teacherName"),
                   Utils.parseLong(allRequestParam.get("time")),
                   Utils.parseLong(allRequestParam.get("inTimeBegin")),
                   Utils.parseLong(allRequestParam.get("inTimeEnd")),

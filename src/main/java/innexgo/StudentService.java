@@ -72,8 +72,8 @@ public class StudentService {
     return this.jdbcTemplate.query(sql, rowMapper);
   }
 
-  // find students who are absent at the location that they are supposed to be in at this period
-  public List<Student> absent(long courseId, long periodId) {
+  // find students who are present at the location that they are supposed to be in at this period
+  public List<Student> present(long courseId, long periodId) {
     if (!periodService.existsById(periodId) || !courseService.existsById(courseId)) {
       return null;
     }
@@ -86,12 +86,7 @@ public class StudentService {
     // find students who are not in this list
 
     String sql =
-        " SELECT st.id, st.graduating_year, st.name, st.tags"
-            + " FROM student st"
-            + " INNER JOIN schedule sc ON st.id = sc.student_id"
-            + (" WHERE sc.course_id = " + courseId)
-            + " EXCEPT"
-            + " SELECT st.id, st.graduating_year, st.name, st.tags"
+              " SELECT DISTINCT st.id, st.graduating_year, st.name, st.tags"
             + " FROM student st"
             + " RIGHT JOIN session ses ON ses.student_id = st.id"
             + " INNER JOIN encounter inen ON ses.in_encounter_id = inen.id"
@@ -99,7 +94,6 @@ public class StudentService {
             + " WHERE 1 = 1 "
             + (" AND inen.location_id = " + course.locationId)
             + (" AND inen.time < " + period.startTime)
-            + (" AND outen.time IS NULL OR outen.time > " + period.startTime)
             + (" AND outen.time IS NULL OR outen.time > " + period.startTime)
             + " ;";
 

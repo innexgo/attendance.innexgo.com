@@ -10,6 +10,7 @@ public class EncounterRowMapper implements RowMapper<Encounter> {
     Encounter encounter = new Encounter();
     encounter.id = row.getLong("id");
     encounter.time = row.getLong("time");
+    encounter.virtual = row.getBoolean("virtual");
     encounter.locationId = row.getLong("location_id");
     encounter.studentId = row.getLong("student_id");
     return encounter;
