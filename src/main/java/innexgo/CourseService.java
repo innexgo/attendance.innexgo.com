@@ -30,14 +30,14 @@ public class CourseService {
     String sql =
         "INSERT INTO course (id, teacher_id, location_id, period, subject, year) values (?, ?, ?, ?, ?, ?)";
     jdbcTemplate.update(
-        sql, course.id, course.teacherId, course.locationId, course.period, course.subject);
+        sql, course.id, course.teacherId, course.locationId, course.period, course.subject, course.year);
 
     // Fetch course id
     sql =
         "SELECT id FROM course WHERE teacher_id=? AND location_id=? AND period=? AND subject=? AND year=?";
     long id =
         jdbcTemplate.queryForObject(
-            sql, Long.class, course.teacherId, course.locationId, course.period, course.subject);
+            sql, Long.class, course.teacherId, course.locationId, course.period, course.subject, course.year);
 
     // Set course id
     course.id = id;
