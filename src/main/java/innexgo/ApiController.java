@@ -134,6 +134,7 @@ public class ApiController {
    * @return Session object with filled jackson objects
    */
   Session fillSession(Session session) {
+    System.out.println("======================>"+session.id);
     session.student = fillStudent(studentService.getById(session.studentId));
     session.inEncounter = fillEncounter(encounterService.getById(session.inEncounterId));
     if (session.complete) {

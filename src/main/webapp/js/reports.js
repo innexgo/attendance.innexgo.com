@@ -104,6 +104,7 @@ $(document).ready(function () {
     if(!isEmpty(tbox.value)) {
       console.log('doing button');
       searchStudent(tbox.value);
+      tbox.value = '';
     } else {
       console.log('button pressed but name is empty');
     }
@@ -119,7 +120,7 @@ function searchStudent(name) {
   }
 
   // clear
-  $('#reports-classes').empty();
+  $('#reports-students').empty();
 
   request(`${apiUrl()}/student/?partialName=${validatedName}&apiKey=${apiKey.key}`,
     function(xhr) {
