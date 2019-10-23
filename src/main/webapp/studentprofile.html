@@ -50,7 +50,7 @@
           <h6 id="info-location">Current Location</h6>
         </div>
         <div id="sidebar-navigation">
-          <a class="sidebar-item navbar-palette active" href="#" id="my-overview"><i class="fa fa-tachometer-alt"></i> Overview</a>
+          <a class="sidebar-item navbar-palette" href="#" id="my-overview"><i class="fa fa-tachometer-alt"></i> Overview</a>
           <a class="sidebar-item navbar-palette" href="recentactivity.html"><i class="fa fa-history"></i> Recent Activity</a>
           <a class="sidebar-item navbar-palette" href="reports.html" id="my-reports"><i class="fa fa-chart-bar"></i> Reports</a>
         </div>
@@ -77,43 +77,90 @@
           <div class="card-deck">
 
             <!-- Student Stats -->
-            <div class="card col-sm mx-3 card-no-border palette-level-two">
+            <div class="card col-sm-3 palette-level-two">
               <div class="card-body">
-                <div>
-                  <h5 id="studentprofile-name" class="card-title text-center">Current Student</h5>
+                <div class="input-group">
+                  <h5 id="studentprofile-name" class="card-title">Class Minutes Lost</h5>
+                  <span class="input-group-btn ml-auto">
+                    <button type="button" class="btn btn-sm" data-html="true" data-toggle="popover" title="Student Reports" data-placement="top"
+                                                                                                                            data-content="View basic information and courses of a student.">
+                      <i class="fa fa-question"></i>
+                    </button>
+                  </span>
                 </div>
-                <div class="card-text">
-                  <h6>
-                    <table style='width:100%'>
-                      <tr>
-                        <td id="studentprofile-id">ID: </td>
-                        <td id="studentprofile-total-tardies" style='text-align: left'>Total Tardies: </td>
-                      </tr>
-                      <tr>
-                        <td id="studentprofile-tags">Tags: </td>
-                        <td id="studentprofile-total-absences" style='text-align: left'>Total Absences: </td>
-                      </tr>
-                    </table>
-                  </h6>
-                  <hr>
-                  <table class="table">
+                <table style="width:100%;">
+                  <tr>
+                    <td id="studentprofile-id">ID: </td>
+                    <td id="studentprofile-total-tardies" style='text-align: left'>Total Tardies: </td>
+                  </tr>
+                  <tr>
+                    <td id="studentprofile-tags">Tags: </td>
+                    <td id="studentprofile-total-absences" style='text-align: left'>Total Absences: </td>
+                  </tr>
+                </table>
+                <br>
+                <p class="card-text">Courses currently taken:</p>
+                <table class="table striped white">
+                  <thead>
+                    <tr class='table-header'>
+                      <td>Period</td>
+                      <td>Class</td>
+                      <td>Teacher</td>
+                      <td>Location</td>
+                    </tr>
+                  </thead>
+                  <tbody id="studentprofile-courses"></tbody>
+                </table>
+              </div>
+            </div>
+
+
+            <!-- Student Graphs -->
+            <div class="card col-sm-4 palette-level-two">
+              <div class="card-body">
+                <div class="input-group">
+                  <h5 id="studentprofile-name" class="card-title">Missing Minutes Graph</h5>
+                  <span class="input-group-btn ml-auto">
+                    <button type="button" class="btn btn-sm" data-html="true" data-toggle="popover" title="Missing Minutes Graph" data-placement="top"
+                                                                                                                            data-content="Graph displays the class minutes lost over the past two weeks. The graph axes scale, and they are not absolute. This is meant as a visual aid only.">
+                      <i class="fa fa-question"></i>
+                    </button>
+                  </span>
+                </div>
+                <canvas id="chart-two" height="50%" width="50%"></canvas>
+              </div>
+            </div>
+
+            <!-- Student Irregularities -->
+            <div class="card col-sm-7 palette-level-two">
+              <div class="card-body">
+                <div class="input-group">
+                  <h5 id="studentprofile-name" class="card-title">Recent Irregularities</h5>
+                  <span class="input-group-btn ml-auto">
+                    <button type="button" class="btn btn-sm" data-html="true" data-toggle="popover" title="Recent Irregularities" data-placement="top"
+                                                                                                                                  data-content="Displays any recent irregularities associated with the student. <br>Examples include tardies, absences, leaving the clasroom, or forgetting to sign out.">
+                      <i class="fa fa-question"></i>
+                    </button>
+                  </span>
+                </div>
+                <p class="card-text">Irregularities associated with student</p>
+                <div class="table-height-standard">
+                  <table class="table striped white ">
                     <thead>
                       <tr class='table-header'>
                         <td>Period</td>
                         <td>Class</td>
                         <td>Teacher</td>
                         <td>Location</td>
+                        <td>Type</td>
                       </tr>
                     </thead>
-                    <tbody id="studentprofile-courses"></tbody>
+                    <tbody id="studentprofile-irregularities"></tbody>
                   </table>
                 </div>
               </div>
             </div>
 
-            <div class="card col-sm card-no-border palette-level-two">
-              <canvas id="chart-two" height="50%" width="50%"></canvas>
-            </div>
           </div>
         </div>
       </div>

@@ -99,7 +99,7 @@ public class IrregularityService {
     String sql =
         "SELECT irr.id, irr.student_id, irr.course_id, irr.period_id, irr.type, irr.time, irr.time_missing"
             + " FROM irregularity irr"
-            + (teacherId == null ? "" : " JOIN course crs ON crs.id = irr.course_id")
+            + (:steacherId == null ? "" : " JOIN course crs ON crs.id = irr.course_id")
             + " WHERE 1=1 "
             + (id == null ? "" : " AND irr.id = " + id)
             + (studentId == null ? "" : " AND irr.student_id = " + studentId)

@@ -93,6 +93,10 @@ function giveAlert(innerHTML, type, permanent) {
   alertCounter++;
 }
 
+function currentAcademicYear() {
+  return momentToAcademicYear(moment());
+}
+
 function momentToAcademicYear(momentDate) {
   if(momentDate.month() >= 7) {
     return momentDate.year()+1;
