@@ -108,13 +108,13 @@ public class SessionService {
             + " FROM session ses"
             + " INNER JOIN encounter inen ON ses.in_encounter_id = inen.id"
             + " LEFT JOIN encounter outen ON (ses.complete AND ses.out_encounter_id = outen.id)"
-            + (periodUnused ? "" : " RIGHT JOIN period per ON (per.start_time <= IFNULL(outen.time, UNIX_TIMESTAMP()*1000) AND per.end_time >= inen.time)")
+            + (periodUnused ? "" : " INNER JOIN period per ON (per.start_time <= IFNULL(outen.time, UNIX_TIMESTAMP()*1000) AND per.end_time >= inen.time)")
             + (courseUnused ? "" : " INNER JOIN course crs ON crs.period = per.period")
+            + " WHERE 1 = 1 "
             + (id == null ? "" : " AND ses.id = " + id)
             + (inEncounterId == null ? "" : " AND ses.in_encounter_id = " + inEncounterId)
             + (outEncounterId == null ? "" : " AND ses.out_encounter_id = " + outEncounterId)
             + (anyEncounterId == null ? "" : " AND (ses.in_encounter_id =" + anyEncounterId + " OR ses.out_encounter_id = " + anyEncounterId + ")")
-            + " WHERE 1 = 1 "
             + (complete == null ? "" : " AND ses.complete = " + complete)
             + (courseId == null ? "" : " AND ses.course_id = " + courseId)
             + (studentId == null ? "" : " AND ses.student_id = " + studentId)
@@ -127,7 +127,6 @@ public class SessionService {
             + (outTimeEnd == null ? "" : " AND outen.time <= " + outTimeEnd)
             + (count == null ? "" : " LIMIT " + count)
             + ";";
-
     RowMapper<Session> rowMapper = new SessionRowMapper();
     return this.jdbcTemplate.query(sql, rowMapper);
   }

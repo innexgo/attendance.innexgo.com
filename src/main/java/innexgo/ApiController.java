@@ -134,7 +134,6 @@ public class ApiController {
    * @return Session object with filled jackson objects
    */
   Session fillSession(Session session) {
-    System.out.println("======================>"+session.id);
     session.student = fillStudent(studentService.getById(session.studentId));
     session.inEncounter = fillEncounter(encounterService.getById(session.inEncounterId));
     if (session.complete) {
@@ -271,6 +270,7 @@ public class ApiController {
             course.id, //Long courseId
             null, //Integer graduatingYear
             null, //String name
+            null, //String partialName
             null  //String tags
             );
         studentAbsentList.removeAll(studentService.present(course.id, period.id));
@@ -1128,6 +1128,7 @@ public class ApiController {
                   Utils.parseLong(allRequestParam.get("courseId")),
                   Utils.parseInteger(allRequestParam.get("graduatingYear")),
                   allRequestParam.get("name"),
+                  allRequestParam.get("partialName"),
                   allRequestParam.get("tags"))
               .stream()
               .map(x -> fillStudent(x))

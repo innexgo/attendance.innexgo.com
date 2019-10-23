@@ -24,21 +24,16 @@ function submitEncounter(studentId) {
     return;
   }
 
-  var addEncounterUrl = apiUrl() + '/encounter/new/' +
-    '?studentId=' + studentId +
-    '&locationId=' + course.location.id +
-    '&apiKey=' + apiKey.key;
-
-  request(addEncounterUrl,
+  request(`${apiUrl()}/encounter/new/?studentId=${studentId}&locationId=${course.location.id}&apiKey=${apiKey.key}`,
     //success
     function (xhr) {
-      var encounter = JSON.parse(xhr.responseText);
+      let encounter = JSON.parse(xhr.responseText);
 
       //now check if it was a sign in or a sign out
       request(`${apiUrl()}/session/?inEncounterId=${encounter.id}&apiKey=${apiKey.key}`,
         //success
         function (xhr) {
-          var sessionList = JSON.parse(xhr.responseText);
+          let sessionList = JSON.parse(xhr.responseText);
           console.log(sessionList);
           //curRow = $('#id-'+studentId)
           //curRow.insertBefore(curRow.parent().find('tr:first-child'));
