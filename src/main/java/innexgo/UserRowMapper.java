@@ -14,7 +14,6 @@ public class UserRowMapper implements RowMapper<User> {
     u.email = row.getString("email");
     u.passwordHash = row.getString("password_hash");
     u.ring = row.getInt("ring");
-    u.prefstring = row.getString("prefstring");
     return u;
   }
 }

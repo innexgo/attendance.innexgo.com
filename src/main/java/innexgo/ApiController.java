@@ -660,7 +660,7 @@ public class ApiController {
       @RequestParam("studentId") Long studentId,
       @RequestParam("courseId") Long courseId,
       @RequestParam("apiKey") String apiKey) {
-    if (isTrusted(apiKey)) {
+    if (isAdministrator(apiKey)) {
       if (studentService.existsById(studentId)
           && courseService.existsById(courseId)
           && scheduleService
@@ -711,7 +711,7 @@ public class ApiController {
       @RequestParam("password") String password,
       @RequestParam("ring") Integer ring,
       @RequestParam("apiKey") String apiKey) {
-    if (!isAdministrator(apiKey)) {
+    if (isAdministrator(apiKey)) {
       if (!Utils.isEmpty(name)
           && !Utils.isEmpty(password)
           && !Utils.isEmpty(email)
@@ -721,7 +721,6 @@ public class ApiController {
         u.email = email;
         u.passwordHash = Utils.encodePassword(password);
         u.ring = ring;
-        u.prefstring = "";
         userService.add(u);
         return new ResponseEntity<>(fillUser(u), HttpStatus.OK);
       } else {
@@ -753,24 +752,6 @@ public class ApiController {
     } else {
       return UNAUTHORIZED;
     }
-  }
-
-  // This method updates the prefstring for same user only
-  @RequestMapping("/user/updatePrefs/")
-  public ResponseEntity<?> updatePrefs(
-      @RequestParam("userId") Long userId,
-      @RequestParam("prefstring") String prefstring,
-      @RequestParam("apiKey") String apiKey) {
-    if (!Utils.isEmpty(apiKey) && userService.existsById(userId)) {
-      User apiUser = getUserIfValid(apiKey);
-      User user = userService.getById(userId);
-      if (apiUser != null && apiUser.id == user.id) {
-        user.prefstring = prefstring;
-        userService.update(user);
-        return new ResponseEntity<>(fillUser(user), HttpStatus.OK);
-      }
-    }
-    return UNAUTHORIZED;
   }
 
   @RequestMapping("/apiKey/delete/")

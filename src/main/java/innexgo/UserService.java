@@ -16,28 +16,28 @@ public class UserService {
   public static final int TEACHER = 1;
 
   public User getById(long id) {
-    String sql = "SELECT id, name, email, password_hash, ring, prefstring FROM user WHERE id=?";
+    String sql = "SELECT id, name, email, password_hash, ring FROM user WHERE id=?";
     RowMapper<User> rowMapper = new UserRowMapper();
     User user = jdbcTemplate.queryForObject(sql, rowMapper, id);
     return user;
   }
 
   public List<User> getByName(String name) {
-    String sql = "SELECT id, name, email, password_hash, ring, prefstring FROM user WHERE name=?";
+    String sql = "SELECT id, name, email, password_hash, ring FROM user WHERE name=?";
     RowMapper<User> rowMapper = new UserRowMapper();
     List<User> users = jdbcTemplate.query(sql, rowMapper, name);
     return users;
   }
 
   public User getByEmail(String email) {
-    String sql = "SELECT id, name, email, password_hash, ring, prefstring FROM user WHERE email=?";
+    String sql = "SELECT id, name, email, password_hash, ring FROM user WHERE email=?";
     RowMapper<User> rowMapper = new UserRowMapper();
     User user = jdbcTemplate.queryForObject(sql, rowMapper, email);
     return user;
   }
 
   public List<User> getAll() {
-    String sql = "SELECT  id, name, email, password_hash, ring, prefstring FROM user";
+    String sql = "SELECT  id, name, email, password_hash, ring FROM user";
     RowMapper<User> rowMapper = new UserRowMapper();
     return this.jdbcTemplate.query(sql, rowMapper);
   }
@@ -45,16 +45,16 @@ public class UserService {
   public void add(User user) {
     // Add user
     String sql =
-        "INSERT INTO user (id, name, email, password_hash, ring, prefstring ) values (?, ?, ?, ?, ?, ?)";
+        "INSERT INTO user (id, name, email, password_hash, ring) values (?, ?, ?, ?, ?)";
     jdbcTemplate.update(
-        sql, user.id, user.name, user.email, user.passwordHash, user.ring, user.prefstring);
+        sql, user.id, user.name, user.email, user.passwordHash, user.ring);
 
     // Fetch user id
     sql =
-        "SELECT id FROM user WHERE name=? AND email=? AND password_hash=? AND ring=? AND prefstring=?";
+        "SELECT id FROM user WHERE name=? AND email=? AND password_hash=? AND ring=?";
     long id =
         jdbcTemplate.queryForObject(
-            sql, Long.class, user.name, user.email, user.passwordHash, user.ring, user.prefstring);
+            sql, Long.class, user.name, user.email, user.passwordHash, user.ring);
 
     // Set user id
     user.id = id;
@@ -62,7 +62,7 @@ public class UserService {
 
   public void update(User user) {
     String sql =
-        "UPDATE user SET id=?, name=?, email=?, password_hash=?, ring=?, prefstring=? WHERE id=?";
+        "UPDATE user SET id=?, name=?, email=?, password_hash=?, ring=? WHERE id=?";
     jdbcTemplate.update(
         sql,
         user.id,
@@ -70,7 +70,6 @@ public class UserService {
         user.email,
         user.passwordHash,
         user.ring,
-        user.prefstring,
         user.id);
   }
 
@@ -95,7 +94,7 @@ public class UserService {
 
   public List<User> query(Long id, String name, String email, Integer ring) {
     String sql =
-        "SELECT u.id, u.name, u.password_hash, u.email, u.ring, u.prefstring FROM user u"
+        "SELECT u.id, u.name, u.password_hash, u.email, u.ring FROM user u"
             + " WHERE 1=1 "
             + (id == null ? "" : " AND u.id = " + id)
             + (name == null ? "" : " AND u.name = " + Utils.escape(name))
