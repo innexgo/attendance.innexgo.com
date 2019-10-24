@@ -8,6 +8,7 @@ $(document).ready(function(){
 
 
   $('#reports-datetimepicker').datetimepicker({
+    defaultDate: moment(),
     format: 'L',
     keepInvalid: false,
     change: (date, oldDate) => loadClassSessionReports(date),
