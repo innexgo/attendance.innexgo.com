@@ -455,6 +455,13 @@ public class ApiController {
         // Now we update sessions
         if(!noSession) {
 
+
+          // if school is currently going on, represents the current period
+          Period currentPeriod = null;
+          // if there is currently a course going on, represents the current course
+          Course currentCourse = null;
+
+
           List<Period> currentPeriods =
             periodService.query(
                 null, // id,
@@ -472,20 +479,24 @@ public class ApiController {
                 null  // teacherId
                 );
 
-          Period currentPeriod = currentPeriods.isEmpty() ? null : currentPeriods.get(0);
+          currentPeriod = currentPeriods.isEmpty() ? null : currentPeriods.get(0);
 
-          List<Course> currentCourses = courseService.query(
-                null, // Long id
-                null, // Long teacherId
-                locationId, // Long locationId
-                null, // Long studentId
-                currentPeriod.period, // Integer period
-                null, // String subject
-                null, // Long time
-                Utils.getCurrentGraduatingYear()  // Integer year
-              );
+          if (currentPeriod != null) {
+            List<Course> currentCourses = courseService.query(
+                  null, // Long id
+                  null, // Long teacherId
+                  locationId, // Long locationId
+                  null, // Long studentId
+                  currentPeriod.period, // Integer period
+                  null, // String subject
+                  null, // Long time
+                  Utils.getCurrentGraduatingYear()  // Integer year
+                );
 
-          Course currentCourse = currentCourses.isEmpty() ? null : currentCourses.get(0);
+            currentCourse = currentCourses.isEmpty() ? null : currentCourses.get(0);
+          } else {
+            currentCourse = null;
+          }
 
           List<Session> openSessions = sessionService.query(
                 null, // Long id
@@ -497,7 +508,7 @@ public class ApiController {
                 null, // Long courseId
                 false, // Boolean complete
                 null, // Long locationId
-                studentId, // Long studentId
+                student.id, // Long studentId
                 null, // Long teacherId
                 null, // Long time
                 null, // Long inTimeBegin
@@ -521,18 +532,20 @@ public class ApiController {
 
               usedToClose = true;
 
-              // if it is in the middle of class, add a leaveEarly irregularity
-              if (System.currentTimeMillis() < currentPeriod.endTime) {
-                Irregularity irregularity = new Irregularity();
-                irregularity.studentId = student.id;
-                irregularity.courseId = currentCourse.id;
-                irregularity.periodId = currentPeriod.id;
-                // if before the period has actually started, make absent instead of left early
-                irregularity.type =
-                    System.currentTimeMillis() > currentPeriod.startTime ? "left_early" : "left_early";
-                irregularity.time = System.currentTimeMillis();
-                irregularity.timeMissing = currentPeriod.endTime - System.currentTimeMillis();
-                irregularityService.add(irregularity);
+              if(currentCourse != null) {
+                // if it is in the middle of class, add a leaveEarly irregularity
+                if (System.currentTimeMillis() < currentPeriod.endTime) {
+                  Irregularity irregularity = new Irregularity();
+                  irregularity.studentId = student.id;
+                  irregularity.courseId = currentCourse.id;
+                  irregularity.periodId = currentPeriod.id;
+                  // if before the period has actually started, make absent instead of left early
+                  irregularity.type =
+                      System.currentTimeMillis() > currentPeriod.startTime ? "left_early" : "left_early";
+                  irregularity.time = System.currentTimeMillis();
+                  irregularity.timeMissing = currentPeriod.endTime - System.currentTimeMillis();
+                  irregularityService.add(irregularity);
+                }
               }
             } else {
               // its not at the same location as the beginning
@@ -562,35 +575,37 @@ public class ApiController {
             session.outEncounterId = 0;
             sessionService.add(session);
 
-            // now we check if they arent there, and fix it
-            List<Irregularity> irregularities =
-                irregularityService.query(
-                    null, // id
-                    student.id, // studentId
-                    currentCourse.id, // courseId
-                    currentPeriod.id, // periodId
-                    null, // teacherId
-                    null, // type
-                    null, // time
-                    null // timeMissing
-                    );
+            if (currentCourse != null) {
+              // now we check if they arent there, and fix it
+              List<Irregularity> irregularities =
+                  irregularityService.query(
+                      null, // id
+                      student.id, // studentId
+                      currentCourse.id, // courseId
+                      currentPeriod.id, // periodId
+                      null, // teacherId
+                      null, // type
+                      null, // time
+                      null // timeMissing
+                      );
 
-            for (Irregularity irregularity : irregularities) {
-              if (irregularity.type.equals("absent")) {
-                // if there is absence, convert it to a tardy or delete it
-                if (System.currentTimeMillis() > currentPeriod.startTime) {
-                  irregularity.type = "tardy";
-                  irregularity.timeMissing = System.currentTimeMillis() - currentPeriod.startTime;
+              for (Irregularity irregularity : irregularities) {
+                if (irregularity.type.equals("absent")) {
+                  // if there is absence, convert it to a tardy or delete it
+                  if (System.currentTimeMillis() > currentPeriod.startTime) {
+                    irregularity.type = "tardy";
+                    irregularity.timeMissing = System.currentTimeMillis() - currentPeriod.startTime;
+                    irregularityService.update(irregularity);
+                  } else {
+                    // if they're present before the startTime
+                    irregularityService.deleteById(irregularity.id);
+                  }
+                } else if (irregularity.type.equals("left_early")) {
+                  // if there is a leftEarly, convert it to a leftTemporarily
+                  irregularity.type = "left_temporarily";
+                  irregularity.timeMissing = System.currentTimeMillis() - irregularity.time;
                   irregularityService.update(irregularity);
-                } else {
-                  // if they're present before the startTime
-                  irregularityService.deleteById(irregularity.id);
                 }
-              } else if (irregularity.type.equals("left_early")) {
-                // if there is a leftEarly, convert it to a leftTemporarily
-                irregularity.type = "left_temporarily";
-                irregularity.timeMissing = System.currentTimeMillis() - irregularity.time;
-                irregularityService.update(irregularity);
               }
             }
           }
@@ -608,8 +623,8 @@ public class ApiController {
   /**
    * Creates a new location and can only be done by an Administrator
    *
-   * @param name //TODO what do you mean by name
-   * @param tags //TODO what do you mean by tags
+   * @param name name of location, eg. "Room 105"
+   * @param tags attributes associated with location, such as "classroom" or "restricted"
    * @param apiKey - apiKey of the User creating the location
    * @return ResponseEntity with location and HttpStatus.OK
    * @throws ResponseEntity with HttpStatus.BAD_REQUEST if process if unsuccessful
