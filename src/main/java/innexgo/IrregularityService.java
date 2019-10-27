@@ -95,7 +95,8 @@ public class IrregularityService {
       Long teacherId,
       String type,
       Long time,
-      Long timeMissing) {
+      Long timeMissing,
+      Long count) {
     String sql =
         "SELECT irr.id, irr.student_id, irr.course_id, irr.period_id, irr.type, irr.time, irr.time_missing"
             + " FROM irregularity irr"
@@ -109,6 +110,8 @@ public class IrregularityService {
             + (type == null ? "" : " AND irr.type = " + Utils.escape(type))
             + (time == null ? "" : " AND irr.time = " + time)
             + (timeMissing == null ? "" : " AND irr.time_missing = " + timeMissing)
+            + (" ORDER BY time")
+            + (count == null ? "" : " LIMIT " + count)
             + ";";
 
     RowMapper<Irregularity> rowMapper = new IrregularityRowMapper();

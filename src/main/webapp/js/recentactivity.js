@@ -34,14 +34,14 @@ function getRecentActivity() {
       return valueA - valueB;
     });
     sessionList.forEach((session, index) => {
-      var outEncounterTime = (session.outEncounter === null) ? 'N/A' : moment(session.outEncounter.time, 'x').format('L LTS');
+      var outEncounterTime = (session.outEncounter === null) ? 'N/A' : moment(session.outEncounter.time, 'x').fromNow();
       table.insertRow(0).innerHTML = `
           <tr>
             <td>${(sessionList.length-index)}</td>
             <td>${linkRelative(session.inEncounter.student.name, '/studentprofile.html?studentId=' + session.inEncounter.student.id)}</td>
             <td>${session.inEncounter.student.id}</td>
             <td>${linkRelative(session.inEncounter.location.name, '/locationprofile.html?locationId='+session.inEncounter.location.id)}</td>
-            <td>${moment(session.inEncounter.time, 'x').format('L LTS')}</td>
+            <td>${moment(session.inEncounter.time, 'x').fromNow()}</td>
             <td>${outEncounterTime}</td>
           </tr>`;
     }

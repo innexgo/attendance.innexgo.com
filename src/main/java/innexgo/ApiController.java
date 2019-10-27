@@ -210,6 +210,54 @@ public class ApiController {
   }
 
   /**
+   * Each day at midnight, log everyone out and give a "forgot to sign out" irregularity if they had a session open
+   */
+  @Scheduled(cron="0 0 * * * *")
+  public void signOutAtMidnight() {
+    // get list of open sessions
+    List<Session> openSessionList = sessionService.query(
+      null, // Long id
+      null, // Long inEncounterId
+      null, // Long outEncounterId
+      null, // Long anyEncounterId
+      null, // Long periodId
+      null, // Long period
+      null, // Long courseId
+      false, // Boolean complete
+      null, // Long locationId
+      null, // Long studentId
+      null, // Long teacherId
+      null, // Long time
+      null, // Long inTimeBegin
+      null, // Long inTimeEnd
+      null, // Long outTimeBegin
+      null, // Long outTimeEnd
+      null  // Long count
+    );
+
+    for(Session openSession : openSessionList) {
+      // Virtually close session by generating a fake (virtual) encounter and insert it in.
+      // We know they must have somehow left from here
+
+      // grab old encounter
+      Encounter inEncounter = encounterService.getById(openSession.inEncounterId);
+      //make new encounter
+      Encounter virtualEncounter = new Encounter();
+      virtualEncounter.locationId = inEncounter.locationId;
+      virtualEncounter.studentId = openSession.studentId;
+      virtualEncounter.time = System.currentTimeMillis();
+      virtualEncounter.virtual = true;
+      encounterService.add(virtualEncounter);
+
+      // now close session
+      openSession.outEncounterId = virtualEncounter.id;
+      openSession.complete = true;
+      sessionService.update(openSession);
+    }
+  }
+
+
+  /**
    * For all the courses at the current time, create irregularities {
    *   If the student has not signed in yet before or during the period {
    *     generate an absent irregularity
@@ -217,7 +265,7 @@ public class ApiController {
    * }
    */
   @Scheduled(fixedDelay = 5000)
-  public void irregularityGenerator() {
+  public void insertAbsences() {
     // the list of periods that havent started yet
     List<Period> periodList =
         periodService.query(
@@ -234,7 +282,7 @@ public class ApiController {
             null, // period
             null, // courseId
             null // teacherId
-            );
+          );
 
     Collections.sort(periodList, Comparator.comparingLong(p -> p.startTime));
 
@@ -279,7 +327,7 @@ public class ApiController {
         for (Student student : studentAbsentList) {
           boolean alreadyAbsent =
               irregularityService
-                      .query(null, student.id, null, period.id, null, "absent", null, null)
+                      .query(null, student.id, null, period.id, null, "absent", null, null, null)
                       .size()
                   > 0;
           // if not already absent
@@ -541,7 +589,7 @@ public class ApiController {
                   irregularity.periodId = currentPeriod.id;
                   // if before the period has actually started, make absent instead of left early
                   irregularity.type =
-                      System.currentTimeMillis() > currentPeriod.startTime ? "left_early" : "left_early";
+                      System.currentTimeMillis() < currentPeriod.startTime ? "absent" : "left_early";
                   irregularity.time = System.currentTimeMillis();
                   irregularity.timeMissing = currentPeriod.endTime - System.currentTimeMillis();
                   irregularityService.add(irregularity);
@@ -586,7 +634,8 @@ public class ApiController {
                       null, // teacherId
                       null, // type
                       null, // time
-                      null // timeMissing
+                      null, // timeMissing
+                      null // count
                       );
 
               for (Irregularity irregularity : irregularities) {
@@ -1003,7 +1052,8 @@ public class ApiController {
                   Utils.parseLong(allRequestParam.get("teacherId")),
                   allRequestParam.get("type"),
                   Utils.parseLong(allRequestParam.get("time")),
-                  Utils.parseLong(allRequestParam.get("timeMissing")))
+                  Utils.parseLong(allRequestParam.get("timeMissing")),
+                  Utils.parseLong(allRequestParam.get("count")))
               .stream()
               .map(x -> fillIrregularity(x))
               .collect(Collectors.toList());

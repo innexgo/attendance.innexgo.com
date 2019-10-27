@@ -64,9 +64,10 @@ $(document).ready(function () {
   var period = Cookies.getJSON('period');
   setInterval(function () {
     if (period == null) {
+      displayInfo();
     } else if (period.endTime - moment().valueOf() < 0) {
       userInfo();
       displayInfo();
-    };
+    }
   }, 10000);
 })

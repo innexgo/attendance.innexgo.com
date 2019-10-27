@@ -28,106 +28,127 @@
     <script src="/js/sidebar.js"></script>
     <script src="/js/courseprofile.js"></script>
 
-      <!-- Fonts -->
-      <link href="https://fonts.googleapis.com/css?family=Exo&display=swap" rel="stylesheet">
-      <link href="https://fonts.googleapis.com/css?family=Ubuntu&display=swap" rel="stylesheet">
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Exo&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Ubuntu&display=swap" rel="stylesheet">
 
-      <!-- Favicon -->
-      <link rel='icon' href='img/innexgo_gold_brandmark.png' type='image/png'/ >
+    <!-- Favicon -->
+    <link rel='icon' href='img/innexgo_gold_brandmark.png' type='image/png'/ >
 
-    </head>
-
+  </head>
     <body class="palette-level-one">
 
-  <!-- Sidebar -->
-    <nav id="sidebar" class="navbar-palette sidebar-fixed">
-      <nav class="navbar sidebar-top">
-        <div style="margin:auto;display:block">
-          <h6 id="info-time" style="font-family:'Exo', sans-serif;">Current Time</h6>
+      <!-- Sidebar -->
+      <nav id="sidebar" class="navbar-palette sidebar-fixed">
+        <nav class="navbar sidebar-top">
+          <div style="margin:auto;display:block">
+            <h6 id="info-time" style="font-family:'Exo', sans-serif;">Current Time</h6>
+          </div>
+        </nav>
+        <div class="sidebar-item sidebar-info-list navbar-palette" style="">
+          <h6 id="info-name">Teacher Name</h6>
+          <h6 id="info-period">Current Period</h6>
+          <h6 id="info-location">Current Location</h6>
+        </div>
+        <div id="sidebar-navigation">
+          <a class="sidebar-item navbar-palette" href="#" id="my-overview"><i class="fa fa-tachometer-alt"></i> Overview</a>
+          <a class="sidebar-item navbar-palette" href="recentactivity.html"><i class="fa fa-history"></i> Recent Activity</a>
+          <a class="sidebar-item navbar-palette" href="reports.html" id="my-reports"><i class="fa fa-chart-bar"></i> Reports</a>
+        </div>
+        <div class="sidebar-bottom">
+          <a class="sidebar-item navbar-palette" href="settings.html"><i class="fa fa-cog"></i>  Settings</a>
+          <a class="sidebar-item navbar-palette" href="index.html"><i class="fa fa-sign-out-alt"></i>  Sign out</a>
         </div>
       </nav>
-      <div class="sidebar-item sidebar-info-list navbar-palette" style="">
-        <h6 id="info-name">Teacher Name</h6>
-        <h6 id="info-period">Current Period</h6>
-        <h6 id="info-location">Current Location</h6>
-      </div>
-      <div id="sidebar-navigation">
-        <a class="sidebar-item navbar-palette active" href="#" id="my-overview"><i class="fa fa-tachometer-alt"></i> Overview</a>
-        <a class="sidebar-item navbar-palette" href="recentactivity.html"><i class="fa fa-history"></i> Recent Activity</a>
-        <a class="sidebar-item navbar-palette" href="reports.html" id="my-reports"><i class="fa fa-chart-bar"></i> Reports</a>
-      </div>
-      <div class="sidebar-bottom">
-        <a class="sidebar-item navbar-palette" href="settings.html"><i class="fa fa-cog"></i>  Settings</a>
-        <a class="sidebar-item navbar-palette" href="index.html"><i class="fa fa-sign-out-alt"></i>  Sign out</a>
-      </div>
-    </nav>
 
-    <!-- Top Navbar -->
-    <nav class="navbar navbar-expand-md navbar-palette">
-      <!-- Center Logo -->
-      <div class="mx-auto order-0">
-        <img class="logoicon" src="img/innexgo_transparent_icon.png" alt="" style="" />
-        <h1 class="navbar-brand navbar-palette" style="font-size: 25px; margin-left: 5px;">Innexgo</h1>
-      </div>
+      <!-- Top Navbar -->
+      <nav class="navbar navbar-expand-md navbar-palette">
+        <!-- Center Logo -->
+        <div class="mx-auto order-0">
+          <img class="logoicon" src="img/innexgo_transparent_icon.png" alt="" style="" />
+          <h1 class="navbar-brand navbar-palette" style="font-size: 25px; margin-left: 5px;">Innexgo</h1>
+        </div>
 
-    </nav>
+      </nav>
 
-    <!-- Content -->
-    <div id="not-sidebar" class="container-fluid">
-      <div class="row my-3 px-3">
-        <div id="alert-zone"></div>
+      <!-- Content -->
+      <div id="not-sidebar" class="container-fluid">
+        <div class="my-3 px-3">
+          <div id="alert-zone"></div>
+          <div class="card-deck">
 
-        <!-- Student Stats -->
-        <div class="card col-sm mx-3 card-no-border palette-level-two">
-          <div class="card-body">
-            <div>
-              <h5 id="course-name" class="card-title text-center">Course Name</h5>
-            </div>
-            <div class="card-text">
-              <h6>
-                <table style='width:100%'>
+
+            <!-- Course Stats -->
+            <div class="card col-sm-6 palette-level-two">
+              <div class="card-body">
+                <div class="input-group">
+                  <h5 id="courseprofile-name" class="card-title">Course Name</h5>
+                  <span class="input-group-btn ml-auto">
+                    <button type="button" class="btn btn-sm" data-html="true" data-toggle="popover" title="Course Report" data-placement="top"
+                                                                                                                          data-content="View basic statistics and information associated with a course.">
+                      <i class="fa fa-question"></i>
+                    </button>
+                  </span>
+                </div>
+                <table style="width:100%;">
                   <tr>
-                    <td id="course-period" style='width:50%'>Period: </td>
-                    <td id="course-teacher" style='text-align: left; width:50%'>Teacher: </td>
+                    <td id="courseprofile-period">Couurse Period</td>
+                    <td id="courseprofile-teacher" style='text-align: left'>Course Teacher</td>
                   </tr>
                   <tr>
-                    <td id="course-room">Room </td>
-                    <td id="course-student-count" style='text-align: left'>Total Students: </td>
+                    <td id="courseprofile-location">Course Location</td>
+                    <td id="courseprofile-student-count" style='text-align: left'>Student Count</td>
                   </tr>
                 </table>
-              </h6>
-              <hr>
-              <div class="table-height-standard">
-                <table class="table striped white">
-                  <thead>
-                    <tr class="table-header">
-                      <td>Name</td>
-                      <td>ID</td>
-                      <td>Grad. Year</td>
-                    </tr>
-                  </thead>
-                  <tbody id="course-students" class="table-height-standard"></tbody>
-                </table>
+                <br>
+                <p class="card-text">Courses currently taken:</p>
+                <div class="table-height-standard">
+                  <table class="table striped white">
+                    <thead>
+                      <tr class="table-header">
+                        <td>Name</td>
+                        <td>ID</td>
+                        <td>Grad. Year</td>
+                      </tr>
+                    </thead>
+                    <tbody id="courseprofile-students"></tbody>
+                  </table>
+                </div>
               </div>
             </div>
-          </div>
-        </div>
 
-        <div class="card col-sm card-no-border palette-level-two">
-          <div class="card-body">
-            <div>
-              <h5 class="card-title text-center">Student Time Missing</h5>
+            <!-- Course Irregularities -->
+            <div class="card col-sm-6 palette-level-two">
+              <div class="card-body">
+                <div class="input-group">
+                  <h5 class="card-title">Recent Irregularities</h5>
+                  <span class="input-group-btn ml-auto">
+                    <button type="button" class="btn btn-sm" data-html="true" data-toggle="popover" title="Recent Irregularities" data-placement="top"
+                                                                                                                                  data-content="Displays any recent irregularities associated with the course.<br>Examples include tardies, absences, leaving the clasroom, or forgetting to sign out.">
+                      <i class="fa fa-question"></i>
+                    </button>
+                  </span>
+                </div>
+                <p class="card-text">Irregularities associated with course</p>
+                <div class="table-height-standard">
+                  <table class="table striped white ">
+                    <thead>
+                      <tr class='table-header'>
+                        <td>Name</td>
+                        <td>Type</td>
+                        <td>Time</td>
+                      </tr>
+                    </thead>
+                    <tbody id="courseprofile-irregularities"></tbody>
+                  </table>
+                </div>
+              </div>
             </div>
-            <canvas id="chart-one" height="50%" width="50%"></canvas>
-            <table style='width:100%'>
-              <tr>
-                <td id="course-total-tardies" style='width:50%'>Total Tardies: </td>
-                <td id="course-total-absences" style='text-align: left; width:50%'>Total Absences: </td>
-              </tr>
-            </table>
+
+
+            <!-- Course Class Sessions -->
+
           </div>
         </div>
-      </div>
-    </div>
-  </body>
+    </body>
 </html>

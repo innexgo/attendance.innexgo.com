@@ -67,7 +67,7 @@ function getIrregularities(chartName) {
 }
 
 function loadStudentProfile() {
-  var apiKey = Cookies.getJSON('apiKey');
+  let apiKey = Cookies.getJSON('apiKey');
 
   if (apiKey == null) {
     console.log('not signed in');
@@ -135,6 +135,7 @@ function loadStudentProfile() {
               <td>${linkRelative(irregularity.course.teacher.name, '/userprofile.html?userId='+irregularity.course.teacher.id)}</td>
               <td>${linkRelative(irregularity.course.location.name, '/locationprofile.html?locationId='+irregularity.course.location.id)}</td>
               <td>${irregularity.type}</td>
+              <td>${moment(irregularity.time).format('MMM Do, YYYY')}</td>
             </tr>
           `)); // Append row
     },
@@ -153,7 +154,6 @@ for (i = 0; i < 14; i++) {
 };
 
 $(document).ready(function () {
-  //var chartOne = document.getElementById('chart-one');
   var chartTwo = document.getElementById('chart-two');
 
   var dates = [];

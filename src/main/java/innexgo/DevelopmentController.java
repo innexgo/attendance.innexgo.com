@@ -74,7 +74,24 @@ public class DevelopmentController {
             null // teacherId
             );
     for (Period period : periodList) {
+      // delete period
       periodService.deleteById(period.id);
+
+      // delete irregularities, as they reference periods
+      List<Irregularity> irregularities = irregularityService.query(
+        null, // Long id
+        null, // Long studentId
+        null, // Long courseId
+        period.id, // Long periodId
+        null, // Long teacherId
+        null, // String type
+        null, // Long time
+        null , // Long timeMissing
+        null  // Long count
+        );
+      for(Irregularity irregularity  : irregularities) {
+        irregularityService.deleteById(irregularity.id);
+      }
     }
     return OK;
   }

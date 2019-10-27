@@ -3,8 +3,8 @@ var beepdown = new Audio('assets/beepdown.wav');
 var error = new Audio('assets/error.wav');
 
 function submitEncounter(studentId) {
-  console.log('submitting encounter ' + String(studentId))
-  console.log(String(studentId));
+  console.log('submitting encounter ' + studentId)
+  console.log(studentId);
   document.getElementById('manual-userid').value = '';
   var checkBox = document.getElementById('manual-type-toggle');
   var apiKey = Cookies.getJSON('apiKey');
@@ -34,9 +34,6 @@ function submitEncounter(studentId) {
         //success
         function (xhr) {
           let sessionList = JSON.parse(xhr.responseText);
-          console.log(sessionList);
-          //curRow = $('#id-'+studentId)
-          //curRow.insertBefore(curRow.parent().find('tr:first-child'));
           if (sessionList.length != 0) {
             giveAlert(`Sucessfully logged ${encounter.student.name} in to ${encounter.location.name}`, 'alert-success', false);
             beepup.play();
