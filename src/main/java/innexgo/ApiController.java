@@ -214,6 +214,7 @@ public class ApiController {
    */
   @Scheduled(cron="0 0 * * * *")
   public void signOutAtMidnight() {
+    System.out.println("Signing everyone out");
     // get list of open sessions
     List<Session> openSessionList = sessionService.query(
       null, // Long id
@@ -290,7 +291,8 @@ public class ApiController {
       Period period = periodList.get(i);
       // wait till we are at the right time
       try {
-        System.out.println((period.initialTime - System.currentTimeMillis()) / 1000);
+        System.out.println("Next Period in: " +
+            (period.initialTime - System.currentTimeMillis()) / 1000);
         Thread.sleep(Math.max(0, period.initialTime - System.currentTimeMillis()));
       } catch (InterruptedException e) {
         e.printStackTrace();
