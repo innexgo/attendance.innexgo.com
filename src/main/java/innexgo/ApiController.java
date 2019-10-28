@@ -192,7 +192,7 @@ public class ApiController {
       return false;
     }
     User user = getUserIfValid(key);
-    return user != null && (user.ring == UserService.ADMINISTRATOR);
+    return user != null && (user.ring == User.ADMINISTRATOR);
   }
 
   /**
@@ -206,7 +206,7 @@ public class ApiController {
       return false;
     }
     User user = getUserIfValid(key);
-    return user != null && (user.ring <= UserService.TEACHER);
+    return user != null && (user.ring <= User.TEACHER);
   }
 
   /**
@@ -254,6 +254,21 @@ public class ApiController {
       openSession.outEncounterId = virtualEncounter.id;
       openSession.complete = true;
       sessionService.update(openSession);
+
+
+      // get period of 
+
+
+      // Now add irregularity about forgetting to sign out
+      // Irregularity forgotToSignOut = new Irregularity();
+      // forgotToSignOut.studentId = openSession.studentId;
+      // forgotToSignOut.courseId = course.id;
+      // forgotToSignOut.periodId = period.id;
+      // forgotToSignOut.type = Irregularity.FORGOT_SIGN_OUT_TYPE;
+      // forgotToSignOut.time = period.startTime;
+      // forgotToSignOut.timeMissing = period.endTime - period.startTime;
+      // irregularityService.add(forgotToSignOut);
+
     }
   }
 
@@ -329,7 +344,7 @@ public class ApiController {
         for (Student student : studentAbsentList) {
           boolean alreadyAbsent =
               irregularityService
-                      .query(null, student.id, null, period.id, null, "absent", null, null, null)
+                      .query(null, student.id, null, period.id, null, Irregularity.TYPE_ABSENT, null, null, null)
                       .size()
                   > 0;
           // if not already absent
@@ -338,7 +353,7 @@ public class ApiController {
             irregularity.studentId = student.id;
             irregularity.courseId = course.id;
             irregularity.periodId = period.id;
-            irregularity.type = "absent";
+            irregularity.type = Irregularity.TYPE_ABSENT;
             irregularity.time = period.startTime;
             irregularity.timeMissing = period.endTime - period.startTime;
             irregularityService.add(irregularity);
@@ -590,8 +605,9 @@ public class ApiController {
                   irregularity.courseId = currentCourse.id;
                   irregularity.periodId = currentPeriod.id;
                   // if before the period has actually started, make absent instead of left early
-                  irregularity.type =
-                      System.currentTimeMillis() < currentPeriod.startTime ? "absent" : "left_early";
+                  irregularity.type = System.currentTimeMillis() < currentPeriod.startTime
+                    ? Irregularity.TYPE_ABSENT
+                    : Irregularity.TYPE_LEFT_EARLY;
                   irregularity.time = System.currentTimeMillis();
                   irregularity.timeMissing = currentPeriod.endTime - System.currentTimeMillis();
                   irregularityService.add(irregularity);
@@ -641,19 +657,19 @@ public class ApiController {
                       );
 
               for (Irregularity irregularity : irregularities) {
-                if (irregularity.type.equals("absent")) {
+                if (irregularity.type.equals(Irregularity.TYPE_ABSENT)) {
                   // if there is absence, convert it to a tardy or delete it
                   if (System.currentTimeMillis() > currentPeriod.startTime) {
-                    irregularity.type = "tardy";
+                    irregularity.type = Irregularity.TYPE_TARDY;
                     irregularity.timeMissing = System.currentTimeMillis() - currentPeriod.startTime;
                     irregularityService.update(irregularity);
                   } else {
                     // if they're present before the startTime
                     irregularityService.deleteById(irregularity.id);
                   }
-                } else if (irregularity.type.equals("left_early")) {
+                } else if (irregularity.type.equals(Irregularity.TYPE_LEFT_EARLY)) {
                   // if there is a leftEarly, convert it to a leftTemporarily
-                  irregularity.type = "left_temporarily";
+                  irregularity.type = Irregularity.TYPE_LEFT_TEMPORARILY;
                   irregularity.timeMissing = System.currentTimeMillis() - irregularity.time;
                   irregularityService.update(irregularity);
                 }

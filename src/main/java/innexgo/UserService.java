@@ -12,9 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
   @Autowired private JdbcTemplate jdbcTemplate;
 
-  public static final int ADMINISTRATOR = 0;
-  public static final int TEACHER = 1;
-
   public User getById(long id) {
     String sql = "SELECT id, name, email, password_hash, ring FROM user WHERE id=?";
     RowMapper<User> rowMapper = new UserRowMapper();
