@@ -1,6 +1,7 @@
 package innexgo;
 
 import java.time.*;
+import java.time.temporal.*;
 import java.util.*;
 import java.util.stream.Collectors;
 import org.apache.commons.csv.*;
@@ -212,63 +213,73 @@ public class ApiController {
   /**
    * Each day at midnight, log everyone out and give a "forgot to sign out" irregularity if they had a session open
    */
-  @Scheduled(cron="0 0 * * * *")
+  @Scheduled(fixedDelay = 5000)
   public void signOutAtMidnight() {
-    System.out.println("Signing everyone out");
-    // get list of open sessions
-    List<Session> openSessionList = sessionService.query(
-      null, // Long id
-      null, // Long inEncounterId
-      null, // Long outEncounterId
-      null, // Long anyEncounterId
-      null, // Long periodId
-      null, // Long period
-      null, // Long courseId
-      false, // Boolean complete
-      null, // Long locationId
-      null, // Long studentId
-      null, // Long teacherId
-      null, // Long time
-      null, // Long inTimeBegin
-      null, // Long inTimeEnd
-      null, // Long outTimeBegin
-      null, // Long outTimeEnd
-      null  // Long count
-    );
+    while(true) {
+      try {
+        ZonedDateTime now = ZonedDateTime.now(Utils.TIMEZONE);
+        ZonedDateTime tomorrowStart = now.plusDays( 1 ).truncatedTo(ChronoUnit.DAYS);
+        long millisTillMidnight = Duration.between(now , tomorrowStart).toMillis();
+        Thread.sleep(millisTillMidnight);
+      } catch(Exception e) {
+        e.printStackTrace();
+      }
 
-    for(Session openSession : openSessionList) {
-      // Virtually close session by generating a fake (virtual) encounter and insert it in.
-      // We know they must have somehow left from here
+      System.out.println("Signing everyone out");
+      // get list of open sessions
+      List<Session> openSessionList = sessionService.query(
+        null, // Long id
+        null, // Long inEncounterId
+        null, // Long outEncounterId
+        null, // Long anyEncounterId
+        null, // Long periodId
+        null, // Long period
+        null, // Long courseId
+        false, // Boolean complete
+        null, // Long locationId
+        null, // Long studentId
+        null, // Long teacherId
+        null, // Long time
+        null, // Long inTimeBegin
+        null, // Long inTimeEnd
+        null, // Long outTimeBegin
+        null, // Long outTimeEnd
+        null  // Long count
+      );
 
-      // grab old encounter
-      Encounter inEncounter = encounterService.getById(openSession.inEncounterId);
-      //make new encounter
-      Encounter virtualEncounter = new Encounter();
-      virtualEncounter.locationId = inEncounter.locationId;
-      virtualEncounter.studentId = openSession.studentId;
-      virtualEncounter.time = System.currentTimeMillis();
-      virtualEncounter.virtual = true;
-      encounterService.add(virtualEncounter);
+      for(Session openSession : openSessionList) {
+        // Virtually close session by generating a fake (virtual) encounter and insert it in.
+        // We know they must have somehow left from here
 
-      // now close session
-      openSession.outEncounterId = virtualEncounter.id;
-      openSession.complete = true;
-      sessionService.update(openSession);
+        // grab old encounter
+        Encounter inEncounter = encounterService.getById(openSession.inEncounterId);
+        //make new encounter
+        Encounter virtualEncounter = new Encounter();
+        virtualEncounter.locationId = inEncounter.locationId;
+        virtualEncounter.studentId = openSession.studentId;
+        virtualEncounter.time = System.currentTimeMillis();
+        virtualEncounter.virtual = true;
+        encounterService.add(virtualEncounter);
+
+        // now close session
+        openSession.outEncounterId = virtualEncounter.id;
+        openSession.complete = true;
+        sessionService.update(openSession);
 
 
-      // get period of 
+        // get period of 
 
 
-      // Now add irregularity about forgetting to sign out
-      // Irregularity forgotToSignOut = new Irregularity();
-      // forgotToSignOut.studentId = openSession.studentId;
-      // forgotToSignOut.courseId = course.id;
-      // forgotToSignOut.periodId = period.id;
-      // forgotToSignOut.type = Irregularity.FORGOT_SIGN_OUT_TYPE;
-      // forgotToSignOut.time = period.startTime;
-      // forgotToSignOut.timeMissing = period.endTime - period.startTime;
-      // irregularityService.add(forgotToSignOut);
-
+        // Now add irregularity about forgetting to sign out
+        // Irregularity forgotToSignOut = new Irregularity();
+        // forgotToSignOut.studentId = openSession.studentId;
+        // forgotToSignOut.courseId = course.id;
+        // forgotToSignOut.periodId = period.id;
+        // forgotToSignOut.type = Irregularity.FORGOT_SIGN_OUT_TYPE;
+        // forgotToSignOut.time = period.startTime;
+        // forgotToSignOut.timeMissing = period.endTime - period.startTime;
+        // irregularityService.add(forgotToSignOut);
+      }
     }
   }
 
