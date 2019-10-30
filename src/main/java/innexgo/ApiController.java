@@ -215,11 +215,13 @@ public class ApiController {
    */
   @Scheduled(fixedDelay = 5000)
   public void signOutAtMidnight() {
+    System.out.println("Starting sign out at midnight process");
     while(true) {
       try {
         ZonedDateTime now = ZonedDateTime.now(Utils.TIMEZONE);
         ZonedDateTime tomorrowStart = now.plusDays( 1 ).truncatedTo(ChronoUnit.DAYS);
         long millisTillMidnight = Duration.between(now , tomorrowStart).toMillis();
+        System.out.println("Next mass sign out at: " + millisTillMidnight/1000);
         Thread.sleep(millisTillMidnight);
       } catch(Exception e) {
         e.printStackTrace();
@@ -293,6 +295,7 @@ public class ApiController {
    */
   @Scheduled(fixedDelay = 5000)
   public void insertAbsences() {
+    System.out.println("Starting insert absences process");
     // the list of periods that havent started yet
     List<Period> periodList =
         periodService.query(
