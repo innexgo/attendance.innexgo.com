@@ -230,24 +230,24 @@ public class ApiController {
       System.out.println("Signing everyone out");
       // get list of open sessions
       List<Session> openSessionList = sessionService.query(
-        null, // Long id
-        null, // Long inEncounterId
-        null, // Long outEncounterId
-        null, // Long anyEncounterId
-        null, // Long periodId
-        null, // Long period
-        null, // Long courseId
-        false, // Boolean complete
-        null, // Long locationId
-        null, // Long studentId
-        null, // Long teacherId
-        null, // Long time
-        null, // Long inTimeBegin
-        null, // Long inTimeEnd
-        null, // Long outTimeBegin
-        null, // Long outTimeEnd
-        null  // Long count
-      );
+          null, // Long id
+          null, // Long inEncounterId
+          null, // Long outEncounterId
+          null, // Long anyEncounterId
+          null, // Long periodId
+          null, // Long period
+          null, // Long courseId
+          false, // Boolean complete
+          null, // Long locationId
+          null, // Long studentId
+          null, // Long teacherId
+          null, // Long time
+          null, // Long inTimeBegin
+          null, // Long inTimeEnd
+          null, // Long outTimeBegin
+          null, // Long outTimeEnd
+          null  // Long count
+          );
 
       for(Session openSession : openSessionList) {
         // Virtually close session by generating a fake (virtual) encounter and insert it in.
@@ -269,18 +269,57 @@ public class ApiController {
         sessionService.update(openSession);
 
 
-        // get period of 
+        // STUFF TO ADD irregularities
 
+        // get location
 
-        // Now add irregularity about forgetting to sign out
-        // Irregularity forgotToSignOut = new Irregularity();
-        // forgotToSignOut.studentId = openSession.studentId;
-        // forgotToSignOut.courseId = course.id;
-        // forgotToSignOut.periodId = period.id;
-        // forgotToSignOut.type = Irregularity.FORGOT_SIGN_OUT_TYPE;
-        // forgotToSignOut.time = period.startTime;
-        // forgotToSignOut.timeMissing = period.endTime - period.startTime;
-        // irregularityService.add(forgotToSignOut);
+        // period and course are that of the first period with a course that the session intersected
+        List<Period> intersectedPeriods = periodService.query(
+            null, // Long id,
+            null, // Long time,
+            null, // Long minDuration,
+            null, // Long maxDuration,
+            null, // Long initialTimeBegin,
+            null, // Long initialTimeEnd,
+            null, // Long startTimeBegin,
+            null, // Long startTimeEnd,
+            null, // Long endTimeBegin,
+            null, // Long endTimeEnd,
+            null, // Integer period,
+            null, // Long courseId
+            null  // Long teacherId
+            );
+        // Find first period with a course at this location
+        Period irregPeriod = null;
+        Course irregCourse = null;
+        for(Period period : intersectedPeriods) {
+          List<Course> courses = courseService.query(
+              null, //Long id,
+              null, //Long teacherId,
+              inEncounter.locationId, //Long locationId,
+              openSession.studentId, //Long studentId,
+              period.period, //Integer period,
+              null, //String subject,
+              null, //Long time,
+              Utils.getCurrentGraduatingYear()  //Integer year
+              );
+          if(courses.size() > 0) {
+            irregPeriod = period;
+            irregCourse = courses.get(0);
+          }
+        }
+
+        if(irregPeriod != null && irregCourse != null) {
+          // Now add irregularity about forgetting to sign out
+          Irregularity forgotToSignOut = new Irregularity();
+          forgotToSignOut.studentId = openSession.studentId;
+          forgotToSignOut.courseId = irregCourse.id;
+          forgotToSignOut.periodId = irregPeriod.id;
+          forgotToSignOut.type = Irregularity.TYPE_FORGOT_SIGN_OUT;
+          forgotToSignOut.time = irregPeriod.startTime;
+          forgotToSignOut.timeMissing = 0;
+          irregularityService.add(forgotToSignOut);
+        }
       }
     }
   }
@@ -878,20 +917,6 @@ public class ApiController {
     }
   }
 
-  @RequestMapping("/course/delete/")
-  public ResponseEntity<?> deleteCourse(
-      @RequestParam("courseId") Long courseId, @RequestParam("apiKey") String apiKey) {
-    if (isAdministrator(apiKey)) {
-      if (courseService.existsById(courseId)) {
-        return new ResponseEntity<>(fillCourse(courseService.deleteById(courseId)), HttpStatus.OK);
-      } else {
-        return BAD_REQUEST;
-      }
-    } else {
-      return UNAUTHORIZED;
-    }
-  }
-
   @RequestMapping("/irregularity/delete/")
   public ResponseEntity<?> deleteIrregularity(
       @RequestParam("irregularityId") Long irregularityId, @RequestParam("apiKey") String apiKey) {
@@ -907,35 +932,6 @@ public class ApiController {
     }
   }
 
-  @RequestMapping("/location/delete/")
-  public ResponseEntity<?> deleteLocation(
-      @RequestParam("locationId") Long locationId, @RequestParam("apiKey") String apiKey) {
-    if (isAdministrator(apiKey)) {
-      if (locationService.existsById(locationId)) {
-        return new ResponseEntity<>(
-            fillLocation(locationService.deleteById(locationId)), HttpStatus.OK);
-      } else {
-        return BAD_REQUEST;
-      }
-    } else {
-      return UNAUTHORIZED;
-    }
-  }
-
-  @RequestMapping("/period/delete/")
-  public ResponseEntity<?> deletePeriod(
-      @RequestParam("periodId") Long periodId, @RequestParam("apiKey") String apiKey) {
-    if (isAdministrator(apiKey)) {
-      if (periodService.existsById(periodId)) {
-        return new ResponseEntity<>(fillPeriod(periodService.deleteById(periodId)), HttpStatus.OK);
-      } else {
-        return BAD_REQUEST;
-      }
-    } else {
-      return UNAUTHORIZED;
-    }
-  }
-
   @RequestMapping("/schedule/delete/")
   public ResponseEntity<?> deleteSchedule(
       @RequestParam("scheduleId") Integer scheduleId, @RequestParam("apiKey") String apiKey) {
@@ -943,35 +939,6 @@ public class ApiController {
       if (scheduleService.existsById(scheduleId)) {
         return new ResponseEntity<>(
             fillSchedule(scheduleService.deleteById(scheduleId)), HttpStatus.OK);
-      } else {
-        return BAD_REQUEST;
-      }
-    } else {
-      return UNAUTHORIZED;
-    }
-  }
-
-  @RequestMapping("/student/delete/")
-  public ResponseEntity<?> deleteStudent(
-      @RequestParam("studentId") Integer studentId, @RequestParam("apiKey") String apiKey) {
-    if (isAdministrator(apiKey)) {
-      if (studentService.existsById(studentId)) {
-        return new ResponseEntity<>(
-            fillStudent(studentService.deleteById(studentId)), HttpStatus.OK);
-      } else {
-        return BAD_REQUEST;
-      }
-    } else {
-      return UNAUTHORIZED;
-    }
-  }
-
-  @RequestMapping("/user/delete/")
-  public ResponseEntity<?> deleteUser(
-      @RequestParam("userId") Integer userId, @RequestParam("apiKey") String apiKey) {
-    if (isAdministrator(apiKey)) {
-      if (userService.existsById(userId)) {
-        return new ResponseEntity<>(fillUser(userService.deleteById(userId)), HttpStatus.OK);
       } else {
         return BAD_REQUEST;
       }

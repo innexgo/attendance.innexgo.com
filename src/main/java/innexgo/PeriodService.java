@@ -110,6 +110,7 @@ public class PeriodService {
             + (period == null ? "" : " AND p.period = " + period)
             + (courseId == null ? "" : " AND c.course_id = " + courseId)
             + (teacherId == null ? "" : " AND c.teacher_id = " + teacherId)
+            + " ORDER BY p.start_time"
             + ";";
 
     RowMapper<Period> rowMapper = new PeriodRowMapper();
