@@ -211,51 +211,53 @@ public class ApiController {
   }
 
   /**
-   * Each day at midnight, log everyone out and give a "forgot to sign out" irregularity if they had a session open
+   * Each day at midnight, log everyone out and give a "forgot to sign out" irregularity if they had
+   * a session open
    */
   @Scheduled(fixedDelay = 5000)
   public void signOutAtMidnight() {
     System.out.println("Starting sign out at midnight process");
-    while(true) {
+    while (true) {
       try {
         ZonedDateTime now = ZonedDateTime.now(Utils.TIMEZONE);
-        ZonedDateTime tomorrowStart = now.plusDays( 1 ).truncatedTo(ChronoUnit.DAYS);
-        long millisTillMidnight = Duration.between(now , tomorrowStart).toMillis();
-        System.out.println("Next mass sign out at: " + millisTillMidnight/1000);
+        ZonedDateTime tomorrowStart = now.plusDays(1).truncatedTo(ChronoUnit.DAYS);
+        long millisTillMidnight = Duration.between(now, tomorrowStart).toMillis();
+        System.out.println("Next mass sign out at: " + millisTillMidnight / 1000);
         Thread.sleep(millisTillMidnight);
-      } catch(Exception e) {
+      } catch (Exception e) {
         e.printStackTrace();
       }
 
       System.out.println("Signing everyone out");
       // get list of open sessions
-      List<Session> openSessionList = sessionService.query(
-          null, // Long id
-          null, // Long inEncounterId
-          null, // Long outEncounterId
-          null, // Long anyEncounterId
-          null, // Long periodId
-          null, // Long period
-          null, // Long courseId
-          false, // Boolean complete
-          null, // Long locationId
-          null, // Long studentId
-          null, // Long teacherId
-          null, // Long time
-          null, // Long inTimeBegin
-          null, // Long inTimeEnd
-          null, // Long outTimeBegin
-          null, // Long outTimeEnd
-          null  // Long count
-          );
+      List<Session> openSessionList =
+          sessionService.query(
+              null, // Long id
+              null, // Long inEncounterId
+              null, // Long outEncounterId
+              null, // Long anyEncounterId
+              null, // Long periodId
+              null, // Long period
+              null, // Long courseId
+              false, // Boolean complete
+              null, // Long locationId
+              null, // Long studentId
+              null, // Long teacherId
+              null, // Long time
+              null, // Long inTimeBegin
+              null, // Long inTimeEnd
+              null, // Long outTimeBegin
+              null, // Long outTimeEnd
+              null // Long count
+              );
 
-      for(Session openSession : openSessionList) {
+      for (Session openSession : openSessionList) {
         // Virtually close session by generating a fake (virtual) encounter and insert it in.
         // We know they must have somehow left from here
 
         // grab old encounter
         Encounter inEncounter = encounterService.getById(openSession.inEncounterId);
-        //make new encounter
+        // make new encounter
         Encounter virtualEncounter = new Encounter();
         virtualEncounter.locationId = inEncounter.locationId;
         virtualEncounter.studentId = openSession.studentId;
@@ -268,48 +270,45 @@ public class ApiController {
         openSession.complete = true;
         sessionService.update(openSession);
 
-
-        // STUFF TO ADD irregularities
-
-        // get location
-
         // period and course are that of the first period with a course that the session intersected
-        List<Period> intersectedPeriods = periodService.query(
-            null, // Long id,
-            null, // Long time,
-            null, // Long minDuration,
-            null, // Long maxDuration,
-            null, // Long initialTimeBegin,
-            null, // Long initialTimeEnd,
-            null, // Long startTimeBegin,
-            null, // Long startTimeEnd,
-            null, // Long endTimeBegin,
-            null, // Long endTimeEnd,
-            null, // Integer period,
-            null, // Long courseId
-            null  // Long teacherId
-            );
+        List<Period> intersectedPeriods =
+            periodService.query(
+                null, // Long id,
+                null, // Long time,
+                null, // Long minDuration,
+                null, // Long maxDuration,
+                null, // Long initialTimeBegin,
+                null, // Long initialTimeEnd,
+                null, // Long startTimeBegin,
+                null, // Long startTimeEnd,
+                null, // Long endTimeBegin,
+                null, // Long endTimeEnd,
+                null, // Integer period,
+                null, // Long courseId
+                null // Long teacherId
+                );
         // Find first period with a course at this location
         Period irregPeriod = null;
         Course irregCourse = null;
-        for(Period period : intersectedPeriods) {
-          List<Course> courses = courseService.query(
-              null, //Long id,
-              null, //Long teacherId,
-              inEncounter.locationId, //Long locationId,
-              openSession.studentId, //Long studentId,
-              period.period, //Integer period,
-              null, //String subject,
-              null, //Long time,
-              Utils.getCurrentGraduatingYear()  //Integer year
-              );
-          if(courses.size() > 0) {
+        for (Period period : intersectedPeriods) {
+          List<Course> courses =
+              courseService.query(
+                  null, // Long id,
+                  null, // Long teacherId,
+                  inEncounter.locationId, // Long locationId,
+                  openSession.studentId, // Long studentId,
+                  period.period, // Integer period,
+                  null, // String subject,
+                  null, // Long time,
+                  Utils.getCurrentGraduatingYear() // Integer year
+                  );
+          if (courses.size() > 0) {
             irregPeriod = period;
             irregCourse = courses.get(0);
           }
         }
 
-        if(irregPeriod != null && irregCourse != null) {
+        if (irregPeriod != null && irregCourse != null) {
           // Now add irregularity about forgetting to sign out
           Irregularity forgotToSignOut = new Irregularity();
           forgotToSignOut.studentId = openSession.studentId;
@@ -324,13 +323,9 @@ public class ApiController {
     }
   }
 
-
   /**
-   * For all the courses at the current time, create irregularities {
-   *   If the student has not signed in yet before or during the period {
-   *     generate an absent irregularity
-   *   }
-   * }
+   * For all the courses at the current time, create irregularities { If the student has not signed
+   * in yet before or during the period { generate an absent irregularity } }
    */
   @Scheduled(fixedDelay = 5000)
   public void insertAbsences() {
@@ -351,7 +346,7 @@ public class ApiController {
             null, // period
             null, // courseId
             null // teacherId
-          );
+            );
 
     Collections.sort(periodList, Comparator.comparingLong(p -> p.startTime));
 
@@ -359,9 +354,9 @@ public class ApiController {
       Period period = periodList.get(i);
       // wait till we are at the right time
       try {
-        System.out.println("Next Period in: " +
-            (period.initialTime - System.currentTimeMillis()) / 1000);
-        Thread.sleep(Math.max(0, period.initialTime - System.currentTimeMillis()));
+        System.out.println(
+            "Next Period in: " + (period.initialTime - System.currentTimeMillis()) / 1000);
+        Thread.sleep(Math.max(0, period.startTime - System.currentTimeMillis()));
       } catch (InterruptedException e) {
         e.printStackTrace();
       }
@@ -382,22 +377,32 @@ public class ApiController {
       // for all courses at this time
       for (Course course : courseList) {
         // subtract present students from all students taking the course
-        List<Student> studentAbsentList = studentService.query(
-            null, //Long id
-            null, //Long cardId
-            course.id, //Long courseId
-            null, //Integer graduatingYear
-            null, //String name
-            null, //String partialName
-            null  //String tags
-            );
+        List<Student> studentAbsentList =
+            studentService.query(
+                null, // Long id
+                null, // Long cardId
+                course.id, // Long courseId
+                null, // Integer graduatingYear
+                null, // String name
+                null, // String partialName
+                null // String tags
+                );
         studentAbsentList.removeAll(studentService.present(course.id, period.id));
 
         // mark all students not there as absent
         for (Student student : studentAbsentList) {
           boolean alreadyAbsent =
               irregularityService
-                      .query(null, student.id, null, period.id, null, Irregularity.TYPE_ABSENT, null, null, null)
+                      .query(
+                          null,
+                          student.id,
+                          null,
+                          period.id,
+                          null,
+                          Irregularity.TYPE_ABSENT,
+                          null,
+                          null,
+                          null)
                       .size()
                   > 0;
           // if not already absent
@@ -552,6 +557,7 @@ public class ApiController {
       @RequestParam("locationId") Long locationId,
       @RequestParam(value = "noSession", defaultValue = "false") Boolean noSession,
       @RequestParam("apiKey") String apiKey) {
+
     if (isTrusted(apiKey)) {
       Student student;
       if (cardService.existsById(cardId)) {
@@ -571,75 +577,75 @@ public class ApiController {
         encounterService.add(encounter);
 
         // Now we update sessions
-        if(!noSession) {
-
+        if (!noSession) {
 
           // if school is currently going on, represents the current period
           Period currentPeriod = null;
           // if there is currently a course going on, represents the current course
           Course currentCourse = null;
 
-
           List<Period> currentPeriods =
-            periodService.query(
-                null, // id,
-                System.currentTimeMillis(), // time,
-                null, // minDuration,
-                null, // maxDuration,
-                null, // initialTimeBegin,
-                null, // initialTimeEnd,
-                null, // startTimeBegin,
-                null, // startTimeEnd,
-                null, // endTimeBegin,
-                null, // endTimeEnd,
-                null, // period,
-                null, // courseId,
-                null  // teacherId
-                );
+              periodService.query(
+                  null, // id,
+                  System.currentTimeMillis(), // time,
+                  null, // minDuration,
+                  null, // maxDuration,
+                  null, // initialTimeBegin,
+                  null, // initialTimeEnd,
+                  null, // startTimeBegin,
+                  null, // startTimeEnd,
+                  null, // endTimeBegin,
+                  null, // endTimeEnd,
+                  null, // period,
+                  null, // courseId,
+                  null // teacherId
+                  );
 
           currentPeriod = currentPeriods.isEmpty() ? null : currentPeriods.get(0);
 
           if (currentPeriod != null) {
-            List<Course> currentCourses = courseService.query(
-                  null, // Long id
-                  null, // Long teacherId
-                  locationId, // Long locationId
-                  null, // Long studentId
-                  currentPeriod.period, // Integer period
-                  null, // String subject
-                  null, // Long time
-                  Utils.getCurrentGraduatingYear()  // Integer year
-                );
+            List<Course> currentCourses =
+                courseService.query(
+                    null, // Long id
+                    null, // Long teacherId
+                    locationId, // Long locationId
+                    null, // Long studentId
+                    currentPeriod.period, // Integer period
+                    null, // String subject
+                    null, // Long time
+                    Utils.getCurrentGraduatingYear() // Integer year
+                    );
 
             currentCourse = currentCourses.isEmpty() ? null : currentCourses.get(0);
           } else {
             currentCourse = null;
           }
 
-          List<Session> openSessions = sessionService.query(
-                null, // Long id
-                null, // Long inEncounterId
-                null, // Long outEncounterId
-                null, // Long anyEncounterId
-                null, // Long periodId
-                null, // Long period
-                null, // Long courseId
-                false, // Boolean complete
-                null, // Long locationId
-                student.id, // Long studentId
-                null, // Long teacherId
-                null, // Long time
-                null, // Long inTimeBegin
-                null, // Long inTimeEnd
-                null, // Long outTimeBegin
-                null, // Long outTimeEnd
-                null  // Long count
-              );
+          List<Session> openSessions =
+              sessionService.query(
+                  null, // Long id
+                  null, // Long inEncounterId
+                  null, // Long outEncounterId
+                  null, // Long anyEncounterId
+                  null, // Long periodId
+                  null, // Long period
+                  null, // Long courseId
+                  false, // Boolean complete
+                  null, // Long locationId
+                  student.id, // Long studentId
+                  null, // Long teacherId
+                  null, // Long time
+                  null, // Long inTimeBegin
+                  null, // Long inTimeEnd
+                  null, // Long outTimeBegin
+                  null, // Long outTimeEnd
+                  null // Long count
+                  );
 
           // If the encounter was used to close a session properly
           boolean usedToClose = false;
 
-          for(Session openSession : openSessions) {
+          for (Session openSession : openSessions) {
             Encounter inEncounter = encounterService.getById(openSession.inEncounterId);
             // if it's at the same location
             if (locationId == inEncounter.locationId) {
@@ -650,7 +656,7 @@ public class ApiController {
 
               usedToClose = true;
 
-              if(currentCourse != null) {
+              if (currentCourse != null) {
                 // if it is in the middle of class, add a leaveEarly irregularity
                 if (System.currentTimeMillis() < currentPeriod.endTime) {
                   Irregularity irregularity = new Irregularity();
@@ -658,9 +664,10 @@ public class ApiController {
                   irregularity.courseId = currentCourse.id;
                   irregularity.periodId = currentPeriod.id;
                   // if before the period has actually started, make absent instead of left early
-                  irregularity.type = System.currentTimeMillis() < currentPeriod.startTime
-                    ? Irregularity.TYPE_ABSENT
-                    : Irregularity.TYPE_LEFT_EARLY;
+                  irregularity.type =
+                      System.currentTimeMillis() < currentPeriod.startTime
+                          ? Irregularity.TYPE_ABSENT
+                          : Irregularity.TYPE_LEFT_EARLY;
                   irregularity.time = System.currentTimeMillis();
                   irregularity.timeMissing = currentPeriod.endTime - System.currentTimeMillis();
                   irregularityService.add(irregularity);
@@ -680,51 +687,102 @@ public class ApiController {
               openSession.outEncounterId = virtualEncounter.id;
               openSession.complete = true;
               sessionService.update(openSession);
-            }
-          }
 
-
-          // If the encounter wasn't used to close, we must make a new one
-          if(!usedToClose) {
-            // make new open session
-            Session session = new Session();
-            session.studentId = student.id;
-            session.complete = false;
-            session.inEncounterId = encounter.id;
-            session.outEncounterId = 0;
-            sessionService.add(session);
-
-            if (currentCourse != null) {
-              // now we check if they arent there, and fix it
-              List<Irregularity> irregularities =
-                  irregularityService.query(
-                      null, // id
-                      student.id, // studentId
-                      currentCourse.id, // courseId
-                      currentPeriod.id, // periodId
-                      null, // teacherId
-                      null, // type
-                      null, // time
-                      null, // timeMissing
-                      null // count
+              // period and course are that of the first period with a course that the session
+              // intersected
+              List<Period> intersectedPeriods =
+                  periodService.query(
+                      null, // Long id,
+                      null, // Long time,
+                      null, // Long minDuration,
+                      null, // Long maxDuration,
+                      null, // Long initialTimeBegin,
+                      inEncounter.time, // Long initialTimeEnd,
+                      null, // Long startTimeBegin,
+                      null, // Long startTimeEnd,
+                      System.currentTimeMillis(), // Long endTimeBegin,
+                      null, // Long endTimeEnd,
+                      null, // Integer period,
+                      null, // Long courseId
+                      null // Long teacherId
                       );
+              // Find first period with a course at this location
+              Period irregPeriod = null;
+              Course irregCourse = null;
+              for (Period period : intersectedPeriods) {
+                List<Course> courses =
+                    courseService.query(
+                        null, // Long id,
+                        null, // Long teacherId,
+                        inEncounter.locationId, // Long locationId,
+                        openSession.studentId, // Long studentId,
+                        period.period, // Integer period,
+                        null, // String subject,
+                        null, // Long time,
+                        Utils.getCurrentGraduatingYear() // Integer year
+                        );
+                if (courses.size() > 0) {
+                  irregPeriod = period;
+                  irregCourse = courses.get(0);
+                }
+              }
 
-              for (Irregularity irregularity : irregularities) {
-                if (irregularity.type.equals(Irregularity.TYPE_ABSENT)) {
-                  // if there is absence, convert it to a tardy or delete it
-                  if (System.currentTimeMillis() > currentPeriod.startTime) {
-                    irregularity.type = Irregularity.TYPE_TARDY;
-                    irregularity.timeMissing = System.currentTimeMillis() - currentPeriod.startTime;
+              if (irregPeriod != null && irregCourse != null) {
+                // Now add irregularity about forgetting to sign out
+                Irregularity forgotToSignOut = new Irregularity();
+                forgotToSignOut.studentId = openSession.studentId;
+                forgotToSignOut.courseId = irregCourse.id;
+                forgotToSignOut.periodId = irregPeriod.id;
+                forgotToSignOut.type = Irregularity.TYPE_FORGOT_SIGN_OUT;
+                forgotToSignOut.time = irregPeriod.startTime;
+                forgotToSignOut.timeMissing = 0;
+                irregularityService.add(forgotToSignOut);
+              }
+            }
+
+            // If the encounter wasn't used to close, we must make a new one
+            if (!usedToClose) {
+              // make new open session
+              Session session = new Session();
+              session.studentId = student.id;
+              session.complete = false;
+              session.inEncounterId = encounter.id;
+              session.outEncounterId = 0;
+              sessionService.add(session);
+
+              if (currentCourse != null) {
+                // now we check if they arent there, and fix it
+                List<Irregularity> irregularities =
+                    irregularityService.query(
+                        null, // id
+                        student.id, // studentId
+                        currentCourse.id, // courseId
+                        currentPeriod.id, // periodId
+                        null, // teacherId
+                        null, // type
+                        null, // time
+                        null, // timeMissing
+                        null // count
+                        );
+
+                for (Irregularity irregularity : irregularities) {
+                  if (irregularity.type.equals(Irregularity.TYPE_ABSENT)) {
+                    // if there is absence, convert it to a tardy or delete it
+                    if (System.currentTimeMillis() > currentPeriod.startTime) {
+                      irregularity.type = Irregularity.TYPE_TARDY;
+                      irregularity.timeMissing =
+                          System.currentTimeMillis() - currentPeriod.startTime;
+                      irregularityService.update(irregularity);
+                    } else {
+                      // if they're present before the startTime
+                      irregularityService.deleteById(irregularity.id);
+                    }
+                  } else if (irregularity.type.equals(Irregularity.TYPE_LEFT_EARLY)) {
+                    // if there is a leftEarly, convert it to a leftTemporarily
+                    irregularity.type = Irregularity.TYPE_LEFT_TEMPORARILY;
+                    irregularity.timeMissing = System.currentTimeMillis() - irregularity.time;
                     irregularityService.update(irregularity);
-                  } else {
-                    // if they're present before the startTime
-                    irregularityService.deleteById(irregularity.id);
                   }
-                } else if (irregularity.type.equals(Irregularity.TYPE_LEFT_EARLY)) {
-                  // if there is a leftEarly, convert it to a leftTemporarily
-                  irregularity.type = Irregularity.TYPE_LEFT_TEMPORARILY;
-                  irregularity.timeMissing = System.currentTimeMillis() - irregularity.time;
-                  irregularityService.update(irregularity);
                 }
               }
             }
