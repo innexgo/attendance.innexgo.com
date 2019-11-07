@@ -337,9 +337,9 @@ public class ApiController {
             null, // time
             null, // minDuration
             null, // maxDuration
-            null, // initialTimeBegin
+            System.currentTimeMillis(), // initialTimeBegin
             null, // initialTimeEnd
-            System.currentTimeMillis(), // startTimeBegin
+            null, // startTimeBegin
             null, // startTimeEnd
             null, // endTimeBegin
             null, // endTimeEnd
@@ -354,14 +354,15 @@ public class ApiController {
       Period period = periodList.get(i);
       // wait till we are at the right time
       try {
+        long timeToSleep = Math.max(0, period.initialTime - System.currentTimeMillis());
         System.out.println(
-            "Next Period in: " + (period.initialTime - System.currentTimeMillis()) / 1000);
-        Thread.sleep(Math.max(0, period.startTime - System.currentTimeMillis()));
+            "Inserting absences in: " +  timeToSleep / 1000);
+        Thread.sleep(timeToSleep);
       } catch (InterruptedException e) {
         e.printStackTrace();
       }
 
-      System.out.println("Period " + period.id + "started, inserting absences");
+      System.out.println("Period " + period.id + " started, inserting absences");
       // get courses at this period
       List<Course> courseList =
           courseService.query(
@@ -374,6 +375,8 @@ public class ApiController {
               null, // time
               Utils.getCurrentGraduatingYear() // year
               );
+
+
 
       // for all courses at this time
       for (Course course : courseList) {
@@ -623,6 +626,7 @@ public class ApiController {
             currentCourse = null;
           }
 
+
           List<Session> openSessions =
               sessionService.query(
                   null, // Long id
@@ -644,8 +648,10 @@ public class ApiController {
                   null // Long count
                   );
 
+
           // If the encounter was used to close a session properly
           boolean usedToClose = false;
+
 
           for (Session openSession : openSessions) {
             Encounter inEncounter = encounterService.getById(openSession.inEncounterId);
@@ -741,50 +747,51 @@ public class ApiController {
                 irregularityService.add(forgotToSignOut);
               }
             }
+          }
 
-            // If the encounter wasn't used to close, we must make a new one
-            if (!usedToClose) {
-              // make new open session
-              Session session = new Session();
-              session.studentId = student.id;
-              session.complete = false;
-              session.inEncounterId = encounter.id;
-              session.outEncounterId = 0;
-              sessionService.add(session);
+          // If the encounter wasn't used to close, we must make a new one
+          if (!usedToClose) {
+            // make new open session
+            Session session = new Session();
+            session.studentId = student.id;
+            session.complete = false;
+            session.inEncounterId = encounter.id;
+            session.outEncounterId = 0;
+            sessionService.add(session);
+            System.out.println("session added");
 
-              if (currentCourse != null) {
-                // now we check if they arent there, and fix it
-                List<Irregularity> irregularities =
-                    irregularityService.query(
-                        null, // id
-                        student.id, // studentId
-                        currentCourse.id, // courseId
-                        currentPeriod.id, // periodId
-                        null, // teacherId
-                        null, // type
-                        null, // time
-                        null, // timeMissing
-                        null // count
-                        );
+            if (currentCourse != null) {
+              // now we check if they arent there, and fix it
+              List<Irregularity> irregularities =
+                irregularityService.query(
+                    null, // id
+                    student.id, // studentId
+                    currentCourse.id, // courseId
+                    currentPeriod.id, // periodId
+                    null, // teacherId
+                    null, // type
+                    null, // time
+                    null, // timeMissing
+                    null // count
+                    );
 
-                for (Irregularity irregularity : irregularities) {
-                  if (irregularity.type.equals(Irregularity.TYPE_ABSENT)) {
-                    // if there is absence, convert it to a tardy or delete it
-                    if (System.currentTimeMillis() > currentPeriod.startTime) {
-                      irregularity.type = Irregularity.TYPE_TARDY;
-                      irregularity.timeMissing =
-                          System.currentTimeMillis() - currentPeriod.startTime;
-                      irregularityService.update(irregularity);
-                    } else {
-                      // if they're present before the startTime
-                      irregularityService.deleteById(irregularity.id);
-                    }
-                  } else if (irregularity.type.equals(Irregularity.TYPE_LEFT_EARLY)) {
-                    // if there is a leftEarly, convert it to a leftTemporarily
-                    irregularity.type = Irregularity.TYPE_LEFT_TEMPORARILY;
-                    irregularity.timeMissing = System.currentTimeMillis() - irregularity.time;
+              for (Irregularity irregularity : irregularities) {
+                if (irregularity.type.equals(Irregularity.TYPE_ABSENT)) {
+                  // if there is absence, convert it to a tardy or delete it
+                  if (System.currentTimeMillis() > currentPeriod.startTime) {
+                    irregularity.type = Irregularity.TYPE_TARDY;
+                    irregularity.timeMissing =
+                      System.currentTimeMillis() - currentPeriod.startTime;
                     irregularityService.update(irregularity);
+                  } else {
+                    // if they're present before the startTime
+                    irregularityService.deleteById(irregularity.id);
                   }
+                } else if (irregularity.type.equals(Irregularity.TYPE_LEFT_EARLY)) {
+                  // if there is a leftEarly, convert it to a leftTemporarily
+                  irregularity.type = Irregularity.TYPE_LEFT_TEMPORARILY;
+                  irregularity.timeMissing = System.currentTimeMillis() - irregularity.time;
+                  irregularityService.update(irregularity);
                 }
               }
             }

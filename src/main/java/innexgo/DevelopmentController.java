@@ -38,7 +38,7 @@ public class DevelopmentController {
   public ResponseEntity<?> populateTestingPeriods() {
     LocalDate today = ZonedDateTime.now(Utils.TIMEZONE).toLocalDate();
 
-    long minute = 5 * 60 * 1000;
+    long minute = 1 * 60 * 1000;
     long initialTime = System.currentTimeMillis();
     for (int i = 3; i < 7; i++) {
       Period period = new Period();

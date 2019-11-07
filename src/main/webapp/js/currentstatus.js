@@ -15,43 +15,45 @@ function currentStatus() {
   // get students
   request(`${apiUrl()}/student/?courseId=${course.id}&apiKey=${apiKey.key}`,
     function (xhr) {
-      var students = JSON.parse(xhr.responseText);
+      let students = JSON.parse(xhr.responseText);
       // get irregularities
       request(`${apiUrl()}/irregularity/?courseId=${course.id}&periodId=${period.id}&apiKey=${apiKey.key}`,
         function (xhr) {
-          var irregularities = JSON.parse(xhr.responseText).sort((a, b) => (a.time > b.time) ? 1 : -1);
+          let irregularities = JSON.parse(xhr.responseText).sort((a, b) => (a.time > b.time) ? 1 : -1);
 
           //blank table
           table.innerHTML = '';
           students.sort((a, b) => (a.name > b.name) ? 1 : -1)
-          for (var i = 0; i < students.length; i++) {
-            var text = '<span class="fa fa-check"></span>'
-            var bgcolor = '#ccffcc';
-            var fgcolor = '#00ff00';
-            var student = students[i];
+          for (let i = 0; i < students.length; i++) {
+            let text = '<span class="fa fa-check"></span>'
+            let bgcolor = '#ccffcc';
+            let fgcolor = '#00ff00';
+            let student = students[i];
 
-            var irregularity = irregularities.filter(i => i.student.id == student.id).pop();
-            var type = irregularity == null ? null : irregularity.type;
-            if (type == 'absent') {
+            var irregularity = irregularities.filter(irr => irr.student.id == student.id).pop();
+            console.log(irregularity);
+            console.log(student);
+            let type = irregularity == null ? null : irregularity.type;
+            if (type == 'Absent') {
               text = '<span class="fa fa-times"></span>';
               bgcolor = '#ffcccc';
               fgcolor = '#ff0000';
-            } else if (type == 'tardy') {
+            } else if (type == 'Tardy') {
               text = '<span class="fa fa-check"></span>';
               bgcolor = '#ffffcc';
               fgcolor = '#cccc00';
-            } else if (type == 'left_early') {
+            } else if (type == 'Left Early') {
               text = '<span class="fa fa-times"></span>';
               bgcolor = '#ccffff';
               fgcolor = '#00cccc';
-            } else if (type == 'left_temporarily') {
+            } else if (type == 'Left Temporarily') {
               text = '<span class="fa fa-check"></span>';
               bgcolor = '#ccffff';
               fgcolor = '#00cccc';
             }
 
             // put values in table
-            var newrow = table.insertRow(0);
+            let newrow = table.insertRow(0);
             newrow.innerHTML =
               `<td>${linkRelative(student.name, '/studentprofile.html?studentId='+student.id)}</td>
                <td>${student.id}</td>

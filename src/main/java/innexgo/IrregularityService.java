@@ -28,6 +28,7 @@ public class IrregularityService {
   }
 
   public void add(Irregularity irregularity) {
+
     // Add irregularity
     String sql =
         "INSERT INTO irregularity (id, student_id, course_id, period_id, type, time, time_missing) values (?, ?, ?, ?, ?, ?, ?)";

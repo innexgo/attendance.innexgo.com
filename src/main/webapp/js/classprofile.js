@@ -46,19 +46,19 @@ function loadClassProfile() {
 
             var irregularity = irregularities.filter(i => i.student.id == student.id).pop();
             var type = irregularity == null ? null : irregularity.type;
-            if (type == 'absent') {
+            if (type == 'Absent') {
               text = '<span class="fa fa-times"></span>';
               bgcolor = '#ffcccc';
               fgcolor = '#ff0000';
-            } else if (type == 'tardy') {
+            } else if (type == 'Tardy') {
               text = '<span class="fa fa-check"></span>';
               bgcolor = '#ffffcc';
               fgcolor = '#ffff00';
-            } else if (type == 'left_early') {
+            } else if (type == 'Left Early') {
               text = '<span class="fa fa-sign-out-alt"></span>';
               bgcolor = '#ccffff';
               fgcolor = '#00ffff';
-            } else if (type == 'left_temporarily') {
+            } else if (type == 'Left Temporarily') {
               text = '<span class="fa fa-check"></span>';
               bgcolor = '#ccffff';
               fgcolor = '#00ffff';
