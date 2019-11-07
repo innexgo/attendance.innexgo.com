@@ -758,7 +758,6 @@ public class ApiController {
             session.inEncounterId = encounter.id;
             session.outEncounterId = 0;
             sessionService.add(session);
-            System.out.println("session added");
 
             if (currentCourse != null) {
               // now we check if they arent there, and fix it
