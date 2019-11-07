@@ -361,6 +361,7 @@ public class ApiController {
         e.printStackTrace();
       }
 
+      System.out.println("Period " + period.id + "started, inserting absences");
       // get courses at this period
       List<Course> courseList =
           courseService.query(
@@ -391,6 +392,7 @@ public class ApiController {
 
         // mark all students not there as absent
         for (Student student : studentAbsentList) {
+          // Check if already absent. if not, don't add
           boolean alreadyAbsent =
               irregularityService
                       .query(

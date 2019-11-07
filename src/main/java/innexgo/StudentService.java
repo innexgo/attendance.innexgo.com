@@ -75,10 +75,6 @@ public class StudentService {
 
   // find students who are present at the location that they are supposed to be in at this period
   public List<Student> present(long courseId, long periodId) {
-    if (!periodService.existsById(periodId) || !courseService.existsById(courseId)) {
-      return null;
-    }
-
     Course course = courseService.getById(courseId);
     Period period = periodService.getById(periodId);
 
