@@ -13,14 +13,14 @@ public class CourseService {
   @Autowired private JdbcTemplate jdbcTemplate;
 
   public Course getById(long id) {
-    String sql = "SELECT id, teacher_id, location_id, period, subject, semester FROM course WHERE id=?";
+    String sql = "SELECT id, teacher_id, location_id, period, subject, semester_id FROM course WHERE id=?";
     RowMapper<Course> rowMapper = new CourseRowMapper();
     Course course = jdbcTemplate.queryForObject(sql, rowMapper, id);
     return course;
   }
 
   public List<Course> getAll() {
-    String sql = "SELECT id, teacher_id, location_id, period, subject, semester FROM course";
+    String sql = "SELECT id, teacher_id, location_id, period, subject, semester_id FROM course";
     RowMapper<Course> rowMapper = new CourseRowMapper();
     return this.jdbcTemplate.query(sql, rowMapper);
   }
@@ -28,16 +28,16 @@ public class CourseService {
   public void add(Course course) {
     // Add course
     String sql =
-        "INSERT INTO course (id, teacher_id, location_id, period, subject, semester) values (?, ?, ?, ?, ?, ?)";
+        "INSERT INTO course (id, teacher_id, location_id, period, subject, semester_id) values (?, ?, ?, ?, ?, ?)";
     jdbcTemplate.update(
-        sql, course.id, course.teacherId, course.locationId, course.period, course.subject, course.semester);
+        sql, course.id, course.teacherId, course.locationId, course.period, course.subject, course.semesterId);
 
     // Fetch course id
     sql =
-        "SELECT id FROM course WHERE teacher_id=? AND location_id=? AND period=? AND subject=? AND semester=?";
+        "SELECT id FROM course WHERE teacher_id=? AND location_id=? AND period=? AND subject=? AND semester_id=?";
     long id =
         jdbcTemplate.queryForObject(
-            sql, Long.class, course.teacherId, course.locationId, course.period, course.subject, course.semester);
+            sql, Long.class, course.teacherId, course.locationId, course.period, course.subject, course.semesterId);
 
     // Set course id
     course.id = id;
@@ -45,7 +45,7 @@ public class CourseService {
 
   public void update(Course course) {
     String sql =
-        "UPDATE course SET id=?, teacher_id=?, location_id=? period=?, subject=?, semester=? WHERE id=?";
+        "UPDATE course SET id=?, teacher_id=?, location_id=? period=?, subject=?, semester_id=? WHERE id=?";
     jdbcTemplate.update(
         sql,
         course.id,
@@ -53,7 +53,7 @@ public class CourseService {
         course.locationId,
         course.period,
         course.subject,
-        course.semester,
+        course.semesterId,
         course.id);
   }
 
@@ -78,7 +78,7 @@ public class CourseService {
       Integer period,
       String subject,
       Long time,
-      Long semester) {
+      Long semesterId) {
     String sql =
         "SELECT DISTINCT c.id, c.teacher_id, c.location_id, c.period, c.subject, c.semester FROM course c"
             + (time == null ? "" : " RIGHT JOIN period p ON p.period = course.period")
@@ -89,7 +89,7 @@ public class CourseService {
             + (period == null ? "" : " AND c.period = " + period)
             + (teacherId == null ? "" : " AND c.teacher_id = " + teacherId)
             + (locationId == null ? "" : " AND c.location_id = " + locationId)
-            + (semester == null ? "" : " AND c.semester = " + semester)
+            + (semesterId == null ? "" : " AND c.semester_id = " + semesterId)
             + (studentId == null ? "" : " AND sc.student_id = " + studentId)
             + (subject == null ? "" : " AND c.subject = " + Utils.escape(subject))
             + ";";

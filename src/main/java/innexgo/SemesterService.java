@@ -71,6 +71,16 @@ public class SemesterService {
     return count != 0;
   }
 
+  public long getCurrentSemester() {
+    return query(
+        null,
+        null,
+        null,
+        null,
+        System.currentTimeMillis(),
+        null).get(0).id;
+  }
+
   public List<Semester> query(
       Long id,
       Long time,
@@ -84,8 +94,6 @@ public class SemesterService {
             + " WHERE 1=1 "
             + (id == null ? "" : " AND se.id = " + id)
             + (time == null ? "" : " AND " + time + " BETWEEN se.initial_time AND se.end_time")
-            + (minDuration == null ? "" : " AND " + minDuration + " <= se.end_time - se.start_time")
-            + (maxDuration == null ? "" : " AND " + maxDuration + " >= se.end_time - se.start_time")
             + (startTimeBegin == null ? "" : " AND se.start_time >= " + startTimeBegin)
             + (startTimeEnd == null ? "" : " AND se.start_time <= " + startTimeEnd)
             + (endTimeBegin == null ? "" : " AND se.end_time >= " + endTimeBegin)

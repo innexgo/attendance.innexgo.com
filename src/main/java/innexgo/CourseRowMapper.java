@@ -14,7 +14,7 @@ public class CourseRowMapper implements RowMapper<Course> {
     course.locationId = row.getLong("location_id");
     course.period = row.getInt("period");
     course.subject = row.getString("subject");
-    course.semester = row.getLong("semester");
+    course.semesterId = row.getLong("semester_id");
     return course;
   }
 }

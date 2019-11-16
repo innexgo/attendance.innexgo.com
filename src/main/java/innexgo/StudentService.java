@@ -54,7 +54,7 @@ public class StudentService {
   }
 
   public List<Student> query(
-      Long id, Long cardId, Long courseId, Integer graduatingSemester, String name, String partialName, String tags) {
+      Long id, Long cardId, Long courseId, Long graduatingSemester, String name, String partialName, String tags) {
     String sql =
         "SELECT st.id, st.graduating_semester, st.name, st.tags FROM student st"
             + (courseId == null ? "" : " INNER JOIN schedule sc ON st.id = sc.student_id ")
