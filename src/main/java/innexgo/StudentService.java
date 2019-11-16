@@ -16,28 +16,28 @@ public class StudentService {
   @Autowired private JdbcTemplate jdbcTemplate;
 
   public Student getById(long id) {
-    String sql = "SELECT id, graduating_year, name, tags FROM student WHERE id=?";
+    String sql = "SELECT id, graduating_semester, name, tags FROM student WHERE id=?";
     RowMapper<Student> rowMapper = new StudentRowMapper();
     Student student = jdbcTemplate.queryForObject(sql, rowMapper, id);
     return student;
   }
 
   public List<Student> getAll() {
-    String sql = "SELECT id, graduating_year, name, tags FROM student";
+    String sql = "SELECT id, graduating_semester, name, tags FROM student";
     RowMapper<Student> rowMapper = new StudentRowMapper();
     return this.jdbcTemplate.query(sql, rowMapper);
   }
 
   public void add(Student student) {
     // Add student
-    String sql = "INSERT INTO student(id, graduating_year, name, tags) values (?, ?, ?, ?)";
-    jdbcTemplate.update(sql, student.id, student.graduatingYear, student.name, student.tags);
+    String sql = "INSERT INTO student(id, graduating_semester, name, tags) values (?, ?, ?, ?)";
+    jdbcTemplate.update(sql, student.id, student.graduatingSemester, student.name, student.tags);
   }
 
   public void update(Student student) {
-    String sql = "UPDATE student SET id=?, graduating_year=?, name=?, tags=? WHERE id=?";
+    String sql = "UPDATE student SET id=?, graduating_semester=?, name=?, tags=? WHERE id=?";
     jdbcTemplate.update(
-        sql, student.id, student.graduatingYear, student.name, student.tags, student.id);
+        sql, student.id, student.graduatingSemester, student.name, student.tags, student.id);
   }
 
   public Student deleteById(long id) {
@@ -54,15 +54,15 @@ public class StudentService {
   }
 
   public List<Student> query(
-      Long id, Long cardId, Long courseId, Integer graduatingYear, String name, String partialName, String tags) {
+      Long id, Long cardId, Long courseId, Integer graduatingSemester, String name, String partialName, String tags) {
     String sql =
-        "SELECT st.id, st.graduating_year, st.name, st.tags FROM student st"
+        "SELECT st.id, st.graduating_semester, st.name, st.tags FROM student st"
             + (courseId == null ? "" : " INNER JOIN schedule sc ON st.id = sc.student_id ")
             + (cardId == null ? "" : " INNER JOIN card c ON c.student_id = st.id ")
             + " WHERE 1=1 "
             + (id == null ? "" : " AND st.id = " + id)
             + (cardId == null ? "" : " AND c.id = " + cardId)
-            + (graduatingYear == null ? "" : " AND st.graduating_year = " + graduatingYear)
+            + (graduatingSemester == null ? "" : " AND st.graduating_semester = " + graduatingSemester)
             + (name == null ? "" : " AND st.name = " + Utils.escape(name))
             + (partialName == null ? "" : " AND st.name LIKE " + Utils.escape("%"+partialName+"%"))
             + (tags == null ? "" : " AND st.tags = " + Utils.escape(tags))
@@ -83,7 +83,7 @@ public class StudentService {
     // find students who are not in this list
 
     String sql =
-              " SELECT DISTINCT st.id, st.graduating_year, st.name, st.tags"
+              " SELECT DISTINCT st.id, st.graduating_semester, st.name, st.tags"
             + " FROM student st"
             + " RIGHT JOIN session ses ON ses.student_id = st.id"
             + " INNER JOIN encounter inen ON ses.in_encounter_id = inen.id"

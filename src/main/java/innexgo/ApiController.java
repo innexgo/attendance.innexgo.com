@@ -312,7 +312,7 @@ public class ApiController {
                   period.period, // Integer period,
                   null, // String subject,
                   null, // Long time,
-                  Utils.getCurrentGraduatingYear() // Integer year
+                  semesterService.getCurrentSemester() // Long semester
                   );
           if (courses.size() > 0) {
             irregPeriod = period;
@@ -385,7 +385,7 @@ public class ApiController {
               period.period, // period
               null, // subject
               null, // time
-              Utils.getCurrentGraduatingYear() // year
+              semesterService.getCurrentSemester() // semester
               );
 
 
@@ -533,6 +533,7 @@ public class ApiController {
       @RequestParam("locationId") Long locationId,
       @RequestParam("period") Integer period,
       @RequestParam("subject") String subject,
+      @RequestParam("semester") Long semester,
       @RequestParam("apiKey") String apiKey) {
     if (isAdministrator(apiKey)) {
       if (!Utils.isEmpty(subject)
@@ -543,7 +544,7 @@ public class ApiController {
         course.locationId = locationId;
         course.period = period;
         course.subject = subject;
-        course.year = Utils.getCurrentGraduatingYear();
+        course.semester = semester;
         courseService.add(course);
         // return the filled course on success
         return new ResponseEntity<>(fillCourse(course), HttpStatus.OK);
@@ -630,7 +631,7 @@ public class ApiController {
                     currentPeriod.period, // Integer period
                     null, // String subject
                     null, // Long time
-                    Utils.getCurrentGraduatingYear() // Integer year
+                    semesterService.getCurrentSemester() // Long semester
                     );
 
             currentCourse = currentCourses.isEmpty() ? null : currentCourses.get(0);
@@ -739,7 +740,7 @@ public class ApiController {
                         period.period, // Integer period,
                         null, // String subject,
                         null, // Long time,
-                        Utils.getCurrentGraduatingYear() // Integer year
+                        semesterService.getCurrentSemester() // Long semester
                         );
                 if (courses.size() > 0) {
                   irregPeriod = period;
@@ -1081,7 +1082,7 @@ public class ApiController {
                   Utils.parseLong(allRequestParam.get("time")),
                   Utils.parseInteger(
                       allRequestParam.getOrDefault(
-                          "year", Integer.toString(Utils.getCurrentGraduatingYear()))))
+                          "semester", Integer.toString(semesterService.getCurrentSemester()))))
               .stream()
               .map(x -> fillCourse(x))
               .collect(Collectors.toList());

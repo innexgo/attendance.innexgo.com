@@ -10,7 +10,7 @@ public class StudentRowMapper implements RowMapper<Student> {
   public Student mapRow(ResultSet row, int rowNum) throws SQLException {
     Student student = new Student();
     student.id = row.getLong("id");
-    student.graduatingYear = row.getInt("graduating_year");
+    student.graduatingSemester = row.getLong("graduating_semester");
     student.name = row.getString("name");
     student.tags = row.getString("tags");
     return student;
