@@ -28,6 +28,7 @@ public class ApiController {
   @Autowired PeriodService periodService;
   @Autowired ScheduleService scheduleService;
   @Autowired SessionService sessionService;
+  @Autowired SessionService sessionService;
   @Autowired StudentService studentService;
   @Autowired UserService userService;
 
@@ -127,6 +128,17 @@ public class ApiController {
     schedule.course = fillCourse(courseService.getById(schedule.courseId));
     return schedule;
   }
+
+  /**
+   * Fills in jackson objects (none at the moment) for Semester
+   *
+   * @param semester - Semester object
+   * @return Semester object with filled jackson objects
+   */
+  Semester fillSemester(Semester semester) {
+    return semester;
+  }
+
 
   /**
    * Fills in jackson objects (Student, Course, inEncounter, and outEncounter) for Session

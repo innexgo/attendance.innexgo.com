@@ -6,7 +6,7 @@ public class Course {
   long locationId;
   public int period;
   public String subject;
-  public int year;
+  public long semester;
 
   // for jackson
   public User teacher;
