@@ -1,6 +1,5 @@
 package innexgo;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
@@ -29,15 +28,8 @@ public class InnexgoApplication {
     return threadPoolTaskScheduler;
   }
 
-
-  @Value("${server.port.http}")
-  private int serverPortHttp;
-  
-  @Value("${server.port}")
-  private int serverPortHttps;
-
-
   /* TO REDIRECT ALL TO HTTPS */
+  /*
   @Bean
   public ServletWebServerFactory servletContainer() {
     TomcatServletWebServerFactory tomcat = new TomcatServletWebServerFactory() {
@@ -58,11 +50,11 @@ public class InnexgoApplication {
   private Connector redirectConnector() {
     Connector connector = new Connector("org.apache.coyote.http11.Http11NioProtocol");
     connector.setScheme("http");
+    connector.setPort(8080);
     connector.setSecure(false);
-    connector.setPort(serverPortHttp);
-    connector.setRedirectPort(serverPortHttps);
+    connector.setRedirectPort(8443);
     return connector;
-  }
+  }*/
 
   public static void main(String[] args) {
     SpringApplication.run(InnexgoApplication.class, args);
