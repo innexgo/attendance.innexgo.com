@@ -5,6 +5,10 @@ public class Schedule {
   long studentId;
   long courseId;
 
+  // This is for dropping and inserting into classes
+  public long startTime;
+  public long endTime;
+
   // for jackson
   public Student student;
   public Course course;

@@ -54,14 +54,17 @@ public class StudentService {
   }
 
   public List<Student> query(
-      Long id, Long cardId, Long courseId, Integer graduatingSemester, String name, String partialName, String tags) {
+      Long id,
+      Long courseId,
+      Integer graduatingSemester,
+      String name,
+      String partialName,
+      String tags) {
     String sql =
         "SELECT st.id, st.graduating_semester, st.name, st.tags FROM student st"
             + (courseId == null ? "" : " INNER JOIN schedule sc ON st.id = sc.student_id ")
-            + (cardId == null ? "" : " INNER JOIN card c ON c.student_id = st.id ")
             + " WHERE 1=1 "
             + (id == null ? "" : " AND st.id = " + id)
-            + (cardId == null ? "" : " AND c.id = " + cardId)
             + (graduatingSemester == null ? "" : " AND st.graduating_semester = " + graduatingSemester)
             + (name == null ? "" : " AND st.name = " + Utils.escape(name))
             + (partialName == null ? "" : " AND st.name LIKE " + Utils.escape("%"+partialName+"%"))

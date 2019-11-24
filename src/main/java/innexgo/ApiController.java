@@ -26,7 +26,7 @@ public class ApiController {
   @Autowired LocationService locationService;
   @Autowired PeriodService periodService;
   @Autowired ScheduleService scheduleService;
-  @Autowired SessionService sessionService;
+  @Autowired SemesterService semesterService;
   @Autowired SessionService sessionService;
   @Autowired StudentService studentService;
   @Autowired UserService userService;
@@ -301,7 +301,7 @@ public class ApiController {
                   period.period, // Integer period,
                   null, // String subject,
                   null, // Long time,
-                  semesterService.getCurrentSemester() // Long semester
+                  semesterService.getCurrentSemester().id // Long semester
                   );
           if (courses.size() > 0) {
             irregPeriod = period;
@@ -374,7 +374,7 @@ public class ApiController {
               period.period, // period
               null, // subject
               null, // time
-              semesterService.getCurrentSemester() // semester
+              semesterService.getCurrentSemester().id // semester
               );
 
 
@@ -581,7 +581,7 @@ public class ApiController {
                     currentPeriod.period, // Integer period
                     null, // String subject
                     null, // Long time
-                    semesterService.getCurrentSemester() // Long semester
+                    semesterService.getCurrentSemester().id // Long semester
                     );
 
             currentCourse = currentCourses.isEmpty() ? null : currentCourses.get(0);
@@ -690,7 +690,7 @@ public class ApiController {
                         period.period, // Integer period,
                         null, // String subject,
                         null, // Long time,
-                        semesterService.getCurrentSemester() // Long semester
+                        semesterService.getCurrentSemester().id // Long semester
                         );
                 if (courses.size() > 0) {
                   irregPeriod = period;
@@ -846,8 +846,8 @@ public class ApiController {
 
   @RequestMapping("/student/new/")
   public ResponseEntity<?> newStudent(
-      @RequestParam("studentId") Long id,
-      @RequestParam("graduatingYear") Integer graduatingYear,
+      @RequestParam("graduatingSemesterId") Long id,
+      @RequestParam("year") Integer graduatingYear,
       @RequestParam("name") String name,
       @RequestParam(value = "tags", defaultValue = "") String tags,
       @RequestParam("apiKey") String apiKey) {
@@ -1000,9 +1000,9 @@ public class ApiController {
                   Utils.parseInteger(allRequestParam.get("period")),
                   allRequestParam.get("subject"),
                   Utils.parseLong(allRequestParam.get("time")),
-                  Utils.parseInteger(
+                  Utils.parseLong(
                       allRequestParam.getOrDefault(
-                          "semester", Integer.toString(semesterService.getCurrentSemester()))))
+                          "semester", Long.toString(semesterService.getCurrentSemester().id))))
               .stream()
               .map(x -> fillCourse(x))
               .collect(Collectors.toList());

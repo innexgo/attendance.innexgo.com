@@ -14,7 +14,7 @@ public class ScheduleService {
   @Autowired private JdbcTemplate jdbcTemplate;
 
   public Schedule getById(long id) {
-    String sql = "SELECT id, student_id, course_id FROM schedule WHERE id=?";
+    String sql = "SELECT id, student_id, course_id, start_time, end_time FROM schedule WHERE id=?";
     RowMapper<Schedule> rowMapper = new ScheduleRowMapper();
     List<Schedule> schedules = jdbcTemplate.query(sql, rowMapper, id);
     return schedules.size() == 0 ? null : schedules.get(0);
@@ -22,7 +22,7 @@ public class ScheduleService {
 
   public Schedule getScheduleByStudentIdCourseId(long studentId, long courseId) {
     String sql =
-        "SELECT id, student_id, course_id FROM schedule WHERE student_id=? AND course_id=?";
+        "SELECT id, student_id, course_id, start_time, end_time FROM schedule WHERE student_id=? AND course_id=?";
     RowMapper<Schedule> rowMapper = new ScheduleRowMapper();
     List<Schedule> schedules = jdbcTemplate.query(sql, rowMapper, studentId, courseId);
     return schedules.size() == 0 ? null : schedules.get(0);

@@ -10,6 +10,8 @@ public class ScheduleRowMapper implements RowMapper<Schedule> {
   public Schedule mapRow(ResultSet row, int rowNum) throws SQLException {
     Schedule schedule = new Schedule();
     schedule.id = row.getLong("id");
+    schedule.startTime = row.getLong("start_time");
+    schedule.endTime = row.getLong("end_time");
     schedule.studentId = row.getLong("student_id");
     schedule.courseId = row.getLong("course_id");
     return schedule;

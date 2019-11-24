@@ -15,13 +15,13 @@ import org.springframework.web.bind.annotation.RestController;
 public class DevelopmentController {
 
   @Autowired ApiKeyService apiKeyService;
-  @Autowired CardService cardService;
   @Autowired CourseService courseService;
   @Autowired EncounterService encounterService;
   @Autowired IrregularityService irregularityService;
   @Autowired LocationService locationService;
   @Autowired PeriodService periodService;
   @Autowired ScheduleService scheduleService;
+  @Autowired SemesterService semesterService;
   @Autowired SessionService sessionService;
   @Autowired StudentService studentService;
   @Autowired UserService userService;
