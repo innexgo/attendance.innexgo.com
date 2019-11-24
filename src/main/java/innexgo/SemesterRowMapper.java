@@ -12,6 +12,6 @@ public class SemesterRowMapper implements RowMapper<Semester> {
     semester.id = row.getLong("id");
     semester.startTime = row.getLong("start_time");
     semester.endTime = row.getLong("end_time");
-    return semester;
+    return period;
   }
 }

@@ -27,7 +27,7 @@ public class ApiController {
   @Autowired LocationService locationService;
   @Autowired PeriodService periodService;
   @Autowired ScheduleService scheduleService;
-  @Autowired SemesterService semesterService;
+  @Autowired SessionService sessionService;
   @Autowired SessionService sessionService;
   @Autowired StudentService studentService;
   @Autowired UserService userService;
@@ -398,12 +398,11 @@ public class ApiController {
                 null, // Long id
                 null, // Long cardId
                 course.id, // Long courseId
-                null, // Long graduatingSemester
+                null, // Integer graduatingYear
                 null, // String name
                 null, // String partialName
                 null // String tags
-            );
-
+                );
         studentAbsentList.removeAll(studentService.present(course.id, period.id));
 
         // mark all students not there as absent
@@ -424,7 +423,7 @@ public class ApiController {
                       .size()
                   > 0;
           // if not already absent
-          if(!alreadyAbsent) {
+          if (!alreadyAbsent) {
             Irregularity irregularity = new Irregularity();
             irregularity.studentId = student.id;
             irregularity.courseId = course.id;
@@ -870,23 +869,6 @@ public class ApiController {
     }
   }
 
-
-  @RequestMapping("/semester/new/")
-  public ResponseEntity<?> newPeriod(
-      @RequestParam("startTime") Long startTime,
-      @RequestParam("endTime") Long endTime,
-      @RequestParam("apiKey") String apiKey) {
-    if (isAdministrator(apiKey)) {
-      Semester s = new Semester();
-      s.startTime = startTime;
-      s.endTime = endTime;
-      semesterService.add(s);
-      return new ResponseEntity<>(fillSemester(s), HttpStatus.OK);
-    } else {
-      return UNAUTHORIZED;
-    }
-  }
-
   @RequestMapping("/schedule/new/")
   public ResponseEntity<?> newSchedule(
       @RequestParam("studentId") Long studentId,
@@ -915,7 +897,7 @@ public class ApiController {
   @RequestMapping("/student/new/")
   public ResponseEntity<?> newStudent(
       @RequestParam("studentId") Long id,
-      @RequestParam("graduatingSemester") Long graduatingSemester,
+      @RequestParam("graduatingYear") Integer graduatingYear,
       @RequestParam("name") String name,
       @RequestParam(value = "tags", defaultValue = "") String tags,
       @RequestParam("apiKey") String apiKey) {
@@ -923,7 +905,7 @@ public class ApiController {
       if (!studentService.existsById(id) && !Utils.isEmpty(name)) {
         Student student = new Student();
         student.id = id;
-        student.graduatingSemester = graduatingSemester;
+        student.graduatingYear = graduatingYear;
         student.name = name.toUpperCase();
         student.tags = tags;
         studentService.add(student);
@@ -1268,7 +1250,7 @@ public class ApiController {
                   Utils.parseLong(allRequestParam.get("studentId")),
                   Utils.parseLong(allRequestParam.get("cardId")),
                   Utils.parseLong(allRequestParam.get("courseId")),
-                  Utils.parseLong(allRequestParam.get("graduatingSemester")),
+                  Utils.parseInteger(allRequestParam.get("graduatingYear")),
                   allRequestParam.get("name"),
                   allRequestParam.get("partialName"),
                   allRequestParam.get("tags"))
