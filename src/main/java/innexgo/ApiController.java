@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class ApiController {
 
   @Autowired ApiKeyService apiKeyService;
-  @Autowired CardService cardService;
   @Autowired CourseService courseService;
   @Autowired EncounterService encounterService;
   @Autowired IrregularityService irregularityService;
@@ -49,16 +48,6 @@ public class ApiController {
     return apiKey;
   }
 
-  /**
-   * Fills in jackson objects(Student) in Card
-   *
-   * @param card - Card object
-   * @return Card object with filled jackson objects
-   */
-  Card fillCard(Card card) {
-    card.student = fillStudent(studentService.getById(card.studentId));
-    return card;
-  }
 
   /**
    * Fills in jackson objects(Teacher and Location) in Course
@@ -396,7 +385,6 @@ public class ApiController {
         List<Student> studentAbsentList =
             studentService.query(
                 null, // Long id
-                null, // Long cardId
                 course.id, // Long courseId
                 null, // Integer graduatingYear
                 null, // String name
@@ -485,35 +473,6 @@ public class ApiController {
     return BAD_REQUEST;
   }
 
-  /**
-   * Create a new Student ID Card and can be done by a trusted User
-   *
-   * @param cardId - unique identifier of the card
-   * @param studentId - student id (the id on the card given by the school)
-   * @param apiKey - api key of the user trying to make a new card
-   * @return ResponseEntity with a Card and HttpStatus.OK
-   * @throws ResponseEntity with HttpStatus.UNAUTHORIZED if the User is unauthorized
-   * @throws ResponseEntity with HttpStatus.BAD_REQUEST if the process if unsuccessful
-   */
-  @RequestMapping("/card/new/")
-  public ResponseEntity<?> newCard(
-      @RequestParam("cardId") Long cardId,
-      @RequestParam("studentId") Long studentId,
-      @RequestParam("apiKey") String apiKey) {
-    if (isTrusted(apiKey)) {
-      if (studentService.existsById(studentId) && !cardService.existsById(cardId)) {
-        Card card = new Card();
-        card.id = cardId;
-        card.studentId = studentId;
-        cardService.add(card);
-        return new ResponseEntity<>(fillCard(card), HttpStatus.OK);
-      } else {
-        return BAD_REQUEST;
-      }
-    } else {
-      return UNAUTHORIZED;
-    }
-  }
 
   /**
    * Create a new course and can only be done by an administrator
@@ -560,7 +519,6 @@ public class ApiController {
    * Creates a new encounter and can be done by a trusted user
    *
    * @param studentId - student id number
-   * @param cardId - unique identifier for the card
    * @param locationId - location id of the location where this course is normally taught
    * @param courseId - course id
    * @param apiKey - apiKey of the user creating the encounter
@@ -570,23 +528,15 @@ public class ApiController {
    */
   @RequestMapping("/encounter/new/")
   public ResponseEntity<?> newEncounter(
-      @RequestParam(value = "studentId", defaultValue = "-1") Long studentId,
-      @RequestParam(value = "cardId", defaultValue = "-1") Long cardId,
+      @RequestParam("studentId") Long studentId,
       @RequestParam("locationId") Long locationId,
       @RequestParam(value = "noSession", defaultValue = "false") Boolean noSession,
       @RequestParam("apiKey") String apiKey) {
 
     if (isTrusted(apiKey)) {
       Student student;
-      if (cardService.existsById(cardId)) {
-        student = studentService.getById(cardService.getById(cardId).studentId);
-      } else if (studentService.existsById(studentId)) {
-        student = studentService.getById(studentId);
-      } else {
-        return BAD_REQUEST;
-      }
 
-      if (locationService.existsById(locationId)) {
+      if (locationService.existsById(locationId) && studentService.existsById(studentId)) {
         Encounter encounter = new Encounter();
         encounter.locationId = locationId;
         encounter.studentId = student.id;
@@ -982,19 +932,6 @@ public class ApiController {
     }
   }
 
-  @RequestMapping("/card/delete/")
-  public ResponseEntity<?> deleteCard(
-      @RequestParam("cardId") Long cardId, @RequestParam("apiKey") String apiKey) {
-    if (isAdministrator(apiKey)) {
-      if (cardService.existsById(cardId)) {
-        return new ResponseEntity<>(fillCard(cardService.deleteById(cardId)), HttpStatus.OK);
-      } else {
-        return BAD_REQUEST;
-      }
-    } else {
-      return UNAUTHORIZED;
-    }
-  }
 
   @RequestMapping("/irregularity/delete/")
   public ResponseEntity<?> deleteIrregularity(
@@ -1041,23 +978,6 @@ public class ApiController {
                       : null)
               .stream()
               .map(x -> fillApiKey(x))
-              .collect(Collectors.toList());
-      return new ResponseEntity<>(list, HttpStatus.OK);
-    } else {
-      return UNAUTHORIZED;
-    }
-  }
-
-  @RequestMapping("/card/")
-  public ResponseEntity<?> viewCard(@RequestParam Map<String, String> allRequestParam) {
-    if (allRequestParam.containsKey("apiKey") && isTrusted(allRequestParam.get("apiKey"))) {
-      List<Card> list =
-          cardService
-              .query(
-                  Utils.parseLong(allRequestParam.get("cardId")),
-                  Utils.parseLong(allRequestParam.get("studentId")))
-              .stream()
-              .map(x -> fillCard(x))
               .collect(Collectors.toList());
       return new ResponseEntity<>(list, HttpStatus.OK);
     } else {
@@ -1248,7 +1168,6 @@ public class ApiController {
           studentService
               .query(
                   Utils.parseLong(allRequestParam.get("studentId")),
-                  Utils.parseLong(allRequestParam.get("cardId")),
                   Utils.parseLong(allRequestParam.get("courseId")),
                   Utils.parseInteger(allRequestParam.get("graduatingYear")),
                   allRequestParam.get("name"),
