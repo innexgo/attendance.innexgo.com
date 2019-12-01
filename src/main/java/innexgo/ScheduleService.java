@@ -14,7 +14,7 @@ public class ScheduleService {
   @Autowired private JdbcTemplate jdbcTemplate;
 
   public Schedule getById(long id) {
-    String sql = "SELECT id, student_id, course_id, start_time, end_time FROM schedule WHERE id=?";
+    String sql = "SELECT id, student_id, course_id, first_period_id, last_period_id FROM schedule WHERE id=?";
     RowMapper<Schedule> rowMapper = new ScheduleRowMapper();
     List<Schedule> schedules = jdbcTemplate.query(sql, rowMapper, id);
     return schedules.size() == 0 ? null : schedules.get(0);
@@ -22,7 +22,7 @@ public class ScheduleService {
 
   public Schedule getScheduleByStudentIdCourseId(long studentId, long courseId) {
     String sql =
-        "SELECT id, student_id, course_id, start_time, end_time FROM schedule WHERE student_id=? AND course_id=?";
+        "SELECT id, student_id, course_id, first_period_id, last_period_id FROM schedule WHERE student_id=? AND course_id=?";
     RowMapper<Schedule> rowMapper = new ScheduleRowMapper();
     List<Schedule> schedules = jdbcTemplate.query(sql, rowMapper, studentId, courseId);
     return schedules.size() == 0 ? null : schedules.get(0);
@@ -50,12 +50,12 @@ public class ScheduleService {
     // check if it doesnt exist yet
     if (!existsByStudentIdCourseId(schedule.studentId, schedule.courseId)) {
       // Add schedule
-      String sql = "INSERT INTO schedule (id, student_id, course_id) values (?, ?, ?)";
-      jdbcTemplate.update(sql, schedule.id, schedule.studentId, schedule.courseId);
+      String sql = "INSERT INTO schedule (id, student_id, course_id, first_period_id, last_period_id) values (?, ?, ?, ?, ?)";
+      jdbcTemplate.update(sql, schedule.id, schedule.studentId, schedule.courseId, schedule.firstPeriodId, schedule.lastPeriodId);
 
       // Fetch schedule id
-      sql = "SELECT id FROM schedule WHERE student_id=? AND course_id=?";
-      long id = jdbcTemplate.queryForObject(sql, Long.class, schedule.studentId, schedule.courseId);
+      sql = "SELECT id FROM schedule WHERE student_id=? AND course_id=? AND first_period_id=? AND last_period_id=?";
+      long id = jdbcTemplate.queryForObject(sql, Long.class, schedule.studentId, schedule.courseId, schedule.firstPeriodId, schedule.lastPeriodId);
       schedule.id = id;
       return schedule;
     } else {
@@ -64,8 +64,8 @@ public class ScheduleService {
   }
 
   public void update(Schedule schedule) {
-    String sql = "UPDATE schedule SET id=?, student_id=?, course_id=? WHERE id=?";
-    jdbcTemplate.update(sql, schedule.id, schedule.studentId, schedule.courseId, schedule.id);
+    String sql = "UPDATE schedule SET id=?, student_id=?, course_id=?, first_period_id=?, last_period_id=? WHERE id=?";
+    jdbcTemplate.update(sql, schedule.id, schedule.studentId, schedule.courseId, schedule.firstPeriodId, schedule.lastPeriodId, schedule.id);
   }
 
   public Schedule deleteById(long id) {
@@ -79,9 +79,11 @@ public class ScheduleService {
       Long scheduleId,
       Long studentId,
       Long courseId,
+      Long firstPeriodId,
+      Long lastPeriodId,
       Long teacherId,
       Long locationId,
-      Integer period) {
+      Long period) {
     String sql =
         "SELECT s.id, s.student_id, s.course_id FROM schedule s"
             + " JOIN course c ON s.course_id = c.id"
@@ -89,6 +91,8 @@ public class ScheduleService {
             + (scheduleId == null ? "" : " AND s.id = " + scheduleId)
             + (studentId == null ? "" : " AND s.student_id = " + studentId)
             + (courseId == null ? "" : " AND s.course_id = " + courseId)
+            + (firstPeriodId == null ? "" : " AND s.first_period_id = " + firstPeriodId)
+            + (lastPeriodId == null ? "" : " AND s.last_period_id = " + lastPeriodId)
             + (teacherId == null ? "" : " AND c.teacher_id = " + teacherId)
             + (locationId == null ? "" : " AND c.location_id = " + locationId)
             + (period == null ? "" : " AND c.period = " + period)

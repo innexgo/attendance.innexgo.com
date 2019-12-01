@@ -72,9 +72,13 @@ public class SemesterService {
   }
 
   public Semester getCurrentSemester() {
+    return getCurrentSemesterByTime(System.currentTimeMillis());
+  }
+
+  public Semester getSemesterByTime(Long time) {
     List<Semester> currentSemesters =  query(
       null, // Long id
-      System.currentTimeMillis(), // Long time
+      time, // Long time
       null, // Long startTimeBegin
       null, // Long startTimeEnd
       null, // Long endTimeBegin

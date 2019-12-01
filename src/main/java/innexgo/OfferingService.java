@@ -78,20 +78,13 @@ public class OfferingService {
   public List<Offering> query(
       Long offeringId,
       Long semesterId,
-      Long courseId,
-      Long teacherId,
-      Long locationId,
-      Integer period) {
+      Long courseId) {
     String sql =
-        "SELECT s.id, s.semester_id, s.course_id FROM offering s"
-            + " JOIN course c ON s.course_id = c.id"
+        "SELECT o.id, o.semester_id, o.course_id FROM offering o"
             + " WHERE 1=1 "
             + (offeringId == null ? "" : " AND s.id = " + offeringId)
             + (semesterId == null ? "" : " AND s.semester_id = " + semesterId)
             + (courseId == null ? "" : " AND s.course_id = " + courseId)
-            + (teacherId == null ? "" : " AND c.teacher_id = " + teacherId)
-            + (locationId == null ? "" : " AND c.location_id = " + locationId)
-            + (period == null ? "" : " AND c.period = " + period)
             + ";";
 
     RowMapper<Offering> rowMapper = new OfferingRowMapper();

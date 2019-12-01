@@ -13,7 +13,7 @@ public class PeriodRowMapper implements RowMapper<Period> {
     period.initialTime = row.getLong("initial_time");
     period.startTime = row.getLong("start_time");
     period.endTime = row.getLong("end_time");
-    period.period = row.getInt("period");
+    period.period = row.getLong("period");
     return period;
   }
 }

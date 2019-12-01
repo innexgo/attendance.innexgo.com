@@ -86,7 +86,7 @@ public class PeriodService {
       Long startTimeEnd,
       Long endTimeBegin,
       Long endTimeEnd,
-      Integer period,
+      Long period,
       Long courseId, // all periods that have this course
       Long teacherId // all periods where this teacher teaches a coruse
       ) {

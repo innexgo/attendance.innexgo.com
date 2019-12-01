@@ -10,17 +10,19 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @Repository
 public class CourseService {
+
+  @Autowired private OfferingService offeringService;
   @Autowired private JdbcTemplate jdbcTemplate;
 
   public Course getById(long id) {
-    String sql = "SELECT id, teacher_id, location_id, period, subject, semester FROM course WHERE id=?";
+    String sql = "SELECT id, teacher_id, location_id, period, subject FROM course WHERE id=?";
     RowMapper<Course> rowMapper = new CourseRowMapper();
     Course course = jdbcTemplate.queryForObject(sql, rowMapper, id);
     return course;
   }
 
   public List<Course> getAll() {
-    String sql = "SELECT id, teacher_id, location_id, period, subject, semester FROM course";
+    String sql = "SELECT id, teacher_id, location_id, period, subject FROM course";
     RowMapper<Course> rowMapper = new CourseRowMapper();
     return this.jdbcTemplate.query(sql, rowMapper);
   }
@@ -28,16 +30,16 @@ public class CourseService {
   public void add(Course course) {
     // Add course
     String sql =
-        "INSERT INTO course (id, teacher_id, location_id, period, subject, semester) values (?, ?, ?, ?, ?, ?)";
+        "INSERT INTO course (id, teacher_id, location_id, period, subject) values (?, ?, ?, ?, ?)";
     jdbcTemplate.update(
-        sql, course.id, course.teacherId, course.locationId, course.period, course.subject, course.semester);
+        sql, course.id, course.teacherId, course.locationId, course.period, course.subject);
 
     // Fetch course id
     sql =
-        "SELECT id FROM course WHERE teacher_id=? AND location_id=? AND period=? AND subject=? AND semester=?";
+        "SELECT id FROM course WHERE teacher_id=? AND location_id=? AND period=? AND subject=?";
     long id =
         jdbcTemplate.queryForObject(
-            sql, Long.class, course.teacherId, course.locationId, course.period, course.subject, course.semester);
+            sql, Long.class, course.teacherId, course.locationId, course.period, course.subject);
 
     // Set course id
     course.id = id;
@@ -45,7 +47,7 @@ public class CourseService {
 
   public void update(Course course) {
     String sql =
-        "UPDATE course SET id=?, teacher_id=?, location_id=? period=?, subject=?, semester=? WHERE id=?";
+        "UPDATE course SET id=?, teacher_id=?, location_id=? period=?, subject=? WHERE id=?";
     jdbcTemplate.update(
         sql,
         course.id,
@@ -53,7 +55,6 @@ public class CourseService {
         course.locationId,
         course.period,
         course.subject,
-        course.semester,
         course.id);
   }
 
@@ -75,21 +76,18 @@ public class CourseService {
       Long teacherId,
       Long locationId,
       Long studentId,
-      Integer period,
+      Long period,
       String subject,
-      Long time,
-      Long semester) {
+      Long semesterId) {
     String sql =
         "SELECT DISTINCT c.id, c.teacher_id, c.location_id, c.period, c.subject, c.semester FROM course c"
-            + (time == null ? "" : " RIGHT JOIN period p ON p.period = course.period")
-            + (studentId == null ? "" : " JOIN schedule sc ON c.id = sc.course_id ")
+            + (semesterId == null ? "" : " INNER JOIN offering o ON c.id = o.course_id")
             + " WHERE 1=1 "
-            + (time == null ? "" : " AND time BETWEEN p.initial_time AND p.end_time")
             + (id == null ? "" : " AND c.id = " + id)
             + (period == null ? "" : " AND c.period = " + period)
             + (teacherId == null ? "" : " AND c.teacher_id = " + teacherId)
             + (locationId == null ? "" : " AND c.location_id = " + locationId)
-            + (semester == null ? "" : " AND c.semester = " + semester)
+            + (semesterId == null ? "" : " AND o.semester_id = " + semesterId)
             + (studentId == null ? "" : " AND sc.student_id = " + studentId)
             + (subject == null ? "" : " AND c.subject = " + Utils.escape(subject))
             + ";";

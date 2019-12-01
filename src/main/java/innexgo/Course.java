@@ -4,9 +4,8 @@ public class Course {
   public long id;
   long teacherId;
   long locationId;
-  public int period;
+  public long period;
   public String subject;
-  public long semester;
 
   // for jackson
   public User teacher;

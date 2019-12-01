@@ -5,5 +5,5 @@ public class Period {
   public long initialTime;
   public long startTime;
   public long endTime;
-  public int period;
+  public long period;
 }

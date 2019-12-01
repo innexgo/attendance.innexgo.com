@@ -24,6 +24,7 @@ public class ApiController {
   @Autowired EncounterService encounterService;
   @Autowired IrregularityService irregularityService;
   @Autowired LocationService locationService;
+  @Autowired OfferingService offeringService;
   @Autowired PeriodService periodService;
   @Autowired ScheduleService scheduleService;
   @Autowired SemesterService semesterService;
@@ -97,6 +98,18 @@ public class ApiController {
   }
 
   /**
+   * Fills in jackson objects(Course, Semester) for Offering
+   *
+   * @param offering - Offering object
+   * @return Offering object with filled jackson objects
+   */
+  Offering fillOffering(Offering offering) {
+    offering.course = fillCourse(courseService.getById(offering.courseId));
+    offering.semester = fillSemester(semesterService.getById(offering.semesterId));
+    return offering;
+  }
+
+  /**
    * Fills in jackson objects (none at the moment) for Period
    *
    * @param period - Period object
@@ -131,6 +144,7 @@ public class ApiController {
 
   /**
    * Fills in jackson objects (Student, Course, inEncounter, and outEncounter) for Session
+   *
    *
    * @param session - Session object
    * @return Session object with filled jackson objects
@@ -271,6 +285,8 @@ public class ApiController {
         openSession.complete = true;
         sessionService.update(openSession);
 
+        // After the person signed out the first time, they might have been logged in at a bunch of classes afterwards
+        // We give them the forgot to sign out irregularity at the course which they signed in to
         // period and course are that of the first period with a course that the session intersected
         List<Period> intersectedPeriods =
             periodService.query(
@@ -284,10 +300,11 @@ public class ApiController {
                 null, // Long startTimeEnd,
                 null, // Long endTimeBegin,
                 null, // Long endTimeEnd,
-                null, // Integer period,
+                null, // Long period,
                 null, // Long courseId
                 null // Long teacherId
                 );
+
         // Find first period with a course at this location
         Period irregPeriod = null;
         Course irregCourse = null;
@@ -298,7 +315,7 @@ public class ApiController {
                   null, // Long teacherId,
                   inEncounter.locationId, // Long locationId,
                   openSession.studentId, // Long studentId,
-                  period.period, // Integer period,
+                  period.period, // Long period,
                   null, // String subject,
                   null, // Long time,
                   semesterService.getCurrentSemester().id // Long semester
@@ -490,7 +507,7 @@ public class ApiController {
   public ResponseEntity<?> newCourse(
       @RequestParam("userId") Long teacherId,
       @RequestParam("locationId") Long locationId,
-      @RequestParam("period") Integer period,
+      @RequestParam("period") Long period,
       @RequestParam("subject") String subject,
       @RequestParam("semester") Long semester,
       @RequestParam("apiKey") String apiKey) {
@@ -578,7 +595,7 @@ public class ApiController {
                     null, // Long teacherId
                     locationId, // Long locationId
                     null, // Long studentId
-                    currentPeriod.period, // Integer period
+                    currentPeriod.period, // Long period
                     null, // String subject
                     null, // Long time
                     semesterService.getCurrentSemester().id // Long semester
@@ -673,7 +690,7 @@ public class ApiController {
                       null, // Long startTimeEnd,
                       System.currentTimeMillis(), // Long endTimeBegin,
                       null, // Long endTimeEnd,
-                      null, // Integer period,
+                      null, // Long period,
                       null, // Long courseId
                       null // Long teacherId
                       );
@@ -687,7 +704,7 @@ public class ApiController {
                         null, // Long teacherId,
                         inEncounter.locationId, // Long locationId,
                         openSession.studentId, // Long studentId,
-                        period.period, // Integer period,
+                        period.period, // Long period,
                         null, // String subject,
                         null, // Long time,
                         semesterService.getCurrentSemester().id // Long semester
@@ -799,12 +816,34 @@ public class ApiController {
     }
   }
 
+  @RequestMapping("/offering/new/")
+  public ResponseEntity<?> newOffering(
+      @RequestParam("semesterId") Long semesterId,
+      @RequestParam("courseId") Long courseId,
+      @RequestParam("apiKey") String apiKey) {
+    if (isAdministrator(apiKey)) {
+      if (semesterService.existsById(semesterId)
+          && courseService.existsById(courseId)
+          && offeringService.getOfferingBySemesterIdCourseId(semesterId, courseId) == null) {
+        Offering offering = new Offering();
+        offering.semesterId = semesterId;
+        offering.courseId = courseId;
+        offeringService.add(offering);
+        return new ResponseEntity<>(fillOffering(offering), HttpStatus.OK);
+      } else {
+        return BAD_REQUEST;
+      }
+    } else {
+      return UNAUTHORIZED;
+    }
+  }
+
   @RequestMapping("/period/new/")
   public ResponseEntity<?> newPeriod(
       @RequestParam("initialTime") Long initialTime,
       @RequestParam("startTime") Long startTime,
       @RequestParam("endTime") Long endTime,
-      @RequestParam("period") Integer period,
+      @RequestParam("period") Long period,
       @RequestParam("apiKey") String apiKey) {
     if (isAdministrator(apiKey)) {
       Period p = new Period();
@@ -827,10 +866,7 @@ public class ApiController {
     if (isAdministrator(apiKey)) {
       if (studentService.existsById(studentId)
           && courseService.existsById(courseId)
-          && scheduleService
-                  .query(null, studentId, null, null, null, courseService.getById(courseId).period)
-                  .size()
-              == 0) {
+          && scheduleService.getScheduleByStudentIdCourseId(studentId, courseId) == null) {
         Schedule schedule = new Schedule();
         schedule.studentId = studentId;
         schedule.courseId = courseId;
@@ -997,7 +1033,7 @@ public class ApiController {
                   Utils.parseLong(allRequestParam.get("teacherId")),
                   Utils.parseLong(allRequestParam.get("locationId")),
                   Utils.parseLong(allRequestParam.get("studentId")),
-                  Utils.parseInteger(allRequestParam.get("period")),
+                  Utils.parseLong(allRequestParam.get("period")),
                   allRequestParam.get("subject"),
                   Utils.parseLong(allRequestParam.get("time")),
                   Utils.parseLong(
@@ -1096,7 +1132,7 @@ public class ApiController {
                   Utils.parseLong(allRequestParam.get("startTimeEnd")),
                   Utils.parseLong(allRequestParam.get("endTimeBegin")),
                   Utils.parseLong(allRequestParam.get("endTimeEnd")),
-                  Utils.parseInteger(allRequestParam.get("period")),
+                  Utils.parseLong(allRequestParam.get("period")),
                   Utils.parseLong(allRequestParam.get("courseId")),
                   Utils.parseLong(allRequestParam.get("teacherId")))
               .stream()
@@ -1119,7 +1155,7 @@ public class ApiController {
                   Utils.parseLong(allRequestParam.get("courseId")),
                   Utils.parseLong(allRequestParam.get("teacherId")),
                   Utils.parseLong(allRequestParam.get("locationId")),
-                  Utils.parseInteger(allRequestParam.get("period")))
+                  Utils.parseLong(allRequestParam.get("period")))
               .stream()
               .map(x -> fillSchedule(x))
               .collect(Collectors.toList());
@@ -1169,7 +1205,7 @@ public class ApiController {
               .query(
                   Utils.parseLong(allRequestParam.get("studentId")),
                   Utils.parseLong(allRequestParam.get("courseId")),
-                  Utils.parseInteger(allRequestParam.get("graduatingYear")),
+                  Utils.parseLong(allRequestParam.get("graduatingYear")),
                   allRequestParam.get("name"),
                   allRequestParam.get("partialName"),
                   allRequestParam.get("tags"))
@@ -1191,7 +1227,7 @@ public class ApiController {
                   Utils.parseLong(allRequestParam.get("userId")),
                   allRequestParam.get("name"),
                   allRequestParam.get("email"),
-                  Utils.parseInteger(allRequestParam.get("ring")))
+                  Utils.parseLong(allRequestParam.get("ring")))
               .stream()
               .map(x -> fillUser(x))
               .collect(Collectors.toList());
