@@ -7,8 +7,8 @@ public class Period {
   public static final String LUNCH_PERIOD = "Lunch";
   public static final String TUTORIAL_PERIOD = "Tutorial Period";
 
-  // This is the ID
-  public long time;
+  // Primary Index is startTime
+  public long startTime;
   public long number;
   public String type;
 }

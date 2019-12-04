@@ -13,15 +13,15 @@ public class SemesterService {
 
   @Autowired private JdbcTemplate jdbcTemplate;
 
-  public Semester getById(long id) {
-    String sql = "SELECT id, start_time, end_time FROM semester WHERE id=?";
+  public Semester getByStartTime(long startTime) {
+    String sql = "SELECT start_time, year, type FROM semester WHERE start_time=?";
     RowMapper<Semester> rowMapper = new SemesterRowMapper();
-    Semester semester = jdbcTemplate.queryForObject(sql, rowMapper, id);
+    Semester semester = jdbcTemplate.queryForObject(sql, rowMapper, startTime);
     return semester;
   }
 
   public List<Semester> getAll() {
-    String sql = "SELECT id, start_time, end_time FROM semester";
+    String sql = "SELECT start_time, year, type FROM semester";
     RowMapper<Semester> rowMapper = new SemesterRowMapper();
     return this.jdbcTemplate.query(sql, rowMapper);
   }
@@ -29,33 +29,26 @@ public class SemesterService {
   public void add(Semester semester) {
     // Add semester
     String sql =
-        "INSERT INTO semester (id, start_time, end_time) values (?, ?, ?)";
+        "INSERT INTO semester (start_time, year, type) values (?, ?, ?)";
     jdbcTemplate.update(
-        sql, semester.id, semester.startTime, semester.endTime);
-
-    // Fetch semester id
-    sql = "SELECT id FROM semester WHERE start_time=? AND end_time=?";
-    long id = jdbcTemplate.queryForObject(sql, Long.class, semester.startTime, semester.endTime);
-
-    // Set semester id
-    semester.id = id;
+        sql, semester.startTime, semester.year, semester.type);
   }
 
   public void update(Semester semester) {
     String sql =
-        "UPDATE semester SET id=?, start_time=?, end_time=? WHERE id=?";
+        "UPDATE semester SET start_time=?, year=?, type=? WHERE start_time=?";
     jdbcTemplate.update(
         sql,
-        semester.id,
         semester.startTime,
-        semester.endTime,
-        semester.id);
+        semester.year,
+        semester.type,
+        semester.startTime);
   }
 
-  public Semester deleteById(long id) {
-    Semester semester = getById(id);
-    String sql = "DELETE FROM semester WHERE id=?";
-    jdbcTemplate.update(sql, id);
+  public Semester deleteByStartTime(long startTime) {
+    Semester semester = getByStartTime(startTime);
+    String sql = "DELETE FROM semester WHERE start_time=?";
+    jdbcTemplate.update(sql, startTime);
     return semester;
   }
 
@@ -65,45 +58,42 @@ public class SemesterService {
     return;
   }
 
-  public boolean existsById(long id) {
-    String sql = "SELECT count(*) FROM semester WHERE id=?";
-    int count = jdbcTemplate.queryForObject(sql, Integer.class, id);
+  public boolean existsByStartTime(long startTime) {
+    String sql = "SELECT count(*) FROM semester WHERE start_time=?";
+    int count = jdbcTemplate.queryForObject(sql, Integer.class, startTime);
     return count != 0;
   }
 
   public Semester getCurrentSemester() {
-    return getCurrentSemesterByTime(System.currentTimeMillis());
+    return getSemesterByTime(System.currentTimeMillis());
   }
 
   public Semester getSemesterByTime(Long time) {
     List<Semester> currentSemesters =  query(
-      null, // Long id
-      time, // Long time
-      null, // Long startTimeBegin
-      null, // Long startTimeEnd
-      null, // Long endTimeBegin
-      null  // Long endTimeEnd
+      null, // Long startTime
+      null, // Long year
+      null, // Long type
+      null, // Long minStartTime
+      time  // Long maxStartTime
     );
     return (currentSemesters.size() != 0 ? currentSemesters.get(0) : null);
   }
 
   public List<Semester> query(
-      Long id,
-      Long time,
-      Long startTimeBegin,
-      Long startTimeEnd,
-      Long endTimeBegin,
-      Long endTimeEnd) {
+      Long startTime,
+      Long year,
+      String type,
+      Long minStartTime,
+      Long maxStartTime
+      ) {
 
-    String sql =
-        "SELECT se.id, se.start_time, se.end_time FROM semester se"
+    String sql = "SELECT se.start_time, se.year, se.type FROM semester se"
             + " WHERE 1=1 "
-            + (id == null ? "" : " AND se.id = " + id)
-            + (time == null ? "" : " AND " + time + " BETWEEN se.initial_time AND se.end_time")
-            + (startTimeBegin == null ? "" : " AND se.start_time >= " + startTimeBegin)
-            + (startTimeEnd == null ? "" : " AND se.start_time <= " + startTimeEnd)
-            + (endTimeBegin == null ? "" : " AND se.end_time >= " + endTimeBegin)
-            + (endTimeEnd == null ? "" : " AND se.end_time <= " + endTimeEnd)
+            + (startTime == null ? "" : " AND se.start_time = " + startTime)
+            + (year == null ? "" : " AND se.year = " + year)
+            + (type == null ? "" : " AND se.type = " + Utils.escape(type))
+            + (minStartTime == null ? "" : " AND se.start_time >= " + minStartTime)
+            + (maxStartTime == null ? "" : " AND se.start_time <= " + maxStartTime)
             + " ORDER BY se.start_time"
             + ";";
 

@@ -13,15 +13,15 @@ public class PeriodService {
 
   @Autowired private JdbcTemplate jdbcTemplate;
 
-  public Period getByTime(long time) {
-    String sql = "SELECT time, number, type FROM period WHERE time=?";
+  public Period getByStartTime(long startTime) {
+    String sql = "SELECT start_time, number, type FROM period WHERE start_time=?";
     RowMapper<Period> rowMapper = new PeriodRowMapper();
-    Period period = jdbcTemplate.queryForObject(sql, rowMapper, time);
+    Period period = jdbcTemplate.queryForObject(sql, rowMapper, startTime);
     return period;
   }
 
   public List<Period> getAll() {
-    String sql = "SELECT time, number, type FROM period";
+    String sql = "SELECT start_time, number, type FROM period";
     RowMapper<Period> rowMapper = new PeriodRowMapper();
     return this.jdbcTemplate.query(sql, rowMapper);
   }
@@ -29,25 +29,25 @@ public class PeriodService {
   public void add(Period period) {
     // Add period
     String sql =
-        "INSERT INTO period (time, number, type) values (?, ?, ?)";
+        "INSERT INTO period (start_time, number, type) values (?, ?, ?)";
     jdbcTemplate.update(
-        sql, period.time, period.number, period.type);
+        sql, period.startTime, period.number, period.type);
   }
 
   public void update(Period period) {
     String sql =
-        "UPDATE period SET time=?, number=?, type=? WHERE id=?";
+        "UPDATE period SET start_time=?, number=?, type=? WHERE start_time=?";
     jdbcTemplate.update(
         sql,
-        period.time,
+        period.startTime,
         period.number,
         period.type);
   }
 
-  public Period deleteByTime(long time) {
-    Period period = getByTime(time);
-    String sql = "DELETE FROM period WHERE time=?";
-    jdbcTemplate.update(sql, time);
+  public Period deleteByStartTime(long startTime) {
+    Period period = getByTime(startTime);
+    String sql = "DELETE FROM period WHERE start_time=?";
+    jdbcTemplate.update(sql, startTime);
     return period;
   }
 
@@ -57,38 +57,42 @@ public class PeriodService {
     return;
   }
 
-  public boolean existsByTime(long time) {
-    String sql = "SELECT count(*) FROM period WHERE id=?";
+  public boolean existsByStartTime(long startTime) {
+    String sql = "SELECT count(*) FROM period WHERE start_time=?";
     int count = jdbcTemplate.queryForObject(sql, Integer.class, time);
     return count != 0;
   }
 
+  public Period getCurrentPeriod() {
+    return getPeriodByTime(System.currentTimeMillis());
+  }
+
+  public Period getPeriodByTime(long time) {
+    List<Period> currentPeriods = query(
+      null, // Long startTime
+      null, // Long number
+      null, // String type
+      null, // Long minStartTime
+      null  // Long maxStartTime
+    );
+    return (currentPeriods.size() != 0 ? currentPeriods.get(0) : null);
+  }
+
   public List<Period> query(
-      Long time,
+      Long startTime,
       Long number,
       String type,
-      Long containsTime,
+      Long minStartTime,
+      Long maxStartTime
     ) {
 
-    String sql =
-        "SELECT p.id, p.initial_time, p.start_time, p.end_time, p.period FROM period p"
-            + (courseId == null || teacherId == null
-                ? ""
-                : " JOIN course c ON c.period = p.period ")
+    String sql = "SELECT p.start_time, p.number, p.type FROM period p"
             + " WHERE 1=1 "
-            + (id == null ? "" : " AND p.id = " + id)
-            + (time == null ? "" : " AND " + time + " BETWEEN p.initial_time AND p.end_time")
-            + (minDuration == null ? "" : " AND " + minDuration + " <= p.end_time - p.start_time")
-            + (maxDuration == null ? "" : " AND " + maxDuration + " >= p.end_time - p.start_time")
-            + (startTimeBegin == null ? "" : " AND p.start_time >= " + startTimeBegin)
-            + (startTimeEnd == null ? "" : " AND p.start_time <= " + startTimeEnd)
-            + (initialTimeBegin == null ? "" : " AND p.initial_time >= " + initialTimeBegin)
-            + (initialTimeEnd == null ? "" : " AND p.initial_time <= " + initialTimeEnd)
-            + (endTimeBegin == null ? "" : " AND p.end_time >= " + endTimeBegin)
-            + (endTimeEnd == null ? "" : " AND p.end_time <= " + endTimeEnd)
-            + (period == null ? "" : " AND p.period = " + period)
-            + (courseId == null ? "" : " AND c.course_id = " + courseId)
-            + (teacherId == null ? "" : " AND c.teacher_id = " + teacherId)
+            + (startTime == null ? "" : " AND p.start_time = " + startTime)
+            + (number == null ? "" : " AND p.number = " + number)
+            + (type == null ? "" : " AND p.type = " + Utils.escape(type))
+            + (minStartTime == null ? "" : " AND p.start_time >= " + minStartTime)
+            + (maxStartTime == null ? "" : " AND p.start_time <= " + maxStartTime)
             + " ORDER BY p.start_time"
             + ";";
 
