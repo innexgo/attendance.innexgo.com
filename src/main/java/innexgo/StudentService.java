@@ -16,28 +16,28 @@ public class StudentService {
   @Autowired private JdbcTemplate jdbcTemplate;
 
   public Student getById(long id) {
-    String sql = "SELECT id, graduating_semester, name, tags FROM student WHERE id=?";
+    String sql = "SELECT id, tags, initial_semester_id, initial_semester_id FROM student WHERE id=?";
     RowMapper<Student> rowMapper = new StudentRowMapper();
     Student student = jdbcTemplate.queryForObject(sql, rowMapper, id);
     return student;
   }
 
   public List<Student> getAll() {
-    String sql = "SELECT id, graduating_semester, name, tags FROM student";
+    String sql = "SELECT id, name, tags, initial_semester_id FROM student";
     RowMapper<Student> rowMapper = new StudentRowMapper();
     return this.jdbcTemplate.query(sql, rowMapper);
   }
 
   public void add(Student student) {
     // Add student
-    String sql = "INSERT INTO student(id, graduating_semester, name, tags) values (?, ?, ?, ?)";
-    jdbcTemplate.update(sql, student.id, student.graduatingSemester, student.name, student.tags);
+    String sql = "INSERT INTO student(id, name, tags, initial_semester_id) values (?, ?, ?, ?)";
+    jdbcTemplate.update(sql, student.id, student.name, student.tags, student.initialSemesterId);
   }
 
   public void update(Student student) {
-    String sql = "UPDATE student SET id=?, graduating_semester=?, name=?, tags=? WHERE id=?";
+    String sql = "UPDATE student SET id=?, name=?, tags=?, initial_semester_id=? WHERE id=?";
     jdbcTemplate.update(
-        sql, student.id, student.graduatingSemester, student.name, student.tags, student.id);
+        sql, student.id, student.name, student.tags, student.initialSemesterId, student.id);
   }
 
   public Student deleteById(long id) {
@@ -53,50 +53,84 @@ public class StudentService {
     return count != 0;
   }
 
+  // Restrict students by
   public List<Student> query(
-      Long id,
-      Long courseId,
-      Integer graduatingSemester,
-      String name,
-      String partialName,
-      String tags) {
+      Long id, // Exact match to id
+      String name, // Exact match to name
+      String partialName, // Partial match to name
+      String tags, // Exact match to tags
+      String partialTags, // Partial match to tags
+      Long initialSemesterId // Exact match to initial semester id
+      ) {
     String sql =
-        "SELECT st.id, st.graduating_semester, st.name, st.tags FROM student st"
-            + (courseId == null ? "" : " INNER JOIN schedule sc ON st.id = sc.student_id ")
+        "SELECT st.id, st.name, st.tags, st.initial_semester_id FROM student st"
             + " WHERE 1=1 "
             + (id == null ? "" : " AND st.id = " + id)
-            + (graduatingSemester == null ? "" : " AND st.graduating_semester = " + graduatingSemester)
             + (name == null ? "" : " AND st.name = " + Utils.escape(name))
             + (partialName == null ? "" : " AND st.name LIKE " + Utils.escape("%"+partialName+"%"))
             + (tags == null ? "" : " AND st.tags = " + Utils.escape(tags))
-            + (courseId == null ? "" : " AND sc.course_id = " + courseId)
+            + (partialTags == null ? "" : " AND st.tags LIKE " + Utils.escape("%"+partialTags+"%"))
+            + (initial_semester_id == null ? "" : " AND st.initial_semester_id = " + initial_semester_id)
             + ";";
 
     RowMapper<Student> rowMapper = new StudentRowMapper();
     return this.jdbcTemplate.query(sql, rowMapper);
   }
 
-  // find students who are present at the location that they are supposed to be in at this period
-  public List<Student> present(long courseId, long periodId) {
+  // find students who are present at the location that they are supposed to be in at this time
+  public List<Student> present(long courseId, long time) {
     Course course = courseService.getById(courseId);
-    Period period = periodService.getById(periodId);
+    Period period = periodService.getByTime(time);
+
+    // Do some sanity checks to ensure that the time's period is the same period as the course
+    if(period.number != course.period) {
+      // empty list return
+      return new ArrayList<Student>();
+    }
 
     // Find the sessions that have a start date before the period start date.
     // If they have an end date it must be after the period start date
-    // find students who are not in this list
+    // find students who are in this list
 
     String sql =
-              " SELECT DISTINCT st.id, st.graduating_semester, st.name, st.tags"
+              " SELECT DISTINCT st.id, st.name, st.tags, st.initial_semester_id"
             + " FROM student st"
-            + " RIGHT JOIN session ses ON ses.student_id = st.id"
+            + " INNER JOIN session ses ON ses.student_id = st.id"
             + " INNER JOIN encounter inen ON ses.in_encounter_id = inen.id"
-            + " LEFT JOIN encounter outen ON ses.out_encounter_id = outen.id"
+            + " LEFT JOIN encounter outen ON ses.complete AND ses.out_encounter_id = outen.id"
             + " WHERE 1 = 1 "
             + (" AND inen.location_id = " + course.locationId)
             + (" AND inen.time < " + period.startTime)
             + (" AND outen.time IS NULL OR outen.time > " + period.startTime)
             + " ;";
 
+    RowMapper<Student> rowMapper = new StudentRowMapper();
+    return this.jdbcTemplate.query(sql, rowMapper);
+  }
+
+  // Find students who are supposed to be here
+  public List<Student> registeredForCourse(long courseId, long time) {
+    Course course = courseService.getById(courseId);
+    Period period = periodService.getByTime(time);
+
+    // Do some sanity checks to ensure that the time's period is the same period as the course
+    if(period.number != course.period) {
+      // empty list return
+      return new ArrayList<Student>();
+    }
+
+    // Find schedules which have the specified courseId
+    // From these select schedules that are still active
+    // Return the students of these schedules
+    String sql =
+        " SELECT DISTINCT st.id, st.name, st.tags, st.initial_semester_id"
+      + " FROM student st"
+      + " INNER JOIN schedule sc ON st.id = sc.student_id"
+      + " INNER JOIN courses cs ON cs.id = sc.course_id "
+      + " WHERE 1 == 1"
+      + " AND cs.id = " + course.id
+      + " AND " + time + " >= sc.first_period_start_time AND " + time + " < sc.last_period_start_time "
+      + " ;";
     RowMapper<Student> rowMapper = new StudentRowMapper();
     return this.jdbcTemplate.query(sql, rowMapper);
   }

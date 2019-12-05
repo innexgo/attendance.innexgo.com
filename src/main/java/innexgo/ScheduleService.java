@@ -79,8 +79,8 @@ public class ScheduleService {
       Long scheduleId,
       Long studentId,
       Long courseId,
-      Long firstPeriodId,
-      Long lastPeriodId,
+      Long firstPeriodStartTime,
+      Long lastPeriodStartTime,
       Long teacherId,
       Long locationId,
       Long period) {
