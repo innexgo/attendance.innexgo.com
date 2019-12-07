@@ -3,7 +3,7 @@ package innexgo;
 public class Offering {
   public long id;
   long courseId;
-  long semesterId;
+  long semesterStartTime;
 
   // for jackson
   public Course course;

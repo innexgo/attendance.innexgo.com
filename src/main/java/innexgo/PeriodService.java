@@ -45,7 +45,7 @@ public class PeriodService {
   }
 
   public Period deleteByStartTime(long startTime) {
-    Period period = getByTime(startTime);
+    Period period = getByStartTime(startTime);
     String sql = "DELETE FROM period WHERE start_time=?";
     jdbcTemplate.update(sql, startTime);
     return period;
@@ -59,23 +59,34 @@ public class PeriodService {
 
   public boolean existsByStartTime(long startTime) {
     String sql = "SELECT count(*) FROM period WHERE start_time=?";
-    int count = jdbcTemplate.queryForObject(sql, Integer.class, time);
+    int count = jdbcTemplate.queryForObject(sql, Integer.class, startTime);
     return count != 0;
   }
 
   public Period getCurrentPeriod() {
-    return getPeriodByTime(System.currentTimeMillis());
+    return getByTime(System.currentTimeMillis());
   }
 
-  public Period getPeriodByTime(long time) {
+  public Period getByTime(long time) {
     List<Period> currentPeriods = query(
       null, // Long startTime
       null, // Long number
       null, // String type
-      null, // Long minStartTime
+      time, // Long minStartTime
       null  // Long maxStartTime
     );
-    return (currentPeriods.size() != 0 ? currentPeriods.get(0) : null);
+    return (currentPeriods.size() > 0 ? currentPeriods.get(0) : null);
+  }
+
+  public Period getNextPeriodByTime(long time) {
+    List<Period> currentPeriods = query(
+      null, // Long startTime
+      null, // Long number
+      null, // String type
+      time, // Long minStartTime
+      null  // Long maxStartTime
+    );
+    return (currentPeriods.size() >= 1 ? currentPeriods.get(1) : null);
   }
 
   public List<Period> query(

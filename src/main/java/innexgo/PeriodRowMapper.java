@@ -9,7 +9,7 @@ public class PeriodRowMapper implements RowMapper<Period> {
   @Override
   public Period mapRow(ResultSet row, int rowNum) throws SQLException {
     Period period = new Period();
-    period.time = row.getLong("time");
+    period.startTime = row.getLong("start_time");
     period.number = row.getLong("number");
     period.type = row.getString("type");
     return period;

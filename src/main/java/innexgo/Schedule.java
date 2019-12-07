@@ -6,10 +6,9 @@ public class Schedule {
   long courseId;
 
   // This is for dropping and inserting into classes
-  // First period where student will attend course
-  public long firstPeriodStartTime;
-  // first period start time where student will not attend course
-  public long lastPeriodStartTime;
+  // Should be set to the natural boundaries of the semester if not used
+  public long startTime;
+  public long endTime;
 
   // for jackson
   public Student student;

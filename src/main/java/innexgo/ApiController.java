@@ -82,7 +82,7 @@ public class ApiController {
    */
   Irregularity fillIrregularity(Irregularity irregularity) {
     irregularity.course = fillCourse(courseService.getById(irregularity.courseId));
-    irregularity.period = fillPeriod(periodService.getById(irregularity.periodId));
+    irregularity.period = fillPeriod(periodService.getById(irregularity.periodStartTime));
     irregularity.student = fillStudent(studentService.getById(irregularity.studentId));
     return irregularity;
   }
@@ -105,7 +105,7 @@ public class ApiController {
    */
   Offering fillOffering(Offering offering) {
     offering.course = fillCourse(courseService.getById(offering.courseId));
-    offering.semester = fillSemester(semesterService.getById(offering.semesterId));
+    offering.semester = fillSemester(semesterService.getByStartTime(offering.semesterStartTime));
     return offering;
   }
 

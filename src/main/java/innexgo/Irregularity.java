@@ -11,7 +11,7 @@ public class Irregularity {
   public long id;
   long studentId;
   long courseId;
-  long periodId;
+  long periodStartTime;
   public String type;
   public long time;
   public long timeMissing;

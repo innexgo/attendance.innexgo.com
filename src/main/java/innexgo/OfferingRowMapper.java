@@ -11,7 +11,7 @@ public class OfferingRowMapper implements RowMapper<Offering> {
     Offering offering = new Offering();
     offering.id = row.getLong("id");
     offering.courseId = row.getLong("course_id");
-    offering.semesterId = row.getLong("semester_id");
+    offering.semesterStartTime = row.getLong("semester_start_time");
     return offering;
   }
 }

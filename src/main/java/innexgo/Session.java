@@ -2,13 +2,13 @@ package innexgo;
 
 public class Session {
   public long id;
-  long studentId;
+  // Id of encounter (Use this to determine student, location, etc)
   long inEncounterId;
-  long outEncounterId;
   public boolean complete;
+  // This is UNDEFINED unless complete is true
+  long outEncounterId;
 
   // Initialized by jackson during serialization
-  public Student student;
   public Encounter inEncounter;
   public Encounter outEncounter;
 }
