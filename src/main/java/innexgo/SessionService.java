@@ -94,7 +94,6 @@ public class SessionService {
       Long outTimeEnd,
       Long count) {
 
-
     String sql =
         "SELECT DISTINCT ses.id, ses.in_encounter_id, ses.out_encounter_id, ses.complete"
             + " FROM session ses"

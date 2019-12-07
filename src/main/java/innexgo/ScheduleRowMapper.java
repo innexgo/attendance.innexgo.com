@@ -12,7 +12,9 @@ public class ScheduleRowMapper implements RowMapper<Schedule> {
     schedule.id = row.getLong("id");
     schedule.studentId = row.getLong("student_id");
     schedule.courseId = row.getLong("course_id");
+    schedule.hasStart = row.getBoolean("has_start");
     schedule.startTime = row.getLong("start_time");
+    schedule.hasEnd = row.getBoolean("has_end");
     schedule.endTime = row.getLong("end_time");
     return schedule;
   }

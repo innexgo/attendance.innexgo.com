@@ -14,7 +14,7 @@ public class ScheduleService {
   @Autowired private JdbcTemplate jdbcTemplate;
 
   public Schedule getById(long id) {
-    String sql = "SELECT id, student_id, course_id, start_time, end_time FROM schedule WHERE id=?";
+    String sql = "SELECT id, student_id, course_id, has_start, start_time, has_end, end_time FROM schedule WHERE id=?";
     RowMapper<Schedule> rowMapper = new ScheduleRowMapper();
     List<Schedule> schedules = jdbcTemplate.query(sql, rowMapper, id);
     return schedules.size() == 0 ? null : schedules.get(0);
@@ -22,7 +22,7 @@ public class ScheduleService {
 
   public Schedule getScheduleByStudentIdCourseId(long studentId, long courseId) {
     String sql =
-        "SELECT id, student_id, course_id, start_time, end_time FROM schedule WHERE student_id=? AND course_id=?";
+        "SELECT id, student_id, course_id, has_start, start_time, has_end, end_time FROM schedule WHERE student_id=? AND course_id=?";
     RowMapper<Schedule> rowMapper = new ScheduleRowMapper();
     List<Schedule> schedules = jdbcTemplate.query(sql, rowMapper, studentId, courseId);
     return schedules.size() == 0 ? null : schedules.get(0);
@@ -50,12 +50,12 @@ public class ScheduleService {
     // check if it doesnt exist yet
     if (!existsByStudentIdCourseId(schedule.studentId, schedule.courseId)) {
       // Add schedule
-      String sql = "INSERT INTO schedule (id, student_id, course_id, start_time, end_time) values (?, ?, ?, ?, ?)";
-      jdbcTemplate.update(sql, schedule.id, schedule.studentId, schedule.courseId, schedule.startTime, schedule.endTime);
+      String sql = "INSERT INTO schedule (id, student_id, course_id, has_start, start_time, has_end, end_time) values (?, ?, ?, ?, ?, ?, ?)";
+      jdbcTemplate.update(sql, schedule.id, schedule.studentId, schedule.courseId, schedule.hasStart, schedule.startTime, schedule.hasEnd, schedule.endTime);
 
       // Fetch schedule id
-      sql = "SELECT id FROM schedule WHERE student_id=? AND course_id=? AND start_time=? AND end_time=?";
-      long id = jdbcTemplate.queryForObject(sql, Long.class, schedule.studentId, schedule.courseId, schedule.startTime, schedule.endTime);
+      sql = "SELECT id FROM schedule WHERE student_id=? AND course_id=? AND has_start=? AND start_time=? AND has_end=? AND end_time=?";
+      long id = jdbcTemplate.queryForObject(sql, Long.class, schedule.studentId, schedule.courseId, schedule.hasStart, schedule.startTime, schedule.hasEnd, schedule.endTime);
       schedule.id = id;
       return schedule;
     } else {
@@ -64,8 +64,14 @@ public class ScheduleService {
   }
 
   public void update(Schedule schedule) {
-    String sql = "UPDATE schedule SET id=?, student_id=?, course_id=?, start_time=?, end_time=? WHERE id=?";
+    String sql = "UPDATE schedule SET id=?, student_id=?, course_id=?, has_start=?, start_time=?, has_end=?, end_time=? WHERE id=?";
     jdbcTemplate.update(sql, schedule.id, schedule.studentId, schedule.courseId, schedule.startTime, schedule.endTime, schedule.id);
+
+    // Fetch schedule id
+    sql = "SELECT id FROM schedule WHERE student_id=? AND course_id=? AND has_start=? AND start_time=? AND has_end=? AND end_time=?";
+    long id = jdbcTemplate.queryForObject(sql, Long.class, schedule.studentId, schedule.courseId, schedule.hasStart, schedule.startTime, schedule.hasEnd, schedule.endTime);
+    schedule.id = id;
+    return schedule;
   }
 
   public Schedule deleteById(long id) {
@@ -79,7 +85,9 @@ public class ScheduleService {
       Long scheduleId,
       Long studentId,
       Long courseId,
+      Boolean hasStart,
       Long startTime,
+      Boolean hasEnd,
       Long endTime,
       Long teacherId,
       Long locationId,
@@ -91,7 +99,9 @@ public class ScheduleService {
             + (scheduleId == null ? "" : " AND s.id = " + scheduleId)
             + (studentId == null ? "" : " AND s.student_id = " + studentId)
             + (courseId == null ? "" : " AND s.course_id = " + courseId)
+            + (hasStart == null ? "" : " AND s.has_start = " + hasStart)
             + (startTime == null ? "" : " AND s.start_time = " + startTime)
+            + (hasEnd == null ? "" : " AND s.has_end = " + hasEnd)
             + (endTime == null ? "" : " AND s.end_time = " + endTime)
             + (teacherId == null ? "" : " AND c.teacher_id = " + teacherId)
             + (locationId == null ? "" : " AND c.location_id = " + locationId)

@@ -11,6 +11,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 public class PeriodService {
 
+  @Autowired private EncounterService encounterService;
+  @Autowired private SessionService sessionService;
+
   @Autowired private JdbcTemplate jdbcTemplate;
 
   public Period getByStartTime(long startTime) {
@@ -72,21 +75,10 @@ public class PeriodService {
       null, // Long startTime
       null, // Long number
       null, // String type
-      time, // Long minStartTime
-      null  // Long maxStartTime
+      null, // Long minStartTime
+      time  // Long maxStartTime
     );
-    return (currentPeriods.size() > 0 ? currentPeriods.get(0) : null);
-  }
-
-  public Period getNextPeriodByTime(long time) {
-    List<Period> currentPeriods = query(
-      null, // Long startTime
-      null, // Long number
-      null, // String type
-      time, // Long minStartTime
-      null  // Long maxStartTime
-    );
-    return (currentPeriods.size() >= 1 ? currentPeriods.get(1) : null);
+    return (currentPeriods.size() != 0 ? currentPeriods.get(currentPeriods.size()-1) : null);
   }
 
   public List<Period> query(
@@ -97,14 +89,14 @@ public class PeriodService {
       Long maxStartTime
     ) {
 
-    String sql = "SELECT p.start_time, p.number, p.type FROM period p"
-            + " WHERE 1=1 "
-            + (startTime == null ? "" : " AND p.start_time = " + startTime)
-            + (number == null ? "" : " AND p.number = " + number)
-            + (type == null ? "" : " AND p.type = " + Utils.escape(type))
-            + (minStartTime == null ? "" : " AND p.start_time >= " + minStartTime)
-            + (maxStartTime == null ? "" : " AND p.start_time <= " + maxStartTime)
-            + " ORDER BY p.start_time"
+    String sql = "SELECT p.start_time, p.number, p.type FROM period pr"
+            + " WHERE 1=1"
+            + (startTime == null ? "" : " AND pr.start_time = " + startTime)
+            + (number == null ? "" : " AND pr.number = " + number)
+            + (type == null ? "" : " AND pr.type = " + Utils.escape(type))
+            + (minStartTime == null ? "" : " AND pr.start_time >= " + minStartTime)
+            + (maxStartTime == null ? "" : " AND pr.start_time <= " + maxStartTime)
+            + " ORDER BY pr.start_time"
             + ";";
 
     RowMapper<Period> rowMapper = new PeriodRowMapper();

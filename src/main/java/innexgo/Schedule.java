@@ -6,8 +6,13 @@ public class Schedule {
   long courseId;
 
   // This is for dropping and inserting into classes
-  // Should be set to the natural boundaries of the semester if not used
+  // If there is a nonzero start time
+  public boolean hasStart;
+  // Only defined if hasStart true
   public long startTime;
+  // If there is a noninfinity end time
+  public boolean hasEnd;
+  // Only defined if hasEnd true
   public long endTime;
 
   // for jackson

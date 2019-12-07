@@ -5,6 +5,9 @@ import java.time.temporal.*;
 import java.util.*;
 import java.util.stream.Collectors;
 import org.apache.commons.csv.*;
+import org.apache.logging.log4j.LogManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +21,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(value = {"/api"})
 public class ApiController {
+
+  Logger logger = LoggerFactory.getLogger(ApiController.class);
 
   @Autowired ApiKeyService apiKeyService;
   @Autowired CourseService courseService;
@@ -82,7 +87,7 @@ public class ApiController {
    */
   Irregularity fillIrregularity(Irregularity irregularity) {
     irregularity.course = fillCourse(courseService.getById(irregularity.courseId));
-    irregularity.period = fillPeriod(periodService.getById(irregularity.periodStartTime));
+    irregularity.period = fillPeriod(periodService.getByStartTime(irregularity.periodStartTime));
     irregularity.student = fillStudent(studentService.getById(irregularity.studentId));
     return irregularity;
   }
@@ -150,7 +155,6 @@ public class ApiController {
    * @return Session object with filled jackson objects
    */
   Session fillSession(Session session) {
-    session.student = fillStudent(studentService.getById(session.studentId));
     session.inEncounter = fillEncounter(encounterService.getById(session.inEncounterId));
     if (session.complete) {
       session.outEncounter = fillEncounter(encounterService.getById(session.outEncounterId));
@@ -165,6 +169,7 @@ public class ApiController {
    * @return Student object with filled jackson objects
    */
   Student fillStudent(Student student) {
+    student.initialSemester = semesterService.getByStartTime(student.initialSemesterStartTime);
     return student;
   }
 
@@ -247,24 +252,20 @@ public class ApiController {
       // get list of open sessions
       List<Session> openSessionList =
           sessionService.query(
-              null, // Long id
-              null, // Long inEncounterId
-              null, // Long outEncounterId
-              null, // Long anyEncounterId
-              null, // Long periodId
-              null, // Long period
-              null, // Long courseId
-              false, // Boolean complete
-              null, // Long locationId
-              null, // Long studentId
-              null, // Long teacherId
-              null, // Long time
-              null, // Long inTimeBegin
-              null, // Long inTimeEnd
-              null, // Long outTimeBegin
-              null, // Long outTimeEnd
-              null // Long count
-              );
+            null, //  Long id
+            null, //  Long inEncounterId
+            null, //  Long outEncounterId
+            null, //  Long anyEncounterId
+            false,//  Boolean complete
+            null, //  Long studentId
+            null, //  Long locationId
+            null, //  Long time
+            null, //  Long inTimeBegin
+            null, //  Long inTimeEnd
+            null, //  Long outTimeBegin
+            null, //  Long outTimeEnd
+            null  //  Long count
+          );
 
       for (Session openSession : openSessionList) {
         // Virtually close session by generating a fake (virtual) encounter and insert it in.
@@ -272,16 +273,16 @@ public class ApiController {
 
         // grab old encounter
         Encounter inEncounter = encounterService.getById(openSession.inEncounterId);
-        // make new encounter
-        Encounter virtualEncounter = new Encounter();
-        virtualEncounter.locationId = inEncounter.locationId;
-        virtualEncounter.studentId = openSession.studentId;
-        virtualEncounter.time = System.currentTimeMillis();
-        virtualEncounter.virtual = true;
-        encounterService.add(virtualEncounter);
+        // make a virtual out encounter
+        Encounter outEncounter = new Encounter();
+        outEncounter.locationId = inEncounter.locationId;
+        outEncounter.studentId = inEncounter.studentId;
+        outEncounter.time = System.currentTimeMillis();
+        outEncounter.virtual = true;
+        encounterService.add(outEncounter);
 
         // now close session
-        openSession.outEncounterId = virtualEncounter.id;
+        openSession.outEncounterId = outEncounter.id;
         openSession.complete = true;
         sessionService.update(openSession);
 
@@ -290,36 +291,18 @@ public class ApiController {
         // period and course are that of the first period with a course that the session intersected
         List<Period> intersectedPeriods =
             periodService.query(
-                null, // Long id,
-                null, // Long time,
-                null, // Long minDuration,
-                null, // Long maxDuration,
-                null, // Long initialTimeBegin,
-                null, // Long initialTimeEnd,
-                null, // Long startTimeBegin,
-                null, // Long startTimeEnd,
-                null, // Long endTimeBegin,
-                null, // Long endTimeEnd,
-                null, // Long period,
-                null, // Long courseId
-                null // Long teacherId
-                );
+              null,                                                // Long startTime
+              null,                                                // Long number
+              Period.CLASS_PERIOD,                                 // String type
+              periodService.getByTime(inEncounter.time).startTime, // Long minStartTime
+              outEncounter.time                                    // Long maxStartTime
+            );
 
         // Find first period with a course at this location
         Period irregPeriod = null;
         Course irregCourse = null;
         for (Period period : intersectedPeriods) {
-          List<Course> courses =
-              courseService.query(
-                  null, // Long id,
-                  null, // Long teacherId,
-                  inEncounter.locationId, // Long locationId,
-                  openSession.studentId, // Long studentId,
-                  period.period, // Long period,
-                  null, // String subject,
-                  null, // Long time,
-                  semesterService.getCurrentSemester().id // Long semester
-                  );
+          List<Course> courses = courseService.getByPeriodStartTime(period.startTime);
           if (courses.size() > 0) {
             irregPeriod = period;
             irregCourse = courses.get(0);
@@ -329,9 +312,9 @@ public class ApiController {
         if (irregPeriod != null && irregCourse != null) {
           // Now add irregularity about forgetting to sign out
           Irregularity forgotToSignOut = new Irregularity();
-          forgotToSignOut.studentId = openSession.studentId;
+          forgotToSignOut.studentId = inEncounter.studentId;
           forgotToSignOut.courseId = irregCourse.id;
-          forgotToSignOut.periodId = irregPeriod.id;
+          forgotToSignOut.periodStartTime = irregPeriod.startTime;
           forgotToSignOut.type = Irregularity.TYPE_FORGOT_SIGN_OUT;
           forgotToSignOut.time = irregPeriod.startTime;
           forgotToSignOut.timeMissing = 0;

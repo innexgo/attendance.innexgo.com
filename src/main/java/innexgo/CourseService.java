@@ -11,6 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 public class CourseService {
 
+  @Autowired private PeriodService periodService;
+  @Autowired private SemesterService semesterService;
   @Autowired private OfferingService offeringService;
   @Autowired private JdbcTemplate jdbcTemplate;
 
@@ -78,20 +80,38 @@ public class CourseService {
       Long studentId,
       Long period,
       String subject,
-      Long semesterId) {
-    String sql =
-        "SELECT DISTINCT c.id, c.teacher_id, c.location_id, c.period, c.subject, c.semester FROM course c"
-            + (semesterId == null ? "" : " INNER JOIN offering o ON c.id = o.course_id")
+      Long semesterStartTime) {
+    String sql = "SELECT DISTINCT cs.id, cs.teacher_id, cs.location_id, cs.period, cs.subject, cs.semesterStartTime"
+        + " FROM course cs"
+            + (semesterId == null ? "" : " INNER JOIN offering of ON cs.id = of.course_id")
+            + (studentId == null ? "" : " INNER JOIN schedule sc ON sc.id = sc.course_id")
             + " WHERE 1=1 "
-            + (id == null ? "" : " AND c.id = " + id)
-            + (period == null ? "" : " AND c.period = " + period)
-            + (teacherId == null ? "" : " AND c.teacher_id = " + teacherId)
-            + (locationId == null ? "" : " AND c.location_id = " + locationId)
-            + (semesterId == null ? "" : " AND o.semester_id = " + semesterId)
+            + (id == null ? "" : " AND cs.id = " + id)
+            + (period == null ? "" : " AND cs.period = " + period)
+            + (teacherId == null ? "" : " AND cs.teacher_id = " + teacherId)
+            + (locationId == null ? "" : " AND cs.location_id = " + locationId)
+            + (semesterStartTime == null ? "" : " AND of.semester_start_time = " + semesterStartTime)
             + (studentId == null ? "" : " AND sc.student_id = " + studentId)
-            + (subject == null ? "" : " AND c.subject = " + Utils.escape(subject))
+            + (subject == null ? "" : " AND cs.subject = " + Utils.escape(subject))
             + ";";
 
+    RowMapper<Course> rowMapper = new CourseRowMapper();
+    return this.jdbcTemplate.query(sql, rowMapper);
+  }
+
+  // Returns all courses that are currently running at this period start time
+  public List<Course> getByPeriodStartTime(long periodStartTime) {
+    Period period = periodService.getByStartTime(periodStartTime);
+    Semester semester = semesterService.getByTime(periodStartTime);
+
+    String sql = "SELECT DISTINCT cs.id, cs.teacher_id, cs.location_id, cs.period, cs.subject, cs.semesterStartTime"
+      + " FROM course cs"
+      + " INNER JOIN offering of ON of.course_id = cs.id"
+      + " INNER JOIN period pr ON pr.number = cs.period"
+      + " WHERE 1 == 1"
+      + " AND of.semester_start_time = " + semester.startTime
+      + " AND pr.start_time = " + period.startTime
+      + ";";
     RowMapper<Course> rowMapper = new CourseRowMapper();
     return this.jdbcTemplate.query(sql, rowMapper);
   }
