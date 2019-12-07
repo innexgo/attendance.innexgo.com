@@ -242,13 +242,13 @@ public class ApiController {
         ZonedDateTime now = ZonedDateTime.now(Utils.TIMEZONE);
         ZonedDateTime tomorrowStart = now.plusDays(1).truncatedTo(ChronoUnit.DAYS);
         long millisTillMidnight = Duration.between(now, tomorrowStart).toMillis();
-        System.out.println("Next mass sign out at: " + millisTillMidnight / 1000);
+        logger.info("Next mass sign out at: " + millisTillMidnight / 1000);
         Thread.sleep(millisTillMidnight);
       } catch (Exception e) {
         e.printStackTrace();
       }
 
-      System.out.println("Signing everyone out");
+      logger.info("Signing everyone out");
       // get list of open sessions
       List<Session> openSessionList =
           sessionService.query(
@@ -330,71 +330,40 @@ public class ApiController {
    */
   @Scheduled(fixedDelay = 5000)
   public void insertAbsences() {
-    System.out.println("Starting insert absences process");
+    logger.info("Starting insert absences process");
     // the list of periods that havent started yet
     List<Period> periodList =
         periodService.query(
-            null, // id
-            null, // time
-            null, // minDuration
-            null, // maxDuration
-            System.currentTimeMillis(), // initialTimeBegin
-            null, // initialTimeEnd
-            null, // startTimeBegin
-            null, // startTimeEnd
-            null, // endTimeBegin
-            null, // endTimeEnd
-            null, // period
-            null, // courseId
-            null // teacherId
-            );
-
-    Collections.sort(periodList, Comparator.comparingLong(p -> p.startTime));
+          null,                       // Long startTime,
+          null,                       // Long number,
+          null,                       // String type,
+          System.currentTimeMillis(), // Long minStartTime,
+          null                        // Long maxStartTime
+        );
 
     for (int i = 0; i < periodList.size(); i++) {
       Period period = periodList.get(i);
       // wait till we are at the right time
       try {
-        long timeToSleep = Math.max(0, period.initialTime - System.currentTimeMillis());
-        System.out.println(
-            "Inserting absences in: " +  timeToSleep / 1000);
+        long timeToSleep = Math.max(0, period.startTime - System.currentTimeMillis());
+        logger.info("Inserting absences in: " +  timeToSleep / 1000 + " seconds");
         Thread.sleep(timeToSleep);
       } catch (InterruptedException e) {
         e.printStackTrace();
       }
 
-      System.out.println("Period " + period.id + " started, inserting absences");
+      logger.info("Period " + period.startTime + " started, inserting absences");
       // get courses at this period
-      List<Course> courseList =
-          courseService.query(
-              null, // id
-              null, // teacherId
-              null, // locationId
-              null, // studentId
-              period.period, // period
-              null, // subject
-              null, // time
-              semesterService.getCurrentSemester().id // semester
-              );
-
-
+      List<Course> courseList = courseService.getByPeriodStartTime(period.startTime);
 
       // for all courses at this time
       for (Course course : courseList) {
         // subtract present students from all students taking the course
-        List<Student> studentAbsentList =
-            studentService.query(
-                null, // Long id
-                course.id, // Long courseId
-                null, // Integer graduatingYear
-                null, // String name
-                null, // String partialName
-                null // String tags
-                );
-        studentAbsentList.removeAll(studentService.present(course.id, period.id));
+        List<Student> absentees = studentService.registeredForCourse(course.id, period.startTime);
+        absentees.removeAll(studentService.present(course.id, period.startTime));
 
         // mark all students not there as absent
-        for (Student student : studentAbsentList) {
+        for (Student student : absentees) {
           // Check if already absent. if not, don't add
           boolean alreadyAbsent =
               irregularityService
