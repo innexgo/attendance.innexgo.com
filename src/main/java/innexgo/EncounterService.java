@@ -62,18 +62,17 @@ public class EncounterService {
   }
 
   public List<Encounter> query(
-      Long count,
       Long encounterId,
       Long studentId,
       Long locationId,
       Long minTime,
       Long maxTime,
       Boolean virtual,
-      String studentName) {
+      Long count
+      ) {
     String sql =
         "SELECT e.id, e.time, e.virtual, e.location_id, e.student_id "
             + " FROM encounter e"
-            + " JOIN student s ON e.student_id = s.id"
             + " WHERE 1=1 "
             + (encounterId == null ? "" : " AND e.id=" + encounterId)
             + (studentId == null ? "" : " AND e.student_id=" + studentId)
@@ -81,7 +80,6 @@ public class EncounterService {
             + (virtual == null ? "" : " AND e.virtual=" + virtual)
             + (minTime == null ? "" : " AND e.time >= " + minTime)
             + (maxTime == null ? "" : " AND e.time <= " + maxTime)
-            + (studentName == null ? "" : " AND s.name=" + Utils.escape(studentName))
             + " ORDER BY e.time DESC"
             + (count == null ? "" : " LIMIT " + count)
             + ";";

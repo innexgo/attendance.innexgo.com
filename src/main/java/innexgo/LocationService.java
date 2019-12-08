@@ -30,13 +30,6 @@ public class LocationService {
     // Add location
     String sql = "INSERT INTO location (id, name, tags) values (?, ?, ?)";
     jdbcTemplate.update(sql, location.id, location.name, location.tags);
-
-    // Fetch location id
-    sql = "SELECT id FROM location WHERE name=? AND tags=?";
-    long id = jdbcTemplate.queryForObject(sql, Long.class, location.name, location.tags);
-
-    // Set location id
-    location.id = id;
   }
 
   public void update(Location location) {

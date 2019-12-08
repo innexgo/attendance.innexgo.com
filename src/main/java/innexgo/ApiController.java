@@ -39,7 +39,7 @@ public class ApiController {
 
   static final ResponseEntity<?> BAD_REQUEST = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
   static final ResponseEntity<?> INTERNAL_SERVER_ERROR =
-      new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
   static final ResponseEntity<?> OK = new ResponseEntity<>(HttpStatus.OK);
   static final ResponseEntity<?> UNAUTHORIZED = new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
   static final ResponseEntity<?> NOT_FOUND = new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -251,7 +251,7 @@ public class ApiController {
       logger.info("Signing everyone out");
       // get list of open sessions
       List<Session> openSessionList =
-          sessionService.query(
+        sessionService.query(
             null, //  Long id
             null, //  Long inEncounterId
             null, //  Long outEncounterId
@@ -265,7 +265,7 @@ public class ApiController {
             null, //  Long outTimeBegin
             null, //  Long outTimeEnd
             null  //  Long count
-          );
+            );
 
       for (Session openSession : openSessionList) {
         // Virtually close session by generating a fake (virtual) encounter and insert it in.
@@ -290,13 +290,13 @@ public class ApiController {
         // We give them the forgot to sign out irregularity at the course which they signed in to
         // period and course are that of the first period with a course that the session intersected
         List<Period> intersectedPeriods =
-            periodService.query(
+          periodService.query(
               null,                                                // Long startTime
               null,                                                // Long number
               Period.CLASS_PERIOD,                                 // String type
               periodService.getByTime(inEncounter.time).startTime, // Long minStartTime
               outEncounter.time                                    // Long maxStartTime
-            );
+              );
 
         // Find first period with a course at this location
         Period irregPeriod = null;
@@ -333,13 +333,13 @@ public class ApiController {
     logger.info("Starting insert absences process");
     // the list of periods that havent started yet
     List<Period> periodList =
-        periodService.query(
+      periodService.query(
           null,                       // Long startTime,
           null,                       // Long number,
           null,                       // String type,
           System.currentTimeMillis(), // Long minStartTime,
           null                        // Long maxStartTime
-        );
+          );
 
     for (int i = 0; i < periodList.size(); i++) {
       Period period = periodList.get(i);
@@ -365,29 +365,28 @@ public class ApiController {
         // mark all students not there as absent
         for (Student student : absentees) {
           // Check if already absent. if not, don't add
-          boolean alreadyAbsent =
-              irregularityService
-                      .query(
-                          null,
-                          student.id,
-                          null,
-                          period.id,
-                          null,
-                          Irregularity.TYPE_ABSENT,
-                          null,
-                          null,
-                          null)
-                      .size()
-                  > 0;
+          boolean alreadyAbsent = irregularityService.query(
+              null,                     //  Long id
+              student.id,               //  Long studentId
+              null,                     //  Long courseId
+              period.startTime,         //  Long periodStartTime
+              null,                     //  Long teacherId
+              Irregularity.TYPE_ABSENT, //  String type
+              null,                     //  Long time
+              null,                     //  Long timeMissing
+              null                      //  Long count
+              ).size() > 0;
           // if not already absent
           if (!alreadyAbsent) {
             Irregularity irregularity = new Irregularity();
             irregularity.studentId = student.id;
             irregularity.courseId = course.id;
-            irregularity.periodId = period.id;
+            irregularity.periodStartTime = period.startTime;
             irregularity.type = Irregularity.TYPE_ABSENT;
             irregularity.time = period.startTime;
-            irregularity.timeMissing = period.endTime - period.startTime;
+            irregularity.timeMissing = periodService
+              .getNextByTime(period.startTime+1)
+              .startTime - period.startTime;
             irregularityService.add(irregularity);
           }
         }
@@ -413,34 +412,34 @@ public class ApiController {
       @RequestParam("expirationTime") Long expirationTime,
       @RequestParam("password") String password) {
 
-    // if they gave a username instead of a userId
-    if (userId == -1 && !Utils.isEmpty(email)) {
+      // if they gave a username instead of a userId
+      if (userId == -1 && !Utils.isEmpty(email)) {
 
-      // if the email is registered
-      if (userService.existsByEmail(email)) {
-        // get email
-        userId = userService.getByEmail(email).id;
+        // if the email is registered
+        if (userService.existsByEmail(email)) {
+          // get email
+          userId = userService.getByEmail(email).id;
+        }
       }
-    }
 
-    // now actually make apiKey
-    if (userService.existsById(userId)) {
-      User u = userService.getById(userId);
-      if (Utils.matchesPassword(password, u.passwordHash)) {
-        ApiKey apiKey = new ApiKey();
-        apiKey.userId = userId;
-        apiKey.creationTime = System.currentTimeMillis();
-        apiKey.expirationTime = expirationTime;
-        apiKey.key = Utils.generateKey();
-        apiKey.keyHash = Utils.encodeApiKey(apiKey.key);
-        apiKeyService.add(apiKey);
-        return new ResponseEntity<>(fillApiKey(apiKey), HttpStatus.OK);
-      } else {
-        return UNAUTHORIZED;
+      // now actually make apiKey
+      if (userService.existsById(userId)) {
+        User u = userService.getById(userId);
+        if (Utils.matchesPassword(password, u.passwordHash)) {
+          ApiKey apiKey = new ApiKey();
+          apiKey.userId = userId;
+          apiKey.creationTime = System.currentTimeMillis();
+          apiKey.expirationTime = expirationTime;
+          apiKey.key = Utils.generateKey();
+          apiKey.keyHash = Utils.encodeApiKey(apiKey.key);
+          apiKeyService.add(apiKey);
+          return new ResponseEntity<>(fillApiKey(apiKey), HttpStatus.OK);
+        } else {
+          return UNAUTHORIZED;
+        }
       }
-    }
-    return BAD_REQUEST;
-  }
+      return BAD_REQUEST;
+      }
 
 
   /**
@@ -461,7 +460,6 @@ public class ApiController {
       @RequestParam("locationId") Long locationId,
       @RequestParam("period") Long period,
       @RequestParam("subject") String subject,
-      @RequestParam("semester") Long semester,
       @RequestParam("apiKey") String apiKey) {
     if (isAdministrator(apiKey)) {
       if (!Utils.isEmpty(subject)
@@ -472,7 +470,6 @@ public class ApiController {
         course.locationId = locationId;
         course.period = period;
         course.subject = subject;
-        course.semester = semester;
         courseService.add(course);
         // return the filled course on success
         return new ResponseEntity<>(fillCourse(course), HttpStatus.OK);
@@ -499,236 +496,16 @@ public class ApiController {
   public ResponseEntity<?> newEncounter(
       @RequestParam("studentId") Long studentId,
       @RequestParam("locationId") Long locationId,
-      @RequestParam(value = "noSession", defaultValue = "false") Boolean noSession,
       @RequestParam("apiKey") String apiKey) {
-
     if (isTrusted(apiKey)) {
-      Student student;
-
-      if (locationService.existsById(locationId) && studentService.existsById(studentId)) {
+      if (locationService.existsById(locationId)
+          && studentService.existsById(studentId)) {
         Encounter encounter = new Encounter();
         encounter.locationId = locationId;
-        encounter.studentId = student.id;
+        encounter.studentId = studentId;
         encounter.time = System.currentTimeMillis();
         encounter.virtual = false;
         encounterService.add(encounter);
-
-        // Now we update sessions
-        if (!noSession) {
-
-          // if school is currently going on, represents the current period
-          Period currentPeriod = null;
-          // if there is currently a course going on, represents the current course
-          Course currentCourse = null;
-
-          List<Period> currentPeriods =
-              periodService.query(
-                  null, // id,
-                  System.currentTimeMillis(), // time,
-                  null, // minDuration,
-                  null, // maxDuration,
-                  null, // initialTimeBegin,
-                  null, // initialTimeEnd,
-                  null, // startTimeBegin,
-                  null, // startTimeEnd,
-                  null, // endTimeBegin,
-                  null, // endTimeEnd,
-                  null, // period,
-                  null, // courseId,
-                  null // teacherId
-                  );
-
-          currentPeriod = currentPeriods.isEmpty() ? null : currentPeriods.get(0);
-
-          if (currentPeriod != null) {
-            List<Course> currentCourses =
-                courseService.query(
-                    null, // Long id
-                    null, // Long teacherId
-                    locationId, // Long locationId
-                    null, // Long studentId
-                    currentPeriod.period, // Long period
-                    null, // String subject
-                    null, // Long time
-                    semesterService.getCurrentSemester().id // Long semester
-                    );
-
-            currentCourse = currentCourses.isEmpty() ? null : currentCourses.get(0);
-          } else {
-            currentCourse = null;
-          }
-
-
-          List<Session> openSessions =
-              sessionService.query(
-                  null, // Long id
-                  null, // Long inEncounterId
-                  null, // Long outEncounterId
-                  null, // Long anyEncounterId
-                  null, // Long periodId
-                  null, // Long period
-                  null, // Long courseId
-                  false, // Boolean complete
-                  null, // Long locationId
-                  student.id, // Long studentId
-                  null, // Long teacherId
-                  null, // Long time
-                  null, // Long inTimeBegin
-                  null, // Long inTimeEnd
-                  null, // Long outTimeBegin
-                  null, // Long outTimeEnd
-                  null // Long count
-                  );
-
-
-          // If the encounter was used to close a session properly
-          boolean usedToClose = false;
-
-
-          for (Session openSession : openSessions) {
-            Encounter inEncounter = encounterService.getById(openSession.inEncounterId);
-            // if it's at the same location
-            if (locationId == inEncounter.locationId) {
-              // Then close this session naturally
-              openSession.outEncounterId = encounter.id;
-              openSession.complete = true;
-              sessionService.update(openSession);
-
-              usedToClose = true;
-
-              if (currentCourse != null) {
-                // if it is in the middle of class, add a leaveEarly irregularity
-                if (System.currentTimeMillis() < currentPeriod.endTime) {
-                  Irregularity irregularity = new Irregularity();
-                  irregularity.studentId = student.id;
-                  irregularity.courseId = currentCourse.id;
-                  irregularity.periodId = currentPeriod.id;
-                  // if before the period has actually started, make absent instead of left early
-                  irregularity.type =
-                      System.currentTimeMillis() < currentPeriod.startTime
-                          ? Irregularity.TYPE_ABSENT
-                          : Irregularity.TYPE_LEFT_EARLY;
-                  irregularity.time = System.currentTimeMillis();
-                  irregularity.timeMissing = currentPeriod.endTime - System.currentTimeMillis();
-                  irregularityService.add(irregularity);
-                }
-              }
-            } else {
-              // its not at the same location as the beginning
-              // Virtually close session by generating a fake (virtual) encounter and insert it in.
-              // We know they must have somehow left from here
-              Encounter virtualEncounter = new Encounter();
-              virtualEncounter.locationId = inEncounter.locationId;
-              virtualEncounter.studentId = student.id;
-              virtualEncounter.time = System.currentTimeMillis();
-              virtualEncounter.virtual = true;
-              encounterService.add(virtualEncounter);
-
-              openSession.outEncounterId = virtualEncounter.id;
-              openSession.complete = true;
-              sessionService.update(openSession);
-
-              // period and course are that of the first period with a course that the session
-              // intersected
-              List<Period> intersectedPeriods =
-                  periodService.query(
-                      null, // Long id,
-                      null, // Long time,
-                      null, // Long minDuration,
-                      null, // Long maxDuration,
-                      null, // Long initialTimeBegin,
-                      inEncounter.time, // Long initialTimeEnd,
-                      null, // Long startTimeBegin,
-                      null, // Long startTimeEnd,
-                      System.currentTimeMillis(), // Long endTimeBegin,
-                      null, // Long endTimeEnd,
-                      null, // Long period,
-                      null, // Long courseId
-                      null // Long teacherId
-                      );
-              // Find first period with a course at this location
-              Period irregPeriod = null;
-              Course irregCourse = null;
-              for (Period period : intersectedPeriods) {
-                List<Course> courses =
-                    courseService.query(
-                        null, // Long id,
-                        null, // Long teacherId,
-                        inEncounter.locationId, // Long locationId,
-                        openSession.studentId, // Long studentId,
-                        period.period, // Long period,
-                        null, // String subject,
-                        null, // Long time,
-                        semesterService.getCurrentSemester().id // Long semester
-                        );
-                if (courses.size() > 0) {
-                  irregPeriod = period;
-                  irregCourse = courses.get(0);
-                }
-              }
-
-              if (irregPeriod != null && irregCourse != null) {
-                // Now add irregularity about forgetting to sign out
-                Irregularity forgotToSignOut = new Irregularity();
-                forgotToSignOut.studentId = openSession.studentId;
-                forgotToSignOut.courseId = irregCourse.id;
-                forgotToSignOut.periodId = irregPeriod.id;
-                forgotToSignOut.type = Irregularity.TYPE_FORGOT_SIGN_OUT;
-                forgotToSignOut.time = irregPeriod.startTime;
-                forgotToSignOut.timeMissing = 0;
-                irregularityService.add(forgotToSignOut);
-              }
-            }
-          }
-
-          // If the encounter wasn't used to close, we must make a new one
-          if (!usedToClose) {
-            // make new open session
-            Session session = new Session();
-            session.studentId = student.id;
-            session.complete = false;
-            session.inEncounterId = encounter.id;
-            session.outEncounterId = 0;
-            sessionService.add(session);
-
-            if (currentCourse != null) {
-              // now we check if they arent there, and fix it
-              List<Irregularity> irregularities =
-                irregularityService.query(
-                    null, // id
-                    student.id, // studentId
-                    currentCourse.id, // courseId
-                    currentPeriod.id, // periodId
-                    null, // teacherId
-                    null, // type
-                    null, // time
-                    null, // timeMissing
-                    null // count
-                    );
-
-              for (Irregularity irregularity : irregularities) {
-                if (irregularity.type.equals(Irregularity.TYPE_ABSENT)) {
-                  // if there is absence, convert it to a tardy or delete it
-                  if (System.currentTimeMillis() > currentPeriod.startTime) {
-                    irregularity.type = Irregularity.TYPE_TARDY;
-                    irregularity.timeMissing =
-                      System.currentTimeMillis() - currentPeriod.startTime;
-                    irregularityService.update(irregularity);
-                  } else {
-                    // if they're present before the startTime
-                    irregularityService.deleteById(irregularity.id);
-                  }
-                } else if (irregularity.type.equals(Irregularity.TYPE_LEFT_EARLY)) {
-                  // if there is a leftEarly, convert it to a leftTemporarily
-                  irregularity.type = Irregularity.TYPE_LEFT_TEMPORARILY;
-                  irregularity.timeMissing = System.currentTimeMillis() - irregularity.time;
-                  irregularityService.update(irregularity);
-                }
-              }
-            }
-          }
-        }
-        // return the filled encounter on success
         return new ResponseEntity<>(fillEncounter(encounter), HttpStatus.OK);
       } else {
         return BAD_REQUEST;
@@ -753,32 +530,35 @@ public class ApiController {
       @RequestParam("name") String name,
       @RequestParam("tags") String tags,
       @RequestParam("apiKey") String apiKey) {
-    if (isAdministrator(apiKey)) {
-      if (!Utils.isEmpty(name) && !Utils.isEmpty(tags)) {
-        Location location = new Location();
-        location.name = name;
-        location.tags = tags;
-        locationService.add(location);
-        return new ResponseEntity<>(fillLocation(location), HttpStatus.OK);
+      if (isAdministrator(apiKey)) {
+        if (!Utils.isEmpty(name) && !Utils.isEmpty(tags)) {
+          Location location = new Location();
+          location.name = name;
+          location.tags = tags;
+          locationService.add(location);
+          return new ResponseEntity<>(fillLocation(location), HttpStatus.OK);
+        } else {
+          return BAD_REQUEST;
+        }
       } else {
-        return BAD_REQUEST;
+        return UNAUTHORIZED;
       }
-    } else {
-      return UNAUTHORIZED;
-    }
-  }
+      }
 
   @RequestMapping("/offering/new/")
   public ResponseEntity<?> newOffering(
-      @RequestParam("semesterId") Long semesterId,
+      @RequestParam("semesterStartTime") Long semesterStartTime,
       @RequestParam("courseId") Long courseId,
       @RequestParam("apiKey") String apiKey) {
     if (isAdministrator(apiKey)) {
-      if (semesterService.existsById(semesterId)
+      if (semesterService.existsByStartTime(semesterStartTime)
           && courseService.existsById(courseId)
-          && offeringService.getOfferingBySemesterIdCourseId(semesterId, courseId) == null) {
+          && offeringService.getOfferingBySemesterStartTimeCourseId(
+              semesterStartTime,
+              courseId)
+            == null) {
         Offering offering = new Offering();
-        offering.semesterId = semesterId;
+        offering.semesterStartTime = semesterStartTime;
         offering.courseId = courseId;
         offeringService.add(offering);
         return new ResponseEntity<>(fillOffering(offering), HttpStatus.OK);
@@ -792,19 +572,18 @@ public class ApiController {
 
   @RequestMapping("/period/new/")
   public ResponseEntity<?> newPeriod(
-      @RequestParam("initialTime") Long initialTime,
       @RequestParam("startTime") Long startTime,
-      @RequestParam("endTime") Long endTime,
-      @RequestParam("period") Long period,
+      @RequestParam("number") Long number,
+      @RequestParam("type") String type,
       @RequestParam("apiKey") String apiKey) {
     if (isAdministrator(apiKey)) {
-      Period p = new Period();
-      p.initialTime = initialTime;
-      p.startTime = startTime;
-      p.endTime = endTime;
-      p.period = period;
-      periodService.add(p);
-      return new ResponseEntity<>(fillPeriod(p), HttpStatus.OK);
+      // TODO verify that type is one of the predefined types
+      Period pr = new Period();
+      pr.startTime = startTime;
+      pr.number = number;
+      pr.type = type;
+      periodService.add(pr);
+      return new ResponseEntity<>(fillPeriod(pr), HttpStatus.OK);
     } else {
       return UNAUTHORIZED;
     }
@@ -814,6 +593,8 @@ public class ApiController {
   public ResponseEntity<?> newSchedule(
       @RequestParam("studentId") Long studentId,
       @RequestParam("courseId") Long courseId,
+      @RequestParam(value="startTime", defaultValue="-1") Long startTime,
+      @RequestParam(value="endTime", defaultValue="-1") Long endTime,
       @RequestParam("apiKey") String apiKey) {
     if (isAdministrator(apiKey)) {
       if (studentService.existsById(studentId)
@@ -822,6 +603,14 @@ public class ApiController {
         Schedule schedule = new Schedule();
         schedule.studentId = studentId;
         schedule.courseId = courseId;
+        schedule.hasStart = startTime >= 0;
+        if(schedule.hasStart) {
+          schedule.startTime = startTime;
+        }
+        schedule.hasEnd = endTime >= 0;
+        if(schedule.hasEnd) {
+          schedule.endTime = endTime;
+        }
         scheduleService.add(schedule);
         return new ResponseEntity<>(fillSchedule(schedule), HttpStatus.OK);
       } else {
@@ -834,18 +623,20 @@ public class ApiController {
 
   @RequestMapping("/student/new/")
   public ResponseEntity<?> newStudent(
-      @RequestParam("graduatingSemesterId") Long id,
-      @RequestParam("year") Integer graduatingYear,
+      @RequestParam("studentId") Long studentId,
       @RequestParam("name") String name,
       @RequestParam(value = "tags", defaultValue = "") String tags,
+      @RequestParam("initialSemesterStartTime") Long initialSemesterStartTime,
       @RequestParam("apiKey") String apiKey) {
     if (isAdministrator(apiKey)) {
-      if (!studentService.existsById(id) && !Utils.isEmpty(name)) {
+      if (!studentService.existsById(studentId)
+          && semesterService.existsByStartTime(initialSemesterStartTime)
+          && !Utils.isEmpty(name)) {
         Student student = new Student();
-        student.id = id;
-        student.graduatingYear = graduatingYear;
+        student.id = studentId;
         student.name = name.toUpperCase();
         student.tags = tags;
+        student.initialSemesterStartTime = initialSemesterStartTime;
         studentService.add(student);
         return new ResponseEntity<>(fillStudent(student), HttpStatus.OK);
       } else {
@@ -889,26 +680,30 @@ public class ApiController {
       @RequestParam("userId") Long userId,
       @RequestParam("oldPassword") String oldPassword,
       @RequestParam("newPassword") String newPassword) {
-    if (!Utils.isEmpty(oldPassword)
-        && userService.existsById(userId)
-        && Utils.matchesPassword(oldPassword, userService.getById(userId).passwordHash)) {
+    if(!userService.existsById(userId)) {
+      return BAD_REQUEST;
+    }
 
-      if (!Utils.isEmpty(newPassword)) {
-        User user = userService.getById(userId);
-        user.passwordHash = Utils.encodePassword(newPassword);
-        userService.update(user);
-        return new ResponseEntity<>(fillUser(user), HttpStatus.OK);
-      } else {
-        return BAD_REQUEST;
-      }
-    } else {
+    User user = userService.getById(userId);
+
+    if(!Utils.isEmpty(oldPassword)
+        && Utils.matchesPassword(oldPassword, user.passwordHash)) {
       return UNAUTHORIZED;
     }
+
+    if(Utils.isEmpty(newPassword)) {
+      return BAD_REQUEST;
+    }
+
+    user.passwordHash = Utils.encodePassword(newPassword);
+    userService.update(user);
+    return new ResponseEntity<>(fillUser(user), HttpStatus.OK);
   }
 
   @RequestMapping("/apiKey/delete/")
   public ResponseEntity<?> deleteApiKey(
-      @RequestParam("apiKeyId") Long apiKeyId, @RequestParam("apiKey") String apiKey) {
+      @RequestParam("apiKeyId") Long apiKeyId,
+      @RequestParam("apiKey") String apiKey) {
     if (isAdministrator(apiKey)) {
       if (apiKeyService.existsById(apiKeyId)) {
         return new ResponseEntity<>(fillApiKey(apiKeyService.deleteById(apiKeyId)), HttpStatus.OK);
@@ -923,7 +718,8 @@ public class ApiController {
 
   @RequestMapping("/irregularity/delete/")
   public ResponseEntity<?> deleteIrregularity(
-      @RequestParam("irregularityId") Long irregularityId, @RequestParam("apiKey") String apiKey) {
+      @RequestParam("irregularityId") Long irregularityId,
+      @RequestParam("apiKey") String apiKey) {
     if (isAdministrator(apiKey)) {
       if (irregularityService.existsById(irregularityId)) {
         return new ResponseEntity<>(
@@ -938,7 +734,8 @@ public class ApiController {
 
   @RequestMapping("/schedule/delete/")
   public ResponseEntity<?> deleteSchedule(
-      @RequestParam("scheduleId") Integer scheduleId, @RequestParam("apiKey") String apiKey) {
+      @RequestParam("scheduleId") Integer scheduleId,
+      @RequestParam("apiKey") String apiKey) {
     if (isAdministrator(apiKey)) {
       if (scheduleService.existsById(scheduleId)) {
         return new ResponseEntity<>(
@@ -952,21 +749,23 @@ public class ApiController {
   }
 
   @RequestMapping("/apiKey/")
-  public ResponseEntity<?> viewApiKey(@RequestParam Map<String, String> allRequestParam) {
-    if (allRequestParam.containsKey("apiKey") && isTrusted(allRequestParam.get("apiKey"))) {
+  public ResponseEntity<?> viewApiKey(
+      @RequestParam Map<String, String> allRequestParam) {
+    if (allRequestParam.containsKey("apiKey")
+        && isTrusted(allRequestParam.get("apiKey"))) {
       List<ApiKey> list =
-          apiKeyService
-              .query(
-                  Utils.parseLong(allRequestParam.get("apiKeyId")),
-                  Utils.parseLong(allRequestParam.get("userId")),
-                  Utils.parseLong(allRequestParam.get("minCreationTime")),
-                  Utils.parseLong(allRequestParam.get("maxCreationTime")),
-                  allRequestParam.containsKey("apiKeyData")
-                      ? Utils.encodeApiKey(allRequestParam.get("apiKeyData"))
-                      : null)
-              .stream()
-              .map(x -> fillApiKey(x))
-              .collect(Collectors.toList());
+        apiKeyService
+        .query(
+            Utils.parseLong(allRequestParam.get("apiKeyId")),
+            Utils.parseLong(allRequestParam.get("userId")),
+            Utils.parseLong(allRequestParam.get("minCreationTime")),
+            Utils.parseLong(allRequestParam.get("maxCreationTime")),
+            allRequestParam.containsKey("apiKeyData")
+              ? Utils.encodeApiKey(allRequestParam.get("apiKeyData"))
+              : null)
+        .stream()
+        .map(x -> fillApiKey(x))
+        .collect(Collectors.toList());
       return new ResponseEntity<>(list, HttpStatus.OK);
     } else {
       return UNAUTHORIZED;
@@ -979,21 +778,19 @@ public class ApiController {
     if (isTrusted(apiKey)) {
 
       List<Course> els =
-          courseService
-              .query(
-                  Utils.parseLong(allRequestParam.get("courseId")),
-                  Utils.parseLong(allRequestParam.get("teacherId")),
-                  Utils.parseLong(allRequestParam.get("locationId")),
-                  Utils.parseLong(allRequestParam.get("studentId")),
-                  Utils.parseLong(allRequestParam.get("period")),
-                  allRequestParam.get("subject"),
-                  Utils.parseLong(allRequestParam.get("time")),
-                  Utils.parseLong(
-                      allRequestParam.getOrDefault(
-                          "semester", Long.toString(semesterService.getCurrentSemester().id))))
-              .stream()
-              .map(x -> fillCourse(x))
-              .collect(Collectors.toList());
+        courseService
+        .query(
+            Utils.parseLong(allRequestParam.get("courseId")),
+            Utils.parseLong(allRequestParam.get("teacherId")),
+            Utils.parseLong(allRequestParam.get("locationId")),
+            Utils.parseLong(allRequestParam.get("studentId")),
+            Utils.parseLong(allRequestParam.get("period")),
+            allRequestParam.get("subject"),
+            Utils.parseLong(allRequestParam.get("semesterStartTime"))
+          )
+        .stream()
+        .map(x -> fillCourse(x))
+        .collect(Collectors.toList());
       return new ResponseEntity<>(els, HttpStatus.OK);
     } else {
       return UNAUTHORIZED;
@@ -1005,19 +802,19 @@ public class ApiController {
     String apiKey = allRequestParam.get("apiKey");
     if (isTrusted(apiKey)) {
       List<Encounter> els =
-          encounterService
-              .query(
-                  Utils.parseLong(allRequestParam.get("count")),
-                  Utils.parseLong(allRequestParam.get("encounterId")),
-                  Utils.parseLong(allRequestParam.get("studentId")),
-                  Utils.parseLong(allRequestParam.get("locationId")),
-                  Utils.parseLong(allRequestParam.get("minTime")),
-                  Utils.parseLong(allRequestParam.get("maxTime")),
-                  Utils.parseBoolean(allRequestParam.get("virtual")),
-                  allRequestParam.get("studentName"))
-              .stream()
-              .map(x -> fillEncounter(x))
-              .collect(Collectors.toList());
+        encounterService
+        .query(
+            Utils.parseLong(allRequestParam.get("encounterId")),
+            Utils.parseLong(allRequestParam.get("studentId")),
+            Utils.parseLong(allRequestParam.get("locationId")),
+            Utils.parseLong(allRequestParam.get("minTime")),
+            Utils.parseLong(allRequestParam.get("maxTime")),
+            Utils.parseBoolean(allRequestParam.get("virtual")),
+            Utils.parseLong(allRequestParam.get("count"))
+          )
+        .stream()
+        .map(x -> fillEncounter(x))
+        .collect(Collectors.toList());
       return new ResponseEntity<>(els, HttpStatus.OK);
     } else {
       return UNAUTHORIZED;
@@ -1029,20 +826,20 @@ public class ApiController {
     String apiKey = allRequestParam.get("apiKey");
     if (isTrusted(apiKey)) {
       List<Irregularity> els =
-          irregularityService
-              .query(
-                  Utils.parseLong(allRequestParam.get("irregularityId")),
-                  Utils.parseLong(allRequestParam.get("studentId")),
-                  Utils.parseLong(allRequestParam.get("courseId")),
-                  Utils.parseLong(allRequestParam.get("periodId")),
-                  Utils.parseLong(allRequestParam.get("teacherId")),
-                  allRequestParam.get("type"),
-                  Utils.parseLong(allRequestParam.get("time")),
-                  Utils.parseLong(allRequestParam.get("timeMissing")),
-                  Utils.parseLong(allRequestParam.get("count")))
-              .stream()
-              .map(x -> fillIrregularity(x))
-              .collect(Collectors.toList());
+        irregularityService
+        .query(
+            Utils.parseLong(allRequestParam.get("irregularityId")),
+            Utils.parseLong(allRequestParam.get("studentId")),
+            Utils.parseLong(allRequestParam.get("courseId")),
+            Utils.parseLong(allRequestParam.get("periodStartTime")),
+            Utils.parseLong(allRequestParam.get("teacherId")),
+            allRequestParam.get("type"),
+            Utils.parseLong(allRequestParam.get("time")),
+            Utils.parseLong(allRequestParam.get("timeMissing")),
+            Utils.parseLong(allRequestParam.get("count")))
+        .stream()
+        .map(x -> fillIrregularity(x))
+        .collect(Collectors.toList());
       return new ResponseEntity<>(els, HttpStatus.OK);
     } else {
       return UNAUTHORIZED;
@@ -1053,14 +850,14 @@ public class ApiController {
   public ResponseEntity<?> viewLocation(@RequestParam Map<String, String> allRequestParam) {
     if (allRequestParam.containsKey("apiKey") && isTrusted(allRequestParam.get("apiKey"))) {
       List<Location> list =
-          locationService
-              .query(
-                  Utils.parseLong(allRequestParam.get("locationId")),
-                  allRequestParam.get("name"),
-                  allRequestParam.get("tags"))
-              .stream()
-              .map(x -> fillLocation(x))
-              .collect(Collectors.toList());
+        locationService
+        .query(
+            Utils.parseLong(allRequestParam.get("locationId")),
+            allRequestParam.get("name"),
+            allRequestParam.get("tags"))
+        .stream()
+        .map(x -> fillLocation(x))
+        .collect(Collectors.toList());
       return new ResponseEntity<>(list, HttpStatus.OK);
     } else {
       return UNAUTHORIZED;
@@ -1072,24 +869,17 @@ public class ApiController {
     String apiKey = allRequestParam.get("apiKey");
     if (isTrusted(apiKey)) {
       List<Period> els =
-          periodService
-              .query(
-                  Utils.parseLong(allRequestParam.get("periodId")),
-                  Utils.parseLong(allRequestParam.get("time")),
-                  Utils.parseLong(allRequestParam.get("minDuration")),
-                  Utils.parseLong(allRequestParam.get("maxDuration")),
-                  Utils.parseLong(allRequestParam.get("initialTimeBegin")),
-                  Utils.parseLong(allRequestParam.get("initialTimeEnd")),
-                  Utils.parseLong(allRequestParam.get("startTimeBegin")),
-                  Utils.parseLong(allRequestParam.get("startTimeEnd")),
-                  Utils.parseLong(allRequestParam.get("endTimeBegin")),
-                  Utils.parseLong(allRequestParam.get("endTimeEnd")),
-                  Utils.parseLong(allRequestParam.get("period")),
-                  Utils.parseLong(allRequestParam.get("courseId")),
-                  Utils.parseLong(allRequestParam.get("teacherId")))
-              .stream()
-              .map(x -> fillPeriod(x))
-              .collect(Collectors.toList());
+        periodService
+        .query(
+            Utils.parseLong(allRequestParam.get("startTime")),
+            Utils.parseLong(allRequestParam.get("number")),
+            allRequestParam.get("number"),
+            Utils.parseLong(allRequestParam.get("minStartTime")),
+            Utils.parseLong(allRequestParam.get("maxStartTime"))
+          )
+        .stream()
+        .map(x -> fillPeriod(x))
+        .collect(Collectors.toList());
       return new ResponseEntity<>(els, HttpStatus.OK);
     } else {
       return UNAUTHORIZED;
@@ -1100,17 +890,22 @@ public class ApiController {
   public ResponseEntity<?> viewSchedule(@RequestParam Map<String, String> allRequestParam) {
     if (allRequestParam.containsKey("apiKey") && isTrusted(allRequestParam.get("apiKey"))) {
       List<Schedule> list =
-          scheduleService
-              .query(
-                  Utils.parseLong(allRequestParam.get("scheduleId")),
-                  Utils.parseLong(allRequestParam.get("studentId")),
-                  Utils.parseLong(allRequestParam.get("courseId")),
-                  Utils.parseLong(allRequestParam.get("teacherId")),
-                  Utils.parseLong(allRequestParam.get("locationId")),
-                  Utils.parseLong(allRequestParam.get("period")))
-              .stream()
-              .map(x -> fillSchedule(x))
-              .collect(Collectors.toList());
+        scheduleService
+        .query(
+            Utils.parseLong(allRequestParam.get("scheduleId")),
+            Utils.parseLong(allRequestParam.get("studentId")),
+            Utils.parseLong(allRequestParam.get("courseId")),
+            Utils.parseBoolean(allRequestParam.get("hasStart")),
+            Utils.parseLong(allRequestParam.get("startTime")),
+            Utils.parseBoolean(allRequestParam.get("hasEnd")),
+            Utils.parseLong(allRequestParam.get("endTime")),
+            Utils.parseLong(allRequestParam.get("teacherId")),
+            Utils.parseLong(allRequestParam.get("locationId")),
+            Utils.parseLong(allRequestParam.get("period"))
+          )
+        .stream()
+        .map(x -> fillSchedule(x))
+        .collect(Collectors.toList());
       return new ResponseEntity<>(list, HttpStatus.OK);
     } else {
       return UNAUTHORIZED;
@@ -1121,28 +916,25 @@ public class ApiController {
   public ResponseEntity<?> viewSession(@RequestParam Map<String, String> allRequestParam) {
     if (allRequestParam.containsKey("apiKey") && isTrusted(allRequestParam.get("apiKey"))) {
       List<Session> list =
-          sessionService
-              .query(
-                  Utils.parseLong(allRequestParam.get("id")),
-                  Utils.parseLong(allRequestParam.get("inEncounterId")),
-                  Utils.parseLong(allRequestParam.get("outEncounterId")),
-                  Utils.parseLong(allRequestParam.get("anyEncounterId")),
-                  Utils.parseLong(allRequestParam.get("periodId")),
-                  Utils.parseLong(allRequestParam.get("period")),
-                  Utils.parseLong(allRequestParam.get("courseId")),
-                  Utils.parseBoolean(allRequestParam.get("complete")),
-                  Utils.parseLong(allRequestParam.get("locationId")),
-                  Utils.parseLong(allRequestParam.get("studentId")),
-                  Utils.parseLong(allRequestParam.get("teacherId")),
-                  Utils.parseLong(allRequestParam.get("time")),
-                  Utils.parseLong(allRequestParam.get("inTimeBegin")),
-                  Utils.parseLong(allRequestParam.get("inTimeEnd")),
-                  Utils.parseLong(allRequestParam.get("outTimeBegin")),
-                  Utils.parseLong(allRequestParam.get("outTimeEnd")),
-                  Utils.parseLong(allRequestParam.get("count")))
-              .stream()
-              .map(x -> fillSession(x))
-              .collect(Collectors.toList());
+        sessionService
+        .query(
+            Utils.parseLong(allRequestParam.get("sessionId")),
+            Utils.parseLong(allRequestParam.get("inEncounterId")),
+            Utils.parseLong(allRequestParam.get("outEncounterId")),
+            Utils.parseLong(allRequestParam.get("anyEncounterId")),
+            Utils.parseBoolean(allRequestParam.get("complete")),
+            Utils.parseLong(allRequestParam.get("studentId")),
+            Utils.parseLong(allRequestParam.get("locationId")),
+            Utils.parseLong(allRequestParam.get("time")),
+            Utils.parseLong(allRequestParam.get("inTimeBegin")),
+            Utils.parseLong(allRequestParam.get("inTimeEnd")),
+            Utils.parseLong(allRequestParam.get("outTimeBegin")),
+            Utils.parseLong(allRequestParam.get("outTimeEnd")),
+            Utils.parseLong(allRequestParam.get("count"))
+          )
+        .stream()
+        .map(x -> fillSession(x))
+        .collect(Collectors.toList());
       return new ResponseEntity<>(list, HttpStatus.OK);
     } else {
       return UNAUTHORIZED;
@@ -1151,19 +943,21 @@ public class ApiController {
 
   @RequestMapping("/student/")
   public ResponseEntity<?> viewStudent(@RequestParam Map<String, String> allRequestParam) {
-    if (allRequestParam.containsKey("apiKey") && isTrusted(allRequestParam.get("apiKey"))) {
+    if (allRequestParam.containsKey("apiKey") 
+        && isTrusted(allRequestParam.get("apiKey"))) {
       List<Student> list =
-          studentService
-              .query(
-                  Utils.parseLong(allRequestParam.get("studentId")),
-                  Utils.parseLong(allRequestParam.get("courseId")),
-                  Utils.parseLong(allRequestParam.get("graduatingYear")),
-                  allRequestParam.get("name"),
-                  allRequestParam.get("partialName"),
-                  allRequestParam.get("tags"))
-              .stream()
-              .map(x -> fillStudent(x))
-              .collect(Collectors.toList());
+        studentService
+        .query(
+            Utils.parseLong(allRequestParam.get("studentId")),
+            allRequestParam.get("name"),
+            allRequestParam.get("partialName"),
+            allRequestParam.get("tags"),
+            allRequestParam.get("partialTags"),
+            Utils.parseLong(allRequestParam.get("initialSemesterStartTime"))
+          )
+        .stream()
+        .map(x -> fillStudent(x))
+        .collect(Collectors.toList());
       return new ResponseEntity<>(list, HttpStatus.OK);
     } else {
       return UNAUTHORIZED;
@@ -1172,17 +966,19 @@ public class ApiController {
 
   @RequestMapping("/user/")
   public ResponseEntity<?> viewUser(@RequestParam Map<String, String> allRequestParam) {
-    if (allRequestParam.containsKey("apiKey") && isTrusted(allRequestParam.get("apiKey"))) {
+    if (allRequestParam.containsKey("apiKey") 
+        && isTrusted(allRequestParam.get("apiKey"))) {
       List<User> list =
-          userService
-              .query(
-                  Utils.parseLong(allRequestParam.get("userId")),
-                  allRequestParam.get("name"),
-                  allRequestParam.get("email"),
-                  Utils.parseLong(allRequestParam.get("ring")))
-              .stream()
-              .map(x -> fillUser(x))
-              .collect(Collectors.toList());
+        userService
+        .query(
+            Utils.parseLong(allRequestParam.get("userId")),
+            allRequestParam.get("name"),
+            allRequestParam.get("email"),
+            Utils.parseInteger(allRequestParam.get("ring"))
+        )
+        .stream()
+        .map(x -> fillUser(x))
+        .collect(Collectors.toList());
       return new ResponseEntity<>(list, HttpStatus.OK);
     } else {
       return UNAUTHORIZED;
@@ -1190,7 +986,197 @@ public class ApiController {
   }
 
   /* SPECIAL METHODS */
-  @RequestMapping("/validate/")
+  @RequestMapping("/misc/attends/")
+  public ResponseEntity<?> attends(
+      @RequestParam("studentId") Long studentId,
+      @RequestParam("locationId") Long locationId,
+      @RequestParam("apiKey") String apiKey
+    )
+  {
+    if(!isTrusted(apiKey)) {
+      return UNAUTHORIZED;
+    }
+
+    if(!locationService.existsById(locationId) || !studentService.existsById(studentId))
+    {
+      return BAD_REQUEST;
+    }
+
+    // Get this student
+    Student student = studentService.getById(studentId);
+
+    // Put the encounter in the database
+    Encounter encounter = new Encounter();
+    encounter.locationId = locationId;
+    encounter.studentId = student.id;
+    encounter.time = System.currentTimeMillis();
+    encounter.virtual = false;
+    encounterService.add(encounter);
+
+
+    // if school is currently going on, represents the current period
+    Period currentPeriod = periodService.getCurrent();
+
+    if(currentPeriod == null) {
+      logger.error("Current period is null! This shouldn't happen! Check DB");
+    }
+
+    // if there is currently a course going on, represents the current course
+    List<Course> currentCourses = courseService.getByPeriodStartTime(currentPeriod.startTime);
+    currentCourses.removeIf(cs -> cs.locationId != locationId);
+
+    Course currentCourse = currentCourses.isEmpty() ? null : currentCourses.get(0);
+
+    List<Session> openSessionList =
+      sessionService.query(
+          null,       //  Long id
+          null,       //  Long inEncounterId
+          null,       //  Long outEncounterId
+          null,       //  Long anyEncounterId
+          false,      //  Boolean complete
+          student.id, //  Long studentId
+          null,       //  Long locationId
+          null,       //  Long time
+          null,       //  Long inTimeBegin
+          null,       //  Long inTimeEnd
+          null,       //  Long outTimeBegin
+          null,       //  Long outTimeEnd
+          null        //  Long count
+          );
+
+    // If the encounter will be used to start a new session since there are no open ones
+    boolean usedToClose = false;
+
+    for (Session openSession : openSessionList) {
+      Encounter inEncounter = encounterService.getById(openSession.inEncounterId);
+      // if it's at the same location
+      if (locationId == inEncounter.locationId) {
+        // Then close this session naturally
+        openSession.outEncounterId = encounter.id;
+        openSession.complete = true;
+        sessionService.update(openSession);
+
+        usedToClose = true;
+
+        // if it is in the middle of class, add a leaveEarly irregularity
+        if (currentCourse != null) {
+          Irregularity irregularity = new Irregularity();
+          irregularity.studentId = student.id;
+          irregularity.courseId = currentCourse.id;
+          irregularity.periodStartTime = currentPeriod.startTime;
+          // if before the period has actually started, make absent instead of left early
+          irregularity.type = Irregularity.TYPE_LEFT_EARLY;
+          irregularity.time = encounter.time;
+          irregularity.timeMissing = periodService
+            .getNextByTime(encounter.time)
+            .startTime - encounter.time;
+          irregularityService.add(irregularity);
+        }
+      } else {
+        // its not at the same location as the beginning
+        // Virtually close session by generating a fake (virtual) encounter and insert it in.
+        // We know they must have somehow left from here
+
+        // make a virtual out encounter
+        Encounter outEncounter = new Encounter();
+        outEncounter.locationId = inEncounter.locationId;
+        outEncounter.studentId = inEncounter.studentId;
+        outEncounter.time = encounter.time;
+        outEncounter.virtual = true;
+        encounterService.add(outEncounter);
+
+        // now close session
+        openSession.outEncounterId = outEncounter.id;
+        openSession.complete = true;
+        sessionService.update(openSession);
+
+
+      // After the person signed out the first time, they might have been logged in at a bunch of classes afterwards
+        // We give them the forgot to sign out irregularity at the course which they signed in to
+        // period and course are that of the first period with a course that the session intersected
+        List<Period> intersectedPeriods =
+          periodService.query(
+              null,                                                // Long startTime
+              null,                                                // Long number
+              Period.CLASS_PERIOD,                                 // String type
+              periodService.getByTime(encounter.time).startTime,   // Long minStartTime
+              outEncounter.time                                    // Long maxStartTime
+              );
+
+        // Find first period with a course at this location
+        Period irregPeriod = null;
+        Course irregCourse = null;
+        for (Period period : intersectedPeriods) {
+          List<Course> courses = courseService.getByPeriodStartTime(period.startTime);
+          if (courses.size() > 0) {
+            irregPeriod = period;
+            irregCourse = courses.get(0);
+          }
+        }
+
+        if (irregPeriod != null && irregCourse != null) {
+          // Now add irregularity about forgetting to sign out
+          Irregularity forgotToSignOut = new Irregularity();
+          forgotToSignOut.studentId = inEncounter.studentId;
+          forgotToSignOut.courseId = irregCourse.id;
+          forgotToSignOut.periodStartTime = irregPeriod.startTime;
+          forgotToSignOut.type = Irregularity.TYPE_FORGOT_SIGN_OUT;
+          forgotToSignOut.time = irregPeriod.startTime;
+          forgotToSignOut.timeMissing = 0;
+          irregularityService.add(forgotToSignOut);
+        }
+      }
+    }
+
+    // If the encounter wasn't used to close, we must make a new one
+    if (!usedToClose) {
+      // make new open session
+      Session session = new Session();
+      session.complete = false;
+      session.inEncounterId = encounter.id;
+      session.outEncounterId = 0;
+      sessionService.add(session);
+
+      if (currentCourse != null) {
+        // now we check if they arent there, and fix it
+        List<Irregularity> irregularities =
+          irregularityService.query(
+                null,                    //  Long id
+                studentId,               //  Long studentId
+                currentCourse.id,        //  Long courseId
+                currentPeriod.startTime, //  Long periodStartTime
+                null,                    //  Long teacherId
+                null,                    //  String type
+                null,                    //  Long time
+                null,                    //  Long timeMissing
+                null                     //  Long count
+              );
+
+        for (Irregularity irregularity : irregularities) {
+          if (irregularity.type.equals(Irregularity.TYPE_ABSENT)) {
+            // if there is absence, convert it to a tardy or delete it
+            if (System.currentTimeMillis() > currentPeriod.startTime) {
+              irregularity.type = Irregularity.TYPE_TARDY;
+              irregularity.timeMissing = encounter.time - currentPeriod.startTime;
+              irregularityService.update(irregularity);
+            } else {
+              // if they're present before the startTime
+              irregularityService.deleteById(irregularity.id);
+            }
+          } else if (irregularity.type.equals(Irregularity.TYPE_LEFT_EARLY)) {
+            // if there is a leftEarly, convert it to a leftTemporarily
+            irregularity.type = Irregularity.TYPE_LEFT_TEMPORARILY;
+            irregularity.timeMissing = encounter.time - irregularity.time;
+            irregularityService.update(irregularity);
+          }
+        }
+      }
+    }
+    // return the filled encounter on success
+    return new ResponseEntity<>(fillEncounter(encounter), HttpStatus.OK);
+  }
+
+  @RequestMapping("/misc/validate/")
   public ResponseEntity<?> validateTrusted(@RequestParam("apiKey") String apiKey) {
     return isTrusted(apiKey) ? OK : UNAUTHORIZED;
   }

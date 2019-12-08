@@ -83,7 +83,7 @@ public class CourseService {
       Long semesterStartTime) {
     String sql = "SELECT DISTINCT cs.id, cs.teacher_id, cs.location_id, cs.period, cs.subject, cs.semesterStartTime"
         + " FROM course cs"
-            + (semesterId == null ? "" : " INNER JOIN offering of ON cs.id = of.course_id")
+            + (semesterStartTime == null ? "" : " INNER JOIN offering of ON cs.id = of.course_id")
             + (studentId == null ? "" : " INNER JOIN schedule sc ON sc.id = sc.course_id")
             + " WHERE 1=1 "
             + (id == null ? "" : " AND cs.id = " + id)

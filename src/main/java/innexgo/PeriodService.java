@@ -66,9 +66,10 @@ public class PeriodService {
     return count != 0;
   }
 
-  public Period getCurrentPeriod() {
+  public Period getCurrent() {
     return getByTime(System.currentTimeMillis());
   }
+
 
   public Period getByTime(long time) {
     List<Period> currentPeriods = query(
@@ -80,6 +81,18 @@ public class PeriodService {
     );
     return (currentPeriods.size() != 0 ? currentPeriods.get(currentPeriods.size()-1) : null);
   }
+
+  public Period getNextByTime(long time) {
+    List<Period> currentPeriods = query(
+      null, // Long startTime
+      null, // Long number
+      null, // String type
+      time, // Long minStartTime
+      null  // Long maxStartTime
+    );
+    return (currentPeriods.size() != 0 ? currentPeriods.get(0) : null);
+  }
+
 
   public List<Period> query(
       Long startTime,

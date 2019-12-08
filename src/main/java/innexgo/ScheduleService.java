@@ -71,7 +71,6 @@ public class ScheduleService {
     sql = "SELECT id FROM schedule WHERE student_id=? AND course_id=? AND has_start=? AND start_time=? AND has_end=? AND end_time=?";
     long id = jdbcTemplate.queryForObject(sql, Long.class, schedule.studentId, schedule.courseId, schedule.hasStart, schedule.startTime, schedule.hasEnd, schedule.endTime);
     schedule.id = id;
-    return schedule;
   }
 
   public Schedule deleteById(long id) {
