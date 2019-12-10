@@ -41,7 +41,7 @@ public class ScheduleService {
   }
 
   public List<Schedule> getAll() {
-    String sql = "SELECT id, student_id, course_id FROM schedule";
+    String sql = "SELECT id, student_id, course_id, has_start, start_time, has_end, end_time FROM schedule";
     RowMapper<Schedule> rowMapper = new ScheduleRowMapper();
     return this.jdbcTemplate.query(sql, rowMapper);
   }
@@ -92,16 +92,16 @@ public class ScheduleService {
       Long locationId,
       Long period) {
     String sql =
-        "SELECT s.id, s.student_id, s.course_id FROM schedule s"
-            + " JOIN course c ON s.course_id = c.id"
+        "SELECT sch.id, sch.student_id, sch.course_id, sch.has_start, sch.start_time, sch.has_end, sch.end_time FROM schedule sch"
+            + " JOIN course c ON sch.course_id = c.id"
             + " WHERE 1=1 "
-            + (scheduleId == null ? "" : " AND s.id = " + scheduleId)
-            + (studentId == null ? "" : " AND s.student_id = " + studentId)
-            + (courseId == null ? "" : " AND s.course_id = " + courseId)
-            + (hasStart == null ? "" : " AND s.has_start = " + hasStart)
-            + (startTime == null ? "" : " AND s.start_time = " + startTime)
-            + (hasEnd == null ? "" : " AND s.has_end = " + hasEnd)
-            + (endTime == null ? "" : " AND s.end_time = " + endTime)
+            + (scheduleId == null ? "" : " AND sch.id = " + scheduleId)
+            + (studentId == null ? "" : " AND sch.student_id = " + studentId)
+            + (courseId == null ? "" : " AND sch.course_id = " + courseId)
+            + (hasStart == null ? "" : " AND sch.has_start = " + hasStart)
+            + (startTime == null ? "" : " AND sch.start_time = " + startTime)
+            + (hasEnd == null ? "" : " AND sch.has_end = " + hasEnd)
+            + (endTime == null ? "" : " AND sch.end_time = " + endTime)
             + (teacherId == null ? "" : " AND c.teacher_id = " + teacherId)
             + (locationId == null ? "" : " AND c.location_id = " + locationId)
             + (period == null ? "" : " AND c.period = " + period)

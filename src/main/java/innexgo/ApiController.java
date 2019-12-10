@@ -27,6 +27,7 @@ public class ApiController {
   @Autowired ApiKeyService apiKeyService;
   @Autowired CourseService courseService;
   @Autowired EncounterService encounterService;
+  @Autowired GradeService gradeService;
   @Autowired IrregularityService irregularityService;
   @Autowired LocationService locationService;
   @Autowired OfferingService offeringService;
@@ -77,6 +78,18 @@ public class ApiController {
     encounter.location = fillLocation(locationService.getById(encounter.locationId));
     encounter.student = fillStudent(studentService.getById(encounter.studentId));
     return encounter;
+  }
+
+  /**
+   * Fills in jackson objects(Semester and Student) in Grade
+   *
+   * @param grade - Grade object
+   * @return Grade object with filled jackson objects
+   */
+  Grade fillGrade(Grade grade) {
+    grade.student = fillStudent(studentService.getById(grade.studentId));
+    grade.semester = fillSemester(semesterService.getByStartTime(grade.semesterStartTime));
+    return grade;
   }
 
   /**
@@ -515,6 +528,30 @@ public class ApiController {
     }
   }
 
+  @RequestMapping("/grade/new/")
+  public ResponseEntity<?> newGrade(
+      @RequestParam("studentId") Long studentId,
+      @RequestParam("semesterStartTime") Long semesterStartTime,
+      @RequestParam("number") Long number,
+      @RequestParam("apiKey") String apiKey) {
+    if (isAdministrator(apiKey)) {
+      if (studentService.existsById(studentId)
+          && semesterService.existsByStartTime(semesterStartTime)
+          && !gradeService.existsByStudentIdSemesterStartTime(studentId, semesterStartTime)) {
+        Grade grade = new Grade();
+        grade.studentId = studentId;
+        grade.semesterStartTime = semesterStartTime;
+        grade.number = number;
+        gradeService.add(grade);
+        return new ResponseEntity<>(fillGrade(grade), HttpStatus.OK);
+      } else {
+        return BAD_REQUEST;
+      }
+    } else {
+      return UNAUTHORIZED;
+    }
+  }
+
   /**
    * Creates a new location and can only be done by an Administrator
    *
@@ -719,6 +756,22 @@ public class ApiController {
     }
   }
 
+  @RequestMapping("/grade/delete/")
+  public ResponseEntity<?> deleteGrade(
+      @RequestParam("gradeId") Integer gradeId,
+      @RequestParam("apiKey") String apiKey) {
+    if (isAdministrator(apiKey)) {
+      if (gradeService.existsById(gradeId)) {
+        return new ResponseEntity<>(
+            fillGrade(gradeService.deleteById(gradeId)), HttpStatus.OK);
+      } else {
+        return BAD_REQUEST;
+      }
+    } else {
+      return UNAUTHORIZED;
+    }
+  }
+
 
   @RequestMapping("/irregularity/delete/")
   public ResponseEntity<?> deleteIrregularity(
@@ -818,6 +871,27 @@ public class ApiController {
           )
         .stream()
         .map(x -> fillEncounter(x))
+        .collect(Collectors.toList());
+      return new ResponseEntity<>(els, HttpStatus.OK);
+    } else {
+      return UNAUTHORIZED;
+    }
+  }
+
+  @RequestMapping("/grade/")
+  public ResponseEntity<?> viewGrade(@RequestParam Map<String, String> allRequestParam) {
+    String apiKey = allRequestParam.get("apiKey");
+    if (isTrusted(apiKey)) {
+      List<Grade> els =
+        gradeService
+        .query(
+            Utils.parseLong(allRequestParam.get("gradeId")),
+            Utils.parseLong(allRequestParam.get("studentId")),
+            Utils.parseLong(allRequestParam.get("semesterStartTime")),
+            Utils.parseLong(allRequestParam.get("number"))
+          )
+        .stream()
+        .map(x -> fillGrade(x))
         .collect(Collectors.toList());
       return new ResponseEntity<>(els, HttpStatus.OK);
     } else {

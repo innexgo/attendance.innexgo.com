@@ -17,6 +17,7 @@ public class DevelopmentController {
   @Autowired ApiKeyService apiKeyService;
   @Autowired CourseService courseService;
   @Autowired EncounterService encounterService;
+  @Autowired GradeService gradeService;
   @Autowired IrregularityService irregularityService;
   @Autowired LocationService locationService;
   @Autowired PeriodService periodService;
@@ -201,5 +202,17 @@ public class DevelopmentController {
             .toInstant()
             .toEpochMilli();
     periodService.add(period);
+  }
+
+  @RequestMapping("/populateSemesters")
+  public ResponseEntity<?> populateSemesters() {
+    semesterService.deleteAll();
+    LocalDate sunday =
+        ZonedDateTime.now(Utils.TIMEZONE).toLocalDate().plusWeeks(-1).with(DayOfWeek.SUNDAY);
+    return OK;
+  }
+
+  void addSemester(String type, LocalDate datestring) {
+    Semester semester = new Semester();
   }
 }
