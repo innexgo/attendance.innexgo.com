@@ -17,28 +17,28 @@ public class StudentService {
   @Autowired private JdbcTemplate jdbcTemplate;
 
   public Student getById(long id) {
-    String sql = "SELECT id, tags, initial_semester_start_time, initial_semester_start_time FROM student WHERE id=?";
+    String sql = "SELECT id, name, tags FROM student WHERE id=?";
     RowMapper<Student> rowMapper = new StudentRowMapper();
     Student student = jdbcTemplate.queryForObject(sql, rowMapper, id);
     return student;
   }
 
   public List<Student> getAll() {
-    String sql = "SELECT id, name, tags, initial_semester_start_time FROM student";
+    String sql = "SELECT id, name, tags FROM student";
     RowMapper<Student> rowMapper = new StudentRowMapper();
     return this.jdbcTemplate.query(sql, rowMapper);
   }
 
   public void add(Student student) {
     // Add student
-    String sql = "INSERT INTO student(id, name, tags, initial_semester_start_time) values (?, ?, ?, ?)";
-    jdbcTemplate.update(sql, student.id, student.name, student.tags, student.initialSemesterStartTime);
+    String sql = "INSERT INTO student(id, name, tags) values (?, ?, ?)";
+    jdbcTemplate.update(sql, student.id, student.name, student.tags);
   }
 
   public void update(Student student) {
-    String sql = "UPDATE student SET id=?, name=?, tags=?, initial_semester_start_time=? WHERE id=?";
+    String sql = "UPDATE student SET id=?, name=?, tags=? WHERE id=?";
     jdbcTemplate.update(
-        sql, student.id, student.name, student.tags, student.initialSemesterStartTime, student.id);
+        sql, student.id, student.name, student.tags, student.id);
   }
 
   public Student deleteById(long id) {
@@ -60,18 +60,16 @@ public class StudentService {
       String name, // Exact match to name
       String partialName, // Partial match to name
       String tags, // Exact match to tags
-      String partialTags, // Partial match to tags
-      Long initialSemesterStartTime // Exact match to initial semester id
+      String partialTags // Partial match to tags
       ) {
     String sql =
-        "SELECT st.id, st.name, st.tags, st.initial_semester_start_time FROM student st"
+        "SELECT st.id, st.name, st.tags FROM student st"
             + " WHERE 1=1 "
             + (id == null ? "" : " AND st.id = " + id)
             + (name == null ? "" : " AND st.name = " + Utils.escape(name))
             + (partialName == null ? "" : " AND st.name LIKE " + Utils.escape("%"+partialName+"%"))
             + (tags == null ? "" : " AND st.tags = " + Utils.escape(tags))
             + (partialTags == null ? "" : " AND st.tags LIKE " + Utils.escape("%"+partialTags+"%"))
-            + (initialSemesterStartTime == null ? "" : " AND st.initial_semester_start_time = " + initialSemesterStartTime)
             + ";";
 
     RowMapper<Student> rowMapper = new StudentRowMapper();
@@ -94,7 +92,7 @@ public class StudentService {
     // find students who are in this list
 
     String sql =
-              " SELECT DISTINCT st.id, st.name, st.tags, st.initial_semester_start_time"
+              " SELECT DISTINCT st.id, st.name, st.tags"
             + " FROM student st"
             + " INNER JOIN session ses ON ses.student_id = st.id"
             + " INNER JOIN encounter inen ON ses.in_encounter_id = inen.id"
@@ -125,7 +123,7 @@ public class StudentService {
     // From these select schedules where the beginning of the next period is after time
     // Return the students of these schedules
     String sql =
-        " SELECT DISTINCT st.id, st.name, st.tags, st.initial_semester_start_time"
+        " SELECT DISTINCT st.id, st.name, st.tags"
       + " FROM student st"
       + " INNER JOIN schedule sc ON st.id = sc.student_id"
       + " INNER JOIN courses cs ON cs.id = sc.course_id "

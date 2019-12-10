@@ -182,7 +182,6 @@ public class ApiController {
    * @return Student object with filled jackson objects
    */
   Student fillStudent(Student student) {
-    student.initialSemester = semesterService.getByStartTime(student.initialSemesterStartTime);
     return student;
   }
 
@@ -667,17 +666,14 @@ public class ApiController {
       @RequestParam("studentId") Long studentId,
       @RequestParam("name") String name,
       @RequestParam(value = "tags", defaultValue = "") String tags,
-      @RequestParam("initialSemesterStartTime") Long initialSemesterStartTime,
       @RequestParam("apiKey") String apiKey) {
     if (isAdministrator(apiKey)) {
       if (!studentService.existsById(studentId)
-          && semesterService.existsByStartTime(initialSemesterStartTime)
           && !Utils.isEmpty(name)) {
         Student student = new Student();
         student.id = studentId;
         student.name = name.toUpperCase();
         student.tags = tags;
-        student.initialSemesterStartTime = initialSemesterStartTime;
         studentService.add(student);
         return new ResponseEntity<>(fillStudent(student), HttpStatus.OK);
       } else {
@@ -1021,7 +1017,7 @@ public class ApiController {
 
   @RequestMapping("/student/")
   public ResponseEntity<?> viewStudent(@RequestParam Map<String, String> allRequestParam) {
-    if (allRequestParam.containsKey("apiKey") 
+    if (allRequestParam.containsKey("apiKey")
         && isTrusted(allRequestParam.get("apiKey"))) {
       List<Student> list =
         studentService
@@ -1030,8 +1026,7 @@ public class ApiController {
             allRequestParam.get("name"),
             allRequestParam.get("partialName"),
             allRequestParam.get("tags"),
-            allRequestParam.get("partialTags"),
-            Utils.parseLong(allRequestParam.get("initialSemesterStartTime"))
+            allRequestParam.get("partialTags")
           )
         .stream()
         .map(x -> fillStudent(x))
