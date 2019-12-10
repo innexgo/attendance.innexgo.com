@@ -527,23 +527,27 @@ public class ApiController {
    */
   @RequestMapping("/location/new/")
   public ResponseEntity<?> newLocation(
+      @RequestParam("locationId") Long locationId,
       @RequestParam("name") String name,
       @RequestParam("tags") String tags,
       @RequestParam("apiKey") String apiKey) {
-      if (isAdministrator(apiKey)) {
-        if (!Utils.isEmpty(name) && !Utils.isEmpty(tags)) {
-          Location location = new Location();
-          location.name = name;
-          location.tags = tags;
-          locationService.add(location);
-          return new ResponseEntity<>(fillLocation(location), HttpStatus.OK);
-        } else {
-          return BAD_REQUEST;
-        }
+    if (isAdministrator(apiKey)) {
+      if (!locationService.existsById(locationId)
+          && !Utils.isEmpty(name)
+          && !Utils.isEmpty(tags)) {
+        Location location = new Location();
+        location.id = locationId;
+        location.name = name;
+        location.tags = tags;
+        locationService.add(location);
+        return new ResponseEntity<>(fillLocation(location), HttpStatus.OK);
       } else {
-        return UNAUTHORIZED;
+        return BAD_REQUEST;
       }
-      }
+    } else {
+      return UNAUTHORIZED;
+    }
+  }
 
   @RequestMapping("/offering/new/")
   public ResponseEntity<?> newOffering(
