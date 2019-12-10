@@ -102,14 +102,14 @@ public class PeriodService {
       Long maxStartTime
     ) {
 
-    String sql = "SELECT p.start_time, p.number, p.type FROM period pr"
+    String sql = "SELECT prd.start_time, prd.number, prd.type FROM period prd"
             + " WHERE 1=1"
-            + (startTime == null ? "" : " AND pr.start_time = " + startTime)
-            + (number == null ? "" : " AND pr.number = " + number)
-            + (type == null ? "" : " AND pr.type = " + Utils.escape(type))
-            + (minStartTime == null ? "" : " AND pr.start_time >= " + minStartTime)
-            + (maxStartTime == null ? "" : " AND pr.start_time <= " + maxStartTime)
-            + " ORDER BY pr.start_time"
+            + (startTime == null ? "" : " AND prd.start_time = " + startTime)
+            + (number == null ? "" : " AND prd.number = " + number)
+            + (type == null ? "" : " AND prd.type = " + Utils.escape(type))
+            + (minStartTime == null ? "" : " AND prd.start_time >= " + minStartTime)
+            + (maxStartTime == null ? "" : " AND prd.start_time <= " + maxStartTime)
+            + " ORDER BY prd.start_time"
             + ";";
 
     RowMapper<Period> rowMapper = new PeriodRowMapper();

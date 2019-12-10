@@ -207,12 +207,24 @@ public class DevelopmentController {
   @RequestMapping("/populateSemesters")
   public ResponseEntity<?> populateSemesters() {
     semesterService.deleteAll();
-    LocalDate sunday =
-        ZonedDateTime.now(Utils.TIMEZONE).toLocalDate().plusWeeks(-1).with(DayOfWeek.SUNDAY);
+    for(int year = 2018; year < 2023; year++) {
+      addSemester(Semester.SPRING_SEMESTER, LocalDate.of(year, 1, 1));
+      addSemester(Semester.SUMMER_SEMESTER, LocalDate.of(year, 6, 1));
+      addSemester(Semester.FALL_SEMESTER, LocalDate.of(year, 8, 1));
+    }
     return OK;
   }
 
-  void addSemester(String type, LocalDate datestring) {
+  void addSemester(String type, LocalDate date) {
     Semester semester = new Semester();
+    semester.startTime = date
+      .atTime(0,0)
+      .atZone(Utils.TIMEZONE)
+      .toInstant()
+      .toEpochMilli();
+    semester.year = date.getYear();
+    semester.type = type;
+
+    semesterService.add(semester);
   }
 }
