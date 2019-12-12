@@ -565,12 +565,11 @@ public class ApiController {
   public ResponseEntity<?> newLocation(
       @RequestParam("locationId") Long locationId,
       @RequestParam("name") String name,
-      @RequestParam("tags") String tags,
+      @RequestParam(value = "tags", defaultValue = "") String tags,
       @RequestParam("apiKey") String apiKey) {
     if (isAdministrator(apiKey)) {
       if (!locationService.existsById(locationId)
-          && !Utils.isEmpty(name)
-          && !Utils.isEmpty(tags)) {
+          && !Utils.isEmpty(name)) {
         Location location = new Location();
         location.id = locationId;
         location.name = name;
