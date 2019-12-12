@@ -7,9 +7,9 @@ import requests
 import pandas as pd
 
 # Get while throwing error
-def getJSON(url, parameterss):
+def getJSON(url, parameters):
     try:
-        r = requests.get(url, params=params)
+        r = requests.get(url, params=parameters)
         r.raise_for_status()
         return r.json()
     except requests.exceptions.HTTPError as e:
@@ -17,7 +17,7 @@ def getJSON(url, parameterss):
         print(e)
         print('===> Error occurred. Quit? (y/n)')
         response = input()
-        if response != 'y':
+        if response == 'y':
             print('Quitting...')
             sys.exit(1)
         else:
@@ -31,7 +31,7 @@ def prompt(text):
     return input()
 
 # Bail if not correct
-if len(sys.argv) != 2:
+if len(sys.argv) != 3:
     print('===> Error: Need 2 arguments: file as csv and hostname')
     sys.exit(1)
 
@@ -58,7 +58,7 @@ df = pd.read_excel(filepath)
 # Load the teachers into the db
 def loadTeacher(row):
     print('===> Loading Teachers to Database...')
-    firstName, lastName = tuple([x.strip in row['Teacher'].split(',')])
+    firstName, lastName = tuple([x.strip() for x in row['Teacher'].split(',')])
     # Generate necessary fields
     userName = f'{firstName} {lastName}'
     email = (lastName + firstName[0]).lower()
@@ -162,26 +162,26 @@ def loadSchedule(row):
 
 
 # First make list of teachers, load it. Skip teachers who are already in the DB
-teachers = df['Teacher'].dropna().drop_duplicates()
-teachers['userJson'] = teachers.apply(loadTeacher, axis=1)
+teachers = df[['Teacher']].dropna().drop_duplicates()
+teachers['userJson'] = teachers.apply(loadTeacher)
 
 # Make list of locations, load it. Skip locations already in DB
 locations = df['Room'].dropna().drop_duplicates()
-locations['locationJson'] = locations.apply(loadLocation, axis=1)
+locations['locationJson'] = locations.apply(loadLocation)
 
 # Then make list of each Per-CrsName-Room-Teacher unique combo
 courses = df[['Per', 'CrsName', 'Teacher', 'Room']].dropna().drop_duplicates()
-courses['courseJson'] = courses.apply(loadCourse, axis=1)
-courses['offeringJson'] = courses.apply(loadOffering, axis=1)
+courses['courseJson'] = courses.apply(loadCourse)
+courses['offeringJson'] = courses.apply(loadOffering)
 
 # Then make list of unique StuId-LastName-Firstname-Grade pairs
 students = df[['StuID', 'LastName', 'FirstName', 'GR']].dropna().drop_duplicates()
-students['studentJson'] = students.apply(loadStudent, axis=1)
-students['gradeJson'] = students.apply(loadGrade, axis=1)
+students['studentJson'] = students.apply(loadStudent)
+students['gradeJson'] = students.apply(loadGrade)
 
 # Then make list of schedules
 schedules = df[['StuID', 'Per', 'CrsName', 'Teacher', 'Room']] \
         .dropna() \
         .drop_duplicates() \
         .merge(courses, left_on=['Per', 'CrsName', 'Teacher', 'Room'], right_on=['Per', 'CrsName', 'Teacher', 'Room'])
-schedules['scheduleJson'] = schedules.apply(loadSchedule, axis=1)
+schedules['scheduleJson'] = schedules.apply(loadSchedule)

@@ -34,8 +34,41 @@ public class DevelopmentController {
   static final ResponseEntity<?> UNAUTHORIZED = new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
   static final ResponseEntity<?> NOT_FOUND = new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
+  String rootEmail = "root@example.com";
+
+  @RequestMapping("/populateUsers/")
+  public ResponseEntity<?> populateUsers() {
+    if(userService.getAll().size() == 0) {
+      User user = new User();
+      user.name = "root";
+      user.email = rootEmail;
+      user.passwordHash = Utils.encodePassword("1234");
+      user.ring = User.ADMINISTRATOR;
+      userService.add(user);
+      return OK;
+    }
+    return BAD_REQUEST;
+  }
+
+  @RequestMapping("/lmaoRootKey/")
+  public ResponseEntity<?> lmaoRootKey() {
+    if(userService.existsByEmail(rootEmail)) {
+      User u = userService.getByEmail(rootEmail);
+
+      ApiKey apiKey = new ApiKey();
+      apiKey.userId = u.id;
+      apiKey.creationTime = System.currentTimeMillis();
+      apiKey.expirationTime = Long.MAX_VALUE;
+      apiKey.key = "testlmao";
+      apiKey.keyHash = Utils.encodeApiKey(apiKey.key);
+      apiKeyService.add(apiKey);
+      return new ResponseEntity<>(apiKey, HttpStatus.OK);
+    }
+    return BAD_REQUEST;
+  }
+
   /* TESTING */
-  @RequestMapping("/populateTestingPeriods")
+  @RequestMapping("/populateTestingPeriods/")
   public ResponseEntity<?> populateTestingPeriods() {
     LocalDate today = ZonedDateTime.now(Utils.TIMEZONE).toLocalDate();
 
@@ -59,7 +92,7 @@ public class DevelopmentController {
   }
 
   // deletes periods with a length of less than 4 min
-  @RequestMapping("/deleteTestingPeriods")
+  @RequestMapping("/deleteTestingPeriods/")
   public ResponseEntity<?> deleteTestingPeriods() {
     long minDuration = 4 * 60 * 1000;
     List<Period> periodList = periodService.getAll();
@@ -92,7 +125,7 @@ public class DevelopmentController {
     return OK;
   }
 
-  @RequestMapping("/populatePeriods")
+  @RequestMapping("/populatePeriods/")
   public ResponseEntity<?> populatePeriods() {
     periodService.deleteAll();
     LocalDate sunday =

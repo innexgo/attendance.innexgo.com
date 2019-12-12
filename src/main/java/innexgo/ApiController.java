@@ -1258,4 +1258,9 @@ public class ApiController {
   public ResponseEntity<?> validateTrusted(@RequestParam("apiKey") String apiKey) {
     return isTrusted(apiKey) ? OK : UNAUTHORIZED;
   }
+
+  @RequestMapping("/misc/currentSemester/")
+  public ResponseEntity<?> currentSemester(@RequestParam("apiKey") String apiKey) {
+    return new ResponseEntity<>(semesterService.getCurrent(), HttpStatus.OK);
+  }
 }
