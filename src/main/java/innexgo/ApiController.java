@@ -508,15 +508,17 @@ public class ApiController {
   public ResponseEntity<?> newEncounter(
       @RequestParam("studentId") Long studentId,
       @RequestParam("locationId") Long locationId,
+      @RequestParam("type") String type,
       @RequestParam("apiKey") String apiKey) {
     if (isTrusted(apiKey)) {
       if (locationService.existsById(locationId)
-          && studentService.existsById(studentId)) {
+          && studentService.existsById(studentId)
+          && (type.equals(Encounter.MANUAL_ENCOUNTER) || type.equals(Encounter.RFID_ENCOUNTER)) {
         Encounter encounter = new Encounter();
         encounter.locationId = locationId;
         encounter.studentId = studentId;
         encounter.time = System.currentTimeMillis();
-        encounter.virtual = false;
+        encounter.type = false;
         encounterService.add(encounter);
         return new ResponseEntity<>(fillEncounter(encounter), HttpStatus.OK);
       } else {
@@ -861,7 +863,7 @@ public class ApiController {
             Utils.parseLong(allRequestParam.get("locationId")),
             Utils.parseLong(allRequestParam.get("minTime")),
             Utils.parseLong(allRequestParam.get("maxTime")),
-            Utils.parseBoolean(allRequestParam.get("virtual")),
+            allRequestParam.get("type"),
             Utils.parseLong(allRequestParam.get("count"))
           )
         .stream()

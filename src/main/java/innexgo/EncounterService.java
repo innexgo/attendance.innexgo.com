@@ -14,23 +14,23 @@ public class EncounterService {
   @Autowired private JdbcTemplate jdbcTemplate;
 
   public Encounter getById(long id) {
-    String sql = "SELECT id, time, virtual, location_id, student_id FROM encounter WHERE id=?";
+    String sql = "SELECT id, time, location_id, student_id, type FROM encounter WHERE id=?";
     RowMapper<Encounter> rowMapper = new EncounterRowMapper();
     Encounter encounter = jdbcTemplate.queryForObject(sql, rowMapper, id);
     return encounter;
   }
 
   public List<Encounter> getAll() {
-    String sql = "SELECT id, time, virtual, location_id, student_id, FROM encounter";
+    String sql = "SELECT id, time, location_id, student_id, type FROM encounter";
     RowMapper<Encounter> rowMapper = new EncounterRowMapper();
     return this.jdbcTemplate.query(sql, rowMapper);
   }
 
   public void add(Encounter encounter) {
     // Add encounter
-    String sql = "INSERT INTO encounter(id, time, virtual, location_id, student_id) values (?, ?, ?, ?, ?)";
+    String sql = "INSERT INTO encounter(id, time, location_id, student_id, type) values (?, ?, ?, ?, ?)";
     jdbcTemplate.update(
-        sql, encounter.id, encounter.time, encounter.virtual, encounter.locationId, encounter.studentId);
+        sql, encounter.id, encounter.time, encounter.locationId, encounter.studentId, encounter.type);
 
     RowMapper<Encounter> rowMapper = new EncounterRowMapper();
 
@@ -43,9 +43,9 @@ public class EncounterService {
   }
 
   public void update(Encounter encounter) {
-    String sql = "UPDATE encounter SET id=?, time=?, virtual=?, location_id=?, student_id=? WHERE id=?";
+    String sql = "UPDATE encounter SET id=?, time=?, location_id=?, student_id=?, type=? WHERE id=?";
     jdbcTemplate.update(
-        sql, encounter.id, encounter.time, encounter.virtual, encounter.locationId, encounter.studentId, encounter.id);
+        sql, encounter.id, encounter.time, encounter.locationId, encounter.studentId, encounter.type, encounter.id);
   }
 
   public Encounter delete(long id) {
@@ -67,7 +67,7 @@ public class EncounterService {
       Long locationId,
       Long minTime,
       Long maxTime,
-      Boolean virtual,
+      String type,
       Long count
       ) {
     String sql =
@@ -77,7 +77,7 @@ public class EncounterService {
             + (encounterId == null ? "" : " AND e.id=" + encounterId)
             + (studentId == null ? "" : " AND e.student_id=" + studentId)
             + (locationId == null ? "" : " AND e.location_id=" + locationId)
-            + (virtual == null ? "" : " AND e.virtual=" + virtual)
+            + (type == null ? "" : " AND e.type=" + Utils.escape(virtual))
             + (minTime == null ? "" : " AND e.time >= " + minTime)
             + (maxTime == null ? "" : " AND e.time <= " + maxTime)
             + " ORDER BY e.time DESC"
