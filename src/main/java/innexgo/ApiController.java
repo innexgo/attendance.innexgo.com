@@ -290,7 +290,7 @@ public class ApiController {
         outEncounter.locationId = inEncounter.locationId;
         outEncounter.studentId = inEncounter.studentId;
         outEncounter.time = System.currentTimeMillis();
-        outEncounter.virtual = true;
+        outEncounter.type = Encounter.VIRTUAL_ENCOUNTER;
         encounterService.add(outEncounter);
 
         // now close session
@@ -508,17 +508,18 @@ public class ApiController {
   public ResponseEntity<?> newEncounter(
       @RequestParam("studentId") Long studentId,
       @RequestParam("locationId") Long locationId,
-      @RequestParam("type") String type,
+      @RequestParam("manual") Boolean manual,
       @RequestParam("apiKey") String apiKey) {
     if (isTrusted(apiKey)) {
       if (locationService.existsById(locationId)
-          && studentService.existsById(studentId)
-          && (type.equals(Encounter.MANUAL_ENCOUNTER) || type.equals(Encounter.RFID_ENCOUNTER)) {
+          && studentService.existsById(studentId)) {
         Encounter encounter = new Encounter();
         encounter.locationId = locationId;
         encounter.studentId = studentId;
         encounter.time = System.currentTimeMillis();
-        encounter.type = false;
+        encounter.type = manual
+          ? Encounter.MANUAL_ENCOUNTER
+          : Encounter.DEFAULT_ENCOUNTER;
         encounterService.add(encounter);
         return new ResponseEntity<>(fillEncounter(encounter), HttpStatus.OK);
       } else {
@@ -1040,7 +1041,7 @@ public class ApiController {
 
   @RequestMapping("/user/")
   public ResponseEntity<?> viewUser(@RequestParam Map<String, String> allRequestParam) {
-    if (allRequestParam.containsKey("apiKey") 
+    if (allRequestParam.containsKey("apiKey")
         && isTrusted(allRequestParam.get("apiKey"))) {
       List<User> list =
         userService
@@ -1064,6 +1065,7 @@ public class ApiController {
   public ResponseEntity<?> attends(
       @RequestParam("studentId") Long studentId,
       @RequestParam("locationId") Long locationId,
+      @RequestParam(value="manual", defaultValue="false") Boolean manual,
       @RequestParam("apiKey") String apiKey
     )
   {
@@ -1084,7 +1086,9 @@ public class ApiController {
     encounter.locationId = locationId;
     encounter.studentId = student.id;
     encounter.time = System.currentTimeMillis();
-    encounter.virtual = false;
+    encounter.type = manual
+      ? Encounter.MANUAL_ENCOUNTER
+      : Encounter.DEFAULT_ENCOUNTER;
     encounterService.add(encounter);
 
 
@@ -1156,7 +1160,7 @@ public class ApiController {
         outEncounter.locationId = inEncounter.locationId;
         outEncounter.studentId = inEncounter.studentId;
         outEncounter.time = encounter.time;
-        outEncounter.virtual = true;
+        outEncounter.type = Encounter.VIRTUAL_ENCOUNTER;
         encounterService.add(outEncounter);
 
         // now close session

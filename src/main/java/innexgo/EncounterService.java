@@ -77,7 +77,7 @@ public class EncounterService {
             + (encounterId == null ? "" : " AND e.id=" + encounterId)
             + (studentId == null ? "" : " AND e.student_id=" + studentId)
             + (locationId == null ? "" : " AND e.location_id=" + locationId)
-            + (type == null ? "" : " AND e.type=" + Utils.escape(virtual))
+            + (type == null ? "" : " AND e.type=" + Utils.escape(type))
             + (minTime == null ? "" : " AND e.time >= " + minTime)
             + (maxTime == null ? "" : " AND e.time <= " + maxTime)
             + " ORDER BY e.time DESC"

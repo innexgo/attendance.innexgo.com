@@ -2,9 +2,9 @@ package innexgo;
 
 public class Encounter {
 
-  public static final String VIRTUAL_ENCOUNTER = "Virtually";
-  public static final String MANUAL_ENCOUNTER = "Manually";
-  public static final String RFID_ENCOUNTER = "through RFID card";
+  public static final String VIRTUAL_ENCOUNTER = "virtual";
+  public static final String MANUAL_ENCOUNTER = "manual";
+  public static final String DEFAULT_ENCOUNTER = "default";
 
   public long id; // Id of encounter
   public long time; // time in milliseconds since 1970 that this encounter occured
