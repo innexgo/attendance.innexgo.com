@@ -126,7 +126,7 @@ public class StudentService {
         " SELECT DISTINCT st.id, st.name, st.tags"
       + " FROM student st"
       + " INNER JOIN schedule sc ON st.id = sc.student_id"
-      + " INNER JOIN courses cs ON cs.id = sc.course_id "
+      + " INNER JOIN course cs ON cs.id = sc.course_id "
       + " WHERE 1 = 1"
       + " AND cs.id = " + course.id
       + " AND " + time + " BETWEEN sc.start_time AND sc.end_time"
