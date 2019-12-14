@@ -1065,7 +1065,7 @@ public class ApiController {
   public ResponseEntity<?> attends(
       @RequestParam("studentId") Long studentId,
       @RequestParam("locationId") Long locationId,
-      @RequestParam(value="manual", defaultValue="false") Boolean manual,
+      @RequestParam("manual") Boolean manual,
       @RequestParam("apiKey") String apiKey
     )
   {
