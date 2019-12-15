@@ -9,20 +9,25 @@ function loadClassProfile() {
     return;
   }
 
-  var table = document.getElementById('classprofile-table');
+  let table = document.getElementById('classprofile-table');
 
-  var searchParams = new URLSearchParams(window.location.search);
+  let searchParams = new URLSearchParams(window.location.search);
 
   if(!searchParams.has('courseId') || !searchParams.has('periodId')) {
     console.log('page not loaded with right params');
     return;
   }
 
-  var courseId = searchParams.get('courseId');
-  var periodId = searchParams.get('periodId');
+  let courseId = searchParams.get('courseId');
+  let periodStartTime = searchParams.get('periodStartTime');
+
+  fetch(`${apiUrl()}/schedule/?courseId=${courseId}&time=${periodStartTime}&apiKey=${apiKey.key}`)
+    .then(parseResponse)
+    .then(function(schedules) {
+      let students = 
 
   // get students
-  request(apiUrl() + '/student/' +
+  request(apiUrl() + '/schedule/' +
     '?courseId=' + courseId +
     '&apiKey=' + apiKey.key,
     function (xhr) {

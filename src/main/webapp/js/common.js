@@ -29,34 +29,8 @@ function standardizeString(unsafe) {
   return unsafe.trim().replace(/[^\w\s]/gi, '').toUpperCase();
 }
 
-function doTimer(length, resolution, oninstance, oncomplete) {
-  var steps = (length / 100) * (resolution / 10),
-    speed = length / steps,
-    count = 0,
-    start = new Date().getTime();
-  function instance() {
-    if (count++ == steps) {
-      oncomplete(steps, count);
-    } else {
-      oninstance(steps, count);
-      var diff = (new Date().getTime() - start) - (count * speed);
-      window.setTimeout(instance, (speed - diff));
-    }
-  }
-  window.setTimeout(instance, speed);
-}
-
-function request(url, functionOnLoad, functionOnError) {
-  var xhr = new XMLHttpRequest();
-  xhr.open('GET', url, true);
-  xhr.onload = function () {
-    if (xhr.readyState == 4 && xhr.status == 200) {
-      functionOnLoad(xhr);
-    } else if (xhr.readyState == 4 && xhr.status != 200) {
-      functionOnError(xhr);
-    }
-  };
-  xhr.send();
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 function ordinal_suffix_of(i) {
@@ -93,18 +67,21 @@ function giveAlert(innerHTML, type, permanent) {
   alertCounter++;
 }
 
-function currentAcademicYear() {
-  return momentToAcademicYear(moment());
+function givePermError(innerHTML) {
+  giveAlert(innerHTML, 'alert-danger', true);
 }
 
-function momentToAcademicYear(momentDate) {
-  if(momentDate.month() >= 7) {
-    return momentDate.year()+1;
-  } else {
-    return momentDate.year();
-  }
+function giveTempError(innerHTML) {
+  giveAlert(innerHTML, 'alert-danger', false);
 }
 
+function giveTempSuccess(innerHTML) {
+  giveAlert(innerHTML, 'alert-success', false);
+}
+
+function giveTempInfo(innerHTML) {
+  giveAlert(innerHTML, 'alert-info', false);
+}
 
 function linkAbsolute(text, url) {
   return '<a style="display: inline-block;" href="' + url + '">' + text + '</a>';
@@ -112,4 +89,11 @@ function linkAbsolute(text, url) {
 
 function linkRelative(text, url) {
   return linkAbsolute(text, staticUrl() + url);
+}
+
+function parseResponse(resp) {
+  if(!resp.ok) {
+    throw Error(response.statusText);
+  }
+  return resp.json();
 }

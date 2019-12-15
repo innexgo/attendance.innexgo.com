@@ -2,58 +2,40 @@ var beepup = new Audio('assets/beepup.wav');
 var beepdown = new Audio('assets/beepdown.wav');
 var error = new Audio('assets/error.wav');
 
-function submitEncounter(studentId) {
+async function submitEncounter(studentId) {
   console.log('submitting encounter ' + studentId)
   console.log(studentId);
   document.getElementById('manual-userid').value = '';
   var checkBox = document.getElementById('manual-type-toggle');
   var apiKey = Cookies.getJSON('apiKey');
   var period = Cookies.getJSON('period');
-  if (period == null) {
-    giveAlert('No school at the moment to sign into.', 'alert-danger', false);
-    return;
-  }
-  var course = Cookies.getJSON('courses').filter(c => c.period == period.period)[0];
+  var course = Cookies.getJSON('courses').filter(c => c.period == period.number)[0];
   if (course == null) {
-    giveAlert('No class at the moment to sign into.', 'alert-danger', false);
+    giveTempError('No class at the moment to sign into.');
     return;
   }
 
   if (String(studentId) == String(NaN)) {
-    giveAlert('What you entered wasn\'t a valid ID', 'alert-danger', false);
+    giveTempError('What you entered wasn\'t a valid ID');
     return;
   }
 
-  request(`${apiUrl()}/encounter/new/?studentId=${studentId}&locationId=${course.location.id}&apiKey=${apiKey.key}`,
-    //success
-    function (xhr) {
-      let encounter = JSON.parse(xhr.responseText);
-
-      //now check if it was a sign in or a sign out
-      request(`${apiUrl()}/session/?inEncounterId=${encounter.id}&apiKey=${apiKey.key}`,
-        //success
-        function (xhr) {
-          let sessionList = JSON.parse(xhr.responseText);
-          if (sessionList.length != 0) {
-            giveAlert(`Sucessfully logged ${encounter.student.name} in to ${encounter.location.name}`, 'alert-success', false);
-            beepup.play();
-          } else {
-            giveAlert(`Sucessfully logged ${encounter.student.name} out of ${encounter.location.name}`, 'alert-info', false);
-            beepdown.play();
-          }
-        },
-        //failure
-        function (xhr) {
-          giveAlert('Something went wrong while finalizing sign in.', 'alert-danger', false);
-          error.play();
-        }
-      );
-    },
-    function (xhr) {
-      giveAlert('Something went wrong while trying to sign you in.', 'alert-danger', false);
+  fetch(`${apiUrl()}/misc/attends/?studentId=${studentId}&locationId=${course.location.id}&manual=true&apiKey=${apiKey.key}`)
+    .then(response => parseResponse(response))
+    .then(function(session) {
+      // If the session is complete, then it is logging out
+      if(session.complete) {
+          giveTempInfo(`Sucessfully logged ${encounter.student.name} out of ${encounter.location.name}`);
+          beepdown.play();
+      } else {
+          giveTempSuccess(`Sucessfully logged ${encounter.student.name} in to ${encounter.location.name}`);
+          beepup.play();
+      }
+    })
+    .catch(function(err) {
+      giveTempError('Something went wrong while trying to sign you in.');
       error.play();
-    }
-  );
+    })
 }
 
 $(document).ready(function () {

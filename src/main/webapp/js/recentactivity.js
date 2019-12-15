@@ -5,8 +5,6 @@ function getRecentActivity() {
   var apiKey = Cookies.getJSON('apiKey');
 
   if (apiKey == null) {
-    console.log('apiKey not present. Sending to login page.');
-    window.location.replace(staticUrl() + '/login.html');
     return;
   }
 

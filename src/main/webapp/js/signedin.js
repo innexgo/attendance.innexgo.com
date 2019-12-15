@@ -1,76 +1,86 @@
+"use strict"
+
+// Removes credentials and moves to login page
+function logout() {
+    Cookies.remove('apiKey');
+    Cookies.remove('courses');
+    Cookies.remove('period');
+    Cookies.remove('nextPeriod');
+    window.location.replace(staticUrl() + '/login.html');
+}
+
 // moves to login page on cookie expiration
-function ensureSignedIn() {
+async function ensureSignedIn() {
   // check if sign in cookie exists and is logged in
   var apiKey = Cookies.getJSON('apiKey');
   if (apiKey == null) {
-    window.location.replace(staticUrl() + '/login.html');
-    return;
+    logout();
   }
 
   // now check if the cookie is expired
   if (apiKey.expirationTime < moment().unix()) {
     alert('Session has expired');
-    window.location.replace(staticUrl() + '/login.html');
-    return;
+    logout();
   }
 
   // make test request, on failure delete the cookies
   // usually means something went wrong with server
-  var url = apiUrl() + '/validate/?apiKey=' + apiKey.key;
-  request(url,
-    // on success
-    function (xhr) { },
-    // on failure
-    function (xhr) {
+  fetch(apiUrl() + '/misc/validate/?apiKey=' + apiKey.key)
+    .then(response => parseResponse(response))
+    .catch(function(err) {
       alert('Current session invalid, refresh the page.');
-      Cookies.remove('apiKey');
-    }
-  );
+      logOut()
+    });
+ }
+
+async function userInfo() {
+  var apiKey = Cookies.getJSON('apiKey');
+  if (apiKey == null) {
+    console.log('No ApiKey!');
+    return;
+  }
+  fetch(`${apiUrl()}/misc/currentPeriod/?apiKey=${apiKey.key}`)
+    .then(response => parseResponse(response))
+    .then(function(data) {
+        Cookies.set('period', data);
+    })
+    .catch(function(err) {
+      givePermError('Error Fetching necessary data, try refreshing');
+    })
+  fetch(`${apiUrl()}/misc/nextPeriod/?apiKey=${apiKey.key}`)
+    .then(response => parseResponse(response))
+    .then(function(data) {
+        Cookies.set('nextPeriod', data);
+    })
+    .catch(function(err) {
+      givePermError('Error Fetching necessary data, try refreshing');
+    })
+  fetch(`${apiUrl()}/course/?teacherId=${apiKey.user.id}&apiKey=${apiKey.key}`)
+    .then(response => parseResponse(response))
+    .then(function(data) {
+        Cookies.set('courses', data);
+    })
+    .catch(function(err) {
+      givePermError('Error Fetching necessary course data, try refreshing');
+    })
 }
 
-function userInfo() {
-  var apiKey = Cookies.getJSON('apiKey');
-  if (apiKey != null) {
-    request(apiUrl() + '/period/' +
-      '?time=' + moment().valueOf() +
-      '&apiKey=' + apiKey.key,
-      function (xhr) {
-        var period = JSON.parse(xhr.responseText)[0];
-        // if class has ended, or not yet begun, delete the relevant cookies
-        if (period == null) {
-          Cookies.remove('period');
-          console.log('could not determine period: school not in session');
-          return;
-        } else {
-          Cookies.set('period', period);
-        }
-      },
-      //failure
-      function (xhr) {
-        console.log('error has no school');
-        return;
-      }
-    );
+
+async function pollUserInfo() {
+  while(true) {
+    userInfo();
+    let nextPeriod = Cookies.getJSON('nextPeriod');
+    sleep(nextPeriod.startTime - moment.value());
   }
 }
 
-$(document).ready(function () {
-  ensureSignedIn();
-  userInfo();
-  var apiKey = Cookies.getJSON('apiKey');
-  var period = Cookies.getJSON('period');
-  doTimer(apiKey.expirationTime - moment().valueOf(), 1, function () {
-    if (apiKey.expirationTime - moment().valueOf() < 0) {
-      ensureSignedIn();
-    };
-  }, ensureSignedIn());
+async function pollEnsureSignedIn() {
+  while(true) {
+    ensureSignedIn();
+    let apiKey = Cookies.getJSON('nextPeriod');
+    sleep(apiKey.expirationTime - moment.value());
+  }
+}
 
-  setInterval(function () {
-    if (period == null) {
-      userInfo();
-    }
-    else if (period.endTime - moment().valueOf() < 0) {
-      userInfo();
-    };
-  }, 10000);
-});
+pollUserInfo();
+pollEnsureSignedIn();
