@@ -1,6 +1,5 @@
 "use strict"
 
-
 function loadClassProfile() {
   var apiKey = Cookies.getJSON('apiKey');
 
@@ -21,25 +20,12 @@ function loadClassProfile() {
   let courseId = searchParams.get('courseId');
   let periodStartTime = searchParams.get('periodStartTime');
 
-  fetch(`${apiUrl()}/schedule/?courseId=${courseId}&time=${periodStartTime}&apiKey=${apiKey.key}`)
+  fetch(`${apiUrl()}/misc/registeredForCourse/?courseId=${courseId}&time=${periodStartTime}&apiKey=${apiKey.key}`)
     .then(parseResponse)
-    .then(function(schedules) {
-      let students = 
-
-  // get students
-  request(apiUrl() + '/schedule/' +
-    '?courseId=' + courseId +
-    '&apiKey=' + apiKey.key,
-    function (xhr) {
-      var students = JSON.parse(xhr.responseText);
-      // get irregularities
-      request(apiUrl() + '/irregularity/' +
-        '?courseId=' + courseId +
-        '&periodId=' + periodId +
-        '&apiKey=' + apiKey.key,
-        function (xhr) {
-          var irregularities = JSON.parse(xhr.responseText).sort((a, b) => (a.time > b.time) ? 1 : -1);
-
+    .then(function(students) {
+      fetch(`${apiUrl()}/irregularity/?courseId=${courseId}&periodId=${periodId}&apiKey=${apiKey.key}`)
+        .then(parseResponse)
+        .then(function(irregularities) {
           //blank table
           table.innerHTML = '';
 
@@ -77,21 +63,17 @@ function loadClassProfile() {
                 '<td style="background-color:' + bgcolor + ';color:' + fgcolor + '">' + text + '</td>');
             newrow.className = 'id-' + student.id;
           }
-        },
-        //failure
-        function (xhr) {
-          return;
-        }
-      );
-    },
-    //failure
-    function (xhr) {
-      return;
-    }
-  );
+        })
+        .catch(function(err) {
+          givePermErr('Failed to get data for irregularities');
+        });
+    })
+    .catch(function(err) {
+      givePermErr('Failed to get data for students');
+    });
 }
 
-function loadClassText() {
+async function loadClassText() {
   var apiKey = Cookies.getJSON('apiKey');
 
   if(apiKey == null) {
@@ -100,62 +82,38 @@ function loadClassText() {
   }
 
   var table = document.getElementById('classprofile-table');
-
   var searchParams = new URLSearchParams(window.location.search);
 
-  if(!searchParams.has('courseId') || !searchParams.has('periodId')) {
+  if(!searchParams.has('courseId') || !searchParams.has('periodStartTime')) {
     console.log('page not loaded with right params');
     return;
   }
 
   var courseId = searchParams.get('courseId');
-  var periodId = searchParams.get('periodId');
+  var periodStartTime = searchParams.get('periodStartTime');
 
   var text = document.getElementById('classprofile-text');
 
-  request(apiUrl() + '/course/' +
-    '?courseId='+courseId +
-    '&apiKey='+apiKey.key,
-    function(xhr) {
-      var courses = JSON.parse(xhr.responseText);
-      // if there are no courses with this idea
-      if(courses.length < 1)
-      {
-        console.log('failed to get course');
-        return
-      }
 
-      var course = courses[0];
-
-      // now get the period
-      request(apiUrl() + '/period/' +
-        '?apiKey='+apiKey.key +
-        '&periodId='+periodId,
-        function(xhr) {
-          var periods = JSON.parse(xhr.responseText);
-
-          if(periods.length < 1) {
-            console.log('failed to get periods');
-            return
-          }
-
-          var period = periods[0];
-
+  fetch(`${apiUrl()}/course/?courseId=${courseId}&apiKey=${apiKey.key}`)
+    .then(parseResponse)
+    .then(function(courses) {
+      let course = courses[0];
+      fetch(`${apiUrl()}/period/?periodStartTime=${periodStartTime}&apiKey=${apiKey.key}`)
+        .then(parseResponse)
+        .then(function(periods) {
+          let period = periods[0];
           text.innerHTML = 'View students who attended ' + ordinal_suffix_of(course.period) +
             ' period ' + course.subject + ' ('+course.teacher.name+') on ' +
             moment(period.startTime).format('dddd, MMMM Do YYYY') + '.';
-        },
-        function(xhr) {
-          giveAlert('Failed to get period information.', 'alert-danger', true);
-          return;
-        }
-      );
-    },
-    function(xhr) {
-      giveAlert('Failed to get course information.', 'alert-danger', true);
-      return;
-    }
-  );
+        })
+        .catch(function(err) {
+          givePermError('Could not get period information');
+        })
+    })
+    .catch(function(err) {
+      givePermError('Could not get course information');
+    })
 }
 
 

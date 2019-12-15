@@ -12,8 +12,13 @@ function currentStatus() {
     return;
   }
 
+  if(course.type != 'Class Period') {
+    fetch(`${apiUrl()}/misc/registeredForCours/?courseId=${course.id}&apiKey=${apiKey.key}`)
+      .then(parseResponse)
+      .then(function (student
+
   // get students
-  request(`${apiUrl()}/student/?courseId=${course.id}&apiKey=${apiKey.key}`,
+  request(,
     function (xhr) {
       let students = JSON.parse(xhr.responseText);
       // get irregularities

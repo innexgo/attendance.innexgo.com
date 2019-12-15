@@ -129,7 +129,7 @@ public class StudentService {
       + " INNER JOIN course cs ON cs.id = sc.course_id "
       + " WHERE 1 = 1"
       + " AND cs.id = " + course.id
-      + " AND " + time + " BETWEEN sc.start_time AND sc.end_time"
+      + " AND (!sc.has_start OR sc.start_time <= "+time+ ") AND (!sc.has_end OR sc.end_time > "+time + ")"
       + " ;";
     RowMapper<Student> rowMapper = new StudentRowMapper();
     return this.jdbcTemplate.query(sql, rowMapper);

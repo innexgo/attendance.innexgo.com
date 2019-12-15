@@ -1,5 +1,6 @@
 "use strict"
 
+// use await sleep(some milliseconds)
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }

@@ -20,12 +20,13 @@ public class ApiKeyService {
     return apiKey;
   }
 
+  // Gets the last created key with the keyhash
   public ApiKey getByKeyHash(String keyHash) {
     String sql =
-        "SELECT id, user_id, creation_time, expiration_time, key_hash FROM api_key WHERE key_hash=?";
+        "SELECT id, user_id, creation_time, expiration_time, key_hash FROM api_key WHERE key_hash=? ORDER BY creation_time DESC";
     RowMapper<ApiKey> rowMapper = new ApiKeyRowMapper();
-    ApiKey apiKey = jdbcTemplate.queryForObject(sql, rowMapper, keyHash);
-    return apiKey;
+    List<ApiKey> apiKeys = jdbcTemplate.query(sql, rowMapper, keyHash);
+    return apiKeys.size() > 0 ? apiKeys.get(0) : null;
   }
 
   public List<ApiKey> getAll() {

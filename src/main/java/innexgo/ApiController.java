@@ -1078,6 +1078,8 @@ public class ApiController {
       return BAD_REQUEST;
     }
 
+    Session returnableSession = null;
+
     // Get this student
     Student student = studentService.getById(studentId);
 
@@ -1134,6 +1136,9 @@ public class ApiController {
         openSession.complete = true;
         sessionService.update(openSession);
 
+        // Will result in the last open session being the one returned
+        returnableSession = openSession;
+
         usedToClose = true;
 
         // if it is in the middle of class, add a leaveEarly irregularity
@@ -1169,7 +1174,7 @@ public class ApiController {
         sessionService.update(openSession);
 
 
-      // After the person signed out the first time, they might have been logged in at a bunch of classes afterwards
+        // After the person signed out the first time, they might have been logged in at a bunch of classes afterwards
         // We give them the forgot to sign out irregularity at the course which they signed in to
         // period and course are that of the first period with a course that the session intersected
         List<Period> intersectedPeriods =
@@ -1215,19 +1220,22 @@ public class ApiController {
       session.outEncounterId = 0;
       sessionService.add(session);
 
+      // This is the session we give back
+      returnableSession = session;
+
       if (currentCourse != null) {
         // now we check if they arent there, and fix it
         List<Irregularity> irregularities =
           irregularityService.query(
-                null,                    //  Long id
-                studentId,               //  Long studentId
-                currentCourse.id,        //  Long courseId
-                currentPeriod.startTime, //  Long periodStartTime
-                null,                    //  Long teacherId
-                null,                    //  String type
-                null,                    //  Long time
-                null,                    //  Long timeMissing
-                null                     //  Long count
+              null,                    //  Long id
+              studentId,               //  Long studentId
+              currentCourse.id,        //  Long courseId
+              currentPeriod.startTime, //  Long periodStartTime
+              null,                    //  Long teacherId
+              null,                    //  String type
+              null,                    //  Long time
+              null,                    //  Long timeMissing
+              null                     //  Long count
               );
 
         for (Irregularity irregularity : irregularities) {
@@ -1251,7 +1259,7 @@ public class ApiController {
       }
     }
     // return the filled encounter on success
-    return new ResponseEntity<>(fillEncounter(encounter), HttpStatus.OK);
+    return new ResponseEntity<>(fillSession(returnableSession), HttpStatus.OK);
   }
 
   @RequestMapping("/misc/validate/")
@@ -1281,6 +1289,18 @@ public class ApiController {
   public ResponseEntity<?> nextPeriod(@RequestParam("apiKey") String apiKey) {
     if(isTrusted(apiKey)) {
       return new ResponseEntity<>(periodService.getNextByTime(System.currentTimeMillis()), HttpStatus.OK);
+    } else {
+      return UNAUTHORIZED;
+    }
+  }
+
+  @RequestMapping("/misc/registeredForCourse/")
+  public ResponseEntity<?> registeredForCourse(
+      @RequestParam("courseId") Long courseId,
+      @RequestParam("time") Long time,
+      @RequestParam("apiKey") String apiKey) {
+    if(isTrusted(apiKey)) {
+      return new ResponseEntity<>(studentService.registeredForCourse(courseId, time), HttpStatus.OK);
     } else {
       return UNAUTHORIZED;
     }
