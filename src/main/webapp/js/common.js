@@ -92,9 +92,21 @@ function linkRelative(text, url) {
   return linkAbsolute(text, staticUrl() + url);
 }
 
+// Returns a promise for the json given the response
 function parseResponse(resp) {
   if(!resp.ok) {
-    throw Error(response.statusText);
+    console.log(resp);
+    throw Error(resp.statusText);
   }
   return resp.json();
+}
+
+// Fetches json given a URL
+async function fetchJson(url) {
+  let response = await fetch(url);
+  if(!response.ok) {
+    console.log(response);
+    throw Error(response.statusText);
+  }
+  return await response.json();
 }

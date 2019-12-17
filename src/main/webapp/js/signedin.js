@@ -1,7 +1,7 @@
 "use strict"
 
 // Removes credentials and moves to login page
-function logout() {
+function logOut() {
     Cookies.remove('apiKey');
     Cookies.remove('courses');
     Cookies.remove('period');
@@ -14,22 +14,23 @@ async function ensureSignedIn() {
   // check if sign in cookie exists and is logged in
   var apiKey = Cookies.getJSON('apiKey');
   if (apiKey == null) {
-    logout();
+    logOut();
   }
 
   // now check if the cookie is expired
-  if (apiKey.expirationTime < moment().unix()) {
-    alert('Session has expired');
-    logout();
+  if(apiKey.expirationTime < moment().valueOf()) {
+    modalAlert('Session has expired');
+    logOut();
   }
 
   // make test request, on failure delete the cookies
   // usually means something went wrong with server
-  fetch(apiUrl() + '/misc/validate/?apiKey=' + apiKey.key)
-    .then(response => parseResponse(response))
-    .catch(function(err) {
-      alert('Current session invalid, refresh the page.');
-      logOut()
+  await fetch(`${apiUrl()}/misc/validate/?apiKey=${apiKey.key}`)
+    .then(function(response) {
+      if(!response.ok) {
+        alert('Current session invalid, refresh the page.');
+        logOut();
+      }
     });
  }
 
@@ -39,46 +40,35 @@ async function userInfo() {
     console.log('No ApiKey!');
     return;
   }
-  fetch(`${apiUrl()}/misc/currentPeriod/?apiKey=${apiKey.key}`)
-    .then(response => parseResponse(response))
-    .then(function(data) {
-        Cookies.set('period', data);
-    })
-    .catch(function(err) {
-      givePermError('Error Fetching necessary data, try refreshing');
-    })
-  fetch(`${apiUrl()}/misc/nextPeriod/?apiKey=${apiKey.key}`)
-    .then(response => parseResponse(response))
-    .then(function(data) {
-        Cookies.set('nextPeriod', data);
-    })
-    .catch(function(err) {
-      givePermError('Error Fetching necessary data, try refreshing');
-    })
-  fetch(`${apiUrl()}/course/?teacherId=${apiKey.user.id}&apiKey=${apiKey.key}`)
-    .then(response => parseResponse(response))
-    .then(function(data) {
-        Cookies.set('courses', data);
-    })
-    .catch(function(err) {
-      givePermError('Error Fetching necessary course data, try refreshing');
-    })
-}
 
+  try {
+    let period = await fetchJson(`${apiUrl()}/misc/currentPeriod/?apiKey=${apiKey.key}`);
+    Cookies.set('period', period);
+
+    let nextPeriod = await fetchJson(`${apiUrl()}/misc/nextPeriod/?apiKey=${apiKey.key}`);
+    Cookies.set('nextPeriod', nextPeriod);
+
+    let courses = await fetchJson(`${apiUrl()}/course/?teacherId=${apiKey.user.id}&apiKey=${apiKey.key}`);
+    Cookies.set('courses', courses);
+  }
+  catch(err) {
+    givePermError('Failed to fetch data, refresh.');
+  }
+}
 
 async function pollUserInfo() {
   while(true) {
-    userInfo();
+    await userInfo();
     let nextPeriod = Cookies.getJSON('nextPeriod');
-    sleep(nextPeriod.startTime - moment.value());
+    await sleep(nextPeriod.startTime - moment().valueOf());
   }
 }
 
 async function pollEnsureSignedIn() {
   while(true) {
-    ensureSignedIn();
-    let apiKey = Cookies.getJSON('nextPeriod');
-    sleep(apiKey.expirationTime - moment.value());
+    await ensureSignedIn();
+    let apiKey = Cookies.getJSON('apiKey');
+    await sleep(apiKey.expirationTime - moment().valueOf());
   }
 }
 

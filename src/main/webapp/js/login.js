@@ -1,5 +1,9 @@
 "use strict"
 
+function giveError(errormsg) {
+  document.getElementById('error').innerHTML = errormsg;
+}
+
 //Checks for blank password or user id, or other obvious misconfigurations 
 function validateattempt(userName, password)  {
   if(isEmpty(userName)){
@@ -14,13 +18,9 @@ function validateattempt(userName, password)  {
   return true;
 }
 
-function giveError(errormsg) {
-  document.getElementById('error').innerHTML = errormsg;
-}
-
 function loginattempt() {
-  var userName = document.getElementById('username').value;
-  var password = document.getElementById('password').value;
+  let userName = document.getElementById('username').value;
+  let password = document.getElementById('password').value;
 
   if(!validateattempt(userName, password)) {
     // failed attempt.
@@ -28,54 +28,35 @@ function loginattempt() {
   }
 
   // get date 30 min into the future
-  var apiKeyExpirationTime = moment().add(30, 'hours').valueOf();
-  console.log(apiUrl());
-  request(apiUrl() + '/apiKey/new/' +
-    '?email=' + encodeURIComponent(userName) +
-    '&password=' + encodeURIComponent(password) +
-    '&expirationTime=' + encodeURIComponent(apiKeyExpirationTime),
-    // success function
-    function(xhr) {
-      var apiKey = JSON.parse(xhr.responseText);
-      // store info
-      Cookies.set('apiKey', apiKey);
+  let apiKeyExpirationTime = moment().add(30, 'hours').valueOf();
 
-      if (Cookies.getJSON('prefs') == null) {
-        console.log('resetTheme login');
-        Cookies.set('prefs', {colourTheme: 'default', sidebarStyle: 'fixed'});
-      };
+  fetch(`${apiUrl()}/apiKey/new/?email=${userName}&password=${password}&expirationTime=${apiKeyExpirationTime}`)
+    .then(parseResponse)
+    .then(function(apiKey) {
+        Cookies.set('apiKey', apiKey);
 
-      // now jump to next page
-      if(apiKey.user.ring == 0) {
-        window.location.assign(staticUrl() + '/adminoverview.html');
-      } else if(apiKey.user.ring == 1) {
-        // if they're a teacher, get courses
-        request(apiUrl() + '/course/' +
-          '?teacherId='+encodeURIComponent(apiKey.user.id)+
-          '&apiKey='+encodeURIComponent(apiKey.key),
-          //success
-          function(xhr) {
-            Cookies.set('courses', JSON.parse(xhr.responseText));
-            window.location.assign(staticUrl() + '/overview.html');
-          },
-          // failure
-          function(xhr) {
-            giveError('An error occurred while logging in');
-          }
-        );
-      }
-    },
-    // failure function
-    function(xhr) {
-      console.log('authentication failure!');
+        if (Cookies.getJSON('prefs') == null) {
+          console.log('resetTheme login');
+          Cookies.set('prefs', {colourTheme: 'default', sidebarStyle: 'fixed'});
+        }
+
+        // now jump to next page
+        if(apiKey.user.ring == 0) {
+          window.location.assign(staticUrl() + '/adminoverview.html');
+        } else if(apiKey.user.ring == 1) {
+          //TODO split ensuresignedin into a userinfo and use this to prefetch the data before jumping
+          window.location.assign(staticUrl() + '/overview.html');
+        }
+      })
+    .catch(function(err) {
       giveError('Your email or password doesn\'t match our records.');
-    }
-  );
+      console.log(err);
+    });
 }
 
 window.onload = function() {
-  var username = document.getElementById('username');
-  var password = document.getElementById('password');
+  let username = document.getElementById('username');
+  let password = document.getElementById('password');
 
   username.addEventListener('keydown', function(event) {
     if (event.keyCode === 13) {

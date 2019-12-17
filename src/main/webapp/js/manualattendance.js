@@ -1,16 +1,31 @@
-var beepup = new Audio('assets/beepup.wav');
-var beepdown = new Audio('assets/beepdown.wav');
-var error = new Audio('assets/error.wav');
+const beepup = new Audio('assets/beepup.wav');
+const beepdown = new Audio('assets/beepdown.wav');
+const error = new Audio('assets/error.wav');
+
+let inferred_location_id = null;
 
 async function submitEncounter(studentId) {
   console.log('submitting encounter ' + studentId)
   console.log(studentId);
   document.getElementById('manual-userid').value = '';
-  var checkBox = document.getElementById('manual-type-toggle');
-  var apiKey = Cookies.getJSON('apiKey');
-  var period = Cookies.getJSON('period');
-  var course = Cookies.getJSON('courses').filter(c => c.period == period.number)[0];
+  let checkBox = document.getElementById('manual-type-toggle');
+  let apiKey = Cookies.getJSON('apiKey');
+  let period = Cookies.getJSON('period');
+  let nextPeriod = Cookies.getJSON('nextPeriod');
+  let courses = Cookies.getJSON('courses');
+  let course = courses.filter(c => c.period == period.number)[0];
+
   if (course == null) {
+    let dialog = bootbox.dialog({
+      title: 'A custom dialog with init',
+      message: '<p><i class="fa fa-spin fa-spinner"></i> Loading...</p>'
+    });
+
+    dialog.init(function(){
+      setTimeout(function(){
+        dialog.find('.bootbox-body').html('I was loaded after the dialog was shown!');
+      }, 3000);
+    });
     giveTempError('No class at the moment to sign into.');
     return;
   }
@@ -72,4 +87,6 @@ $(document).ready(function () {
     }
   });
 });
+
+// Periodically poll to check if course is valid
 

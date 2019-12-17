@@ -94,8 +94,8 @@ public class StudentService {
     String sql =
               " SELECT DISTINCT st.id, st.name, st.tags"
             + " FROM student st"
-            + " INNER JOIN session ses ON ses.student_id = st.id"
-            + " INNER JOIN encounter inen ON ses.in_encounter_id = inen.id"
+            + " INNER JOIN encounter inen ON st.id = inen.student_id"
+            + " INNER JOIN session ses ON ses.in_encounter_id = inen.id"
             + " LEFT JOIN encounter outen ON ses.complete AND ses.out_encounter_id = outen.id"
             + " WHERE 1 = 1 "
             + (" AND inen.location_id = " + course.locationId)
