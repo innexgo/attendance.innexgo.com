@@ -1,9 +1,10 @@
 function currentStatus() {
-  var apiKey = Cookies.getJSON('apiKey');
-  var period = Cookies.getJSON('period');
-  var course = period == null ? null : Cookies.getJSON('courses').filter(c => c.period == period.number)[0];
+  let apiKey = Cookies.getJSON('apiKey');
+  let period = Cookies.getJSON('period');
+  let course = period == null ? null : Cookies.getJSON('courses').filter(c => c.period == period.number)[0];
 
-  var table = document.getElementById('current-status-table');
+  let table = document.getElementById('current-status-table');
+  let time = moment().valueOf();
 
   //bail if we dont have all of the necessary cookies
   if (apiKey == null || course == null || period == null) {
@@ -12,8 +13,8 @@ function currentStatus() {
     return;
   }
 
-  if(course.type != 'Class Period') {
-    fetch(`${apiUrl()}/misc/registeredForCourse/?courseId=${course.id}&apiKey=${apiKey.key}`)
+  if(course.type == 'Class Period') {
+    fetch(`${apiUrl()}/misc/registeredForCourse/?courseId=${course.id}&time=${time}&apiKey=${apiKey.key}`)
       .then(parseResponse)
       .then(function (students) {
         fetch(`${apiUrl()}/irregularity/?courseId=${course.id}&periodId=${period.id}&apiKey=${apiKey.key}`)
@@ -64,6 +65,22 @@ function currentStatus() {
       })
       .catch(function(err) {
             givePermError('Failed to correctly fetch course data, try refreshing');
+      });
+  } else {
+    fetch(`${apiUrl()}/misc/present/?courseId=${course.id}&time=${time}&apiKey=${apiKey.key}`)
+      .then(parseResponse)
+      .then(function (students) {
+        // Clear table
+        table.innerHTML = '';
+        // Students
+        students.forEach(student => $('#current-status-table').append(
+              `<td>${linkRelative(student.name, '/studentprofile.html?studentId='+student.id)}</td>
+               <td>${student.id}</td>
+               <td style="background-color:${bgcolor};color:${fgcolor}">${text}</td>`)
+        );
+      })
+      .catch(function(err) {
+        givePermError('Failed to correctly fetch irregularity data, try refreshing');
       });
   }
 }
