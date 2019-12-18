@@ -79,16 +79,9 @@ public class StudentService {
   // find students who are present at the location that they are supposed to be in at this time
   public List<Student> present(long courseId, long time) {
     Course course = courseService.getById(courseId);
-    Period period = periodService.getByTime(time);
 
-    // Do some sanity checks to ensure that the time's period is the same period as the course
-    if(period.number != course.period) {
-      // empty list return
-      return new ArrayList<Student>();
-    }
-
-    // Find the sessions that have a start date before the period start date.
-    // If they have an end date it must be after the period start date
+    // Find the sessions that have a start date before the  time
+    // If they have an end date it must be after the time
     // find students who are in this list
 
     String sql =
@@ -99,8 +92,8 @@ public class StudentService {
             + " LEFT JOIN encounter outen ON ses.complete AND ses.out_encounter_id = outen.id"
             + " WHERE 1 = 1 "
             + (" AND inen.location_id = " + course.locationId)
-            + (" AND inen.time < " + period.startTime)
-            + (" AND outen.time IS NULL OR outen.time > " + period.startTime)
+            + (" AND inen.time < " + time)
+            + (" AND outen.time IS NULL OR outen.time > " + time)
             + " ;";
 
     RowMapper<Student> rowMapper = new StudentRowMapper();

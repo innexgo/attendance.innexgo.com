@@ -2,8 +2,6 @@ const beepup = new Audio('assets/beepup.wav');
 const beepdown = new Audio('assets/beepdown.wav');
 const error = new Audio('assets/error.wav');
 
-let inferred_location_id = null;
-
 async function submitEncounter(studentId) {
   console.log('submitting encounter ' + studentId)
   console.log(studentId);
@@ -34,14 +32,15 @@ async function submitEncounter(studentId) {
     .then(function(session) {
       // If the session is complete, then it is logging out
       if(session.complete) {
-          giveTempInfo(`Sucessfully logged ${encounter.student.name} out of ${encounter.location.name}`);
+          giveTempInfo(`Sucessfully logged ${session.inEncounter.student.name} out of ${session.inEncounter.location.name}`);
           beepdown.play();
       } else {
-          giveTempSuccess(`Sucessfully logged ${encounter.student.name} in to ${encounter.location.name}`);
+          giveTempSuccess(`Sucessfully logged ${session.inEncounter.student.name} in to ${session.inEncounter.location.name}`);
           beepup.play();
       }
     })
     .catch(function(err) {
+      console.log(err);
       giveTempError('Something went wrong while trying to sign you in.');
       error.play();
     })

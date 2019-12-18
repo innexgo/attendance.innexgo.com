@@ -93,12 +93,12 @@ function linkRelative(text, url) {
 }
 
 // Returns a promise for the json given the response
-function parseResponse(resp) {
-  if(!resp.ok) {
-    console.log(resp);
-    throw Error(resp.statusText);
+function parseResponse(response) {
+  if(!response.ok) {
+    console.log(response);
+    throw Error(response.statusText);
   }
-  return resp.json();
+  return response.json();
 }
 
 // Fetches json given a URL

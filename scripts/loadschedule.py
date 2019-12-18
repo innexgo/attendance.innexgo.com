@@ -83,7 +83,7 @@ def loadLocation(row):
         id = int(roomName)
         name = f'Room {id}'
     elif roomName[0] == 'P': # A portable
-        id = 10000 + int(roomName[1:])
+        id = int(roomName[1:])
         name = roomName
     else:
         id = int(prompt(f'===> Enter id for room named {roomName} (could not autogenerate)'))

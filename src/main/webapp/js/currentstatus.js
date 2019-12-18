@@ -60,16 +60,21 @@ function currentStatus() {
               }
           })
           .catch(function(err) {
+            console.log(err);
             givePermError('Failed to correctly fetch irregularity data, try refreshing');
           });
       })
       .catch(function(err) {
+            console.log(err);
             givePermError('Failed to correctly fetch course data, try refreshing');
       });
   } else {
     fetch(`${apiUrl()}/misc/present/?courseId=${course.id}&time=${time}&apiKey=${apiKey.key}`)
       .then(parseResponse)
       .then(function (students) {
+        let text = '<span class="fa fa-check"></span>'
+        let bgcolor = '#ccffcc';
+        let fgcolor = '#00ff00';
         // Clear table
         table.innerHTML = '';
         // Students
@@ -80,6 +85,7 @@ function currentStatus() {
         );
       })
       .catch(function(err) {
+        console.log(err);
         givePermError('Failed to correctly fetch irregularity data, try refreshing');
       });
   }

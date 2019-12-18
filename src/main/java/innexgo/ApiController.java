@@ -1305,4 +1305,17 @@ public class ApiController {
       return UNAUTHORIZED;
     }
   }
+
+  @RequestMapping("/misc/present/")
+  public ResponseEntity<?> present(
+      @RequestParam("courseId") Long courseId,
+      @RequestParam("time") Long time,
+      @RequestParam("apiKey") String apiKey) {
+    if(isTrusted(apiKey)) {
+      return new ResponseEntity<>(studentService.present(courseId, time), HttpStatus.OK);
+    } else {
+      return UNAUTHORIZED;
+    }
+  }
+
 }
