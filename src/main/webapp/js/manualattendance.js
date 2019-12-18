@@ -16,16 +16,10 @@ async function submitEncounter(studentId) {
   let course = courses.filter(c => c.period == period.number)[0];
 
   if (course == null) {
-    let dialog = bootbox.dialog({
-      title: 'A custom dialog with init',
-      message: '<p><i class="fa fa-spin fa-spinner"></i> Loading...</p>'
-    });
+    course = courses.filter(c => c.period == nextPeriod.number)[0];
+  }
 
-    dialog.init(function(){
-      setTimeout(function(){
-        dialog.find('.bootbox-body').html('I was loaded after the dialog was shown!');
-      }, 3000);
-    });
+  if (course == null) {
     giveTempError('No class at the moment to sign into.');
     return;
   }

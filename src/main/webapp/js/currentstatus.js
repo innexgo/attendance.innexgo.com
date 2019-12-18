@@ -13,7 +13,7 @@ function currentStatus() {
   }
 
   if(course.type != 'Class Period') {
-    fetch(`${apiUrl()}/misc/registeredForCours/?courseId=${course.id}&apiKey=${apiKey.key}`)
+    fetch(`${apiUrl()}/misc/registeredForCourse/?courseId=${course.id}&apiKey=${apiKey.key}`)
       .then(parseResponse)
       .then(function (students) {
         fetch(`${apiUrl()}/irregularity/?courseId=${course.id}&periodId=${period.id}&apiKey=${apiKey.key}`)
