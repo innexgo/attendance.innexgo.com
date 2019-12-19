@@ -5,9 +5,9 @@
 const earliest_date_offset = 14;
 
 let student = null;
+let irregularities = null;
 
-
-function getIrregularities(chartName) {
+function getIrregularities() {
 
 
   let chartTwo = document.getElementById('chart-two');
@@ -60,22 +60,6 @@ function getIrregularities(chartName) {
     console.log('not signed in');
     return;
   }
-
-  let searchParams = new URLSearchParams(window.location.search);
-
-  if (!searchParams.has('studentId')) {
-    console.log('page not loaded with right params');
-    return;
-  }
-
-  let studentId = searchParams.get('studentId');
-
-  try {
-    let minTime = moment().subtract(14, 'd').valueOf();
-    let irregularities = await fetchJson(`${apiUrl()}/irregularity/?studentId=${studentId}&apiKey=${apiKey.key}&minTime=${minTime}`);
-    // Now we must construct an array of 
-    let 
-
 
 
   request(apiUrl() + '/irregularity/' +
@@ -154,28 +138,11 @@ async function initialize() {
       document.getElementById('studentprofile-id').innerHTML = 'ID: ' + student.id;
   } catch(err) {
     console.log(err);
-    givePermError('Student Id Invali
+    givePermError('Page loaded with invalid student id.');
+  }
 
-  request(apiUrl() + '/student/' +
-    '?studentId=' + studentId +
-    '&apiKey=' + apiKey.key,
-    function (xhr) {
-      let studentResponse = JSON.parse(xhr.responseText)[0];
-    },
-    function (xhr) {
-      //failure
-      giveAlert('Failed to connect to server.', 'alert-danger', true);
-      return
-    }
-  );
-
-  request(apiUrl() + '/course/' +
-    '?studentId=' + studentId +
-    '&year=' + currentAcademicYear()+
-    '&apiKey=' + apiKey.key,
-    function (xhr) {
-      let studentCourses = JSON.parse(xhr.responseText);
-      studentCourses
+  try {
+    (await fetchJson(`${apiUrl()}/course/?studentId=${studentId}&apiKey=${apiKey.key}`))
         .sort((a, b) => (a.period > b.period) ? 1 : -1) // Sort in order
         .forEach(course => $('#studentprofile-courses').append(`
             <tr>
@@ -185,21 +152,16 @@ async function initialize() {
               <td>${linkRelative(course.location.name, '/locationprofile.html?locationId='+course.location.id)}</td>
             </tr>
           `)); // Append row
-    },
-    function (xhr) {
-      //failure
-      giveAlert('Failed to connect to server.', 'alert-danger', true);
-      return;
-    }
-  );
+  } catch(err) {
+    console.log(err);
+    givePermError('Failed to load courses.');
+  }
 
+  try {
+    irregularities = await fetchJson(`${apiUrl()}/irregularity/?studentId=${studentId}&apiKey=${apiKey.key}`);
 
-  request(`${apiUrl()}/irregularity/?studentId=${studentId}&apiKey=${apiKey.key}`,
-    function(xhr) {
-      let studentIrregularities = JSON.parse(xhr.responseText);
-      studentIrregularities
-        .sort((a,b) => (a.time > b.time) ? -1 : 1) // sort by time descending
-        .forEach(irregularity => $('#studentprofile-irregularities').append(`
+    irregularities.sort((a,b) => (a.time > b.time) ? -1 : 1) // sort by time descending
+           .forEach(irregularity => $('#studentprofile-irregularities').append(`
             <tr>
               <td>${irregularity.course.period}</td>
               <td>${linkRelative(irregularity.course.subject,'/courseprofile.html?courseId='+irregularity.course.id)}</td>
@@ -209,17 +171,14 @@ async function initialize() {
               <td>${moment(irregularity.time).format('MMM Do, YYYY')}</td>
             </tr>
           `)); // Append row
-    },
-    function (xhr) {
-      //failure
-      giveAlert('Failed to connect to server.', 'alert-danger', true);
-      return;
-    }
-  );
+  } catch(err) {
+    console.log(err);
+    givePermError('Failed to load irregularities.');
+  }
 }
 
-$(document).ready(function () {
-  initialize();
+$(document).ready(async function () {
+  await initialize();
   makeChart();
 });
 
