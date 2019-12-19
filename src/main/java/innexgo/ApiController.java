@@ -385,6 +385,8 @@ public class ApiController {
               null,                     //  Long teacherId
               Irregularity.TYPE_ABSENT, //  String type
               null,                     //  Long time
+              null,                     //  Long minTime
+              null,                     //  Long maxTime
               null,                     //  Long timeMissing
               null                      //  Long count
               ).size() > 0;
@@ -911,6 +913,8 @@ public class ApiController {
             Utils.parseLong(allRequestParam.get("teacherId")),
             allRequestParam.get("type"),
             Utils.parseLong(allRequestParam.get("time")),
+            Utils.parseLong(allRequestParam.get("minTime")),
+            Utils.parseLong(allRequestParam.get("maxTime")),
             Utils.parseLong(allRequestParam.get("timeMissing")),
             Utils.parseLong(allRequestParam.get("count")))
         .stream()
@@ -1234,6 +1238,8 @@ public class ApiController {
               null,                    //  Long teacherId
               null,                    //  String type
               null,                    //  Long time
+              null,                    //  Long minTime
+              null,                    //  Long maxTime
               null,                    //  Long timeMissing
               null                     //  Long count
               );

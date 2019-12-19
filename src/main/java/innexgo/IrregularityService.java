@@ -96,6 +96,8 @@ public class IrregularityService {
       Long teacherId,
       String type,
       Long time,
+      Long minTime,
+      Long maxTime,
       Long timeMissing,
       Long count) {
     String sql =
@@ -110,6 +112,8 @@ public class IrregularityService {
             + (teacherId == null ? "" : " AND crs.teacher_id = " + teacherId)
             + (type == null ? "" : " AND irr.type = " + Utils.escape(type))
             + (time == null ? "" : " AND irr.time = " + time)
+            + (minTime == null ? "" : " AND irr.time >= " + minTime)
+            + (maxTime == null ? "" : " AND irr.time <= " + maxTime)
             + (timeMissing == null ? "" : " AND irr.time_missing = " + timeMissing)
             + (" ORDER BY time")
             + (count == null ? "" : " LIMIT " + count)

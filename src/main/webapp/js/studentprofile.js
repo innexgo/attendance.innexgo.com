@@ -1,23 +1,82 @@
 "use strict"
 
-var student = null;
+
+// this is how far back we look to make the graph
+const earliest_date_offset = 14;
+
+let student = null;
+
 
 function getIrregularities(chartName) {
-  var apiKey = Cookies.getJSON('apiKey');
+
+
+  let chartTwo = document.getElementById('chart-two');
+
+  var dates = [];
+  for (let i = 0; i < 14; i++) {
+    dates[i] = String(moment().subtract(14 - i, 'd').format('MMM Do'));
+  }
+
+  var myChartTwo = new Chart(chartTwo, {
+
+    type: 'bar',
+    data: {
+      labels: dates,
+      datasets: [{
+        data: [],
+        label: 'Minutes tardy or absent',
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        xAxes: [{
+          scaleLabel: {
+            display: true,
+            labelString: 'Date'
+          }
+        }],
+        yAxes: [{
+          ticks: {
+            beginAtZero: true
+          },
+          scaleLabel: {
+            display: true,
+            labelString: 'Minutes'
+          }
+        }]
+      }
+    }
+  });
+
+
+
+
+
+
+  let apiKey = Cookies.getJSON('apiKey');
 
   if (apiKey == null) {
     console.log('not signed in');
     return;
   }
 
-  var searchParams = new URLSearchParams(window.location.search);
+  let searchParams = new URLSearchParams(window.location.search);
 
   if (!searchParams.has('studentId')) {
     console.log('page not loaded with right params');
     return;
   }
 
-  var studentId = searchParams.get('studentId');
+  let studentId = searchParams.get('studentId');
+
+  try {
+    let minTime = moment().subtract(14, 'd').valueOf();
+    let irregularities = await fetchJson(`${apiUrl()}/irregularity/?studentId=${studentId}&apiKey=${apiKey.key}&minTime=${minTime}`);
+    // Now we must construct an array of 
+    let 
+
+
 
   request(apiUrl() + '/irregularity/' +
     '?studentId=' + studentId +
@@ -66,7 +125,7 @@ function getIrregularities(chartName) {
   );
 }
 
-function loadStudentProfile() {
+async function initialize() {
   let apiKey = Cookies.getJSON('apiKey');
 
   if (apiKey == null) {
@@ -77,19 +136,31 @@ function loadStudentProfile() {
   let searchParams = new URLSearchParams(window.location.search);
 
   if (!searchParams.has('studentId')) {
-    console.log('page not loaded with right params');
+    console.log('Page not loaded with right params');
+    givePermError('Page loaded with invalid parameters.');
     return;
   }
 
   let studentId = searchParams.get('studentId');
+
+  try {
+    student = (await fetchJson(`${apiUrl()}/student/?studentId=${studentId}&apiKey=${apiKey.key}`))[0];
+
+    if(student == null) {
+      throw new Error('Student Id invalid');
+    }
+
+      document.getElementById('studentprofile-name').innerHTML = student.name;
+      document.getElementById('studentprofile-id').innerHTML = 'ID: ' + student.id;
+  } catch(err) {
+    console.log(err);
+    givePermError('Student Id Invali
 
   request(apiUrl() + '/student/' +
     '?studentId=' + studentId +
     '&apiKey=' + apiKey.key,
     function (xhr) {
       let studentResponse = JSON.parse(xhr.responseText)[0];
-      document.getElementById('studentprofile-name').innerHTML = studentResponse.name;
-      document.getElementById('studentprofile-id').innerHTML = 'ID: ' + studentResponse.id;
     },
     function (xhr) {
       //failure
@@ -147,54 +218,9 @@ function loadStudentProfile() {
   );
 }
 
-var dates = [];
-var i;
-for (i = 0; i < 14; i++) {
-  dates.push(moment().subtract(14 - i, 'd').format('MM-DD-YYYY'));
-};
-
 $(document).ready(function () {
-  var chartTwo = document.getElementById('chart-two');
-
-  var dates = [];
-  var i;
-  for (i = 0; i < 14; i++) {
-    dates[i] = String(moment().subtract(14 - i, 'd').format('MMM Do'));
-  };
-
-  var myChartTwo = new Chart(chartTwo, {
-
-    type: 'bar',
-    data: {
-      labels: dates,
-      datasets: [{
-        data: [],
-        label: 'Minutes tardy or absent',
-        borderWidth: 1
-      }]
-    },
-    options: {
-      scales: {
-        xAxes: [{
-          scaleLabel: {
-            display: true,
-            labelString: 'Date'
-          }
-        }],
-        yAxes: [{
-          ticks: {
-            beginAtZero: true
-          },
-          scaleLabel: {
-            display: true,
-            labelString: 'Minutes'
-          }
-        }]
-      }
-    }
-  });
-  loadStudentProfile();
-  getIrregularities(myChartTwo);
+  initialize();
+  makeChart();
 });
 
 //Bootstrap Popover - Alert Zones/Quick help for Card(s)

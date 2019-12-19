@@ -36,7 +36,8 @@ async function loadCourseProfile() {
             <td>${moment(irregularity.time).format('MMM Do, YYYY')}</td>
           </tr>`));
 
-    let students = await fetchJson(`${apiUrl()}/student/?apiKey=${apiKey.key}&courseId=${courseId}`);
+    let students = (await fetchJson(`${apiUrl()}/schedule/?apiKey=${apiKey.key}&courseId=${courseId}`))
+                    .map(schedule => schedule.student);
     document.getElementById('courseprofile-student-count').innerHTML = 'Number of students: ' + students.length;
     students.forEach(student => $('#courseprofile-students').append(`
           <tr>
