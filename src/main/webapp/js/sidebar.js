@@ -1,26 +1,36 @@
 function displayInfo() {
+
+
+  let info_time = document.getElementById('info-time');
+  let info_period = document.getElementById('info-period');
+  let info_location = document.getElementById('info-location');
+
+
+  info_time.innerHTML = moment().format('dddd (MM/DD/YYYY)');
+
   let period = Cookies.getJSON('period');
-  if(period == null) {
+  let courses = Cookies.getJSON('courses');
+  if(period == null || courses == null) {
+    document.getElementById('info-period').innerHTML = '';
+    document.getElementById('info-location').innerHTML = '';
     return;
   }
 
-  let courses = Cookies.getJSON('courses');
-  if(courses == null) {
-    return;
+  if(period.type == 'Class Period') {
+    document.getElementById('info-period').innerHTML = 'Period ' + period.number;
+  } else {
+    document.getElementById('info-period').innerHTML = period.type;
   }
 
   let course = courses.filter(c => c.period == period.number)[0];
 
-
-  document.getElementById('info-time').innerHTML = moment().format('dddd (MM/DD/YYYY)');
-  document.getElementById('info-period').innerHTML = period.type;
-
-  if(course != null) {
-    document.getElementById('info-location').innerHTML =
-      linkRelative(course.location.name, '/locationprofile.html?locationId=' + course.location.id);
-  } else {
+  if(course == null) {
     document.getElementById('info-location').innerHTML = '';
+    return;
   }
+
+  document.getElementById('info-location').innerHTML =
+    linkRelative(course.location.name, '/locationprofile.html?locationId=' + course.location.id);
 }
 
 $(document).ready(function () {
@@ -50,8 +60,10 @@ $(document).ready(function () {
   brandImage.src = '/img/innexgo_logo.png';
   $('.navbar-palette').addClass('text-light').addClass('bg-dark');
 
-  displayInfo();
+});
 
-  var period = Cookies.getJSON('period');
+// Repeatedly display signin data
+$(document).ready(function () {
+  displayInfo();
   setInterval(displayInfo, 10000);
-})
+});

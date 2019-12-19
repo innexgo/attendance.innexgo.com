@@ -1,13 +1,19 @@
 "use strict"
 
 function loadData() {
-  var apiKey = Cookies.getJSON('apiKey');
-  var searchParams = new URLSearchParams(window.location.search);
-
-  if (!searchParams.has('locationId')) {
-    giveAlert('No user query');
+  let apiKey = Cookies.getJSON('apiKey');
+  if(apiKey == null) {
+    console.log('Not signed in');
     return;
   }
+
+  let searchParams = new URLSearchParams(window.location.search);
+
+  if (!searchParams.has('locationId')) {
+    givePermError('Page loaded with invalid parameters.');
+    return;
+  }
+
   var locationId = searchParams.get('locationId');
 
   request(apiUrl() + '/course/' +

@@ -42,7 +42,7 @@ async function userInfo() {
   }
 
   try {
-    let period = await fetchJson(`${apiUrl()}/misc/currentPeriod/?apiKey=${apiKey.key}`);
+    let period = await fetchJson(`${apiUrl()}/misc/getPeriodByTime/?time=${moment().valueOf()}&apiKey=${apiKey.key}`);
     Cookies.set('period', period);
 
     let nextPeriod = await fetchJson(`${apiUrl()}/misc/nextPeriod/?apiKey=${apiKey.key}`);

@@ -13,7 +13,7 @@ function currentStatus() {
     return;
   }
 
-  if(course.type == 'Class Period') {
+  if(period.type == 'Class Period') {
     fetch(`${apiUrl()}/misc/registeredForCourse/?courseId=${course.id}&time=${time}&apiKey=${apiKey.key}`)
       .then(parseResponse)
       .then(function (students) {
@@ -21,16 +21,14 @@ function currentStatus() {
           .then(parseResponse)
           .then(function(irregularities) {
               table.innerHTML = '';
-              students.sort((a, b) => (a.name > b.name) ? 1 : -1)
+              students.sort((a, b) => (a.name > b.name) ? -1 : 1)
               for (let i = 0; i < students.length; i++) {
                 let text = '<span class="fa fa-check"></span>'
                 let bgcolor = '#ccffcc';
                 let fgcolor = '#00ff00';
                 let student = students[i];
 
-                var irregularity = irregularities.filter(irr => irr.student.id == student.id).pop();
-                console.log(irregularity);
-                console.log(student);
+                let irregularity = irregularities.filter(irr => irr.student.id == student.id).pop();
                 let type = irregularity == null ? null : irregularity.type;
                 if (type == 'Absent') {
                   text = '<span class="fa fa-times"></span>';
@@ -65,8 +63,8 @@ function currentStatus() {
           });
       })
       .catch(function(err) {
-            console.log(err);
-            givePermError('Failed to correctly fetch course data, try refreshing');
+          console.log(err);
+          givePermError('Failed to correctly fetch course data, try refreshing');
       });
   } else {
     fetch(`${apiUrl()}/misc/present/?courseId=${course.id}&time=${time}&apiKey=${apiKey.key}`)

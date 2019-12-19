@@ -20,7 +20,7 @@ $(document).ready(function(){
 
   // Get courses from cookie, sort them by period in order, and then append to end of table
   Cookies.getJSON('courses')
-    .sort((a, b) => (a.time > b.time) ? 1 : -1)
+    .sort((a, b) => (a.period > b.period) ? 1 : -1)
     .forEach(course => $('#reports-courses').append(`
         <tr>
           <td>${course.period}</td>
@@ -32,15 +32,15 @@ $(document).ready(function(){
 });
 
 // Populates tables with links to class session reports for that day
-function loadClassSessionReports(date) {
+async function loadClassSessionReports(date) {
 
   // First get periods that occured on that day
   // Then get courses for that year and teacher
   // For each period on that day, if there is a course with that period, add it to the table
 
-  var apiKey = Cookies.getJSON('apiKey');
-  var dayBegin = moment(date).startOf('day');
-  var dayEnd = moment(date).endOf('day');
+  let apiKey = Cookies.getJSON('apiKey');
+  let dayBegin = moment(date).startOf('day');
+  let dayEnd = moment(date).endOf('day');
 
 
   if(moment().isBefore(dayEnd)) {
@@ -50,39 +50,33 @@ function loadClassSessionReports(date) {
   // clear
   $('#reports-classes').empty();
 
-  // Note this request is inclusive,
-  // searching for end times that are after the beginning of the day, and initial times until the end of the day.
-  request(`${apiUrl()}/period/?endTimeBegin=${dayBegin.valueOf()}&initialTimeEnd=${dayEnd.valueOf()}&apiKey=${apiKey.key}`,
-    function(xhr) {
-      let periods = JSON.parse(xhr.responseText);
-      request(`${apiUrl()}/course/?year=${momentToAcademicYear(date)}&teacherId=${apiKey.user.id}&apiKey=${apiKey.key}`,
-        function(xhr) {
-          let courses = JSON.parse(xhr.responseText);
-          for(let period of periods) {
-            // for each course that has this period's id
-            for(let course of courses.filter(c => c.period === period.period)) {
-              $('#reports-classes').append(`
-                  <tr>
-                    <td>${period.period}</td>
-                    <td>${linkRelative(course.subject, '/classprofile.html?courseId='+course.id+'&periodId='+period.id)}</td>
-                  </tr>
-                `)
-            }
-          }
-        },
-        // Failed to get courses
-        function(xhr) {
-          console.log('Failed to get courses from server.');
-          giveAlert('Something went wrong while fetching courses from the server.', 'alert-danger', false);
-        }
-      );
-    },
-    // Failed to get periods
-    function(xhr) {
-      console.log('Failed to get periods from server.');
-      giveAlert('Something went wrong while fetching periods from the server.', 'alert-danger', false);
+  try {
+    let semester = await fetchJson(`${apiUrl()}/misc/getSemesterByTime/?time=${date.valueOf()}&apiKey=${apiKey.key}`);
+
+    if(semester == null) {
+      console.log('No semester, so assuming no school!');
+      return;
     }
-  );
+
+    // Note this request is inclusive,
+    // searching for end times that are after the beginning of the day, and initial times until the end of the day.
+    let periods = await fetchJson(`${apiUrl()}/period/?minStartTime=${dayBegin.valueOf()}&maxStartTime=${dayEnd.valueOf()}&apiKey=${apiKey.key}`);
+    let courses = await fetchJson(`${apiUrl()}/course/?semesterStartTime=${semester.startTime}&teacherId=${apiKey.user.id}&apiKey=${apiKey.key}`);
+
+    for(let period of periods) {
+      // for each course that has this period's id
+      for(let course of courses.filter(c => c.period === period.number)) {
+        $('#reports-classes').append(`
+                  <tr>
+                    <td>${period.number}</td>
+                    <td>${linkRelative(course.subject, '/classprofile.html?courseId='+course.id+'&periodStartTime='+period.startTime)}</td>
+                  </tr>`)
+      }
+    }
+  } catch(err) {
+    console.log(err);
+    giveAlert('Something went wrong while fetching courses from the server.', 'alert-danger', false);
+  }
 }
 
 // Search event listeners
@@ -112,7 +106,7 @@ $(document).ready(function () {
   });
 });
 
-function searchStudent(name) {
+async function searchStudent(name) {
   let apiKey = Cookies.getJSON('apiKey');
   let validatedName = standardizeString(name);
   if(isEmpty(validatedName)) {
@@ -123,23 +117,19 @@ function searchStudent(name) {
   // clear
   $('#reports-students').empty();
 
-  request(`${apiUrl()}/student/?partialName=${validatedName}&apiKey=${apiKey.key}`,
-    function(xhr) {
-      let studentList = JSON.parse(xhr.responseText);
-      for(let student of studentList) {
-        $('#reports-students').append(`
-            <tr>
-              <td>${linkRelative(student.name, '/studentprofile.html?studentId='+student.id)}</td>
-              <td>${student.id}</td>
-              <td>${student.graduatingYear}</td>
-            </tr>
-          `);
-      }
-    },
-    // Failure
-    function(xhr) {
-      console.log('Failed to get students from server.');
-      giveAlert('Something went wrong while fetching students from the server.', 'alert-danger', false);
+  try {
+    let studentList = await fetchJson(`${apiUrl()}/student/?partialName=${validatedName}&apiKey=${apiKey.key}`);
+    for(let student of studentList) {
+      $('#reports-students').append(`
+              <tr>
+                <td>${linkRelative(student.name, '/studentprofile.html?studentId='+student.id)}</td>
+                <td>${student.id}</td>
+                <td>${student.graduatingYear}</td>
+              </tr>
+            `);
     }
-  );
+  } catch(err) {
+    console.log(err);
+    giveTempError('Something went wrong while fetching students from the server.');
+  }
 }

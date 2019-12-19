@@ -1267,19 +1267,23 @@ public class ApiController {
     return isTrusted(apiKey) ? OK : UNAUTHORIZED;
   }
 
-  @RequestMapping("/misc/currentSemester/")
-  public ResponseEntity<?> currentSemester(@RequestParam("apiKey") String apiKey) {
+  @RequestMapping("/misc/getSemesterByTime/")
+  public ResponseEntity<?> currentSemester(
+      @RequestParam("time") Long time,
+      @RequestParam("apiKey") String apiKey) {
     if(isTrusted(apiKey)) {
-      return new ResponseEntity<>(semesterService.getCurrent(), HttpStatus.OK);
+      return new ResponseEntity<>(semesterService.getByTime(time), HttpStatus.OK);
     } else {
       return UNAUTHORIZED;
     }
   }
 
-  @RequestMapping("/misc/currentPeriod/")
-  public ResponseEntity<?> currentPeriod(@RequestParam("apiKey") String apiKey) {
+  @RequestMapping("/misc/getPeriodByTime/")
+  public ResponseEntity<?> currentPeriod(
+      @RequestParam("time") Long time,
+      @RequestParam("apiKey") String apiKey) {
     if(isTrusted(apiKey)) {
-      return new ResponseEntity<>(periodService.getByTime(System.currentTimeMillis()), HttpStatus.OK);
+      return new ResponseEntity<>(periodService.getByTime(time), HttpStatus.OK);
     } else {
       return UNAUTHORIZED;
     }

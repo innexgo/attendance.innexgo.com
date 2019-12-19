@@ -1,6 +1,6 @@
 "use strict"
 
-function loadCourseProfile() {
+async function loadCourseProfile() {
   let apiKey = Cookies.getJSON('apiKey');
 
   if (apiKey == null) {
@@ -17,65 +17,47 @@ function loadCourseProfile() {
 
   let courseId = searchParams.get('courseId');
 
-  request(`${apiUrl()}/course/?apiKey=${apiKey.key}&courseId=${courseId}`,
-    function (xhr) {
-      let course = JSON.parse(xhr.responseText)[0];
-      document.getElementById('courseprofile-name').innerHTML = course.subject;
-      document.getElementById('courseprofile-teacher').innerHTML = 'Teacher: ' + linkRelative(course.teacher.name, '/userprofile.html?userId=' + course.teacher.id);
-      document.getElementById('courseprofile-period').innerHTML = 'Period: ' + course.period;
-      document.getElementById('courseprofile-location').innerHTML = linkRelative(course.location.name, '/locationprofile.html?locationId='+course.location.id);
+  try {
+    let course = (await fetchJson(`${apiUrl()}/course/?apiKey=${apiKey.key}&courseId=${courseId}`))[0];
+    if(course == null) {
+      throw new Error('Course nonexistent!');
+    }
 
-      request(`${apiUrl()}/irregularity/?apiKey=${apiKey.key}&courseId=${course.id}&count=100`,
-        function(xhr) {
-          let irregularities = JSON.parse(xhr.responseText);
-          irregularities.forEach(irregularity => $('#courseprofile-irregularities').append(`
-            <tr>
-              <td>${linkRelative(irregularity.student.name, '/studentprofile.html?studentId='+irregularity.student.id)}</td>
-              <td>${irregularity.type}</td>
-              <td>${moment(irregularity.time).format('MMM Do, YYYY')}</td>
-            </tr>`));
-        },
-        function (xhr) {
-          //failure
-          giveAlert('Failed to connect to server.', 'alert-danger', true);
-          return;
-        }
-      );
+    document.getElementById('courseprofile-name').innerHTML = course.subject;
+    document.getElementById('courseprofile-teacher').innerHTML = 'Teacher: ' + linkRelative(course.teacher.name, '/userprofile.html?userId=' + course.teacher.id);
+    document.getElementById('courseprofile-period').innerHTML = 'Period: ' + course.period;
+    document.getElementById('courseprofile-location').innerHTML = linkRelative(course.location.name, '/locationprofile.html?locationId='+course.location.id);
 
-      request(`${apiUrl()}/student/?apiKey=${apiKey.key}&courseId=${courseId}`,
-        function(xhr) {
-          let studentList = JSON.parse(xhr.responseText);
-          document.getElementById('courseprofile-student-count').innerHTML = 'Number of students: ' + studentList.length;
-          studentList.forEach(student => $('#courseprofile-students').append(`
+    let irregularities = await fetchJson(`${apiUrl()}/irregularity/?apiKey=${apiKey.key}&courseId=${course.id}&count=100`);
+    irregularities.forEach(irregularity => $('#courseprofile-irregularities').append(`
+          <tr>
+            <td>${linkRelative(irregularity.student.name, '/studentprofile.html?studentId='+irregularity.student.id)}</td>
+            <td>${irregularity.type}</td>
+            <td>${moment(irregularity.time).format('MMM Do, YYYY')}</td>
+          </tr>`));
+
+    let students = await fetchJson(`${apiUrl()}/student/?apiKey=${apiKey.key}&courseId=${courseId}`);
+    document.getElementById('courseprofile-student-count').innerHTML = 'Number of students: ' + students.length;
+    students.forEach(student => $('#courseprofile-students').append(`
           <tr>
             <td>${linkRelative(student.name, '/studentprofile.html?studentId='+student.id)}</td>
             <td>${student.id}</td>
             <td>${student.graduatingYear}</td>
           </tr>`));
-        },
-        // failure
-        function() {
-          giveAlert('Failed to connect to server.', 'alert-danger', true);
-          return;
-        }
-      );
-    },
-    function (xhr) {
-      //failure
-      giveAlert('Failed to connect to server.', 'alert-danger', true);
-      return;
-    }
-  );
+  } catch(err) {
+    console.log(err);
+    givePermError('Failed to connect to server.');
+    return;
+  }
 }
-
-$(document).ready(function() {
-  loadCourseProfile();
-})
-
 
 //Bootstrap Popover - Alert Zones/Quick help for Card(s)
 $(document).ready(function(){
   $('[data-toggle="popover"]').popover({
-      trigger : 'hover'
+    trigger : 'hover'
   });
 });
+
+$(document).ready(function() {
+  loadCourseProfile();
+})

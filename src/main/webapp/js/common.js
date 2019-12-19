@@ -108,5 +108,5 @@ async function fetchJson(url) {
     console.log(response);
     throw Error(response.statusText);
   }
-  return await response.json();
+  return response.json();
 }
