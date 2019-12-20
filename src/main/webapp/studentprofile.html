@@ -77,7 +77,7 @@
           <div class="card-deck">
 
             <!-- Student Stats -->
-            <div class="card col-sm-3 palette-level-two">
+            <div class="card col-sm-6 palette-level-two">
               <div class="card-body">
                 <div class="input-group">
                   <h5 id="studentprofile-name" class="card-title">Student Name</h5>
@@ -107,7 +107,6 @@
                         <td>Period</td>
                         <td>Class</td>
                         <td>Teacher</td>
-                        <td>Location</td>
                       </tr>
                     </thead>
                     <tbody id="studentprofile-courses"></tbody>
@@ -129,12 +128,12 @@
                     </button>
                   </span>
                 </div>
-                <canvas id="chart-two" height="50%" width="50%"></canvas>
+                <canvas id="studentprofile-chart" height="50%" width="50%"></canvas>
               </div>
             </div>
 
             <!-- Student Irregularities -->
-            <div class="card col-sm-7 palette-level-two">
+            <div class="card col-sm-4 palette-level-two">
               <div class="card-body">
                 <div class="input-group">
                   <h5 id="studentprofile-name" class="card-title">Recent Irregularities</h5>
@@ -150,12 +149,9 @@
                   <table class="table striped white ">
                     <thead>
                       <tr class='table-header'>
-                        <td>Period</td>
-                        <td>Class</td>
-                        <td>Teacher</td>
-                        <td>Location</td>
-                        <td>Type</td>
                         <td>Time</td>
+                        <td>Class</td>
+                        <td>Type</td>
                       </tr>
                     </thead>
                     <tbody id="studentprofile-irregularities"></tbody>
