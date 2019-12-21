@@ -8,6 +8,13 @@ const position = {
 
 async function loadData() {
   let apiKey = Cookies.getJSON('apiKey');
+  let semester = Cookies.getJSON('semester');
+
+  if(apiKey == null || semester == null) {
+    console.log('Missing cookies');
+    return;
+  }
+
   let searchParams = new URLSearchParams(window.location.search);
 
   if (!searchParams.has('userId')) {
@@ -27,7 +34,7 @@ async function loadData() {
     document.getElementById('user-email').innerHTML = 'Email: ' + linkAbsolute(user.email, 'mailto:' + user.email);
     document.getElementById('user-position').innerHTML = position[user.ring];
 
-    (await fetchJson(`${apiUrl()}/course/?teacherId=${userId}&apiKey=${apiKey.key}`))
+    (await fetchJson(`${apiUrl()}/course/?semesterStartTime=${semester.startTime}&teacherId=${userId}&apiKey=${apiKey.key}`))
         .sort((a, b) => (a.period > b.period) ? 1 : -1)
         .forEach(course => $('#user-courses').append(`
             <tr>

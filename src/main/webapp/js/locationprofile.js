@@ -7,6 +7,12 @@ async function loadData() {
     return;
   }
 
+  let semester = Cookies.getJSON('semester');
+  if(semester == null) {
+    console.log('No semester, bailing');
+    return;
+  }
+
   let searchParams = new URLSearchParams(window.location.search);
 
   if (!searchParams.has('locationId')) {
@@ -29,9 +35,10 @@ async function loadData() {
 
   try {
     // One liner time
-    (await fetchJson(`${apiUrl()}/course/?locationId=${locationId}&apiKey=${apiKey.key}`))
-        .sort((a, b) => (a.period > b.period) ? 1 : -1)
-        .forEach(course => $('#location-courses').append(`
+    (await fetchJson(`${apiUrl()}/course/?locationId=${locationId}&semesterStartTime=${semester.startTime}`
+      + `apiKey=${apiKey.key}`))
+      .sort((a, b) => (a.period > b.period) ? 1 : -1)
+      .forEach(course => $('#location-courses').append(`
             <tr>
               <td>${course.period}</td>
               <td>${linkRelative(course.subject, '/courseprofile.html?courseId='+course.id)}</td>

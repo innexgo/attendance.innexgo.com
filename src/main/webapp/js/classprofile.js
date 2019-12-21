@@ -5,7 +5,7 @@ let period = null;
 
 
 async function loadClassProfile() {
-  var apiKey = Cookies.getJSON('apiKey');
+  let apiKey = Cookies.getJSON('apiKey');
 
   if(apiKey == null) {
     console.log('not signed in');
@@ -66,10 +66,16 @@ async function loadClassProfile() {
 }
 
 async function initialize() {
-  var apiKey = Cookies.getJSON('apiKey');
+  let apiKey = Cookies.getJSON('apiKey');
 
   if(apiKey == null) {
     console.log('not signed in');
+    return;
+  }
+
+  let semester = Cookies.getJSON('semester');
+  if(semester == null) {
+    console.log('No semester');
     return;
   }
 

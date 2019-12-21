@@ -18,7 +18,7 @@ function validateattempt(userName, password)  {
   return true;
 }
 
-function loginattempt() {
+async function loginattempt() {
   let userName = document.getElementById('username').value;
   let password = document.getElementById('password').value;
 
@@ -30,28 +30,26 @@ function loginattempt() {
   // get date 30 min into the future
   let apiKeyExpirationTime = moment().add(30, 'hours').valueOf();
 
-  fetch(`${apiUrl()}/apiKey/new/?email=${userName}&password=${password}&expirationTime=${apiKeyExpirationTime}`)
-    .then(parseResponse)
-    .then(function(apiKey) {
-        Cookies.set('apiKey', apiKey);
+  try {
 
-        if (Cookies.getJSON('prefs') == null) {
-          console.log('resetTheme login');
-          Cookies.set('prefs', {colourTheme: 'default', sidebarStyle: 'fixed'});
-        }
+    let apiKey = await fetchJson(`${apiUrl()}/apiKey/new/?email=${userName}&password=${password}&expirationTime=${apiKeyExpirationTime}`);
 
-        // now jump to next page
-        if(apiKey.user.ring == 0) {
-          window.location.assign(staticUrl() + '/adminoverview.html');
-        } else if(apiKey.user.ring == 1) {
-          //TODO split ensuresignedin into a userinfo and use this to prefetch the data before jumping
-          window.location.assign(staticUrl() + '/overview.html');
-        }
-      })
-    .catch(function(err) {
-      giveError('Your email or password doesn\'t match our records.');
-      console.log(err);
-    });
+    if (Cookies.getJSON('prefs') == null) {
+      console.log('resetTheme login');
+      Cookies.set('prefs', {colourTheme: 'default', sidebarStyle: 'fixed'});
+    }
+
+    // now jump to next page
+    if(apiKey.user.ring == 0) {
+      window.location.assign(staticUrl() + '/adminoverview.html');
+    } else if(apiKey.user.ring == 1) {
+      //TODO split ensuresignedin into a userinfo and use this to prefetch the data before jumping
+      window.location.assign(staticUrl() + '/overview.html');
+    }
+  } catch(err) {
+    console.log(err);
+    giveError('Your email or password doesn\'t match our records.');
+  }
 }
 
 window.onload = function() {

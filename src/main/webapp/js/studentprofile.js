@@ -66,9 +66,15 @@ function makeChart() {
 
 async function initialize() {
   let apiKey = Cookies.getJSON('apiKey');
-
   if (apiKey == null) {
     console.log('not signed in');
+    return;
+  }
+
+
+  let semester = Cookies.getJSON('semester');
+  if(semester == null) {
+    console.log('No semester');
     return;
   }
 
@@ -97,7 +103,7 @@ async function initialize() {
   }
 
   try {
-    (await fetchJson(`${apiUrl()}/course/?studentId=${studentId}&apiKey=${apiKey.key}`))
+    (await fetchJson(`${apiUrl()}/course/?studentId=${studentId}&semesterStartTime=${semester.startTime}&apiKey=${apiKey.key}`))
         .sort((a, b) => (a.period > b.period) ? 1 : -1) // Sort in order
         .forEach(course => {$('#studentprofile-courses').append(`
             <tr>

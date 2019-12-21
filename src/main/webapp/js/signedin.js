@@ -6,6 +6,7 @@ function logOut() {
     Cookies.remove('courses');
     Cookies.remove('period');
     Cookies.remove('nextPeriod');
+    Cookies.remove('semester');
     window.location.replace(staticUrl() + '/login.html');
 }
 
@@ -48,8 +49,12 @@ async function userInfo() {
     let nextPeriod = await fetchJson(`${apiUrl()}/misc/nextPeriod/?apiKey=${apiKey.key}`);
     Cookies.set('nextPeriod', nextPeriod);
 
-    let courses = await fetchJson(`${apiUrl()}/course/?teacherId=${apiKey.user.id}&apiKey=${apiKey.key}`);
+    let semester = await fetchJson(`${apiUrl()}/misc/getSemesterByTime/?time=${moment().valueOf()}&apiKey=${apiKey.key}`);
+    Cookies.set('semester', semester);
+
+    let courses = await fetchJson(`${apiUrl()}/course/?semesterStartTime=${semester.startTime}&teacherId=${apiKey.user.id}&apiKey=${apiKey.key}`);
     Cookies.set('courses', courses);
+
   }
   catch(err) {
     givePermError('Failed to fetch data, refresh.');
@@ -71,6 +76,7 @@ async function pollEnsureSignedIn() {
     await sleep(apiKey.expirationTime - moment().valueOf());
   }
 }
+
 
 pollUserInfo();
 pollEnsureSignedIn();
