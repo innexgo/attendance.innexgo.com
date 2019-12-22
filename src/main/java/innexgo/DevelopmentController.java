@@ -96,33 +96,47 @@ public class DevelopmentController {
   public ResponseEntity<?> deleteTestingPeriods() {
     long minDuration = 4 * 60 * 1000;
     List<Period> periodList = periodService.getAll();
+
+    Set<Period> toDelete = new HashSet<>();
+
     for(int i = 0; i < periodList.size()-1; i++) {
       Period currentPeriod = periodList.get(i);
       Period nextPeriod = periodList.get(i+1);
-
       if(nextPeriod.startTime - currentPeriod.startTime < minDuration) {
-        periodService.deleteByStartTime(currentPeriod.startTime);
-
-        // delete irregularities, as they reference periods
-        List<Irregularity> irregularities = irregularityService.query(
-
-            null,                    // Long id,
-            null,                    // Long studentId,
-            null,                    // Long courseId,
-            currentPeriod.startTime, // Long periodStartTime,
-            null,                    // Long teacherId,
-            null,                    // String type,
-            null,                    // Long time,
-            null,                    // Long minTime,
-            null,                    // Long maxTime,
-            null,                    // Long timeMissing,
-            null                     // Long count) {
-          );
-
-        for(Irregularity irregularity  : irregularities) {
-          irregularityService.deleteById(irregularity.id);
-        }
+        toDelete.add(currentPeriod);
       }
+    }
+
+    for(int i = 1; i < periodList.size(); i++) {
+      Period currentPeriod = periodList.get(i);
+      Period previousPeriod = periodList.get(i-1);
+      if(currentPeriod.startTime - previousPeriod.startTime < minDuration) {
+        toDelete.add(currentPeriod);
+      }
+    }
+
+
+    for(Period currentPeriod : toDelete) {
+      // delete irregularities, as they reference periods
+      List<Irregularity> irregularities = irregularityService.query(
+
+          null,                    // Long id,
+          null,                    // Long studentId,
+          null,                    // Long courseId,
+          currentPeriod.startTime, // Long periodStartTime,
+          null,                    // Long teacherId,
+          null,                    // String type,
+          null,                    // Long time,
+          null,                    // Long minTime,
+          null,                    // Long maxTime,
+          null,                    // Long timeMissing,
+          null                     // Long count) {
+        );
+
+      for(Irregularity irregularity  : irregularities) {
+        irregularityService.deleteById(irregularity.id);
+      }
+      periodService.deleteByStartTime(currentPeriod.startTime);
     }
     return OK;
   }
