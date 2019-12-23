@@ -13,9 +13,10 @@ function logOut() {
 // moves to login page on cookie expiration
 async function ensureSignedIn() {
   // check if sign in cookie exists and is logged in
-  var apiKey = Cookies.getJSON('apiKey');
+  let apiKey = Cookies.getJSON('apiKey');
   if (apiKey == null) {
     logOut();
+    return;
   }
 
   // now check if the cookie is expired
