@@ -35,8 +35,7 @@ async function loadData() {
 
   try {
     // One liner time
-    (await fetchJson(`${apiUrl()}/course/?locationId=${locationId}&semesterStartTime=${semester.startTime}`
-      + `apiKey=${apiKey.key}`))
+    (await fetchJson(`${apiUrl()}/course/?locationId=${locationId}&semesterStartTime=${semester.startTime}&apiKey=${apiKey.key}`))
       .sort((a, b) => (a.period > b.period) ? 1 : -1)
       .forEach(course => $('#location-courses').append(`
             <tr>
