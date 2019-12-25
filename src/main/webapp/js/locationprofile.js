@@ -49,6 +49,14 @@ async function loadData() {
   }
 }
 
+//Bootstrap Popover - Alert Zones/Quick help for Card(s)
+$(document).ready(function(){
+  $('[data-toggle="popover"]').popover({
+      trigger : 'hover'
+  });
+});
+
 $(document).ready(function() {
   loadData();
 })
+
