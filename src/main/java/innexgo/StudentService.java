@@ -17,28 +17,28 @@ public class StudentService {
   @Autowired private JdbcTemplate jdbcTemplate;
 
   public Student getById(long id) {
-    String sql = "SELECT id, name, tags FROM student WHERE id=?";
+    String sql = "SELECT id, name FROM student WHERE id=?";
     RowMapper<Student> rowMapper = new StudentRowMapper();
     Student student = jdbcTemplate.queryForObject(sql, rowMapper, id);
     return student;
   }
 
   public List<Student> getAll() {
-    String sql = "SELECT id, name, tags FROM student";
+    String sql = "SELECT id, name FROM student";
     RowMapper<Student> rowMapper = new StudentRowMapper();
     return this.jdbcTemplate.query(sql, rowMapper);
   }
 
   public void add(Student student) {
     // Add student
-    String sql = "INSERT INTO student(id, name, tags) values (?, ?, ?)";
-    jdbcTemplate.update(sql, student.id, student.name, student.tags);
+    String sql = "INSERT INTO student(id, name) values (?, ?)";
+    jdbcTemplate.update(sql, student.id, student.name);
   }
 
   public void update(Student student) {
-    String sql = "UPDATE student SET id=?, name=?, tags=? WHERE id=?";
+    String sql = "UPDATE student SET id=?, name=? WHERE id=?";
     jdbcTemplate.update(
-        sql, student.id, student.name, student.tags, student.id);
+        sql, student.id, student.name, student.id);
   }
 
   public Student deleteById(long id) {
@@ -58,18 +58,14 @@ public class StudentService {
   public List<Student> query(
       Long id, // Exact match to id
       String name, // Exact match to name
-      String partialName, // Partial match to name
-      String tags, // Exact match to tags
-      String partialTags // Partial match to tags
+      String partialName // Partial match to name
       ) {
     String sql =
-        "SELECT st.id, st.name, st.tags FROM student st"
+        "SELECT st.id, st.name FROM student st"
             + " WHERE 1=1 "
             + (id == null ? "" : " AND st.id = " + id)
             + (name == null ? "" : " AND st.name = " + Utils.escape(name))
             + (partialName == null ? "" : " AND st.name LIKE " + Utils.escape("%"+partialName+"%"))
-            + (tags == null ? "" : " AND st.tags = " + Utils.escape(tags))
-            + (partialTags == null ? "" : " AND st.tags LIKE " + Utils.escape("%"+partialTags+"%"))
             + ";";
 
     RowMapper<Student> rowMapper = new StudentRowMapper();
@@ -85,7 +81,7 @@ public class StudentService {
     // find students who are in this list
 
     String sql =
-              " SELECT DISTINCT st.id, st.name, st.tags"
+              " SELECT DISTINCT st.id, st.name"
             + " FROM student st"
             + " INNER JOIN encounter inen ON st.id = inen.student_id"
             + " INNER JOIN session ses ON ses.in_encounter_id = inen.id"
@@ -116,7 +112,7 @@ public class StudentService {
     // From these select schedules where the beginning of the next period is after time
     // Return the students of these schedules
     String sql =
-        " SELECT DISTINCT st.id, st.name, st.tags"
+        " SELECT DISTINCT st.id, st.name"
       + " FROM student st"
       + " INNER JOIN schedule sc ON st.id = sc.student_id"
       + " INNER JOIN course cs ON cs.id = sc.course_id "

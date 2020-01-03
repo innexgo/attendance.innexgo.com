@@ -560,7 +560,6 @@ public class ApiController {
    * Creates a new location and can only be done by an Administrator
    *
    * @param name name of location, eg. "Room 105"
-   * @param tags attributes associated with location, such as "classroom" or "restricted"
    * @param apiKey - apiKey of the User creating the location
    * @return ResponseEntity with location and HttpStatus.OK
    * @throws ResponseEntity with HttpStatus.BAD_REQUEST if process if unsuccessful
@@ -570,7 +569,6 @@ public class ApiController {
   public ResponseEntity<?> newLocation(
       @RequestParam("locationId") Long locationId,
       @RequestParam("name") String name,
-      @RequestParam(value = "tags", defaultValue = "") String tags,
       @RequestParam("apiKey") String apiKey) {
     if (isAdministrator(apiKey)) {
       if (!locationService.existsById(locationId)
@@ -578,7 +576,6 @@ public class ApiController {
         Location location = new Location();
         location.id = locationId;
         location.name = name;
-        location.tags = tags;
         locationService.add(location);
         return new ResponseEntity<>(fillLocation(location), HttpStatus.OK);
       } else {
@@ -669,7 +666,6 @@ public class ApiController {
   public ResponseEntity<?> newStudent(
       @RequestParam("studentId") Long studentId,
       @RequestParam("name") String name,
-      @RequestParam(value = "tags", defaultValue = "") String tags,
       @RequestParam("apiKey") String apiKey) {
     if (isAdministrator(apiKey)) {
       if (!studentService.existsById(studentId)
@@ -677,7 +673,6 @@ public class ApiController {
         Student student = new Student();
         student.id = studentId;
         student.name = name.toUpperCase();
-        student.tags = tags;
         studentService.add(student);
         return new ResponseEntity<>(fillStudent(student), HttpStatus.OK);
       } else {
@@ -933,8 +928,8 @@ public class ApiController {
         locationService
         .query(
             Utils.parseLong(allRequestParam.get("locationId")),
-            allRequestParam.get("name"),
-            allRequestParam.get("tags"))
+            allRequestParam.get("name")
+          )
         .stream()
         .map(x -> fillLocation(x))
         .collect(Collectors.toList());
@@ -1030,9 +1025,7 @@ public class ApiController {
         .query(
             Utils.parseLong(allRequestParam.get("studentId")),
             allRequestParam.get("name"),
-            allRequestParam.get("partialName"),
-            allRequestParam.get("tags"),
-            allRequestParam.get("partialTags")
+            allRequestParam.get("partialName")
           )
         .stream()
         .map(x -> fillStudent(x))

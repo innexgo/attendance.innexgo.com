@@ -14,27 +14,27 @@ public class LocationService {
   @Autowired private JdbcTemplate jdbcTemplate;
 
   public Location getById(long id) {
-    String sql = "SELECT id, name, tags FROM location WHERE id=?";
+    String sql = "SELECT id, name FROM location WHERE id=?";
     RowMapper<Location> rowMapper = new LocationRowMapper();
     Location location = jdbcTemplate.queryForObject(sql, rowMapper, id);
     return location;
   }
 
   public List<Location> getAll() {
-    String sql = "SELECT id, name, tags FROM location";
+    String sql = "SELECT id, name FROM location";
     RowMapper<Location> rowMapper = new LocationRowMapper();
     return this.jdbcTemplate.query(sql, rowMapper);
   }
 
   public void add(Location location) {
     // Add location
-    String sql = "INSERT INTO location (id, name, tags) values (?, ?, ?)";
-    jdbcTemplate.update(sql, location.id, location.name, location.tags);
+    String sql = "INSERT INTO location (id, name) values (?, ?)";
+    jdbcTemplate.update(sql, location.id, location.name);
   }
 
   public void update(Location location) {
-    String sql = "UPDATE location SET id=?, name=?, tags=? WHERE id=?";
-    jdbcTemplate.update(sql, location.id, location.name, location.tags, location.id);
+    String sql = "UPDATE location SET id=?, name=? WHERE id=?";
+    jdbcTemplate.update(sql, location.id, location.name, location.id);
   }
 
   public Location deleteById(long id) {
@@ -50,13 +50,12 @@ public class LocationService {
     return count != 0;
   }
 
-  public List<Location> query(Long id, String name, String tags) {
+  public List<Location> query(Long id, String name) {
     String sql =
-        "SELECT l.id, l.name, l.tags FROM location l"
+        "SELECT l.id, l.name FROM location l"
             + " WHERE 1=1 "
             + (id == null ? "" : " AND l.id = " + id)
             + (name == null ? "" : " AND l.name = " + Utils.escape(name))
-            + (tags == null ? "" : " AND l.tags = " + Utils.escape(tags))
             + ";";
 
     RowMapper<Location> rowMapper = new LocationRowMapper();

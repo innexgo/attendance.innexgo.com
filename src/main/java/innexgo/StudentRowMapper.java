@@ -11,7 +11,6 @@ public class StudentRowMapper implements RowMapper<Student> {
     Student student = new Student();
     student.id = row.getLong("id");
     student.name = row.getString("name");
-    student.tags = row.getString("tags");
     return student;
   }
 }
