@@ -6,6 +6,7 @@ const chartStartDaysAgo = 14;
 
 let student = null;
 let irregularities = null;
+let grades = null;
 
 function makeChart() {
 
@@ -64,6 +65,10 @@ function makeChart() {
   }
 }
 
+async function getCourses(initialSemesterTime) {
+
+}
+
 async function initialize() {
   let apiKey = Cookies.getJSON('apiKey');
   if (apiKey == null) {
@@ -101,22 +106,14 @@ async function initialize() {
     console.log(err);
     givePermError('Page loaded with invalid student id.');
   }
-
+  
   try {
-    (await fetchJson(`${apiUrl()}/course/?studentId=${studentId}&semesterStartTime=${semester.startTime}&apiKey=${apiKey.key}`))
-        .sort((a, b) => (a.period > b.period) ? 1 : -1) // Sort in order
-        .forEach(course => {$('#studentprofile-courses').append(`
-            <tr>
-              <td>${course.period}</td>
-              <td>${linkRelative(course.subject,'/courseprofile.html?courseId='+course.id)}</td>
-              <td>${linkRelative(course.teacher.name, '/userprofile.html?userId='+course.teacher.id)}</td>
-            </tr>
-          `)
-        console.log('yeet');}); // Append row
-  } catch(err) {
-    console.log(err);
-    givePermError('Failed to load courses.');
-  }
+    grades = await fetchJson(`${apiUrl()}/grades/?studentId=${studentId}&apiKey=${apiKey.key}`);
+
+    let currentGrade = grades.filter(
+
+
+
 
   try {
     irregularities = await fetchJson(`${apiUrl()}/irregularity/?studentId=${studentId}&apiKey=${apiKey.key}`);

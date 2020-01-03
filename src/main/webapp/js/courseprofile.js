@@ -43,7 +43,6 @@ async function loadCourseProfile() {
           <tr>
             <td>${linkRelative(student.name, '/studentprofile.html?studentId='+student.id)}</td>
             <td>${student.id}</td>
-            <td>${student.graduatingYear}</td>
           </tr>`));
   } catch(err) {
     console.log(err);

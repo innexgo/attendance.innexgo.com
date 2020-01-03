@@ -124,7 +124,6 @@ async function searchStudent(name) {
               <tr>
                 <td>${linkRelative(student.name, '/studentprofile.html?studentId='+student.id)}</td>
                 <td>${student.id}</td>
-                <td>${student.graduatingYear}</td>
               </tr>
             `);
     }
