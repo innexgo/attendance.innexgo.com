@@ -76,7 +76,10 @@ public class SemesterService {
       null, // Long minStartTime
       time  // Long maxStartTime
     );
-    return (currentSemesters.size() != 0 ? currentSemesters.get(0) : null);
+    // Get the most recent of the ones that start before now
+    return (currentSemesters.size() != 0
+        ? currentSemesters.get(currentSemesters.size() - 1)
+        : null);
   }
 
   public List<Semester> query(

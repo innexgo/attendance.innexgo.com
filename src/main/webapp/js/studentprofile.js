@@ -65,8 +65,35 @@ function makeChart() {
   }
 }
 
-async function getCourses(initialSemesterTime) {
+async function loadCourses(studentId, initialSemesterTime) {
+  let apiKey = Cookies.getJSON('apiKey');
+  let courseTable = $('#studentprofile-courses')
+  // Clear table
+  courseTable.empty();
+  // Repopulate table
+  (await fetchJson(`${apiUrl()}/course/?studentId=${studentId}&semesterStartTime=${initialSemesterTime}&apiKey=${apiKey.key}`))
+    .sort((a, b) => (a.period > b.period) ? 1 : -1) // Sort in order
+    .forEach(course => courseTable.append(`
+            <tr>
+              <td>${course.period}</td>
+              <td>${linkRelative(course.subject,'/courseprofile.html?courseId='+course.id)}</td>
+              <td>${linkRelative(course.teacher.name, '/userprofile.html?userId='+course.teacher.id)}</td>
+            </tr>
+          `))
+}
 
+async function loadIrregularityPage(studentId, minTime, maxTime) {
+  let apiKey = Cookies.getJSON('apiKey');
+  let irregularityTable = $('#studentprofile-irregularities');
+  (await fetchJson(`${apiUrl()}/irregularity/?studentId=${studentId}&minTime=${minTime}&maxTime=${maxTime}&apiKey=${apiKey.key}`))
+    .sort((a,b) => (a.time > b.time) ? -1 : 1) // sort by time descending
+    .forEach(irregularity => irregularityTable.append(`
+            <tr>
+              <td>${moment(irregularity.time).format('MMM Do, YYYY')}</td>
+              <td>${linkRelative(irregularity.course.subject,'/courseprofile.html?courseId='+irregularity.course.id)}</td>
+              <td>${irregularity.type}</td>
+            </tr>
+          `)); // Append row
 }
 
 async function initialize() {
@@ -102,33 +129,66 @@ async function initialize() {
 
     document.getElementById('studentprofile-name').innerHTML = student.name;
     document.getElementById('studentprofile-id').innerHTML = 'ID: ' + student.id;
+
+    // Load semester chooser options
+    try {
+      let grades = await fetchJson(`${apiUrl()}/grade/?studentId=${studentId}&apiKey=${apiKey.key}`);
+
+      let gradeSelect = $('#studentprofile-grades');
+
+      // Add grades to chooser
+      grades
+        .sort((a,b) => (a.semester.startTime < b.semester.startTime) ? -1 : 1)
+        .forEach(g => gradeSelect.append(
+          `<option value="${g.semester.startTime}">
+            ${moment(semester.startTime).year()} - ${g.semester.type}
+           </option>`
+        ));
+      // On change, reload thing
+      gradeSelect.change(async function() {
+        let selectedValue = $('#studentprofile-grades').val();
+        try {
+          await loadCourses(studentId, selectedValue);
+        } catch(err) {
+          console.log(err);
+          giveTempError('Failed to load courses.');
+        }
+      });
+      // Now figure out which grade to load initially
+      let currentGrade = grades.filter(g => g.semester.startTime == semester.startTime)[0];
+      console.log(grades);
+      if(currentGrade != null) {
+        // Set the grade to the current number
+        $('#studentprofile-grade')[0].innerHTML += currentGrade.number;
+        // Select the current grade
+        gradeSelect.val(currentGrade.semester.startTime);
+        // Load the current courses
+        try {
+          await loadCourses(studentId, currentGrade.semester.startTime);
+        } catch(err) {
+          console.log(err);
+          givePermError('Failed to load courses.');
+        }
+
+      } else {
+        $('#studentprofile-grade')[0].innerHTML += 'N/A (Not Enrolled)';
+        $('#studentprofile-courses')[0].innerHTML = 'Student Not Enrolled';
+      }
+    } catch(err) {
+      console.log(err);
+      givePermError('Failed to load grades.');
+    }
+
+    try {
+      await loadIrregularityPage(studentId, 0, moment().valueOf())
+    } catch(err) {
+      console.log(err);
+      givePermError('Failed to load irregularities.');
+    }
+
   } catch(err) {
     console.log(err);
     givePermError('Page loaded with invalid student id.');
-  }
-  
-  try {
-    grades = await fetchJson(`${apiUrl()}/grades/?studentId=${studentId}&apiKey=${apiKey.key}`);
-
-    let currentGrade = grades.filter(
-
-
-
-
-  try {
-    irregularities = await fetchJson(`${apiUrl()}/irregularity/?studentId=${studentId}&apiKey=${apiKey.key}`);
-
-    irregularities.sort((a,b) => (a.time > b.time) ? -1 : 1) // sort by time descending
-           .forEach(irregularity => $('#studentprofile-irregularities').append(`
-            <tr>
-              <td>${moment(irregularity.time).format('MMM Do, YYYY')}</td>
-              <td>${linkRelative(irregularity.course.subject,'/courseprofile.html?courseId='+irregularity.course.id)}</td>
-              <td>${irregularity.type}</td>
-            </tr>
-          `)); // Append row
-  } catch(err) {
-    console.log(err);
-    givePermError('Failed to load irregularities.');
   }
 }
 
@@ -143,3 +203,4 @@ $(document).ready(function(){
       trigger : 'hover'
   });
 });
+
