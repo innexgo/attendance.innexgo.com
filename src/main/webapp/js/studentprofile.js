@@ -6,9 +6,9 @@ const chartStartDaysAgo = 14;
 
 let student = null;
 let irregularities = null;
-let grades = null;
 
-function makeChart() {
+
+function makeChart(irregularities) {
 
   let apiKey = Cookies.getJSON('apiKey');
 
@@ -141,7 +141,7 @@ async function initialize() {
         .sort((a,b) => (a.semester.startTime < b.semester.startTime) ? -1 : 1)
         .forEach(g => gradeSelect.append(
           `<option value="${g.semester.startTime}">
-            ${moment(semester.startTime).year()} - ${g.semester.type}
+            ${moment(g.semester.startTime).year()} - ${g.semester.type}
            </option>`
         ));
       // On change, reload thing
@@ -154,6 +154,7 @@ async function initialize() {
           giveTempError('Failed to load courses.');
         }
       });
+
       // Now figure out which grade to load initially
       let currentGrade = grades.filter(g => g.semester.startTime == semester.startTime)[0];
       console.log(grades);
@@ -171,6 +172,11 @@ async function initialize() {
         }
 
       } else {
+        gradeSelect.prepend(
+          `<option selected hidden disabled value="null"> -- select an option -- </option>`
+        );
+        gradeSelect.val("null");
+
         $('#studentprofile-grade')[0].innerHTML += 'N/A (Not Enrolled)';
         $('#studentprofile-courses')[0].innerHTML = 'Student Not Enrolled';
       }
@@ -193,8 +199,10 @@ async function initialize() {
 }
 
 $(document).ready(async function () {
-  await initialize();
-  makeChart();
+  await Promise.all(
+    initialize(),
+    makeChart(),
+  );
 });
 
 //Bootstrap Popover - Alert Zones/Quick help for Card(s)
