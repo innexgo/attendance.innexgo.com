@@ -72,39 +72,49 @@
       </nav>
 
       <!-- Content -->
+      <!-- Center Screen -->
       <div id="not-sidebar" class="container-fluid">
-        <div class="row my-3 px-3">
+        <div class="px-3 my-3">
+          <div id="alert-zone"></div>
+          <div class="card-deck">
 
-          <!-- Teacher Stats -->
-          <div class="card col-sm mx-3 card-no-border palette-level-two">
-            <div class="card-body">
-              <div>
-                <h5 id="user-name" class="card-title text-center">User</h5>
-              </div>
-              <div class="card-text">
-                <h6>
-                  <table style='width:100%'>
-                    <tr>
-                      <td id="user-email">Email: </td>
-                      <td id="user-position" style='text-align: left'>Position</td>
-                    </tr>
+            <!-- Location Stats -->
+            <div class="card col-sm-6 palette-level-two">
+              <div class="card-body">
+                <div class="input-group">
+                  <h5 id="user-name" class="card-title text-center">User Name</h5>
+                  <span class="input-group-btn ml-auto">
+                    <button type="button" class="btn btn-sm" data-html="true" data-toggle="popover" title="User Profile" data-placement="top"
+                                                                                                                         data-content="View basic information associated with a user.">
+                      <i class="fa fa-question"></i>
+                    </button>
+                  </span>
+                </div>
+                <div class="card-text">
+
+                  <h6>
+                    <table style='width:100%'>
+                      <tr>
+                        <td id="user-email">Email: </td>
+                        <td id="user-position" style='text-align: left'>Position</td>
+                      </tr>
+                    </table>
+                  </h6>
+                  <hr>
+                  <table id='user-courses-table' class="table">
+                    <thead>
+                      <tr class='table-header'>
+                        <td>Period</td>
+                        <td>Class</td>
+                        <td>Location</td>
+                      </tr>
+                    </thead>
+                    <tbody id="user-courses"></tbody>
                   </table>
-                </h6>
-                <hr>
-                <table id='user-courses-table' class="table">
-                  <thead>
-                    <tr class='table-header'>
-                      <td>Period</td>
-                      <td>Class</td>
-                      <td>Location</td>
-                    </tr>
-                  </thead>
-                  <tbody id="user-courses"></tbody>
-                </table>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
     </body>
 </html>
