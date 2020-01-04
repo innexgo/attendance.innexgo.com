@@ -8,7 +8,7 @@ let student = null;
 let irregularities = null;
 
 
-function makeChart(irregularities) {
+async function makeChart(irregularities) {
 
   let apiKey = Cookies.getJSON('apiKey');
 
@@ -173,7 +173,7 @@ async function initialize() {
 
       } else {
         gradeSelect.prepend(
-          `<option selected hidden disabled value="null"> -- select an option -- </option>`
+          `<option selected hidden disabled value="null">Select Semester</option>`
         );
         gradeSelect.val("null");
 
@@ -199,10 +199,9 @@ async function initialize() {
 }
 
 $(document).ready(async function () {
-  await Promise.all(
+  await Promise.all([
     initialize(),
-    makeChart(),
-  );
+    makeChart()]);
 });
 
 //Bootstrap Popover - Alert Zones/Quick help for Card(s)

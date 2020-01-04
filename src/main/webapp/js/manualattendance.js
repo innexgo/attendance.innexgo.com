@@ -2,7 +2,36 @@ const beepup = new Audio('assets/beepup.wav');
 const beepdown = new Audio('assets/beepdown.wav');
 const error = new Audio('assets/error.wav');
 
-async function loadLocationOptions
+async function loadLocationOptions() {
+  let apiKey = Cookies.getJSON('apiKey');
+  let period = Cookies.getJSON('period');
+  let nextPeriod = Cookies.getJSON('nextPeriod');
+  let courses = Cookies.getJSON('courses');
+
+  try {
+    let locations = await fetchJson(`${apiUrl()}/location/?apiKey=${apiKey.key}`);
+
+    locations.forEach(l =>
+      $('#manual-locationid').append(
+
+    let currentLocation = locations.filter(l => l.id == course.location.id)[0];
+    
+    let course = courses.filter(c => c.period == period.number)[0];
+
+    if (course == null) {
+      course = courses.filter(c => c.period == nextPeriod.number)[0];
+    }
+
+
+
+    if(course != null) {
+
+
+  } catch(err) {
+    console.log(err);
+    givePermError('Failed to load locations');
+  }
+}
 
 async function submitEncounter(studentId) {
   console.log('submitting encounter ' + studentId)
