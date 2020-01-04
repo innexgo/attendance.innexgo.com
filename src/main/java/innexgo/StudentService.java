@@ -72,10 +72,8 @@ public class StudentService {
     return this.jdbcTemplate.query(sql, rowMapper);
   }
 
-  // find students who are present at the location that they are supposed to be in at this time
-  public List<Student> present(long courseId, long time) {
-    Course course = courseService.getById(courseId);
-
+  // find students who are present at this location
+  public List<Student> present(long locationId, long time) {
     // Find the sessions that have a start date before the  time
     // If they have an end date it must be after the time
     // find students who are in this list
@@ -87,7 +85,7 @@ public class StudentService {
             + " INNER JOIN session ses ON ses.in_encounter_id = inen.id"
             + " LEFT JOIN encounter outen ON ses.complete AND ses.out_encounter_id = outen.id"
             + " WHERE 1 = 1 "
-            + (" AND inen.location_id = " + course.locationId)
+            + (" AND inen.location_id = " + locationId)
             + (" AND inen.time < " + time)
             + (" AND outen.time IS NULL OR outen.time > " + time)
             + " ;";

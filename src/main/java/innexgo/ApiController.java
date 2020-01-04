@@ -372,7 +372,7 @@ public class ApiController {
       for (Course course : courseList) {
         // subtract present students from all students taking the course
         List<Student> absentees = studentService.registeredForCourse(course.id, period.startTime);
-        absentees.removeAll(studentService.present(course.id, period.startTime));
+        absentees.removeAll(studentService.present(course.locationId, period.startTime));
 
         // mark all students not there as absent
         for (Student student : absentees) {
@@ -1094,16 +1094,13 @@ public class ApiController {
     // if school is currently going on, represents the current period
     Period currentPeriod = periodService.getCurrent();
 
-    if(currentPeriod == null) {
-      logger.error("Current period is null! This shouldn't happen! Check DB");
-    }
-
     // if there is currently a course going on, represents the current course
     List<Course> currentCourses = courseService.getByPeriodStartTime(currentPeriod.startTime);
     currentCourses.removeIf(cs -> cs.locationId != locationId);
 
     Course currentCourse = currentCourses.isEmpty() ? null : currentCourses.get(0);
 
+    // Get incomplete sessions
     List<Session> openSessionList =
       sessionService.query(
           null,       //  Long id
@@ -1311,14 +1308,13 @@ public class ApiController {
 
   @RequestMapping("/misc/present/")
   public ResponseEntity<?> present(
-      @RequestParam("courseId") Long courseId,
+      @RequestParam("locationId") Long locationId,
       @RequestParam("time") Long time,
       @RequestParam("apiKey") String apiKey) {
     if(isTrusted(apiKey)) {
-      return new ResponseEntity<>(studentService.present(courseId, time), HttpStatus.OK);
+      return new ResponseEntity<>(studentService.present(locationId, time), HttpStatus.OK);
     } else {
       return UNAUTHORIZED;
     }
   }
-
 }
