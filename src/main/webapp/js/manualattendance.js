@@ -2,7 +2,7 @@ const beepup = new Audio('assets/beepup.wav');
 const beepdown = new Audio('assets/beepdown.wav');
 const error = new Audio('assets/error.wav');
 
-async function loadLocationOptions() {
+async function initializeLocationOptions() {
   let apiKey = Cookies.getJSON('apiKey');
   let period = Cookies.getJSON('period');
   let nextPeriod = Cookies.getJSON('nextPeriod');
@@ -11,22 +11,21 @@ async function loadLocationOptions() {
   try {
     let locations = await fetchJson(`${apiUrl()}/location/?apiKey=${apiKey.key}`);
 
-    locations.forEach(l =>
-      $('#manual-locationid').append(
+    let locationSelect = $('#manual-locationid');
 
-    let currentLocation = locations.filter(l => l.id == course.location.id)[0];
-    
-    let course = courses.filter(c => c.period == period.number)[0];
+    // Add the options
+    locationSelect.empty();
+    locations.forEach(l => locationSelect.append(`<option value="${l.id}">${l.name}</option>`));
 
-    if (course == null) {
-      course = courses.filter(c => c.period == nextPeriod.number)[0];
+    // Course that is not null
+    let currentCourse = courses.filter(c => c.period == period.number)[0];
+    let nextPeriodCourse = courses.filter(c => c.period == period.number)[0];
+    if(currentCourse != null || nextPeriodCourse  != null) {
+      // Set auto selected location
+      let selectedLocation = currentCourse == null ? nextPeriodCourse.location : currentCourse.location;
+      locationSelect.prepend(`<option value="${selectedLocation.id}">(Default) ${selectedLocation.name}</option>`);
+      locationSelect.val(selectedLocation.id);
     }
-
-
-
-    if(course != null) {
-
-
   } catch(err) {
     console.log(err);
     givePermError('Failed to load locations');
@@ -41,26 +40,17 @@ async function submitEncounter(studentId) {
   let apiKey = Cookies.getJSON('apiKey');
   let period = Cookies.getJSON('period');
   let nextPeriod = Cookies.getJSON('nextPeriod');
-  let courses = Cookies.getJSON('courses');
-  let course = courses.filter(c => c.period == period.number)[0];
-
-  if (course == null) {
-    course = courses.filter(c => c.period == nextPeriod.number)[0];
-  }
-
-  if (course == null) {
-    giveTempError('No class at the moment to sign into.');
-    return;
-  }
 
   if (String(studentId) == String(NaN)) {
     giveTempError('What you entered wasn\'t a valid ID');
     return;
   }
 
+  let locationId = $('#manual-locationid').val();
+
   try {
     let session = await fetchJson(
-        `${apiUrl()}/misc/attends/?studentId=${studentId}&locationId=${course.location.id}&manual=true&apiKey=${apiKey.key}`);
+        `${apiUrl()}/misc/attends/?studentId=${studentId}&locationId=${locationId}&manual=true&apiKey=${apiKey.key}`);
 
     if(session.complete) {
         giveTempInfo(`Sucessfully logged ${session.inEncounter.student.name} out of ${session.inEncounter.location.name}`);
@@ -69,7 +59,7 @@ async function submitEncounter(studentId) {
         giveTempSuccess(`Sucessfully logged ${session.inEncounter.student.name} in to ${session.inEncounter.location.name}`);
         beepup.play();
     }
-  } catch(function(err) {
+  } catch(err) {
     console.log(err);
     giveTempError('Something went wrong while trying to sign you in.');
     error.play();
@@ -112,4 +102,10 @@ $(document).ready(function () {
 });
 
 // Periodically poll to check if course is valid
-
+$(document).ready(async function() {
+  while(true) {
+    await initializeLocationOptions();
+    let nextPeriod = Cookies.getJSON('nextPeriod');
+    await sleep(nextPeriod.startTime - moment().valueOf());
+  }
+});
