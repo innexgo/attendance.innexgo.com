@@ -1,7 +1,8 @@
 async function currentStatus() {
   let apiKey = Cookies.getJSON('apiKey');
   let period = Cookies.getJSON('period');
-  let course = period == null ? null : Cookies.getJSON('courses').filter(c => c.period == period.number)[0];
+  let courses = Cookies.getJSON('courses').sort((a, b) -> (a.period > b.period ? -1 : 1));
+  let course = period == null ? null : courses.filter(c => c.period == period.number)[0];
 
   let table = document.getElementById('current-status-table');
   let time = moment().valueOf();
@@ -13,7 +14,7 @@ async function currentStatus() {
     return;
   }
 
-  if(period.type == 'Class Period' && course != null) {
+  if(course != null) {
     try {
       let students = await fetchJson(`${apiUrl()}/misc/registeredForCourse/?courseId=${course.id}&time=${time}&apiKey=${apiKey.key}`);
       let irregularities = await fetchJson(`${apiUrl()}/irregularity/?courseId=${course.id}&periodId=${period.id}&apiKey=${apiKey.key}`);
@@ -60,8 +61,6 @@ async function currentStatus() {
     }
   } else {
     try {
-      // TODO we need to make this work
-      return;
       let students = await fetchJson(`${apiUrl()}/misc/present/?locationId=${locationId}&time=${time}&apiKey=${apiKey.key}`);
       let text = '<span class="fa fa-check"></span>'
       let bgcolor = '#ccffcc';
@@ -76,7 +75,7 @@ async function currentStatus() {
       );
     } catch(err) {
       console.log(err);
-      givePermError('Failed to correctly fetch student data, try refreshing');
+      giveTempError('Failed to correctly fetch student data, try refreshing');
     }
   }
 }
