@@ -84,7 +84,9 @@ public class GradeService {
       Long gradeId,
       Long studentId,
       Long semesterStartTime,
-      Long number) {
+      Long number,
+      long offset,
+      long count) {
     String sql =
       "SELECT grd.id, grd.student_id, grd.semester_start_time, grd.number FROM grade grd"
       + " WHERE 1=1 "
@@ -92,6 +94,8 @@ public class GradeService {
       + (studentId == null ? "" : " AND grd.student_id = " + studentId)
       + (semesterStartTime == null ? "" : " AND grd.semester_start_time = " + semesterStartTime)
       + (number == null ? "" : " AND grd.number = " + number)
+      + " ORDER BY grd.id"
+      + " LIMIT " +offset +", "  + count
       + ";";
 
     RowMapper<Grade> rowMapper = new GradeRowMapper();

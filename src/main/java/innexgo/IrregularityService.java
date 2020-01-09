@@ -99,7 +99,8 @@ public class IrregularityService {
       Long minTime,
       Long maxTime,
       Long timeMissing,
-      Long count) {
+      long offset,
+      long count) {
     String sql =
         "SELECT irr.id, irr.student_id, irr.course_id, irr.period_start_time, irr.type, irr.time, irr.time_missing"
             + " FROM irregularity irr"
@@ -115,8 +116,8 @@ public class IrregularityService {
             + (minTime == null ? "" : " AND irr.time >= " + minTime)
             + (maxTime == null ? "" : " AND irr.time <= " + maxTime)
             + (timeMissing == null ? "" : " AND irr.time_missing = " + timeMissing)
-            + (" ORDER BY time")
-            + (count == null ? "" : " LIMIT " + count)
+            + (" ORDER BY irr.id")
+            + (" LIMIT " + offset + ", "  + count)
             + ";";
 
     RowMapper<Irregularity> rowMapper = new IrregularityRowMapper();

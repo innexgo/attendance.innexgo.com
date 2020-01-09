@@ -89,14 +89,16 @@ public class ApiKeyService {
   }
 
   public List<ApiKey> query(
-      Long id, Long userId, Long minCreationTime, Long maxCreationTime, String keyHash) {
+      Long id, Long userId, Long minCreationTime, Long maxCreationTime, String keyHash, long offset, long count) {
     String sql =
-        "SELECT id, user_id, creation_time, expiration_time, key_hash FROM api_key WHERE 1=1"
-            + (id == null ? "" : " AND id=" + id)
-            + (userId == null ? "" : " AND user_id =" + userId)
-            + (minCreationTime == null ? "" : " AND creation_time >= " + minCreationTime)
-            + (maxCreationTime == null ? "" : " AND creation_time <= " + maxCreationTime)
-            + (keyHash == null ? "" : " AND key_hash = " + Utils.escape(keyHash))
+        "SELECT a.id, a.user_id, a.creation_time, a.expiration_time, a.key_hash FROM api_key a WHERE 1=1"
+            + (id == null ? "" : " AND a.id=" + id)
+            + (userId == null ? "" : " AND a.user_id =" + userId)
+            + (minCreationTime == null ? "" : " AND a.creation_time >= " + minCreationTime)
+            + (maxCreationTime == null ? "" : " AND a.creation_time <= " + maxCreationTime)
+            + (keyHash == null ? "" : " AND a.key_hash = " + Utils.escape(keyHash))
+            + (" ORDER BY a.id")
+            + (" LIMIT " + offset + ", "  + count)
             + ";";
     RowMapper<ApiKey> rowMapper = new ApiKeyRowMapper();
     return this.jdbcTemplate.query(sql, rowMapper);

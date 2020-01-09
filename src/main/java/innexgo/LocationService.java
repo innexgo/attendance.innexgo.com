@@ -50,12 +50,14 @@ public class LocationService {
     return count != 0;
   }
 
-  public List<Location> query(Long id, String name) {
+  public List<Location> query(Long id, String name, long offset, long count) {
     String sql =
         "SELECT l.id, l.name FROM location l"
             + " WHERE 1=1 "
             + (id == null ? "" : " AND l.id = " + id)
             + (name == null ? "" : " AND l.name = " + Utils.escape(name))
+            + (" ORDER BY l.id")
+            + (" LIMIT " + offset + ", "  + count)
             + ";";
 
     RowMapper<Location> rowMapper = new LocationRowMapper();

@@ -89,7 +89,7 @@ public class UserService {
     return count != 0;
   }
 
-  public List<User> query(Long id, String name, String email, Integer ring) {
+  public List<User> query(Long id, String name, String email, Integer ring, long offset, long count) {
     String sql =
         "SELECT u.id, u.name, u.password_hash, u.email, u.ring FROM user u"
             + " WHERE 1=1 "
@@ -97,6 +97,8 @@ public class UserService {
             + (name == null ? "" : " AND u.name = " + Utils.escape(name))
             + (email == null ? "" : " AND u.email = " + Utils.escape(email))
             + (ring == null ? "" : " AND u.ring = " + ring)
+            + (" ORDER BY u.id")
+            + (" LIMIT " + offset + ", "  + count)
             + ";";
 
     RowMapper<User> rowMapper = new UserRowMapper();

@@ -264,19 +264,20 @@ public class ApiController {
       // get list of open sessions
       List<Session> openSessionList =
         sessionService.query(
-            null, //  Long id
-            null, //  Long inEncounterId
-            null, //  Long outEncounterId
-            null, //  Long anyEncounterId
-            false,//  Boolean complete
-            null, //  Long studentId
-            null, //  Long locationId
-            null, //  Long time
-            null, //  Long inTimeBegin
-            null, //  Long inTimeEnd
-            null, //  Long outTimeBegin
-            null, //  Long outTimeEnd
-            null  //  Long count
+            null,           //  Long id
+            null,           //  Long inEncounterId
+            null,           //  Long outEncounterId
+            null,           //  Long anyEncounterId
+            false,          //  Boolean complete
+            null,           //  Long studentId
+            null,           //  Long locationId
+            null,           //  Long time
+            null,           //  Long inTimeBegin
+            null,           //  Long inTimeEnd
+            null,           //  Long outTimeBegin
+            null,           //  Long outTimeEnd
+            0,              //  long offset
+            Long.MAX_VALUE  //  long count
             );
 
       for (Session openSession : openSessionList) {
@@ -307,7 +308,9 @@ public class ApiController {
               null,                                                // Long number
               Period.CLASS_PERIOD,                                 // String type
               periodService.getByTime(inEncounter.time).startTime, // Long minStartTime
-              outEncounter.time                                    // Long maxStartTime
+              outEncounter.time,                                   // Long maxStartTime
+              0,                                                   //  long offset
+              Long.MAX_VALUE                                       //  long count
               );
 
         // Find first period with a course at this location
@@ -350,7 +353,9 @@ public class ApiController {
           null,                       // Long number,
           null,                       // String type,
           System.currentTimeMillis(), // Long minStartTime,
-          null                        // Long maxStartTime
+          null,                        // Long maxStartTime
+          0,
+          Long.MAX_VALUE
           );
 
     for (int i = 0; i < periodList.size(); i++) {
@@ -388,7 +393,8 @@ public class ApiController {
               null,                     //  Long minTime
               null,                     //  Long maxTime
               null,                     //  Long timeMissing
-              null                      //  Long count
+              0,                        //  long count
+              Long.MAX_VALUE            //  long count
               ).size() > 0;
           // if not already absent
           if (!alreadyAbsent) {
@@ -802,6 +808,8 @@ public class ApiController {
 
   @RequestMapping("/apiKey/")
   public ResponseEntity<?> viewApiKey(
+      @RequestParam("offset") Long offset,
+      @RequestParam("count") Long count,
       @RequestParam Map<String, String> allRequestParam) {
     if (allRequestParam.containsKey("apiKey")
         && isTrusted(allRequestParam.get("apiKey"))) {
@@ -814,7 +822,9 @@ public class ApiController {
             Utils.parseLong(allRequestParam.get("maxCreationTime")),
             allRequestParam.containsKey("apiKeyData")
               ? Utils.encodeApiKey(allRequestParam.get("apiKeyData"))
-              : null)
+              : null,
+            offset,
+            count)
         .stream()
         .map(x -> fillApiKey(x))
         .collect(Collectors.toList());
@@ -825,7 +835,10 @@ public class ApiController {
   }
 
   @RequestMapping("/course/")
-  public ResponseEntity<?> viewCourse(@RequestParam Map<String, String> allRequestParam) {
+  public ResponseEntity<?> viewCourse(
+      @RequestParam("offset") Long offset,
+      @RequestParam("count") Long count,
+      @RequestParam Map<String, String> allRequestParam) {
     String apiKey = allRequestParam.get("apiKey");
     if (isTrusted(apiKey)) {
 
@@ -838,7 +851,9 @@ public class ApiController {
             Utils.parseLong(allRequestParam.get("studentId")),
             Utils.parseLong(allRequestParam.get("period")),
             allRequestParam.get("subject"),
-            Utils.parseLong(allRequestParam.get("semesterStartTime"))
+            Utils.parseLong(allRequestParam.get("semesterStartTime")),
+            offset,
+            count
           )
         .stream()
         .map(x -> fillCourse(x))
@@ -850,7 +865,10 @@ public class ApiController {
   }
 
   @RequestMapping("/encounter/")
-  public ResponseEntity<?> viewEncounter(@RequestParam Map<String, String> allRequestParam) {
+  public ResponseEntity<?> viewEncounter(
+      @RequestParam("offset") Long offset,
+      @RequestParam("count") Long count,
+      @RequestParam Map<String, String> allRequestParam) {
     String apiKey = allRequestParam.get("apiKey");
     if (isTrusted(apiKey)) {
       List<Encounter> els =
@@ -862,7 +880,8 @@ public class ApiController {
             Utils.parseLong(allRequestParam.get("minTime")),
             Utils.parseLong(allRequestParam.get("maxTime")),
             allRequestParam.get("type"),
-            Utils.parseLong(allRequestParam.get("count"))
+            offset,
+            count
           )
         .stream()
         .map(x -> fillEncounter(x))
@@ -874,7 +893,10 @@ public class ApiController {
   }
 
   @RequestMapping("/grade/")
-  public ResponseEntity<?> viewGrade(@RequestParam Map<String, String> allRequestParam) {
+  public ResponseEntity<?> viewGrade(
+      @RequestParam("offset") Long offset,
+      @RequestParam("count") Long count,
+      @RequestParam Map<String, String> allRequestParam) {
     String apiKey = allRequestParam.get("apiKey");
     if (isTrusted(apiKey)) {
       List<Grade> els =
@@ -883,7 +905,9 @@ public class ApiController {
             Utils.parseLong(allRequestParam.get("gradeId")),
             Utils.parseLong(allRequestParam.get("studentId")),
             Utils.parseLong(allRequestParam.get("semesterStartTime")),
-            Utils.parseLong(allRequestParam.get("number"))
+            Utils.parseLong(allRequestParam.get("number")),
+            offset,
+            count
           )
         .stream()
         .map(x -> fillGrade(x))
@@ -895,7 +919,10 @@ public class ApiController {
   }
 
   @RequestMapping("/irregularity/")
-  public ResponseEntity<?> viewIrregularity(@RequestParam Map<String, String> allRequestParam) {
+  public ResponseEntity<?> viewIrregularity(
+      @RequestParam("offset") Long offset,
+      @RequestParam("count") Long count,
+      @RequestParam Map<String, String> allRequestParam) {
     String apiKey = allRequestParam.get("apiKey");
     if (isTrusted(apiKey)) {
       List<Irregularity> els =
@@ -911,7 +938,9 @@ public class ApiController {
             Utils.parseLong(allRequestParam.get("minTime")),
             Utils.parseLong(allRequestParam.get("maxTime")),
             Utils.parseLong(allRequestParam.get("timeMissing")),
-            Utils.parseLong(allRequestParam.get("count")))
+            offset,
+            count
+          )
         .stream()
         .map(x -> fillIrregularity(x))
         .collect(Collectors.toList());
@@ -922,13 +951,18 @@ public class ApiController {
   }
 
   @RequestMapping("/location/")
-  public ResponseEntity<?> viewLocation(@RequestParam Map<String, String> allRequestParam) {
+  public ResponseEntity<?> viewLocation(
+      @RequestParam("offset") Long offset,
+      @RequestParam("count") Long count,
+      @RequestParam Map<String, String> allRequestParam) {
     if (allRequestParam.containsKey("apiKey") && isTrusted(allRequestParam.get("apiKey"))) {
       List<Location> list =
         locationService
         .query(
             Utils.parseLong(allRequestParam.get("locationId")),
-            allRequestParam.get("name")
+            allRequestParam.get("name"),
+            offset,
+            count
           )
         .stream()
         .map(x -> fillLocation(x))
@@ -940,7 +974,10 @@ public class ApiController {
   }
 
   @RequestMapping("/period/")
-  public ResponseEntity<?> viewPeriod(@RequestParam Map<String, String> allRequestParam) {
+  public ResponseEntity<?> viewPeriod(
+      @RequestParam("offset") Long offset,
+      @RequestParam("count") Long count,
+      @RequestParam Map<String, String> allRequestParam) {
     String apiKey = allRequestParam.get("apiKey");
     if (isTrusted(apiKey)) {
       List<Period> els =
@@ -950,7 +987,9 @@ public class ApiController {
             Utils.parseLong(allRequestParam.get("number")),
             allRequestParam.get("number"),
             Utils.parseLong(allRequestParam.get("minStartTime")),
-            Utils.parseLong(allRequestParam.get("maxStartTime"))
+            Utils.parseLong(allRequestParam.get("maxStartTime")),
+            offset,
+            count
           )
         .stream()
         .map(x -> fillPeriod(x))
@@ -962,7 +1001,10 @@ public class ApiController {
   }
 
   @RequestMapping("/schedule/")
-  public ResponseEntity<?> viewSchedule(@RequestParam Map<String, String> allRequestParam) {
+  public ResponseEntity<?> viewSchedule(
+      @RequestParam("offset") Long offset,
+      @RequestParam("count") Long count,
+      @RequestParam Map<String, String> allRequestParam) {
     if (allRequestParam.containsKey("apiKey") && isTrusted(allRequestParam.get("apiKey"))) {
       List<Schedule> list =
         scheduleService
@@ -976,7 +1018,9 @@ public class ApiController {
             Utils.parseLong(allRequestParam.get("endTime")),
             Utils.parseLong(allRequestParam.get("teacherId")),
             Utils.parseLong(allRequestParam.get("locationId")),
-            Utils.parseLong(allRequestParam.get("period"))
+            Utils.parseLong(allRequestParam.get("period")),
+            offset,
+            count
           )
         .stream()
         .map(x -> fillSchedule(x))
@@ -988,7 +1032,10 @@ public class ApiController {
   }
 
   @RequestMapping("/session/")
-  public ResponseEntity<?> viewSession(@RequestParam Map<String, String> allRequestParam) {
+  public ResponseEntity<?> viewSession(
+      @RequestParam("offset") Long offset,
+      @RequestParam("count") Long count,
+      @RequestParam Map<String, String> allRequestParam) {
     if (allRequestParam.containsKey("apiKey") && isTrusted(allRequestParam.get("apiKey"))) {
       List<Session> list =
         sessionService
@@ -1005,7 +1052,8 @@ public class ApiController {
             Utils.parseLong(allRequestParam.get("inTimeEnd")),
             Utils.parseLong(allRequestParam.get("outTimeBegin")),
             Utils.parseLong(allRequestParam.get("outTimeEnd")),
-            Utils.parseLong(allRequestParam.get("count"))
+            offset,
+            count
           )
         .stream()
         .map(x -> fillSession(x))
@@ -1017,7 +1065,10 @@ public class ApiController {
   }
 
   @RequestMapping("/student/")
-  public ResponseEntity<?> viewStudent(@RequestParam Map<String, String> allRequestParam) {
+  public ResponseEntity<?> viewStudent(
+      @RequestParam("offset") Long offset,
+      @RequestParam("count") Long count,
+      @RequestParam Map<String, String> allRequestParam) {
     if (allRequestParam.containsKey("apiKey")
         && isTrusted(allRequestParam.get("apiKey"))) {
       List<Student> list =
@@ -1025,7 +1076,9 @@ public class ApiController {
         .query(
             Utils.parseLong(allRequestParam.get("studentId")),
             allRequestParam.get("name"),
-            allRequestParam.get("partialName")
+            allRequestParam.get("partialName"),
+            offset,
+            count
           )
         .stream()
         .map(x -> fillStudent(x))
@@ -1037,7 +1090,10 @@ public class ApiController {
   }
 
   @RequestMapping("/user/")
-  public ResponseEntity<?> viewUser(@RequestParam Map<String, String> allRequestParam) {
+  public ResponseEntity<?> viewUser(
+      @RequestParam("offset") Long offset,
+      @RequestParam("count") Long count,
+      @RequestParam Map<String, String> allRequestParam) {
     if (allRequestParam.containsKey("apiKey")
         && isTrusted(allRequestParam.get("apiKey"))) {
       List<User> list =
@@ -1046,8 +1102,10 @@ public class ApiController {
             Utils.parseLong(allRequestParam.get("userId")),
             allRequestParam.get("name"),
             allRequestParam.get("email"),
-            Utils.parseInteger(allRequestParam.get("ring"))
-        )
+            Utils.parseInteger(allRequestParam.get("ring")),
+            offset,
+            count
+          )
         .stream()
         .map(x -> fillUser(x))
         .collect(Collectors.toList());
@@ -1103,19 +1161,20 @@ public class ApiController {
     // Get incomplete sessions
     List<Session> openSessionList =
       sessionService.query(
-          null,       //  Long id
-          null,       //  Long inEncounterId
-          null,       //  Long outEncounterId
-          null,       //  Long anyEncounterId
-          false,      //  Boolean complete
-          student.id, //  Long studentId
-          null,       //  Long locationId
-          null,       //  Long time
-          null,       //  Long inTimeBegin
-          null,       //  Long inTimeEnd
-          null,       //  Long outTimeBegin
-          null,       //  Long outTimeEnd
-          null        //  Long count
+          null,           //  Long id
+          null,           //  Long inEncounterId
+          null,           //  Long outEncounterId
+          null,           //  Long anyEncounterId
+          false,          //  Boolean complete
+          student.id,     //  Long studentId
+          null,           //  Long locationId
+          null,           //  Long time
+          null,           //  Long inTimeBegin
+          null,           //  Long inTimeEnd
+          null,           //  Long outTimeBegin
+          null,           //  Long outTimeEnd
+          0,              //  long count
+          Long.MAX_VALUE  //  long count
           );
 
     // If the encounter will be used to start a new session since there are no open ones
@@ -1177,7 +1236,9 @@ public class ApiController {
               null,                                                // Long number
               Period.CLASS_PERIOD,                                 // String type
               periodService.getByTime(encounter.time).startTime,   // Long minStartTime
-              outEncounter.time                                    // Long maxStartTime
+              outEncounter.time,                                    // Long maxStartTime
+              0,
+              Long.MAX_VALUE
               );
 
         // Find first period with a course at this location
@@ -1231,7 +1292,8 @@ public class ApiController {
               null,                    //  Long minTime
               null,                    //  Long maxTime
               null,                    //  Long timeMissing
-              null                     //  Long count
+              0,                       //  long offset
+              Long.MAX_VALUE           //  long count
               );
 
         for (Irregularity irregularity : irregularities) {

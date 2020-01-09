@@ -112,7 +112,8 @@ public class DevelopmentController {
           null,                    // Long minTime,
           null,                    // Long maxTime,
           null,                    // Long timeMissing,
-          null                     // Long count) {
+          0,                       // long offset
+          Long.MAX_VALUE           // long count
         );
 
       for(Irregularity irregularity  : irregularities) {

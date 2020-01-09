@@ -90,7 +90,9 @@ public class ScheduleService {
       Long endTime,
       Long teacherId,
       Long locationId,
-      Long period) {
+      Long period,
+      long offset,
+      long count) {
     String sql =
         "SELECT sch.id, sch.student_id, sch.course_id, sch.has_start, sch.start_time, sch.has_end, sch.end_time FROM schedule sch"
             + " JOIN course c ON sch.course_id = c.id"
@@ -105,6 +107,8 @@ public class ScheduleService {
             + (teacherId == null ? "" : " AND c.teacher_id = " + teacherId)
             + (locationId == null ? "" : " AND c.location_id = " + locationId)
             + (period == null ? "" : " AND c.period = " + period)
+            + (" ORDER BY sch.id")
+            + (" LIMIT " + offset + ", "  + count)
             + ";";
 
     RowMapper<Schedule> rowMapper = new ScheduleRowMapper();

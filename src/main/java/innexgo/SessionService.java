@@ -92,7 +92,8 @@ public class SessionService {
       Long inTimeEnd,
       Long outTimeBegin,
       Long outTimeEnd,
-      Long count) {
+      long offset,
+      long count) {
 
     String sql =
         "SELECT DISTINCT ses.id, ses.in_encounter_id, ses.out_encounter_id, ses.complete"
@@ -112,7 +113,7 @@ public class SessionService {
             + (outTimeBegin == null ? "" : " AND outen.time >= " + outTimeBegin)
             + (outTimeEnd == null ? "" : " AND outen.time <= " + outTimeEnd)
             + (" ORDER BY inen.time")
-            + (count == null ? "" : " LIMIT " + count)
+            + (" LIMIT " + offset + ", " + count)
             + ";";
     RowMapper<Session> rowMapper = new SessionRowMapper();
     return this.jdbcTemplate.query(sql, rowMapper);

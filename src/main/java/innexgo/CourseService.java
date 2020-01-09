@@ -80,7 +80,9 @@ public class CourseService {
       Long studentId,
       Long period,
       String subject,
-      Long semesterStartTime) {
+      Long semesterStartTime,
+      long offset,
+      long count) {
     String sql = "SELECT DISTINCT cs.id, cs.teacher_id, cs.location_id, cs.period, cs.subject"
         + " FROM course cs"
             + (semesterStartTime == null ? "" : " INNER JOIN offering of ON cs.id = of.course_id")
@@ -93,6 +95,8 @@ public class CourseService {
             + (semesterStartTime == null ? "" : " AND of.semester_start_time = " + semesterStartTime)
             + (studentId == null ? "" : " AND sc.student_id = " + studentId)
             + (subject == null ? "" : " AND cs.subject = " + Utils.escape(subject))
+            + " ORDER BY cs.id"
+            + " LIMIT " + offset + ", " + count
             + ";";
 
     RowMapper<Course> rowMapper = new CourseRowMapper();

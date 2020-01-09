@@ -70,11 +70,13 @@ public class SemesterService {
 
   public Semester getByTime(Long time) {
     List<Semester> currentSemesters =  query(
-      null, // Long startTime
-      null, // Long year
-      null, // Long type
-      null, // Long minStartTime
-      time  // Long maxStartTime
+      null,          // Long startTime
+      null,          // Long year
+      null,          // Long type
+      null,          // Long minStartTime
+      time,          // Long maxStartTime
+      0,             // long offset
+      Long.MAX_VALUE // long count
     );
     // Get the most recent of the ones that start before now
     return (currentSemesters.size() != 0
@@ -87,7 +89,9 @@ public class SemesterService {
       Long year,
       String type,
       Long minStartTime,
-      Long maxStartTime
+      Long maxStartTime,
+      long offset,
+      long count
       ) {
 
     String sql = "SELECT se.start_time, se.year, se.type FROM semester se"
@@ -97,7 +101,8 @@ public class SemesterService {
             + (type == null ? "" : " AND se.type = " + Utils.escape(type))
             + (minStartTime == null ? "" : " AND se.start_time >= " + minStartTime)
             + (maxStartTime == null ? "" : " AND se.start_time <= " + maxStartTime)
-            + " ORDER BY se.start_time"
+            + (" ORDER BY se.start_time")
+            + (" LIMIT " + offset + ", "  + count)
             + ";";
 
     RowMapper<Semester> rowMapper = new SemesterRowMapper();

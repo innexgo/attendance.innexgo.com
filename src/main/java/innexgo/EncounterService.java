@@ -68,7 +68,8 @@ public class EncounterService {
       Long minTime,
       Long maxTime,
       String type,
-      Long count
+      long offset,
+      long count
       ) {
     String sql =
         "SELECT e.id, e.time, e.virtual, e.location_id, e.student_id "
@@ -80,8 +81,8 @@ public class EncounterService {
             + (type == null ? "" : " AND e.type=" + Utils.escape(type))
             + (minTime == null ? "" : " AND e.time >= " + minTime)
             + (maxTime == null ? "" : " AND e.time <= " + maxTime)
-            + " ORDER BY e.time DESC"
-            + (count == null ? "" : " LIMIT " + count)
+            + (" ORDER BY e.id")
+            + (" LIMIT " + offset + ", "  + count)
             + ";";
     RowMapper<Encounter> rowMapper = new EncounterRowMapper();
     return this.jdbcTemplate.query(sql, rowMapper);

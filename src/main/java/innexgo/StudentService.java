@@ -58,7 +58,9 @@ public class StudentService {
   public List<Student> query(
       Long id, // Exact match to id
       String name, // Exact match to name
-      String partialName // Partial match to name
+      String partialName, // Partial match to name
+      long offset,
+      long count
       ) {
     String sql =
         "SELECT st.id, st.name FROM student st"
@@ -66,6 +68,8 @@ public class StudentService {
             + (id == null ? "" : " AND st.id = " + id)
             + (name == null ? "" : " AND st.name = " + Utils.escape(name))
             + (partialName == null ? "" : " AND st.name LIKE " + Utils.escape("%"+partialName+"%"))
+            + (" ORDER BY st.id")
+            + (" LIMIT " + offset + ", "  + count)
             + ";";
 
     RowMapper<Student> rowMapper = new StudentRowMapper();

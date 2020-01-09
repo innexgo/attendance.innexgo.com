@@ -81,11 +81,13 @@ public class PeriodService {
 
   public Period getByTime(long time) {
     List<Period> currentPeriods = query(
-      null, // Long startTime
-      null, // Long number
-      null, // String type
-      null, // Long minStartTime
-      time  // Long maxStartTime
+      null,          // Long startTime
+      null,          // Long number
+      null,          // String type
+      null,          // Long minStartTime
+      time,          // Long maxStartTime
+      0,             // offset
+      Long.MAX_VALUE // count
     );
     return (currentPeriods.size() != 0 ? currentPeriods.get(currentPeriods.size()-1) : null);
   }
@@ -96,7 +98,9 @@ public class PeriodService {
       null, // Long number
       null, // String type
       time, // Long minStartTime
-      null  // Long maxStartTime
+      null, // Long maxStartTime
+      0,    // offset
+      1     // count
     );
     return (currentPeriods.size() != 0 ? currentPeriods.get(0) : null);
   }
@@ -107,7 +111,9 @@ public class PeriodService {
       Long number,
       String type,
       Long minStartTime,
-      Long maxStartTime
+      Long maxStartTime,
+      long offset,
+      long count
     ) {
 
     String sql = "SELECT prd.start_time, prd.number, prd.type, prd.temp FROM period prd"
@@ -117,7 +123,8 @@ public class PeriodService {
             + (type == null ? "" : " AND prd.type = " + Utils.escape(type))
             + (minStartTime == null ? "" : " AND prd.start_time >= " + minStartTime)
             + (maxStartTime == null ? "" : " AND prd.start_time <= " + maxStartTime)
-            + " ORDER BY prd.start_time"
+            + (" ORDER BY prd.start_time")
+            + (" LIMIT " + offset + ", "  + count)
             + ";";
 
     RowMapper<Period> rowMapper = new PeriodRowMapper();
