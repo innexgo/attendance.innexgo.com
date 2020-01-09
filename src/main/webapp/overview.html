@@ -82,44 +82,33 @@
         <div class="card-deck">
 
           <!-- Current Settings & Values -->
-          <div class="card col-sm-4 palette-level-two">
+          <div class="card col-sm-3 palette-level-two">
             <div class="card-body">
               <div class="input-group">
-                <h5 class="card-title text-center">Manual Attendance</h5>
+                <h5 class="card-title text-center">Information</h5>
                 <span class="input-group-btn ml-auto">
-                  <button type="button" class="btn btn-sm" data-html="true" data-toggle="popover" title="Manual Attendance" data-placement="top"
-                  data-content="Manually enter a student ID to either scan-in or scan-out a student.">
+                  <button type="button" class="btn btn-sm" data-html="true" data-toggle="popover" title="Information" data-placement="top"
+                  data-content="Set location when classes are unavailable, and view brief log of students currently in classroom">
                     <i class="fa fa-question"></i>
                   </button>
                 </span>
               </div>
-              <p class="card-text">Scan-in/out students manually.</p>
+              <p class="card-text">Set default location when you're not teaching a class, and view overview.</p>
               <div class="input-group mb-3">
                 <div class="input-group-prepend">
                   <span class="input-group-text bg-innexgocrimson">
-                    Student ID
+                    Default Location
                   </span>
                 </div>
-                <input id="manual-userid" type="text" class="form-control">
+                <select id="overview-locationid"></select>
               </div>
-              <div class="input-group mb-3">
-                <div class="input-group-prepend">
-                  <span class="input-group-text bg-innexgocrimson">
-                    Location
-                  </span>
-                </div>
-                <select id="manual-locationid"></select>
-              </div>
-              <button id="manual-submit" type="input-button" class="btn mt-3 btn-block btn-warning">
-                Submit
-              </button>
             </div>
           </div>
 
 
 
           <!-- Current Status -->
-          <div class="card col-sm-8 palette-level-two">
+          <div class="card col-sm-6 palette-level-two">
             <div class="card-body">
               <div class="input-group">
                 <h5 class="card-title">Current Status</h5>
@@ -147,7 +136,7 @@
           </div>
 
           <!-- Manual Attendance -->
-          <div class="card col-sm-4 palette-level-two">
+          <div class="card col-sm-3 palette-level-two">
             <div class="card-body">
               <div class="input-group">
                 <h5 class="card-title text-center">Manual Attendance</h5>
@@ -166,14 +155,6 @@
                   </span>
                 </div>
                 <input id="manual-userid" type="text" class="form-control">
-              </div>
-              <div class="input-group mb-3">
-                <div class="input-group-prepend">
-                  <span class="input-group-text bg-innexgocrimson">
-                    Location
-                  </span>
-                </div>
-                <select id="manual-locationid"></select>
               </div>
               <button id="manual-submit" type="input-button" class="btn mt-3 btn-block btn-warning">
                 Submit

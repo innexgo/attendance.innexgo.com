@@ -17,14 +17,14 @@ public class PeriodService {
   @Autowired private JdbcTemplate jdbcTemplate;
 
   public Period getByStartTime(long startTime) {
-    String sql = "SELECT start_time, number, type FROM period WHERE start_time=?";
+    String sql = "SELECT start_time, number, type, temp FROM period WHERE start_time=?";
     RowMapper<Period> rowMapper = new PeriodRowMapper();
     Period period = jdbcTemplate.queryForObject(sql, rowMapper, startTime);
     return period;
   }
 
   public List<Period> getAll() {
-    String sql = "SELECT start_time, number, type FROM period";
+    String sql = "SELECT start_time, number, type, temp FROM period";
     RowMapper<Period> rowMapper = new PeriodRowMapper();
     return this.jdbcTemplate.query(sql, rowMapper);
   }
@@ -32,19 +32,20 @@ public class PeriodService {
   public void add(Period period) {
     // Add period
     String sql =
-        "INSERT INTO period (start_time, number, type) values (?, ?, ?)";
+        "INSERT INTO period (start_time, number, type, temp) values (?, ?, ?, ?)";
     jdbcTemplate.update(
-        sql, period.startTime, period.number, period.type);
+        sql, period.startTime, period.number, period.type, period.temp);
   }
 
   public void update(Period period) {
     String sql =
-        "UPDATE period SET start_time=?, number=?, type=? WHERE start_time=?";
+        "UPDATE period SET start_time=?, number=?, type=?, temp=? WHERE start_time=?";
     jdbcTemplate.update(
         sql,
         period.startTime,
         period.number,
-        period.type);
+        period.type,
+        period.temp);
   }
 
   public Period deleteByStartTime(long startTime) {
@@ -65,6 +66,13 @@ public class PeriodService {
     int count = jdbcTemplate.queryForObject(sql, Integer.class, startTime);
     return count != 0;
   }
+
+  public List<Period> getTemporary() {
+    String sql = "SELECT start_time, number, type, temp FROM period where temp=true";
+    RowMapper<Period> rowMapper = new PeriodRowMapper();
+    return this.jdbcTemplate.query(sql, rowMapper);
+  }
+
 
   public Period getCurrent() {
     return getByTime(System.currentTimeMillis());
@@ -102,7 +110,7 @@ public class PeriodService {
       Long maxStartTime
     ) {
 
-    String sql = "SELECT prd.start_time, prd.number, prd.type FROM period prd"
+    String sql = "SELECT prd.start_time, prd.number, prd.type, prd.temp FROM period prd"
             + " WHERE 1=1"
             + (startTime == null ? "" : " AND prd.start_time = " + startTime)
             + (number == null ? "" : " AND prd.number = " + number)

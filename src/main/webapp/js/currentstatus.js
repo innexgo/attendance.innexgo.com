@@ -1,7 +1,7 @@
 async function currentStatus() {
   let apiKey = Cookies.getJSON('apiKey');
   let period = Cookies.getJSON('period');
-  let courses = Cookies.getJSON('courses').sort((a, b) -> (a.period > b.period ? -1 : 1));
+  let courses = Cookies.getJSON('courses').sort((a, b) => (a.period > b.period ? -1 : 1));
   let course = period == null ? null : courses.filter(c => c.period == period.number)[0];
 
   let table = document.getElementById('current-status-table');
@@ -60,22 +60,25 @@ async function currentStatus() {
       giveTempError('Failed to get current status.');
     }
   } else {
-    try {
-      let students = await fetchJson(`${apiUrl()}/misc/present/?locationId=${locationId}&time=${time}&apiKey=${apiKey.key}`);
-      let text = '<span class="fa fa-check"></span>'
-      let bgcolor = '#ccffcc';
-      let fgcolor = '#00ff00';
-      // Clear table
-      table.innerHTML = '';
-      // Students
-      students.forEach(student => $('#current-status-table').append(
-            `<td>${linkRelative(student.name, '/studentprofile.html?studentId='+student.id)}</td>
-             <td>${student.id}</td>
-             <td style="background-color:${bgcolor};color:${fgcolor}">${text}</td>`)
-      );
-    } catch(err) {
-      console.log(err);
-      giveTempError('Failed to correctly fetch student data, try refreshing');
+    let locationId = Cookies.getJSON('default-locationid');
+    if(locationId != null) {
+      try {
+        let students = await fetchJson(`${apiUrl()}/misc/present/?locationId=${locationId}&time=${time}&apiKey=${apiKey.key}`);
+        let text = '<span class="fa fa-check"></span>'
+        let bgcolor = '#ccffcc';
+        let fgcolor = '#00ff00';
+        // Clear table
+        table.innerHTML = '';
+        // Students
+        students.forEach(student => $('#current-status-table').append(
+              `<td>${linkRelative(student.name, '/studentprofile.html?studentId='+student.id)}</td>
+               <td>${student.id}</td>
+               <td style="background-color:${bgcolor};color:${fgcolor}">${text}</td>`)
+        );
+      } catch(err) {
+        console.log(err);
+        giveTempError('Failed to correctly fetch student data, try refreshing');
+      }
     }
   }
 }

@@ -1,36 +1,8 @@
+"use strict"
+
 const beepup = new Audio('assets/beepup.wav');
 const beepdown = new Audio('assets/beepdown.wav');
 const error = new Audio('assets/error.wav');
-
-async function initializeLocationOptions() {
-  let apiKey = Cookies.getJSON('apiKey');
-  let period = Cookies.getJSON('period');
-  let nextPeriod = Cookies.getJSON('nextPeriod');
-  let courses = Cookies.getJSON('courses');
-
-  try {
-    let locations = await fetchJson(`${apiUrl()}/location/?apiKey=${apiKey.key}`);
-
-    let locationSelect = $('#manual-locationid');
-
-    // Add the options
-    locationSelect.empty();
-    locations.forEach(l => locationSelect.append(`<option value="${l.id}">${l.name}</option>`));
-
-    // Course that is not null
-    let currentCourse = courses.filter(c => c.period == period.number)[0];
-    let nextPeriodCourse = courses.filter(c => c.period == period.number)[0];
-    if(currentCourse != null || nextPeriodCourse  != null) {
-      // Set auto selected location
-      let selectedLocation = currentCourse == null ? nextPeriodCourse.location : currentCourse.location;
-      locationSelect.prepend(`<option value="${selectedLocation.id}">(Default) ${selectedLocation.name}</option>`);
-      locationSelect.val(selectedLocation.id);
-    }
-  } catch(err) {
-    console.log(err);
-    givePermError('Failed to load locations');
-  }
-}
 
 async function submitEncounter(studentId) {
   console.log('submitting encounter ' + studentId)
@@ -39,14 +11,25 @@ async function submitEncounter(studentId) {
   let checkBox = document.getElementById('manual-type-toggle');
   let apiKey = Cookies.getJSON('apiKey');
   let period = Cookies.getJSON('period');
-  let nextPeriod = Cookies.getJSON('nextPeriod');
+  let course = Cookies.getJSON('courses').filter(c => c.period == period.number)[0];
+
+  // Let's try to determine the location
+  let locationId = Cookies.getJSON('default-locationid');
+  if(course != null) {
+    locationId = course.locationId;
+  }
 
   if (String(studentId) == String(NaN)) {
     giveTempError('What you entered wasn\'t a valid ID');
     return;
   }
 
-  let locationId = $('#manual-locationid').val();
+  if(locationId == null) {
+    // If it's still null tell the user to set the default location
+    giveTempError('Please set default location in order to manually sign in students when class is not in session.');
+    error.play();
+    return;
+  }
 
   try {
     let session = await fetchJson(

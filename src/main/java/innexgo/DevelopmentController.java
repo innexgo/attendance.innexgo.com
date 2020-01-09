@@ -79,12 +79,14 @@ public class DevelopmentController {
       period.startTime = initialTime + minute*i*3;
       period.number = i;
       period.type = Period.CLASS_PERIOD;
+      period.temp = true;
       periodService.add(period);
 
       Period passingPeriod = new Period();
       passingPeriod.startTime = initialTime + minute*i*3 + minute*2; // Offset by 2 min
       passingPeriod.number = i + 100;
       passingPeriod.type = Period.PASSING_PERIOD;
+      passingPeriod.temp = true;
 
       periodService.add(passingPeriod);
     }
@@ -94,29 +96,9 @@ public class DevelopmentController {
   // deletes periods with a length of less than 4 min
   @RequestMapping("/deleteTestingPeriods/")
   public ResponseEntity<?> deleteTestingPeriods() {
-    long minDuration = 4 * 60 * 1000;
-    List<Period> periodList = periodService.getAll();
+    List<Period> periodList = periodService.getTemporary();
 
-    Set<Period> toDelete = new HashSet<>();
-
-    for(int i = 0; i < periodList.size()-1; i++) {
-      Period currentPeriod = periodList.get(i);
-      Period nextPeriod = periodList.get(i+1);
-      if(nextPeriod.startTime - currentPeriod.startTime < minDuration) {
-        toDelete.add(currentPeriod);
-      }
-    }
-
-    for(int i = 1; i < periodList.size(); i++) {
-      Period currentPeriod = periodList.get(i);
-      Period previousPeriod = periodList.get(i-1);
-      if(currentPeriod.startTime - previousPeriod.startTime < minDuration) {
-        toDelete.add(currentPeriod);
-      }
-    }
-
-
-    for(Period currentPeriod : toDelete) {
+    for(Period currentPeriod : periodList) {
       // delete irregularities, as they reference periods
       List<Irregularity> irregularities = irregularityService.query(
 

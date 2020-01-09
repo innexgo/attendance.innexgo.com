@@ -12,4 +12,6 @@ public class Period {
   public long startTime;
   public long number;
   public String type; // Must be one of the above defined strings
+  // If it's a test. (For testing purposes)
+  boolean temp;
 }
