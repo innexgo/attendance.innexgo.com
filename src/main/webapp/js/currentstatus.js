@@ -17,7 +17,7 @@ async function currentStatus() {
   if(course != null) {
     try {
       let students = await fetchJson(`${apiUrl()}/misc/registeredForCourse/?courseId=${course.id}&time=${time}&apiKey=${apiKey.key}`);
-      let irregularities = await fetchJson(`${apiUrl()}/irregularity/?courseId=${course.id}&periodId=${period.id}&apiKey=${apiKey.key}&offset=0&count=${INT32_MAX}`);
+      let irregularities = await fetchJson(`${apiUrl()}/irregularity/?courseId=${course.id}&periodId=${period.id}&offset=0&count=${INT32_MAX}&apiKey=${apiKey.key}&offset=0&count=${INT32_MAX}`);
 
       table.innerHTML = '';
       students.sort((a, b) => (a.name > b.name) ? -1 : 1)
