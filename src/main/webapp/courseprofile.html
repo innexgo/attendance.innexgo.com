@@ -92,7 +92,7 @@
                 </div>
                 <table style="width:100%;">
                   <tr>
-                    <td id="courseprofile-period">Couurse Period</td>
+                    <td id="courseprofile-period">Course Period</td>
                     <td id="courseprofile-teacher" style='text-align: left'>Course Teacher</td>
                   </tr>
                   <tr>
@@ -101,7 +101,7 @@
                   </tr>
                 </table>
                 <br>
-                <p class="card-text">Courses currently taken:</p>
+                <p class="card-text">Students taking course:</p>
                 <div class="table-height-standard">
                   <table class="table striped white">
                     <thead>
@@ -114,8 +114,12 @@
                   </table>
                 </div>
               </div>
-            </div>
 
+              <!-- Course Class Sessions -->
+            </div>
+          </div>
+
+          <div class="card-deck my-3">
             <!-- Course Irregularities -->
             <div class="card col-sm-6 palette-level-two">
               <div class="card-body">
@@ -129,25 +133,28 @@
                   </span>
                 </div>
                 <p class="card-text">Irregularities associated with course</p>
-                <div class="table-height-standard">
-                  <table class="table striped white ">
-                    <thead>
-                      <tr class='table-header'>
-                        <td>Name</td>
-                        <td>Type</td>
-                        <td>Time</td>
-                      </tr>
-                    </thead>
-                    <tbody id="courseprofile-irregularities"></tbody>
-                  </table>
+                <table class="table striped white ">
+                  <thead>
+                    <tr class='table-header'>
+                      <td>Name</td>
+                      <td>Type</td>
+                      <td>Time</td>
+                    </tr>
+                  </thead>
+                  <tbody id="courseprofile-irregularities"></tbody>
+                </table>
+                <div class="btn-group" role="group">
+                  <button id="courseprofile-irregularities-new" type="button" class="btn btn-primary">
+                    <i class="fa fa-arrow-left"></i> Newer
+                  </button>
+                  <button id="courseprofile-irregularities-old" type="button" class="btn btn-primary">
+                    Older <i class="fa fa-arrow-right"></i>
+                  </button>
                 </div>
               </div>
             </div>
-
-
-            <!-- Course Class Sessions -->
-
           </div>
         </div>
+      </div>
     </body>
 </html>

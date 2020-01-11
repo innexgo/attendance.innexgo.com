@@ -1,26 +1,49 @@
 "use strict"
 
-async function loadCourseProfile() {
+let irregularityPage = 0;
+
+async function loadPage(courseId, page) {
   let apiKey = Cookies.getJSON('apiKey');
 
-  if (apiKey == null) {
-    console.log('not signed in');
-    return;
+  if(page == 0) {
+    $('#courseprofile-irregularities-old').attr("disabled", true);
+  } else {
+    $('#courseprofile-irregularities-old').attr("disabled", false);
   }
-
-  let searchParams = new URLSearchParams(window.location.search);
-
-  if (!searchParams.has('courseId')) {
-    giveAlert('No course query', );
-    return;
-  }
-
-  let courseId = searchParams.get('courseId');
-
+  // Count of irregularities per page
+  const c = 10;
   try {
-    let course = (await fetchJson(`${apiUrl()}/course/?apiKey=${apiKey.key}&courseId=${courseId}`))[0];
+    let irregularities = (await fetchJson(`${apiUrl()}/irregularity/?apiKey=${apiKey.key}&courseId=${courseId}&offset=${c * page}&count=${c}`))
+                          .sort((a, b) => (a > b) ? -1 : 1);
+    if(irregularities.length == c) {
+      $('#courseprofile-irregularities-new').attr("disabled", false);
+      irregularities.forEach(irregularity => $('#courseprofile-irregularities').append(`
+              <tr>
+                <td>${linkRelative(irregularity.student.name, '/studentprofile.html?studentId='+irregularity.student.id)}</td>
+                <td>${irregularity.type}</td>
+                <td>${moment(irregularity.time).format('MMM Do, YYYY')}</td>
+              </tr>`));
+    } else {
+      // no more irregularity or something
+      $('#courseprofile-irregularities-new').attr("disabled", true);
+      if(irregularities.length == 0) {
+        $('#courseprofile-irregularities')[0].innerHTML = "<b>No Irregularities</b>";
+      }
+    }
+  } catch(err) {
+    console.log(err);
+    givePermError('Failed to connect to server.');
+    return;
+  }
+}
+
+async function loadCourseProfile(courseId) {
+  try {
+    let apiKey = Cookies.getJSON('apiKey');
+    let course = (await fetchJson(`${apiUrl()}/course/?apiKey=${apiKey.key}&courseId=${courseId}&offset=0&count=1`))[0];
     if(course == null) {
-      throw new Error('Course nonexistent!');
+      givePermError('Course query specifies invalid course id.');
+      return;
     }
 
     document.getElementById('courseprofile-name').innerHTML = course.subject;
@@ -28,16 +51,8 @@ async function loadCourseProfile() {
     document.getElementById('courseprofile-period').innerHTML = 'Period: ' + course.period;
     document.getElementById('courseprofile-location').innerHTML = linkRelative(course.location.name, '/locationprofile.html?locationId='+course.location.id);
 
-    let irregularities = await fetchJson(`${apiUrl()}/irregularity/?apiKey=${apiKey.key}&courseId=${course.id}&count=100`);
-    irregularities.forEach(irregularity => $('#courseprofile-irregularities').append(`
-          <tr>
-            <td>${linkRelative(irregularity.student.name, '/studentprofile.html?studentId='+irregularity.student.id)}</td>
-            <td>${irregularity.type}</td>
-            <td>${moment(irregularity.time).format('MMM Do, YYYY')}</td>
-          </tr>`));
-
-    let students = (await fetchJson(`${apiUrl()}/schedule/?apiKey=${apiKey.key}&courseId=${courseId}`))
-                    .map(schedule => schedule.student);
+    let students = (await fetchJson(`${apiUrl()}/schedule/?apiKey=${apiKey.key}&courseId=${courseId}&offset=0&count=${INT32_MAX}`))
+      .map(schedule => schedule.student);
     document.getElementById('courseprofile-student-count').innerHTML = 'Number of students: ' + students.length;
     students.forEach(student => $('#courseprofile-students').append(`
           <tr>
@@ -59,5 +74,34 @@ $(document).ready(function(){
 });
 
 $(document).ready(function() {
-  loadCourseProfile();
+  let apiKey = Cookies.getJSON('apiKey');
+
+  if (apiKey == null) {
+    givePermError('You are not signed in.', );
+    return;
+  }
+
+  let searchParams = new URLSearchParams(window.location.search);
+
+  if (!searchParams.has('courseId')) {
+    givePermError('No course query in URL.', );
+    return;
+  }
+
+  let courseId = searchParams.get('courseId');
+
+
+  loadCourseProfile(courseId);
+
+  // Handle paging
+  $('#courseprofile-irregularities-new').click(async function() {
+    irregularityPage++;
+    await loadPage(courseId, irregularityPage);
+  });
+  $('#courseprofile-irregularities-old').click(async function() {
+    irregularityPage--;
+    await loadPage(courseId, irregularityPage);
+  });
+
+  loadPage(courseId, irregularityPage)
 })

@@ -1,5 +1,7 @@
 "use strict"
 
+const INT32_MAX = 2147483647;
+
 // use await sleep(some milliseconds)
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
