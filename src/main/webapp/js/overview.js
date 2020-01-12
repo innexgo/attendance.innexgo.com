@@ -8,7 +8,7 @@ async function initializeLocationOptions() {
   let apiKey = Cookies.getJSON('apiKey');
 
   try {
-    let locations = await fetchJson(`${apiUrl()}/location/?apiKey=${apiKey.key}`);
+    let locations = await fetchJson(`${apiUrl()}/location/?offset=0&count=${INT32_MAX}&apiKey=${apiKey.key}`);
     let locationSelect = $('#overview-locationid');
 
     // Add the options
@@ -17,7 +17,7 @@ async function initializeLocationOptions() {
 
     // Preselect Disabled option
     locationSelect.prepend(
-      `<option selected hidden disabled value="null">Select Default Location</option>`
+      `<option selected hidden disabled value="null">Select</option>`
     );
     locationSelect.val("null");
 
