@@ -15,6 +15,7 @@ async function initializeLocationOptions() {
     locationSelect.empty();
     locations.forEach(l => locationSelect.append(`<option value="${l.id}">${l.name}</option>`));
 
+    // Set pre
     // Preselect Disabled option
     locationSelect.prepend(
       `<option selected hidden disabled value="null">Select</option>`
