@@ -225,6 +225,10 @@ async function currentStatus() {
 
         table.innerHTML = '';
         students.sort((a, b) => (a.name > b.name) ? -1 : 1)
+        if(students.length == 0) {
+          table.innerHTML = `<b>No Students Currently in Classroom</b>`;
+        }
+
         for (let i = 0; i < students.length; i++) {
           let text = '<span class="fa fa-check"></span>'
           let bgcolor = '#ccffcc';
@@ -274,6 +278,9 @@ async function currentStatus() {
           // Clear table
           table.innerHTML = '';
           // Students
+          if(students.length == 0) {
+            table.innerHTML = `<b>No Students Currently in Classroom</b>`;
+          }
           students.forEach(student => $('#current-status-table').append(
                 `<td>${linkRelative(student.name, '/studentprofile.html?studentId='+student.id)}</td>
                  <td>${student.id}</td>

@@ -21,7 +21,7 @@ async function loadClassProfile() {
 
   try {
     let students = await fetchJson(`${apiUrl()}/misc/registeredForCourse/?courseId=${course.id}&time=${period.startTime}&apiKey=${apiKey.key}`);
-    let irregularities = await fetchJson(`${apiUrl()}/irregularity/?courseId=${course.id}&periodStartTime=${period.startTime}&apiKey=${apiKey.key}`);
+    let irregularities = await fetchJson(`${apiUrl()}/irregularity/?courseId=${course.id}&periodStartTime=${period.startTime}&offset=0&count=${INT32_MAX}&apiKey=${apiKey.key}`);
 
     table.innerHTML = '';
 

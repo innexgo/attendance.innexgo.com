@@ -23,7 +23,7 @@ async function loadData() {
   var locationId = searchParams.get('locationId');
 
   try {
-    let location = (await fetchJson(`${apiUrl()}/location/?locationId=${locationId}&apiKey=${apiKey.key}`))[0]
+    let location = (await fetchJson(`${apiUrl()}/location/?locationId=${locationId}&offset=0&count=1&apiKey=${apiKey.key}`))[0]
     if(location == null) {
       throw new Error('Location Id undefined in database!');
     }
@@ -35,7 +35,7 @@ async function loadData() {
 
   try {
     // One liner time
-    (await fetchJson(`${apiUrl()}/course/?locationId=${locationId}&semesterStartTime=${semester.startTime}&apiKey=${apiKey.key}`))
+    (await fetchJson(`${apiUrl()}/course/?locationId=${locationId}&semesterStartTime=${semester.startTime}&offset=0&count=${INT32_MAX}&apiKey=${apiKey.key}`))
       .sort((a, b) => (a.period > b.period) ? 1 : -1)
       .forEach(course => $('#location-courses').append(`
             <tr>

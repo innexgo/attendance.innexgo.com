@@ -71,7 +71,7 @@ async function loadCourses(studentId, initialSemesterTime) {
   // Clear table
   courseTable.empty();
   // Repopulate table
-  (await fetchJson(`${apiUrl()}/course/?studentId=${studentId}&semesterStartTime=${initialSemesterTime}&apiKey=${apiKey.key}`))
+  (await fetchJson(`${apiUrl()}/course/?studentId=${studentId}&semesterStartTime=${initialSemesterTime}&offset=0&count=${INT32_MAX}&apiKey=${apiKey.key}`))
     .sort((a, b) => (a.period > b.period) ? 1 : -1) // Sort in order
     .forEach(course => courseTable.append(`
             <tr>
@@ -85,7 +85,7 @@ async function loadCourses(studentId, initialSemesterTime) {
 async function loadIrregularityPage(studentId, minTime, maxTime) {
   let apiKey = Cookies.getJSON('apiKey');
   let irregularityTable = $('#studentprofile-irregularities');
-  (await fetchJson(`${apiUrl()}/irregularity/?studentId=${studentId}&minTime=${minTime}&maxTime=${maxTime}&apiKey=${apiKey.key}`))
+  (await fetchJson(`${apiUrl()}/irregularity/?studentId=${studentId}&minTime=${minTime}&maxTime=${maxTime}&offset=0&count=${INT32_MAX}&apiKey=${apiKey.key}`))
     .sort((a,b) => (a.time > b.time) ? -1 : 1) // sort by time descending
     .forEach(irregularity => irregularityTable.append(`
             <tr>
@@ -121,7 +121,7 @@ async function initialize() {
   let studentId = searchParams.get('studentId');
 
   try {
-    student = (await fetchJson(`${apiUrl()}/student/?studentId=${studentId}&apiKey=${apiKey.key}`))[0];
+    student = (await fetchJson(`${apiUrl()}/student/?studentId=${studentId}&offset=0&count=1&apiKey=${apiKey.key}`))[0];
 
     if(student == null) {
       throw new Error('Student Id invalid');
@@ -132,7 +132,7 @@ async function initialize() {
 
     // Load semester chooser options
     try {
-      let grades = await fetchJson(`${apiUrl()}/grade/?studentId=${studentId}&apiKey=${apiKey.key}`);
+      let grades = await fetchJson(`${apiUrl()}/grade/?studentId=${studentId}&offset=0&count=${INT32_MAX}&apiKey=${apiKey.key}`);
 
       let gradeSelect = $('#studentprofile-grades');
 
