@@ -132,12 +132,12 @@ async function recentActivityLoadPage(page) {
   }
 
   if(page == 0) {
-    $('#recentactivity-events-old').attr("disabled", true);
+    $('#recentactivity-events-new').attr("disabled", true);
   } else {
-    $('#recentactivity-events-old').attr("disabled", false);
+    $('#recentactivity-events-new').attr("disabled", false);
   }
   // Count of irregularities per page
-  const c = 20;
+  const c = 5;
   let sessions = await fetchJson(`${apiUrl()}/session/?apiKey=${apiKey.key}&locationId=${locationId}&offset=${c * page}&count=${c}`);
 
   // Clear table
@@ -165,10 +165,10 @@ async function recentActivityLoadPage(page) {
             </tr>`));
 
   if(sessions.length == c) {
-    $('#recentactivity-events-new').attr("disabled", false);
+    $('#recentactivity-events-old').attr("disabled", false);
   } else {
     // no more irregularity or something
-    $('#recentactivity-events-new').attr("disabled", true);
+    $('#recentactivity-events-old').attr("disabled", true);
     if(sessions.length == 0) {
       $('#recentactivity-events')[0].innerHTML = "<b>No Recent Activity</b>";
     }
@@ -181,11 +181,11 @@ async function recentActivity() {
 
   // Handle paging
   $('#recentactivity-events-new').click(async function() {
-    recentActivityPage++;
+    recentActivityPage--;
     await recentActivityLoadPage(recentActivityPage);
   });
   $('#recentactivity-events-old').click(async function() {
-    recentActivityPage--;
+    recentActivityPage++;
     await recentActivityLoadPage(recentActivityPage);
   });
 

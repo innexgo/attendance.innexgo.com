@@ -25,7 +25,7 @@ async function loadData() {
   let userId = searchParams.get('userId');
 
   try {
-    let user = (await fetchJson(`${apiUrl()}/user/?userId=${userId}&apiKey=${apiKey.key}`))[0];
+    let user = (await fetchJson(`${apiUrl()}/user/?userId=${userId}&offset=0&count=1&apiKey=${apiKey.key}`))[0];
     if(user == null) {
       throw new Error('Failed to find user with this ID');
     }
@@ -34,7 +34,7 @@ async function loadData() {
     document.getElementById('user-email').innerHTML = 'Email: ' + linkAbsolute(user.email, 'mailto:' + user.email);
     document.getElementById('user-position').innerHTML = position[user.ring];
 
-    (await fetchJson(`${apiUrl()}/course/?semesterStartTime=${semester.startTime}&teacherId=${userId}&apiKey=${apiKey.key}`))
+    (await fetchJson(`${apiUrl()}/course/?semesterStartTime=${semester.startTime}&teacherId=${userId}&offset=0&count=${INT32_MAX}&apiKey=${apiKey.key}`))
         .sort((a, b) => (a.period > b.period) ? 1 : -1)
         .forEach(course => $('#user-courses').append(`
             <tr>
@@ -44,7 +44,7 @@ async function loadData() {
             </tr>`));
   } catch(err) {
     console.log(err);
-    givePermError('Page loaded with invalid location id.');
+    givePermError('Page loaded with invalid user id.');
   }
 }
 

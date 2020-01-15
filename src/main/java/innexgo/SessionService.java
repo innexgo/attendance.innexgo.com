@@ -112,7 +112,7 @@ public class SessionService {
             + (inTimeEnd == null ? "" : " AND inen.time <= " + inTimeEnd)
             + (outTimeBegin == null ? "" : " AND outen.time >= " + outTimeBegin)
             + (outTimeEnd == null ? "" : " AND outen.time <= " + outTimeEnd)
-            + (" ORDER BY inen.time")
+            + (" ORDER BY inen.time DESC")
             + (" LIMIT " + offset + ", " + count)
             + ";";
     RowMapper<Session> rowMapper = new SessionRowMapper();
