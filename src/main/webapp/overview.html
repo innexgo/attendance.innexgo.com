@@ -27,8 +27,6 @@
     <script src="/js/loadprefs.js"></script>
     <script src="/js/sidebar.js"></script>
     <script src="/js/overview.js"></script>
-    <script src="/js/currentstatus.js"></script>
-    <script src="/js/manualattendance.js"></script>
 
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Exo&display=swap" rel="stylesheet">
@@ -88,12 +86,12 @@
                 <h5 class="card-title text-center">Information</h5>
                 <span class="input-group-btn ml-auto">
                   <button type="button" class="btn btn-sm" data-html="true" data-toggle="popover" title="Information" data-placement="top"
-                  data-content="Set location when classes are unavailable, and view brief log of students currently in classroom">
+                  data-content="When you're not teaching a class, your current classroom is unknown. This means that the system doesn't know which classroom to display data for. By setting a default location here, you can use the apps on this page, such as Current Status, Manual Attendance, and Recent Activity even when you don't have a class. Note that the default location is overriden when there is a course in session.">
                     <i class="fa fa-question"></i>
                   </button>
                 </span>
               </div>
-              <p class="card-text">Set default location when you're not teaching a class, and view overview.</p>
+              <p class="card-text">Set Default Location for the Current Status, Manual Attendance, and Recent Activity apps.</p>
               <div class="input-group mb-3">
                 <div class="input-group-prepend">
                   <span class="input-group-text">
@@ -154,11 +152,49 @@
                     Student ID
                   </span>
                 </div>
-                <input id="manual-userid" type="text" class="form-control">
+                <input id="manual-studentid" type="text" class="form-control"
+                        onkeypress="return manualEntryFunction(event);">
               </div>
               <button id="manual-submit" type="input-button" class="btn mt-3 btn-block btn-warning">
                 Submit
               </button>
+            </div>
+          </div>
+        </div>
+        <div class="card-deck">
+          <div class="card col-sm mx-3 my-3 card-no-border palette-level-two">
+            <div class="card-body">
+              <div class="input-group">
+                <h5 class="card-title">Recent Activity</h5>
+                <span class="input-group-btn ml-auto">
+                  <button type="button" class="btn btn-sm" data-html="true" data-toggle="popover" title="Recent Activity" data-placement="top"
+                                                                                                                          data-content="This log displays in reverse chronological order attendance events, where a student signed in to or out of your classroom.">
+                    <i class="fa fa-question"></i>
+                  </button>
+                </span>
+              </div>
+              <p class="card-text">View a log of student attendance events for the current classroom.</p>
+              <div class="table-height-standard">
+                <table class="table striped">
+                  <thead>
+                    <tr class="table-header">
+                      <td>Name</td>
+                      <td>ID</td>
+                      <td>Time</td>
+                      <td>Direction</td>
+                    </tr>
+                  </thead>
+                  <tbody class="table-height-standard" id="recentactivity-events"></tbody>
+                </table>
+              </div>
+              <div class="btn-group" role="group">
+                <button id="recentactivity-events-new" type="button" class="btn btn-primary">
+                  <i class="fa fa-arrow-left"></i> Newer
+                </button>
+                <button id="recentactivity-events-old" type="button" class="btn btn-primary">
+                  Older <i class="fa fa-arrow-right"></i>
+                </button>
+              </div>
             </div>
           </div>
         </div>
