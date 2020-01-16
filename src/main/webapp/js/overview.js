@@ -142,9 +142,6 @@ async function recentActivityLoadPage(page) {
 
   // Clear table
   $('#recentactivity-events').empty();
-  let signInText = `<h4 style="color:#66ff66" class="fa fa-sign-in-alt"></h4>`
-  let signOutText = `<h4 style="color:#ff6666" class="fa fa-sign-out-alt"></h4>`
-
   sessions.map(s => {
         // Convert the session into encounters, but keep the info about whether it was an in or out
         if(s.complete) {
@@ -161,7 +158,12 @@ async function recentActivityLoadPage(page) {
               <td>${linkRelative(e.encounter.student.name, '/studentprofile.html?studentId='+e.encounter.student.id)}</td>
               <td>${e.encounter.student.id}</td>
               <td>${moment(e.encounter.time).fromNow()}</td>
-              <td>${e.in ? signInText : signOutText}</td>
+              <td> <h4 style="color:${e.in
+                                      ? '#66ff66'     // green if siginin
+                                      : e.encounter.type == 'virtual'
+                                          ? '#6666ff' // blue if virtual signout
+                                          : '#ff6666' // red if signout
+                                     }" class="fa ${e.in ?'fa-sign-in-alt' : 'fa-sign-out-alt'}"></h4></td>
             </tr>`));
 
   if(sessions.length == c) {

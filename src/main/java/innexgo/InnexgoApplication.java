@@ -1,3 +1,21 @@
+/*
+ * Innexgo Website
+ * Copyright (C) 2020 Innexgo LLC
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published
+ * by the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package innexgo;
 
 import org.springframework.boot.SpringApplication;
@@ -29,7 +47,6 @@ public class InnexgoApplication {
   }
 
   /* TO REDIRECT ALL TO HTTPS */
-  /*
   @Bean
   public ServletWebServerFactory servletContainer() {
     TomcatServletWebServerFactory tomcat = new TomcatServletWebServerFactory() {
@@ -54,7 +71,7 @@ public class InnexgoApplication {
     connector.setSecure(false);
     connector.setRedirectPort(8443);
     return connector;
-  }*/
+  }
 
   public static void main(String[] args) {
     SpringApplication.run(InnexgoApplication.class, args);
