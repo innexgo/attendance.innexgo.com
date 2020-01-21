@@ -1,5 +1,5 @@
 plugins {
-  id 'org.springframework.boot' version '2.2.1.BUILD-SNAPSHOT'
+  id 'org.springframework.boot' version '2.2.3.BUILD-SNAPSHOT'
   id 'java'
   id "com.scuilion.syntastic" version "0.3.8"
 }

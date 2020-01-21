@@ -34,6 +34,17 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import java.io.ByteArrayOutputStream;
 
 @CrossOrigin
 @RestController
@@ -62,6 +73,29 @@ public class ApiController {
   static final ResponseEntity<?> OK = new ResponseEntity<>(HttpStatus.OK);
   static final ResponseEntity<?> UNAUTHORIZED = new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
   static final ResponseEntity<?> NOT_FOUND = new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+  ResponseEntity<?> pdfToResponse(PDDocument pdf) {
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+
+        try {
+          pdf.save(bos);
+        } catch(Exception e){
+          e.printStackTrace();
+          return INTERNAL_SERVER_ERROR;
+        }
+
+        byte[] contents = bos.toByteArray();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.parseMediaType("application/pdf"));
+        String filename = "output.pdf";
+        headers.setContentDispositionFormData(filename, filename);
+        headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
+        ResponseEntity<byte[]> response = new ResponseEntity<>(contents, headers, HttpStatus.OK);
+        return response;
+  }
+
+
   /**
    * Fills in jackson objects (User) for ApiKey
    *
