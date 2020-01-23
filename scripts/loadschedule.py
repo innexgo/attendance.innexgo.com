@@ -2,26 +2,10 @@
 
 import sys
 import time
+import json
 import getpass
 import requests
 import pandas as pd
-
-# Get while throwing error
-def getJSON(url, parameters):
-    try:
-        r = requests.get(url, params=parameters)
-        r.raise_for_status()
-        return r.json()
-    except requests.exceptions.HTTPError as e:
-        print('===============ERROR=================')
-        print(e)
-        print('===> Error occurred. Quit? (y/n)')
-        response = input()
-        if response == 'y':
-            print('Quitting...')
-            sys.exit(1)
-        else:
-            return None
 
 def currentMillis():
     return round(1000 * time.time())
@@ -33,6 +17,35 @@ def prompt(text):
 def alpha(str):
     return ''.join([i for i in str if i.isalpha()])
 
+def jsonPrint(d):
+    json.dumps(d)
+
+# Get while throwing error
+def getJSON(url, parameters):
+    try:
+        r = requests.get(url, params=parameters)
+        r.raise_for_status()
+        return r.json()
+    except requests.exceptions.HTTPError as e:
+        print('===============ERROR=================')
+        print(e)
+        response = prompt('(===> Error occurred. Quit? (y/n)')
+        if response == 'y':
+            print('Quitting...')
+            sys.exit(1)
+        else:
+            return None
+
+def getApiKey(hostname):
+    apiKey = getJSON(f'{hostname}/api/apiKey/new/',
+                 {
+                     'email': prompt(f'Enter email for {hostname}:'),
+                     'password': prompt(f'Enter password for {hostname}:'),
+                     'expirationTime':currentMillis()+60*60*1000 # One hour
+                 })
+    return apiKey['key']
+
+
 # Bail if not correct
 if len(sys.argv) != 3:
     print('===> Error: Need 2 arguments: file as csv and hostname')
@@ -43,19 +56,17 @@ if len(sys.argv) != 3:
 
 filepath = sys.argv[1]
 hostname = sys.argv[2]
-apiKey = getJSON(f'{hostname}/api/apiKey/new/',
-                 {
-                     'email': prompt(f'Enter email for {hostname}:'),
-                     'password': prompt(f'Enter password for {hostname}:'),
-                     'expirationTime':currentMillis()+30*60*1000
-                 })['key']
+apiKey = getApiKey(hostname)
+
 current_semester = getJSON(f'{hostname}/api/misc/currentSemester/',
                                       {
                                           'apiKey':apiKey
                                       })
+
 domain_suffix = prompt(f'===> Please enter domain suffix for teacher emails...')
 
 df = pd.read_excel(filepath, )
+
 
 
 # Load the teachers into the db
@@ -63,9 +74,20 @@ def loadTeacher(row):
     lastName, firstName= tuple([x.strip() for x in row.Teacher.split(',')])
     # Generate necessary fields
     userName = f'{firstName} {lastName}'
-    email = (alpha(lastName +firstName[0]) + '@' + domain_suffix).lower()
+    email = (alpha(lastName + firstName[0] if len(lastName) > 2 else firstName[0:2]) + '@' + domain_suffix).lower()
     password = '1234'
     ring = 1 # Regular User
+    existingUsers = getJSON(f'{hostname}/api/user/',
+                {
+                    'userName': userName,
+                    'offset':0,
+                    'count':1,
+                    'apiKey':apiKey
+                })
+    if len(existingUsers) > 0:
+        print('> An user with the name {userName} already exists. Skipping.')
+            return existingUsers[0]
+
     print(f'> Adding teacher {userName} with email {email}...')
     return getJSON(f'{hostname}/api/user/new/',
                    {
@@ -81,7 +103,7 @@ def loadLocation(row):
     roomName = row.Room
     if str(roomName).isdigit():
         id = int(roomName)
-        name = f'Room {id}'
+        name = f'RM{id}'
     elif roomName[0] == 'P': # A portable
         id = int(roomName[1:])
         name = roomName
@@ -164,15 +186,24 @@ def loadSchedule(row):
                    })
 
 
-# First make list of teachers, load it. Skip teachers who are already in the DB
 teachers = df[['Teacher']].dropna().drop_duplicates()
 print('===> Loading Teachers to Database...')
 teachers['userJson'] = teachers.apply(loadTeacher, axis=1)
 
 # Make list of locations, load it. Skip locations already in DB
 locations = df[['Room']].dropna().drop_duplicates()
-print('===> Loading Locations to Database...')
-locations['locationJson'] = locations.apply(loadLocation, axis=1)
+if prompt('===> Load locations? (y/n)') == 'y':
+    print('===> Loading Locations to Database...')
+    locations['locationJson'] = locations.apply(loadLocation, axis=1)
+
+# Then make list of unique StuId-LastName-Firstname-Grade pairs
+students = df[['StuID', 'LastName', 'FirstName', 'GR']].dropna().drop_duplicates()
+if prompt('===> Load locations? (y/n)') == 'y':
+    print('===> Loading Students to Database...')
+    students['studentJson'] = students.apply(loadStudent, axis=1)
+    print('===> Loading Grades to Database...')
+    students['gradeJson'] = students.apply(loadGrade, axis=1)
+
 
 # Then make list of each Per-CrsName-Room-Teacher unique combo
 courses = df[['Per', 'CrsName', 'Teacher', 'Room']] \
@@ -180,17 +211,11 @@ courses = df[['Per', 'CrsName', 'Teacher', 'Room']] \
         .drop_duplicates() \
         .merge(locations, left_on=['Room'], right_on=['Room']) \
         .merge(teachers, left_on=['Teacher'], right_on=['Teacher'])
-print('===> Loading Courses to Database...')
-courses['courseJson'] = courses.apply(loadCourse, axis=1)
-print('===> Loading Offering to Database...')
-courses['offeringJson'] = courses.apply(loadOffering, axis=1)
-
-# Then make list of unique StuId-LastName-Firstname-Grade pairs
-students = df[['StuID', 'LastName', 'FirstName', 'GR']].dropna().drop_duplicates()
-print('===> Loading Students to Database...')
-students['studentJson'] = students.apply(loadStudent, axis=1)
-print('===> Loading Grades to Database...')
-students['gradeJson'] = students.apply(loadGrade, axis=1)
+if prompt('===> Load Courses + Offerings?') == 'y':
+    print('===> Loading Courses to Database...')
+    courses['courseJson'] = courses.apply(loadCourse, axis=1)
+    print('===> Loading Offering to Database...')
+    courses['offeringJson'] = courses.apply(loadOffering, axis=1)
 
 # Then make list of schedules
 schedules = df[['StuID', 'Per', 'CrsName', 'Teacher', 'Room']] \
