@@ -43,7 +43,7 @@ public class InnexgoApplication {
   @Bean
   public ThreadPoolTaskScheduler threadPoolTaskScheduler() {
     ThreadPoolTaskScheduler threadPoolTaskScheduler = new ThreadPoolTaskScheduler();
-    threadPoolTaskScheduler.setPoolSize(2);
+    threadPoolTaskScheduler.setPoolSize(4);
     return threadPoolTaskScheduler;
   }
 

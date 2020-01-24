@@ -397,7 +397,7 @@ public class ApiController {
    */
   @Scheduled(fixedDelay = 5000)
   public void insertAbsences() {
-    logger.info("Starting insert absences process");
+    logger.info("INNEXGO: Starting insert absences process");
     // the list of periods that havent started yet
     List<Period> periodList =
       periodService.query(

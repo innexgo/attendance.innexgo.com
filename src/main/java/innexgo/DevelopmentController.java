@@ -20,11 +20,9 @@ package innexgo;
 
 import java.time.*;
 import java.util.*;
-import org.apache.commons.csv.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -88,25 +86,15 @@ public class DevelopmentController {
   /* TESTING */
   @RequestMapping("/populateTestingPeriods/")
   public ResponseEntity<?> populateTestingPeriods() {
-    LocalDate today = ZonedDateTime.now(Utils.TIMEZONE).toLocalDate();
-
     long minute = 1 * 60 * 1000;
-    long initialTime = System.currentTimeMillis();
-    for (int i = 3; i < 7; i++) {
+    long initialTime = System.currentTimeMillis() - 3*minute;
+    for (int i = 1; i < 7; i++) {
       Period period = new Period();
       period.startTime = initialTime + minute*i*3;
       period.number = i;
       period.type = Period.CLASS_PERIOD;
       period.temp = true;
       periodService.add(period);
-
-      Period passingPeriod = new Period();
-      passingPeriod.startTime = initialTime + minute*i*3 + minute*2; // Offset by 2 min
-      passingPeriod.number = i + 100;
-      passingPeriod.type = Period.PASSING_PERIOD;
-      passingPeriod.temp = true;
-
-      periodService.add(passingPeriod);
     }
     return OK;
   }
@@ -154,7 +142,6 @@ public class DevelopmentController {
     LocalDate wednesday = sunday.plusDays(3);
     LocalDate thursday = sunday.plusDays(4);
     LocalDate friday = sunday.plusDays(5);
-    LocalDate saturday = sunday.plusDays(6);
 
     for (int week = 0; week < 10; week++) {
       // collab

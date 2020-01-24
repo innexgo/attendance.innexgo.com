@@ -124,6 +124,7 @@ public class SessionService {
             + (outEncounterId == null ? "" : " AND ses.out_encounter_id = " + outEncounterId)
             + (anyEncounterId == null ? "" : " AND (ses.in_encounter_id =" + anyEncounterId + " OR ses.out_encounter_id = " + anyEncounterId + ")")
             + (complete == null ? "" : " AND ses.complete = " + complete)
+            + (studentId == null ? "" : " AND inen.student_id = " + studentId)
             + (locationId == null ? "" : " AND inen.location_id = " + locationId)
             + (time == null ? "" : " AND " + time + " BETWEEN inen.time AND outen.time")
             + (inTimeBegin == null ? "" : " AND inen.time >= " + inTimeBegin)
