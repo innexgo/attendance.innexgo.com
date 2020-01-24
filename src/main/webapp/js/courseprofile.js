@@ -6,17 +6,19 @@ async function loadPage(courseId, page) {
   let apiKey = Cookies.getJSON('apiKey');
 
   if(page == 0) {
-    $('#courseprofile-irregularities-old').attr("disabled", true);
+    $('#courseprofile-irregularities-new').attr("disabled", true);
   } else {
-    $('#courseprofile-irregularities-old').attr("disabled", false);
+    $('#courseprofile-irregularities-new').attr("disabled", false);
   }
   // Count of irregularities per page
   const c = 10;
   try {
+    $('#courseprofile-irregularities').empty();
+
     let irregularities = (await fetchJson(`${apiUrl()}/irregularity/?apiKey=${apiKey.key}&courseId=${courseId}&offset=${c * page}&count=${c}`))
                           .sort((a, b) => (a > b) ? -1 : 1);
     if(irregularities.length == c) {
-      $('#courseprofile-irregularities-new').attr("disabled", false);
+      $('#courseprofile-irregularities-old').attr("disabled", false);
       irregularities.forEach(irregularity => $('#courseprofile-irregularities').append(`
               <tr>
                 <td>${linkRelative(irregularity.student.name, '/studentprofile.html?studentId='+irregularity.student.id)}</td>
@@ -25,7 +27,7 @@ async function loadPage(courseId, page) {
               </tr>`));
     } else {
       // no more irregularity or something
-      $('#courseprofile-irregularities-new').attr("disabled", true);
+      $('#courseprofile-irregularities-old').attr("disabled", true);
       if(irregularities.length == 0) {
         $('#courseprofile-irregularities')[0].innerHTML = "<b>No Irregularities</b>";
       }
@@ -95,11 +97,11 @@ $(document).ready(function() {
 
   // Handle paging
   $('#courseprofile-irregularities-new').click(async function() {
-    irregularityPage++;
+    irregularityPage--;
     await loadPage(courseId, irregularityPage);
   });
   $('#courseprofile-irregularities-old').click(async function() {
-    irregularityPage--;
+    irregularityPage++;
     await loadPage(courseId, irregularityPage);
   });
 
