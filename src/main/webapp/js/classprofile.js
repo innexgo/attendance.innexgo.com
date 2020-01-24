@@ -79,7 +79,6 @@ async function initialize() {
     return;
   }
 
-  let table = document.getElementById('classprofile-table');
   let searchParams = new URLSearchParams(window.location.search);
 
   if(!searchParams.has('courseId') || !searchParams.has('periodStartTime')) {
@@ -93,8 +92,8 @@ async function initialize() {
   let text = document.getElementById('classprofile-text');
 
   try {
-    let courses = await fetchJson(`${apiUrl()}/course/?courseId=${courseId}&apiKey=${apiKey.key}`);
-    let periods = await fetchJson(`${apiUrl()}/period/?startTime=${periodStartTime}&apiKey=${apiKey.key}`);
+    let courses = await fetchJson(`${apiUrl()}/course/?courseId=${courseId}&offset=0&count=${INT32_MAX}&apiKey=${apiKey.key}`);
+    let periods = await fetchJson(`${apiUrl()}/period/?startTime=${periodStartTime}&offset=0&count=${INT32_MAX}&apiKey=${apiKey.key}`);
 
     course = courses[0];
     period = periods[0];

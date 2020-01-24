@@ -102,9 +102,9 @@ public class OfferingService {
     String sql =
         "SELECT o.id, o.semester_start_time, o.course_id FROM offering o"
             + " WHERE 1=1 "
-            + (offeringId == null ? "" : " AND s.id = " + offeringId)
-            + (semesterStartTime == null ? "" : " AND s.semester_start_time = " + semesterStartTime)
-            + (courseId == null ? "" : " AND s.course_id = " + courseId)
+            + (offeringId == null ? "" : " AND o.id = " + offeringId)
+            + (semesterStartTime == null ? "" : " AND o.semester_start_time = " + semesterStartTime)
+            + (courseId == null ? "" : " AND o.course_id = " + courseId)
             + (" ORDER BY o.id")
             + (" LIMIT " + offset + ", "  + count)
             + ";";

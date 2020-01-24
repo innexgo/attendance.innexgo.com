@@ -123,9 +123,9 @@ def loadLocation(row):
     roomName = row.Room
     if str(roomName).isdigit():
         locationId = int(roomName)
-        name = f'{id}'
+        name = f'{locationId}'
     elif roomName[0] == 'P': # A portable
-        locationId = int(roomName[1:])
+        locationId = 10000 + int(roomName[1:])
         name = roomName
     else:
         locationId = int(prompt(f'===> Enter id for location {roomName} (could not autogenerate)'))
@@ -142,7 +142,7 @@ def loadLocation(row):
         print(f'> A location with id {locationId} already exists. Skipping.')
         return existingLocations[0]
 
-    print(f'> Adding location {roomName} with id {id}...')
+    print(f'> Adding location {roomName} with id {locationId}...')
     return getJSON(f'{hostname}/api/location/new/',
                    {
                        'locationId':locationId,
@@ -206,7 +206,7 @@ def loadOffering(row):
         print(f'> A offering for {courseName} in {semesterName} already exists. Skipping.')
         return existing[0]
 
-    print(f'> Adding course offering for {subject} for this semester...')
+    print(f'> Adding course offering for {subject} for {semesterName}')
     return getJSON(f'{hostname}/api/offering/new/',
                {
                    'courseId':courseId,
@@ -271,7 +271,7 @@ def loadSchedule(row):
     studentId = int(row.StuID)
     period = int(row.Per)
     courseId = int(row.courseJson['id'])
-    courseName = int(row.courseJson['name'])
+    courseName = row.courseJson['subject']
     studentName = row.studentJson['name']
 
     existing = getJSON(f'{hostname}/api/schedule/',
