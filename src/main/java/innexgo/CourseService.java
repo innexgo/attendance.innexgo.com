@@ -31,7 +31,6 @@ public class CourseService {
 
   @Autowired private PeriodService periodService;
   @Autowired private SemesterService semesterService;
-  @Autowired private OfferingService offeringService;
   @Autowired private JdbcTemplate jdbcTemplate;
 
   public Course getById(long id) {

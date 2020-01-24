@@ -893,7 +893,6 @@ public class ApiController {
       @RequestParam Map<String, String> allRequestParam) {
     String apiKey = allRequestParam.get("apiKey");
     if (isTrusted(apiKey)) {
-
       List<Course> els =
         courseService
         .query(
@@ -1025,6 +1024,32 @@ public class ApiController {
     }
   }
 
+
+  @RequestMapping("/offering/")
+  public ResponseEntity<?> viewOffering(
+      @RequestParam("offset") Long offset,
+      @RequestParam("count") Long count,
+      @RequestParam Map<String, String> allRequestParam) {
+    String apiKey = allRequestParam.get("apiKey");
+    if (isTrusted(apiKey)) {
+      List<Offering> els =
+        offeringService
+        .query(
+            Utils.parseLong(allRequestParam.get("offeringId")),
+            Utils.parseLong(allRequestParam.get("semesterStartTime")),
+            Utils.parseLong(allRequestParam.get("courseId")),
+            offset,
+            count
+          )
+        .stream()
+        .map(x -> fillOffering(x))
+        .collect(Collectors.toList());
+      return new ResponseEntity<>(els, HttpStatus.OK);
+    } else {
+      return UNAUTHORIZED;
+    }
+  }
+
   @RequestMapping("/period/")
   public ResponseEntity<?> viewPeriod(
       @RequestParam("offset") Long offset,
@@ -1076,6 +1101,32 @@ public class ApiController {
           )
         .stream()
         .map(x -> fillSchedule(x))
+        .collect(Collectors.toList());
+      return new ResponseEntity<>(list, HttpStatus.OK);
+    } else {
+      return UNAUTHORIZED;
+    }
+  }
+
+  @RequestMapping("/semester/")
+  public ResponseEntity<?> viewSemester(
+      @RequestParam("offset") Long offset,
+      @RequestParam("count") Long count,
+      @RequestParam Map<String, String> allRequestParam) {
+    if (allRequestParam.containsKey("apiKey") && isTrusted(allRequestParam.get("apiKey"))) {
+      List<Semester> list =
+        semesterService
+        .query(
+            Utils.parseLong(allRequestParam.get("startTime")),
+            Utils.parseLong(allRequestParam.get("year")),
+            allRequestParam.get("type"),
+            Utils.parseLong(allRequestParam.get("minStartTime")),
+            Utils.parseLong(allRequestParam.get("maxStartTime")),
+            offset,
+            count
+          )
+        .stream()
+        .map(x -> fillSemester(x))
         .collect(Collectors.toList());
       return new ResponseEntity<>(list, HttpStatus.OK);
     } else {
@@ -1378,7 +1429,7 @@ public class ApiController {
   }
 
   @RequestMapping("/misc/getSemesterByTime/")
-  public ResponseEntity<?> currentSemester(
+  public ResponseEntity<?> getSemesterByTime(
       @RequestParam("time") Long time,
       @RequestParam("apiKey") String apiKey) {
     if(isTrusted(apiKey)) {
