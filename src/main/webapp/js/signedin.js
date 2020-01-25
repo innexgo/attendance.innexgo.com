@@ -78,6 +78,5 @@ async function pollEnsureSignedIn() {
   }
 }
 
-
 pollUserInfo();
 pollEnsureSignedIn();

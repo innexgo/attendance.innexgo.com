@@ -229,6 +229,9 @@ async function currentStatus() {
         // This statement is brute force. Oof to those who must read it
         // Is list of all present students who are not in students
         let visitors = presentStudents.filter(v => students.filter(s => s.id == v.id).length == 0)
+        let presentEnrolledStudents = presentStudents.filter(v => students.filter(s => s.id == v.id).length != 0)
+
+        $('#current-status-percent-attendance')[0].innerHTML = `${presentEnrolledStudents.length}/${students.length}`;
 
         table.innerHTML = '';
 
@@ -281,6 +284,8 @@ async function currentStatus() {
         giveTempError('Failed to get current status.');
       }
     } else {
+      // Clear attendance
+      document.getElementById('current-status-percent-attendance').innerHTML = 'N/A';
       let locationId = Cookies.getJSON('default-locationid');
       if (locationId != null) {
         try {
@@ -333,6 +338,9 @@ $(document).ready(async function () {
       manualEncounter(parseInt($('#manual-studentid').val()));
     }
   });
+
+  // Just double check...
+  await userInfo();
 
   // Start long running threads
   locationOptions();
