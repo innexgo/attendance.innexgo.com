@@ -45,7 +45,7 @@
             <h6 id="info-time" style="font-family:'Exo', sans-serif;">Current Time</h6>
           </div>
         </nav>
-        <div class="sidebar-item sidebar-info-list navbar-palette" style="">
+        <div class="sidebar-item sidebar-info-list navbar-palette">
           <h6 id="info-name">Teacher Name</h6>
           <h6 id="info-period">Current Period</h6>
           <h6 id="info-location">Current Location</h6>
@@ -132,16 +132,18 @@
                   </span>
                 </div>
                 <p class="card-text">Irregularities associated with course</p>
-                <table class="table striped white ">
-                  <thead>
-                    <tr class='table-header'>
-                      <td>Name</td>
-                      <td>Type</td>
-                      <td>Time</td>
-                    </tr>
-                  </thead>
-                  <tbody id="courseprofile-irregularities"></tbody>
-                </table>
+                <div class="table-height-standard">
+                  <table class="table striped white ">
+                    <thead>
+                      <tr class='table-header'>
+                        <td>Name</td>
+                        <td>Type</td>
+                        <td>Time</td>
+                      </tr>
+                    </thead>
+                    <tbody id="courseprofile-irregularities"></tbody>
+                  </table>
+                </div>
                 <div class="btn-group" role="group">
                   <button id="courseprofile-irregularities-new" type="button" class="btn btn-primary">
                     <i class="fa fa-arrow-left"></i> Newer
