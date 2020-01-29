@@ -444,7 +444,6 @@ public class ApiController {
               null,                     //  Long time
               null,                     //  Long minTime
               null,                     //  Long maxTime
-              null,                     //  Long timeMissing
               0,                        //  long count
               Long.MAX_VALUE            //  long count
               ).size() > 0;
@@ -480,9 +479,9 @@ public class ApiController {
   @RequestMapping("/apiKey/new/")
   public ResponseEntity<?> newApiKey(
       @RequestParam(value = "userId", defaultValue = "-1") Long userId,
-      @RequestParam(value = "email", defaultValue = "") String email,
+      @RequestParam(value = "userEmail", defaultValue = "") String email,
       @RequestParam("expirationTime") Long expirationTime,
-      @RequestParam("password") String password) {
+      @RequestParam("userPassword") String password) {
 
       // if they gave a username instead of a userId
       if (userId == -1 && !Utils.isEmpty(email)) {
@@ -530,8 +529,8 @@ public class ApiController {
   public ResponseEntity<?> newCourse(
       @RequestParam("userId") Long teacherId,
       @RequestParam("locationId") Long locationId,
-      @RequestParam("period") Long period,
-      @RequestParam("subject") String subject,
+      @RequestParam("periodNumber") Long period,
+      @RequestParam("courseSubject") String subject,
       @RequestParam("apiKey") String apiKey) {
     if (isAdministrator(apiKey)) {
       if (!Utils.isEmpty(subject)
@@ -594,7 +593,7 @@ public class ApiController {
   public ResponseEntity<?> newGrade(
       @RequestParam("studentId") Long studentId,
       @RequestParam("semesterStartTime") Long semesterStartTime,
-      @RequestParam("number") Long number,
+      @RequestParam("gradeNumber") Long number,
       @RequestParam("apiKey") String apiKey) {
     if (isAdministrator(apiKey)) {
       if (studentService.existsById(studentId)
@@ -626,7 +625,7 @@ public class ApiController {
   @RequestMapping("/location/new/")
   public ResponseEntity<?> newLocation(
       @RequestParam("locationId") Long locationId,
-      @RequestParam("name") String name,
+      @RequestParam("locationName") String name,
       @RequestParam("apiKey") String apiKey) {
     if (isAdministrator(apiKey)) {
       if (!locationService.existsById(locationId)
@@ -671,9 +670,9 @@ public class ApiController {
 
   @RequestMapping("/period/new/")
   public ResponseEntity<?> newPeriod(
-      @RequestParam("startTime") Long startTime,
-      @RequestParam("number") Long number,
-      @RequestParam("type") String type,
+      @RequestParam("periodStartTime") Long startTime,
+      @RequestParam("periodNumber") Long number,
+      @RequestParam("periodType") String type,
       @RequestParam("apiKey") String apiKey) {
     if (isAdministrator(apiKey)) {
       // TODO verify that type is one of the predefined types
@@ -692,8 +691,8 @@ public class ApiController {
   public ResponseEntity<?> newSchedule(
       @RequestParam("studentId") Long studentId,
       @RequestParam("courseId") Long courseId,
-      @RequestParam(value="startTime", defaultValue="-1") Long startTime,
-      @RequestParam(value="endTime", defaultValue="-1") Long endTime,
+      @RequestParam(value="scheduleStartTime", defaultValue="-1") Long startTime,
+      @RequestParam(value="scheduleEndTime", defaultValue="-1") Long endTime,
       @RequestParam("apiKey") String apiKey) {
     if (isAdministrator(apiKey)) {
       if (studentService.existsById(studentId)
@@ -723,7 +722,7 @@ public class ApiController {
   @RequestMapping("/student/new/")
   public ResponseEntity<?> newStudent(
       @RequestParam("studentId") Long studentId,
-      @RequestParam("name") String name,
+      @RequestParam("studentName") String name,
       @RequestParam("apiKey") String apiKey) {
     if (isAdministrator(apiKey)) {
       if (!studentService.existsById(studentId)
@@ -744,9 +743,9 @@ public class ApiController {
   @RequestMapping("/user/new/")
   public ResponseEntity<?> newUser(
       @RequestParam("userName") String name,
-      @RequestParam("email") String email,
-      @RequestParam("password") String password,
-      @RequestParam("ring") Integer ring,
+      @RequestParam("userEmail") String email,
+      @RequestParam("userPassword") String password,
+      @RequestParam("userRing") Integer ring,
       @RequestParam("apiKey") String apiKey) {
     if (isAdministrator(apiKey)) {
       if (!Utils.isEmpty(name)
@@ -772,8 +771,8 @@ public class ApiController {
   @RequestMapping("/user/updatePassword/")
   public ResponseEntity<?> updatePassword(
       @RequestParam("userId") Long userId,
-      @RequestParam("oldPassword") String oldPassword,
-      @RequestParam("newPassword") String newPassword) {
+      @RequestParam("userOldPassword") String oldPassword,
+      @RequestParam("userNewPassword") String newPassword) {
     if(!userService.existsById(userId)) {
       return BAD_REQUEST;
     }
@@ -870,8 +869,8 @@ public class ApiController {
         .query(
             Utils.parseLong(allRequestParam.get("apiKeyId")),
             Utils.parseLong(allRequestParam.get("userId")),
-            Utils.parseLong(allRequestParam.get("minCreationTime")),
-            Utils.parseLong(allRequestParam.get("maxCreationTime")),
+            Utils.parseLong(allRequestParam.get("apiKeyMinCreationTime")),
+            Utils.parseLong(allRequestParam.get("apiKeyMaxCreationTime")),
             allRequestParam.containsKey("apiKeyData")
               ? Utils.encodeApiKey(allRequestParam.get("apiKeyData"))
               : null,
@@ -900,8 +899,8 @@ public class ApiController {
             Utils.parseLong(allRequestParam.get("teacherId")),
             Utils.parseLong(allRequestParam.get("locationId")),
             Utils.parseLong(allRequestParam.get("studentId")),
-            Utils.parseLong(allRequestParam.get("period")),
-            allRequestParam.get("subject"),
+            Utils.parseLong(allRequestParam.get("periodNumber")),
+            allRequestParam.get("courseSubject"),
             Utils.parseLong(allRequestParam.get("semesterStartTime")),
             offset,
             count
@@ -928,8 +927,8 @@ public class ApiController {
             Utils.parseLong(allRequestParam.get("encounterId")),
             Utils.parseLong(allRequestParam.get("studentId")),
             Utils.parseLong(allRequestParam.get("locationId")),
-            Utils.parseLong(allRequestParam.get("minTime")),
-            Utils.parseLong(allRequestParam.get("maxTime")),
+            Utils.parseLong(allRequestParam.get("encounterMinTime")),
+            Utils.parseLong(allRequestParam.get("encounterMaxTime")),
             allRequestParam.get("type"),
             offset,
             count
@@ -956,7 +955,7 @@ public class ApiController {
             Utils.parseLong(allRequestParam.get("gradeId")),
             Utils.parseLong(allRequestParam.get("studentId")),
             Utils.parseLong(allRequestParam.get("semesterStartTime")),
-            Utils.parseLong(allRequestParam.get("number")),
+            Utils.parseLong(allRequestParam.get("periodNumber")),
             offset,
             count
           )
@@ -983,12 +982,11 @@ public class ApiController {
             Utils.parseLong(allRequestParam.get("studentId")),
             Utils.parseLong(allRequestParam.get("courseId")),
             Utils.parseLong(allRequestParam.get("periodStartTime")),
-            Utils.parseLong(allRequestParam.get("teacherId")),
-            allRequestParam.get("type"),
-            Utils.parseLong(allRequestParam.get("time")),
-            Utils.parseLong(allRequestParam.get("minTime")),
-            Utils.parseLong(allRequestParam.get("maxTime")),
-            Utils.parseLong(allRequestParam.get("timeMissing")),
+            Utils.parseLong(allRequestParam.get("userId")),
+            allRequestParam.get("irregularityType"),
+            Utils.parseLong(allRequestParam.get("irregularityTime")),
+            Utils.parseLong(allRequestParam.get("irregularityMinTime")),
+            Utils.parseLong(allRequestParam.get("irregularityMaxTime")),
             offset,
             count
           )
@@ -1011,7 +1009,7 @@ public class ApiController {
         locationService
         .query(
             Utils.parseLong(allRequestParam.get("locationId")),
-            allRequestParam.get("name"),
+            allRequestParam.get("locationName"),
             offset,
             count
           )
@@ -1060,11 +1058,11 @@ public class ApiController {
       List<Period> els =
         periodService
         .query(
-            Utils.parseLong(allRequestParam.get("startTime")),
-            Utils.parseLong(allRequestParam.get("number")),
-            allRequestParam.get("number"),
-            Utils.parseLong(allRequestParam.get("minStartTime")),
-            Utils.parseLong(allRequestParam.get("maxStartTime")),
+            Utils.parseLong(allRequestParam.get("periodStartTime")),
+            Utils.parseLong(allRequestParam.get("periodNumber")),
+            allRequestParam.get("periodType"),
+            Utils.parseLong(allRequestParam.get("minPeriodStartTime")),
+            Utils.parseLong(allRequestParam.get("maxPeriodStartTime")),
             offset,
             count
           )
@@ -1089,13 +1087,13 @@ public class ApiController {
             Utils.parseLong(allRequestParam.get("scheduleId")),
             Utils.parseLong(allRequestParam.get("studentId")),
             Utils.parseLong(allRequestParam.get("courseId")),
-            Utils.parseBoolean(allRequestParam.get("hasStart")),
-            Utils.parseLong(allRequestParam.get("startTime")),
-            Utils.parseBoolean(allRequestParam.get("hasEnd")),
-            Utils.parseLong(allRequestParam.get("endTime")),
-            Utils.parseLong(allRequestParam.get("teacherId")),
+            Utils.parseBoolean(allRequestParam.get("scheduleHasStart")),
+            Utils.parseLong(allRequestParam.get("scheduleStartTime")),
+            Utils.parseBoolean(allRequestParam.get("scheduleHasEnd")),
+            Utils.parseLong(allRequestParam.get("scheduleEndTime")),
+            Utils.parseLong(allRequestParam.get("userId")),
             Utils.parseLong(allRequestParam.get("locationId")),
-            Utils.parseLong(allRequestParam.get("period")),
+            Utils.parseLong(allRequestParam.get("periodNumber")),
             offset,
             count
           )
@@ -1117,11 +1115,11 @@ public class ApiController {
       List<Semester> list =
         semesterService
         .query(
-            Utils.parseLong(allRequestParam.get("startTime")),
-            Utils.parseLong(allRequestParam.get("year")),
-            allRequestParam.get("type"),
-            Utils.parseLong(allRequestParam.get("minStartTime")),
-            Utils.parseLong(allRequestParam.get("maxStartTime")),
+            Utils.parseLong(allRequestParam.get("semesterStartTime")),
+            Utils.parseLong(allRequestParam.get("semesterYear")),
+            allRequestParam.get("semesterType"),
+            Utils.parseLong(allRequestParam.get("minSemesterStartTime")),
+            Utils.parseLong(allRequestParam.get("maxSemesterStartTime")),
             offset,
             count
           )
@@ -1147,10 +1145,10 @@ public class ApiController {
             Utils.parseLong(allRequestParam.get("inEncounterId")),
             Utils.parseLong(allRequestParam.get("outEncounterId")),
             Utils.parseLong(allRequestParam.get("anyEncounterId")),
-            Utils.parseBoolean(allRequestParam.get("complete")),
+            Utils.parseBoolean(allRequestParam.get("sessionComplete")),
             Utils.parseLong(allRequestParam.get("studentId")),
             Utils.parseLong(allRequestParam.get("locationId")),
-            Utils.parseLong(allRequestParam.get("time")),
+            Utils.parseLong(allRequestParam.get("sessionIncludesTime")),
             Utils.parseLong(allRequestParam.get("inTimeBegin")),
             Utils.parseLong(allRequestParam.get("inTimeEnd")),
             Utils.parseLong(allRequestParam.get("outTimeBegin")),
@@ -1178,8 +1176,8 @@ public class ApiController {
         studentService
         .query(
             Utils.parseLong(allRequestParam.get("studentId")),
-            allRequestParam.get("name"),
-            allRequestParam.get("partialName"),
+            allRequestParam.get("studentName"),
+            allRequestParam.get("studentNamePartial"),
             offset,
             count
           )
@@ -1203,9 +1201,9 @@ public class ApiController {
         userService
         .query(
             Utils.parseLong(allRequestParam.get("userId")),
-            allRequestParam.get("name"),
-            allRequestParam.get("email"),
-            Utils.parseInteger(allRequestParam.get("ring")),
+            allRequestParam.get("userName"),
+            allRequestParam.get("userEmail"),
+            Utils.parseInteger(allRequestParam.get("userRing")),
             offset,
             count
           )
@@ -1394,7 +1392,6 @@ public class ApiController {
               null,                    //  Long time
               null,                    //  Long minTime
               null,                    //  Long maxTime
-              null,                    //  Long timeMissing
               0,                       //  long offset
               Long.MAX_VALUE           //  long count
               );

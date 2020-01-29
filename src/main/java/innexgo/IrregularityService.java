@@ -116,7 +116,6 @@ public class IrregularityService {
       Long time,
       Long minTime,
       Long maxTime,
-      Long timeMissing,
       long offset,
       long count) {
     String sql =
@@ -133,7 +132,6 @@ public class IrregularityService {
             + (time == null ? "" : " AND irr.time = " + time)
             + (minTime == null ? "" : " AND irr.time >= " + minTime)
             + (maxTime == null ? "" : " AND irr.time <= " + maxTime)
-            + (timeMissing == null ? "" : " AND irr.time_missing = " + timeMissing)
             + (" ORDER BY irr.id")
             + (" LIMIT " + offset + ", "  + count)
             + ";";

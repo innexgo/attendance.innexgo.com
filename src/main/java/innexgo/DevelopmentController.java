@@ -117,7 +117,6 @@ public class DevelopmentController {
           null,                    // Long time,
           null,                    // Long minTime,
           null,                    // Long maxTime,
-          null,                    // Long timeMissing,
           0,                       // long offset
           Long.MAX_VALUE           // long count
         );
