@@ -83,7 +83,7 @@
                   <h5 id="location-name" class="card-title text-center">Location Name</h5>
                   <span class="input-group-btn ml-auto">
                     <button type="button" class="btn btn-sm" data-html="true" data-toggle="popover" title="Location Profile" data-placement="top"
-                                                                                                                              data-content="View basic information associated with a location.">
+                                                                                                                             data-content="View basic information associated with a location.">
                       <i class="fa fa-question"></i>
                     </button>
                   </span>
@@ -98,6 +98,36 @@
                       </tr>
                     </thead>
                     <tbody id="location-courses"></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <!-- Current Status of Location -->
+            <div class="card col-sm-6 palette-level-two">
+              <div class="card-body">
+                <div class="input-group">
+                  <h5 class="card-title">Current Status</h5>
+                  <span class="input-group-btn ml-auto">
+                    <button type="button" class="btn btn-sm" data-html="true" data-toggle="popover" title="Current Status"
+                                                                              data-placement="top"
+                                                                              data-content="View students present at this location right now. <br><br> A <strong>green checkmark</strong> means present.">
+                                                                                                    <i class="fa fa-question"></i>
+                    </button>
+                  </span>
+                </div>
+                <div class="card-text">
+                  <p>View students currently present at this location.</p>
+                </div>
+                <div class="table-height-standard">
+                  <table class="table striped white">
+                    <thead>
+                      <tr class="table-header">
+                        <td>Name</td>
+                        <td>ID</td>
+                        <td>Status</td>
+                      </tr>
+                    </thead>
+                    <tbody id="current-status-table"></tbody>
                   </table>
                 </div>
               </div>

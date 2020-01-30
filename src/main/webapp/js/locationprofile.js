@@ -1,5 +1,49 @@
 "use strict"
 
+
+// Forever runs and updates currentStatus
+async function currentStatus(locationId) {
+  let apiKey = Cookies.getJSON('apiKey');
+  let table = document.getElementById('current-status-table');
+  while (true) {
+    let period = Cookies.getJSON('period');
+
+    let time = moment().valueOf();
+
+    //bail if we dont have all of the necessary cookies
+    if (apiKey == null || period == null) {
+      console.log('lack necessary cookies to calculate current status');
+      table.innerHTML = '';
+      return;
+    }
+
+    try {
+      let students = await fetchJson(`${apiUrl()}/misc/present/?locationId=${locationId}&time=${time}&apiKey=${apiKey.key}`);
+      let text = '<span class="fa fa-check"></span>'
+      let bgcolor = '#ccffcc';
+      let fgcolor = '#00ff00';
+      // Clear table
+      table.innerHTML = '';
+      // Students
+      if (students.length == 0) {
+        table.innerHTML = `<b>No Students Currently at Location</b>`;
+      } else {
+        students.forEach(student => $('#current-status-table').append(
+          `<td>${linkRelative(student.name, '/studentprofile.html?studentId=' + student.id)}</td>
+                   <td>${student.id}</td>
+                   <td style="background-color:${bgcolor};color:${fgcolor}">${text}</td>`)
+        );
+      }
+    } catch (err) {
+      console.log(err);
+      giveTempError('Failed to correctly fetch student data, try refreshing');
+    }
+    // Wait 5 seconds before updating again
+    await sleep(5000);
+  }
+}
+
+
 async function loadData() {
   let apiKey = Cookies.getJSON('apiKey');
   if(apiKey == null) {
@@ -32,6 +76,9 @@ async function loadData() {
     console.log(err);
     givePermError('Page loaded with invalid location id.');
   }
+
+
+  currentStatus(locationId);
 
   try {
     // One liner time
