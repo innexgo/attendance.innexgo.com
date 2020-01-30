@@ -35,6 +35,16 @@ async function loadIrregularityPage(studentId, minTime, maxTime) {
           `)); // Append row
 }
 
+async function loadLocation(studentId) {
+  let apiKey = Cookies.getJSON('apiKey');
+  try {
+    let mostRecentSession = (await fetchJson(`${apiUrl()}/session/?studentId=${studentId}&apiKey=${apiKey.key}&offset=0&count=1`))[0];
+  } catch(err) {
+    console.log(err);
+    givePermError('Failed to load most recent location of student.');
+  }
+}
+
 async function initialize() {
   let apiKey = Cookies.getJSON('apiKey');
   if (apiKey == null) {
