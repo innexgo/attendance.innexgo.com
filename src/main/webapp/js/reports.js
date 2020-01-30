@@ -60,8 +60,8 @@ async function loadClassSessionReports(date) {
 
     // Note this request is inclusive,
     // searching for end times that are after the beginning of the day, and initial times until the end of the day.
-    let periods = await fetchJson(`${apiUrl()}/period/?minStartTime=${dayBegin.valueOf()}&maxStartTime=${dayEnd.valueOf()}&offset=0&count=${INT32_MAX}&apiKey=${apiKey.key}`);
-    let courses = await fetchJson(`${apiUrl()}/course/?semesterStartTime=${semester.startTime}&teacherId=${apiKey.user.id}&offset=0&count=${INT32_MAX}&apiKey=${apiKey.key}`);
+    let periods = await fetchJson(`${apiUrl()}/period/?periodMinStartTime=${dayBegin.valueOf()}&periodMaxStartTime=${dayEnd.valueOf()}&offset=0&count=${INT32_MAX}&apiKey=${apiKey.key}`);
+    let courses = await fetchJson(`${apiUrl()}/course/?semesterStartTime=${semester.startTime}&userId=${apiKey.user.id}&offset=0&count=${INT32_MAX}&apiKey=${apiKey.key}`);
 
     for(let period of periods) {
       // for each course that has this period's id
@@ -118,7 +118,7 @@ async function searchStudent(name) {
   $('#reports-students').empty();
 
   try {
-    let studentList = await fetchJson(`${apiUrl()}/student/?partialName=${validatedName}&offset=0&count=${INT32_MAX}&apiKey=${apiKey.key}`);
+    let studentList = await fetchJson(`${apiUrl()}/student/?studentNamePartial=${validatedName}&offset=0&count=${INT32_MAX}&apiKey=${apiKey.key}`);
     for(let student of studentList) {
       $('#reports-students').append(`
               <tr>

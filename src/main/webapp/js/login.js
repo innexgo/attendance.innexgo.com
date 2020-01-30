@@ -32,7 +32,7 @@ async function loginattempt() {
 
   try {
 
-    let apiKey = await fetchJson(`${apiUrl()}/apiKey/new/?email=${userName}&password=${password}&expirationTime=${apiKeyExpirationTime}`);
+    let apiKey = await fetchJson(`${apiUrl()}/apiKey/new/?userEmail=${userName}&userPassword=${password}&expirationTime=${apiKeyExpirationTime}`);
     Cookies.set('apiKey', apiKey);
 
     if (Cookies.getJSON('prefs') == null) {

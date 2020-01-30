@@ -24,7 +24,7 @@ async function loadCourses(studentId, initialSemesterTime) {
 async function loadIrregularityPage(studentId, minTime, maxTime) {
   let apiKey = Cookies.getJSON('apiKey');
   let irregularityTable = $('#studentprofile-irregularities');
-  (await fetchJson(`${apiUrl()}/irregularity/?studentId=${studentId}&minTime=${minTime}&maxTime=${maxTime}&offset=0&count=${INT32_MAX}&apiKey=${apiKey.key}`))
+  (await fetchJson(`${apiUrl()}/irregularity/?studentId=${studentId}&irregularityMinTime=${minTime}&irregularityMaxTime=${maxTime}&offset=0&count=${INT32_MAX}&apiKey=${apiKey.key}`))
     .sort((a,b) => (a.time > b.time) ? -1 : 1) // sort by time descending
     .forEach(irregularity => irregularityTable.append(`
             <tr>

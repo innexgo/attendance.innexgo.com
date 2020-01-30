@@ -94,7 +94,8 @@ def loadTeacher(row):
     lastName, firstName= tuple([x.strip() for x in row.Teacher.split(',')])
     # Generate necessary fields
     userName = f'{firstName} {lastName}'
-    email = (alpha(lastName + firstName[0] if len(lastName) > 2 else firstName[0:2]) + '@' + domain_suffix).lower()
+    # Create email
+    email = f'{alpha(lastName)}{alpha(firstName[0] if len(lastName) > 2 else firstName[0:2])}@{domain_suffix}'.lower()
     password = '1234'
     ring = 1 # Regular User
     existing = getJSON(f'{hostname}/api/user/',

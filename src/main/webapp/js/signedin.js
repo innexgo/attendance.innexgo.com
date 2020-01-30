@@ -53,7 +53,7 @@ async function userInfo() {
     let semester = await fetchJson(`${apiUrl()}/misc/getSemesterByTime/?time=${moment().valueOf()}&apiKey=${apiKey.key}`);
     Cookies.set('semester', semester);
 
-    let courses = await fetchJson(`${apiUrl()}/course/?semesterStartTime=${semester.startTime}&teacherId=${apiKey.user.id}&offset=0&count=${INT32_MAX}&apiKey=${apiKey.key}`);
+    let courses = await fetchJson(`${apiUrl()}/course/?semesterStartTime=${semester.startTime}&userId=${apiKey.user.id}&offset=0&count=${INT32_MAX}&apiKey=${apiKey.key}`);
     Cookies.set('courses', courses);
 
   }
