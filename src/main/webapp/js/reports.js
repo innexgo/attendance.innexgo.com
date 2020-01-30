@@ -60,7 +60,7 @@ async function loadClassSessionReports(date) {
 
     // Note this request is inclusive,
     // searching for end times that are after the beginning of the day, and initial times until the end of the day.
-    let periods = await fetchJson(`${apiUrl()}/period/?periodMinStartTime=${dayBegin.valueOf()}&periodMaxStartTime=${dayEnd.valueOf()}&offset=0&count=${INT32_MAX}&apiKey=${apiKey.key}`);
+    let periods = await fetchJson(`${apiUrl()}/period/?minPeriodStartTime=${dayBegin.valueOf()}&maxPeriodStartTime=${dayEnd.valueOf()}&offset=0&count=${INT32_MAX}&apiKey=${apiKey.key}`);
     let courses = await fetchJson(`${apiUrl()}/course/?semesterStartTime=${semester.startTime}&userId=${apiKey.user.id}&offset=0&count=${INT32_MAX}&apiKey=${apiKey.key}`);
 
     for(let period of periods) {

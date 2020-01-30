@@ -896,7 +896,7 @@ public class ApiController {
         courseService
         .query(
             Utils.parseLong(allRequestParam.get("courseId")),
-            Utils.parseLong(allRequestParam.get("teacherId")),
+            Utils.parseLong(allRequestParam.get("userId")),
             Utils.parseLong(allRequestParam.get("locationId")),
             Utils.parseLong(allRequestParam.get("studentId")),
             Utils.parseLong(allRequestParam.get("periodNumber")),

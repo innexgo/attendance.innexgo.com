@@ -35,13 +35,15 @@ async function loadIrregularityPage(studentId, minTime, maxTime) {
           `)); // Append row
 }
 
-async function loadLocation(studentId) {
+async function loadCurrentLocation(studentId) {
   let apiKey = Cookies.getJSON('apiKey');
-  try {
-    let mostRecentSession = (await fetchJson(`${apiUrl()}/session/?studentId=${studentId}&apiKey=${apiKey.key}&offset=0&count=1`))[0];
-  } catch(err) {
-    console.log(err);
-    givePermError('Failed to load most recent location of student.');
+  let mostRecentSession = (await fetchJson(`${apiUrl()}/session/?studentId=${studentId}&apiKey=${apiKey.key}&offset=0&count=1`))[0];
+  if(mostRecentSession != null) {
+    $('#studentprofile-currentlocation-signedin')[0].innerHTML = !mostRecentSession.complete;
+    let time = mostRecentSession.complete ? mostRecentSession.outEncounter.time : mostRecentSession.inEncounter.time;
+    $('#studentprofile-currentlocation-time')[0].innerHTML = moment(time).format('h:mm, ddd, MMM Do');
+    let loc = mostRecentSession.inEncounter.location;
+    $('#studentprofile-currentlocation-location')[0].innerHTML = linkRelative(loc.name, '/locationprofile.html?locationId='+loc.id);
   }
 }
 
@@ -139,6 +141,13 @@ async function initialize() {
     } catch(err) {
       console.log(err);
       givePermError('Failed to load irregularities.');
+    }
+
+    try {
+      await loadCurrentLocation(studentId);
+    } catch(err) {
+      console.log(err);
+      givePermError('Failed to load most recent student location.');
     }
 
   } catch(err) {

@@ -126,7 +126,7 @@
                   data-placement="top" data-content="A quick reference for the student's last known sign in or out.<br><br>
                                   The location field describes the most recent location this student signed in.<br><br>
                                   The time field states the time and date of this event.<br><br>
-                                  Signed in is true if the student has not yet signed out of this location.">
+                                  Present is true if the student is signed in at this classroom. If it's false, the student may not be in class.">
                   <i class="fa fa-question"></i>
                 </button>
               </span>
@@ -138,21 +138,21 @@
             </div>
             <table class="table striped white" style="width:100%;">
               <tr>
+                <td>Present</td>
+                <td style="text-align:right;" id="studentprofile-currentlocation-signedin">
+                  N/A
+                </td>
+              </tr>
+              <tr>
                 <td>Location:</td>
                 <td style="text-align:right;" id="studentprofile-currentlocation-location">
-                  Location
+                  N/A
                 </td>
               </tr>
               <tr>
                 <td>Time:</td>
                 <td style="text-align:right;" id="studentprofile-currentlocation-time">
-                  Time
-                </td>
-              </tr>
-              <tr>
-                <td>Signed in:</td>
-                <td style="text-align:right;" id="studentprofile-currentlocation-signedin">
-                  SignedIn
+                  N/A
                 </td>
               </tr>
             </table>
