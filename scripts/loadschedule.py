@@ -41,8 +41,8 @@ def getJSON(url, parameters):
 def getApiKey(hostname):
     apiKey = getJSON(f'{hostname}/api/apiKey/new/',
                  {
-                     'email': prompt(f'Enter email for {hostname}:'),
-                     'password': prompt(f'Enter password for {hostname}:'),
+                     'userEmail': prompt(f'Enter email for {hostname}:'),
+                     'userPassword': prompt(f'Enter password for {hostname}:'),
                      'expirationTime':currentMillis()+60*60*1000 # One hour
                  })
     return apiKey['key']
@@ -99,7 +99,7 @@ def loadTeacher(row):
     ring = 1 # Regular User
     existing = getJSON(f'{hostname}/api/user/',
                 {
-                    'name': userName,
+                    'userName': userName,
                     'offset':0,
                     'count':1,
                     'apiKey':apiKey
@@ -111,10 +111,10 @@ def loadTeacher(row):
     print(f'> Adding teacher {userName} with email {email}...')
     return getJSON(f'{hostname}/api/user/new/',
                    {
-                       'name': userName,
-                       'email': email,
-                       'password': password,
-                       'ring': ring,
+                       'userName': userName,
+                       'userEmail': email,
+                       'userPassword': password,
+                       'userRing': ring,
                        'apiKey': apiKey
                    })
 
@@ -146,7 +146,7 @@ def loadLocation(row):
     return getJSON(f'{hostname}/api/location/new/',
                    {
                        'locationId':locationId,
-                       'name':name,
+                       'locationName':name,
                        'apiKey':apiKey
                    })
 
@@ -161,10 +161,10 @@ def loadCourse(row):
 
     existing = getJSON(f'{hostname}/api/course/',
                 {
-                    'teacherId': userId,
+                    'userId': userId,
                     'locationId': locationId,
-                    'subject':courseName,
-                    'period':period,
+                    'courseSubject':courseName,
+                    'periodNumber':period,
                     'offset':0,
                     'count':1,
                     'apiKey':apiKey
@@ -179,8 +179,8 @@ def loadCourse(row):
                {
                    'userId':userId,
                    'locationId':locationId,
-                   'period':period,
-                   'subject':courseName,
+                   'periodNumber':period,
+                   'courseSubject':courseName,
                    'apiKey':apiKey
                })
 
@@ -234,7 +234,7 @@ def loadStudent(row):
     return getJSON(f'{hostname}/api/student/new/',
                    {
                        'studentId':studentId,
-                       'name':name,
+                       'studentName':name,
                        'apiKey':apiKey
                    })
 def loadGrade(row):
@@ -263,7 +263,7 @@ def loadGrade(row):
                    {
                        'studentId':studentId,
                        'semesterStartTime':semesterStartTime,
-                       'number':number,
+                       'gradeNumber':number,
                        'apiKey':apiKey
                    })
 
@@ -278,7 +278,7 @@ def loadSchedule(row):
                 {
                     'studentId': studentId,
                     'courseId': courseId,
-                    'period': period,
+                    'periodNumber': period,
                     'offset':0,
                     'count':1,
                     'apiKey':apiKey
