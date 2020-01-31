@@ -26,6 +26,9 @@
 /nbdist/
 /.nb-gradle/
 
+# Our own stuff
 /innexgo.sql
 /.syntastic_javac_config
 /.vscode/
+
+/redirectSecureServer/node_modules/
