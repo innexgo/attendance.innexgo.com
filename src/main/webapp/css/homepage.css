@@ -90,8 +90,8 @@ header .cbp-af-header .row {
   font-weight:bold;
 }
 
-nav select.selectmenu, select.selectmenu  {
-  display:none;
+a:focus {
+  
 }
 
 #maincontent {
