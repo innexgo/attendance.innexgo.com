@@ -29,6 +29,7 @@ async function loadIrregularityPage(studentId, minTime, maxTime) {
     .forEach(irregularity => irregularityTable.append(`
             <tr>
               <td>${moment(irregularity.time).format('MMM Do, YYYY')}</td>
+              <td>${moment(irregularity.time).format('h:mm A')}</td>
               <td>${linkRelative(irregularity.course.subject,'/courseprofile.html?courseId='+irregularity.course.id)}</td>
               <td>${irregularity.type}</td>
             </tr>
@@ -41,7 +42,8 @@ async function loadCurrentLocation(studentId) {
   if(mostRecentSession != null) {
     $('#studentprofile-currentlocation-signedin')[0].innerHTML = !mostRecentSession.complete;
     let time = mostRecentSession.complete ? mostRecentSession.outEncounter.time : mostRecentSession.inEncounter.time;
-    $('#studentprofile-currentlocation-time')[0].innerHTML = moment(time).format('h:mm, ddd, MMM Do');
+    $('#studentprofile-currentlocation-time')[0].innerHTML = moment(time).format('h:mm A');
+    $('#studentprofile-currentlocation-date')[0].innerHTML = moment(time).format('dddd, MMM Do, YYYY');
     let loc = mostRecentSession.inEncounter.location;
     $('#studentprofile-currentlocation-location')[0].innerHTML = linkRelative(loc.name, '/locationprofile.html?locationId='+loc.id);
   }
