@@ -13,74 +13,55 @@
   <link href="https://fonts.googleapis.com/css?family=Ubuntu&display=swap" rel="stylesheet">
 
   <!-- CSS References -->
-  <link rel="stylesheet" href="vendor/bootstrap/css/bootstrapv2.css">
+  <link rel="stylesheet" href="vendor/bootstrap/css/bootstrap.min.css">
   <link rel="stylesheet" href="vendor/bootstrap/css/bootstrap-responsive.css">
-  <link rel="stylesheet" href="/vendor/fontawesome-free/css/all.min.css">
+  <link rel="stylesheet" href="vendor/fontawesome-free/css/all.min.css">
+  <link rel="stylesheet" href="vendor/fontawesome-free/css/fontawesome.min.css">
   <link rel="stylesheet" href="css/homepage.css">
+  <link rel="stylesheet" href="css/headerfix_other.css">
+  <link rel="stylesheet" href="css/footer.css">
 
   <!--JS Files -->
   <script src="vendor/jquery/jquery.js"></script>
+  <script src="vendor/jquery/jquery.slim.min.js"></script>
   <script src="vendor/bootstrap/js/bootstrap.js"></script>
+  <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script src="vendor/jquery/jquery-hover-effect.js"></script>
   <script src="vendor/jquery/jquery.ui.totop.js"></script>
+  <script src="js/homepage.js"></script>
+
 
   <!-- Favicon -->
-  <link rel='icon' href='img/innexgo_gold_brandmark.png' type='image/png' />
+  <link rel='icon' href='img/innexgo_gold_brandmark.png' type='image/png'/ >
 
-</head>
-
-<body>
-
-  <header>
-    <!-- Navbar -->
-    <div class="cbp-af-header">
-      <div class="cbp-af-inner">
-        <div class="container">
-          <div class="row">
-
-            <!-- logo -->
-            <div class="span6">
-              <div class="logo">
-                <img class="logoicon" src="img/innexgo_transparent_icon.png" alt="" style="" />
-                <h1><a href="index.html">Innexgo</a></h1>
-              </div>
-            </div>
-
-            <!-- top menu -->
-            <div class="span6">
-              <div class="navbar">
-                <div class="navbar-inner">
-                  <nav>
-                    <ul class="nav topnav">
-                      <li><a href="index.html">Home</a></li>
-                      <li><a href="about.html">About</a></li>
-                      <li><a href="faq.html">FAQs</a></li>
-                      <li><a href="login.html">Sign-In</a></li>
-                    </ul>
-                  </nav>
-                </div>
-              </div>
-            </div>
-
+  </head>
+  <body>
+    <header class="header">
+      <nav class="navbar navbar-expand-lg fixed-top py-3">
+        <div class="container"><a href="index.html" class="navbar-brand font-weight-bold">Innexgo</a>
+          <button type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler navbar-toggler-right"><i class="fa fa-bars"></i></button>
+          <div id="navbarSupportedContent" class="collapse navbar-collapse">
+            <ul class="navbar-nav ml-auto">
+              <li class="nav-item"><a href="about.html" class="nav-link font-weight-bold">About</a></li>
+              <li class="nav-item"><a href="faq.html" class="nav-link font-weight-bold">FAQ</a></li>
+              <li class="nav-item"><a href="login.html" class="nav-link font-weight-bold">Sign-In</a></li>
+            </ul>
           </div>
         </div>
-      </div>
-    </div>
-  </header>
+      </nav>
+    </header>
 
-  <section id="intro">
-    <div class="container-fluid">
-      <div class="row center">
-        <div class="">
-          <h2><strong>Terms of Service</strong></h2>
+    <section id="intro">
+      <div class="container">
+        <div class="row center">
+            <h2><strong>Terms of Service</strong></h2>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
   <section id="maincontent">
     <div class="container">
-      <h2>Our Terms of Service</h2>
+      <h5>Our Terms of Service</h5>
       <p>Please read the following terms of service agreement carefully. By accessing or using our sites and our
         services, you hereby agree to be bound by the terms and all terms incorporated herein by reference. It is the
         responsibility of you, the user, customer, or prospective customer to read the terms and conditions before
@@ -88,12 +69,12 @@
         not access or use our website or our services. This terms of service agreement is effective as of January 10,
         2020.</p>
 
-      <h2>Acceptance of Terms</h2>
+      <h5>Acceptance of Terms</h5>
       <p>The following Terms of Service Agreement (the "TOS") is a legally binding agreement that shall govern the
         relationship with our users and others which may interact or interface with Innexgo LLC , also known as Innexgo,
         in association with the use of the website, www.innexgo.com and its Services, which shall be defined below.</p>
 
-      <h2>Description of Website Services Offered</h2>
+      <h5>Description of Website Services Offered</h5>
       <p>The Site is www.innexgo.com which has the following description: student attendance assurance and analytics
         through RFID technology. Any and all visitors to our site shall be deemed as "users" of the herein contained
         Services provided for the purpose of this TOS.</p>
@@ -121,7 +102,7 @@
         be provided "AS IS" and as such Innexgo shall not assume any responsibility or obligation for the meliness,
         missed delivery, deleon and/or any failure to store user content, communication or personalization settings.</p>
 
-      <h2>Cautions for Global Use and Export and Import Compliance</h2>
+      <h5>Cautions for Global Use and Export and Import Compliance</h5>
       <p>Due to the global nature of the internet, through the use of our network you hereby agree to comply with all
         local rules relating to online conduct and that which is considered acceptable Content. Uploading, posting
         and/or transferring of software, technology and other technical data may be subject to the export and import
@@ -141,7 +122,7 @@
           in violation of the U.S. or other applicable export and/or import laws.</li>
       </ol>
 
-      <h2>Content Placed or Made Available for Company Services</h2>
+      <h5>Content Placed or Made Available for Company Services</h5>
       <ol type="a">
         <li>The content submitted or made available for inclusion on publicly accessible areas of Innexgo's sites, the
           license provided to permit to use, distribute, reproduce, modify, adapt, publicly perform and/or publicly
@@ -168,7 +149,7 @@
           boards and groups that are openly available to users.</li>
       </ol>
 
-      <h2>Contributions to Company Website</h2>
+      <h5>Contributions to Company Website</h5>
       <p>Innexgo provides an area for our users to contribute feedback to our website. When you submit ideas, documents,
         suggestions and/or proposals ("Contributions") to our site, you acknowledge and agree that:</p>
       <ol type="a">
@@ -182,7 +163,7 @@
           nature.</li>
       </ol>
 
-      <h2>Indemnity</h2>
+      <h5>Indemnity</h5>
       <p>All users herein agree to insure and hold Innexgo, our subsidiaries, affiliates, agents, employees, officers,
         partners and/or licensors blameless or not liable for any claim or demand, which may include, but is not limited
         to, reasonable attorney fees made by any third party which may arise from any content a user of our site may
@@ -190,17 +171,17 @@
         your connection with these Services, your violations of the Terms of Service and/or your violation of any such
         rights of another person.</p>
 
-      <h2>Commercial Reuse of Services</h2>
+      <h5>Commercial Reuse of Services</h5>
       <p>The user herein agrees not to replicate, duplicate, copy, trade, sell, resell or exploit for any commercial
         reason any part, use of, or access to Innexgo's sites.</p>
 
-      <h2>Modifications</h2>
+      <h5>Modifications</h5>
       <p>Innexgo shall reserve the right at any time it may deem fit, to modify, alter and or discontinue, whether
         temporarily or permanently, our service, or any part thereof, with or without prior notice. In addition, we
         shall not be held liable to you or to any third party for any such alteration, modification, suspension and/or
         discontinuance of our Services, or any part thereof.</p>
 
-      <h2>Advertisers</h2>
+      <h5>Advertisers</h5>
       <p>Any correspondence or business dealings with, or participation in any promotions of, advertisers located on or
         through our Services, which may include the payment and/or delivery of such related goods and/or Services, and
         any such other term, condition, warranty and/or representation associated with such dealings, are and shall be
@@ -208,7 +189,7 @@
         responsible or liable for any loss or damage of any nature or manner incurred as a direct result of any such
         dealings or as a result of the presence of such advertisers on our website.</p>
 
-      <h2>Links</h2>
+      <h5>Links</h5>
       <p>Either Innexgo or any third parties may provide links to other websites and/or resources. Thus, you acknowledge
         and agree that we are not responsible for the availability of any such external sites or resources, and as such,
         we do not endorse nor are we responsible or liable for any content, products, advertising or any other materials
@@ -217,7 +198,7 @@
         of, caused or alleged to be caused by or in connection with the use of or reliance on any such content, goods or
         Services made available on or through any such site or resource.</p>
 
-      <h2>Proprietary Rights</h2>
+      <h5>Proprietary Rights</h5>
       <p>You do hereby acknowledge and agree that Innexgo's Services and any essential software that may be used in
         connection with our Services ("Software") shall contain proprietary and confidential material that is protected
         by applicable intellectual property rights and other laws. Furthermore, you herein acknowledge and agree that
@@ -238,7 +219,7 @@
         Lastly, you also agree not to access or attempt to access our Services through any means other than through the
         interface, which is provided by Innexgo for use in accessing our Services.</p>
 
-      <h2>Warrenty Disclaimers</h2>
+      <h5>Warrenty Disclaimers</h5>
       <p>YOU HEREIN EXPRESSLY ACKNOWLEDGE AND AGREE THAT:</p>
       <ol type="a">
         <li>THE USE OF INNEXGO SERVICES AND SOFTWARE ARE AT THE SOLE RISK BY YOU. OUR SERVICES AND SOFTWARE SHALL BE
@@ -272,7 +253,7 @@
           INVOLUNTARY MOVEMENT, OR CONVULSIONS.</li>
       </ol>
 
-      <h2>Limitations of Liability</h2>
+      <h5>Limitations of Liability</h5>
       <p>YOU EXPLICITLY ACKNOWLEDGE, UNDERSTAND AND AGREE THAT INNEXGO AND OUR SUBSIDIARIES, AFFILIATES, OFFICERS,
         EMPLOYEES, AGENTS, PARTNERS AND LICENSORS SHALL NOT BE LIABLE TO YOU FOR ANY PUNITIVE, INDIRECT, INCIDENTAL,
         SPECIAL, CONSEQUENTIAL OR EXEMPLARY DAMAGES, INCLUDING, BUT NOT LIMITED TO, DAMAGES WHICH MAY BE RELATED TO THE
@@ -286,13 +267,13 @@
         <li>AND ANY OTHER MATTER WHICH MAY BE RELATED TO OUR SERVICE.</li>
       </ol>
 
-      <h2>Release</h2>
+      <h5>Release</h5>
       <p>In the event you have a dispute, you agree to release Innexgo (and its officers, directors, employees, agents,
         parent subsidiaries, affiliates, co-branders, partners and any other third parties) from claims, demands and
         damages (actual and consequential) of every kind and nature, known and unknown, suspected or unsuspected,
         disclosed and undisclosed, arising out of or in any way connected to such dispute.</p>
 
-      <h2>Special Admonition Related to Financial Matters</h2>
+      <h5>Special Admonition Related to Financial Matters</h5>
       <p>Should you intend to create or to join any service, receive or request any such news, messages, alerts or other
         information from our Services concerning companies, stock quotes, investments or securities, please review the
         above Sections Warranty Disclaimers and Limitations of Liability again. In addition, for this particular type of
@@ -303,16 +284,16 @@
         shall not be responsible or liable for any trading and/or investment decisions based on any such information.
       </p>
 
-      <h2>Exclusion and Limitatons</h2>
+      <h5>Exclusion and Limitatons</h5>
       <p>THERE ARE SOME JURISDICTIONS WHICH DO NOT ALLOW THE EXCLUSION OF CERTAIN WARRANTIES OR THE LIMITATION OF
         EXCLUSION OF LIABILITY FOR INCIDENTAL OR CONSEQUENTIAL DAMAGES. THEREFORE, SOME OF THE ABOVE LIMITATIONS OF
         SECTIONS WARRANTY DISCLAIMERS AND LIMITATION OF LIABILITY MAY NOT APPLY TO YOU.</p>
 
-      <h2>Third Party Beneficiaries</h2>
+      <h5>Third Party Beneficiaries</h5>
       <p>You herein acknowledge, understand and agree, unless otherwise expressly provided in this TOS, that there shall
         be no third-party beneficiaries to this agreement.</p>
 
-      <h2>Notice</h2>
+      <h5>Notice</h5>
       <p>Innexgo may furnish you with notices, including those with regards to any changes to the TOS, including but not
         limited to email, regular mail, MMS or SMS, text messaging, postings on our website Services, or other
         reasonable means currently known or any which may be hereinafter developed. Any such notices may not be received
@@ -320,13 +301,13 @@
         this TOS constitutes your agreement that you are deemed to have received any and all notices that would have
         been delivered had you accessed our Services in an authorized manner.</p>
 
-      <h2>Trademark Information</h2>
+      <h5>Trademark Information</h5>
       <p>You herein acknowledge, understand and agree that all of the Innexgo trademarks, copyright, trade name, service
         marks, and other Innexgo logos and any brand features, and/or product and service names are trademarks and as
         such, are and shall remain the property of Innexgo. You herein agree not to display and/or use in any manner the
         Innexgo logo or marks without obtaining Innexgo's prior written consent.</p>
 
-      <h2>Copyright or Intellectual Property Infringement Claims Notice & Procedures</h2>
+      <h5>Copyright or Intellectual Property Infringement Claims Notice & Procedures</h5>
       <p>Innexgo will always respect the intellectual property of others, and we ask that all of our users do the same.
         With regards to appropriate circumstances and at its sole discretion, Innexgo may disable and/or terminate the
         accounts of any user who violates our TOS and/or infringes the rights of others. If you feel that your work has
@@ -346,11 +327,11 @@
           agent authorized to act on the copyright or intellectual property owner's behalf.</li>
       </ol>
 
-      <h2>Closed Captioning</h2>
+      <h5>Closed Captioning</h5>
       <p>Innexgo complies with all applicable Federal Communications Commission rules and regulations regarding the
         closed captioning of video content.</p>
 
-      <h2>General Information</h2>
+      <h5>General Information</h5>
       <h4><i>Entire Agreement</i></h4>
       <p>This TOS constitutes the entire agreement between you and Innexgo and shall govern the use of our Services,
         superseding any prior version of this TOS between you and us with respect to Innexgo Services. You may also be
@@ -388,21 +369,18 @@
   <!-- Footer -->
   <footer class="footer">
     <div class="container">
-      <div class="row">
-        <div class="span3">
-          <div class="widget">
-            <div class="footerlogo">
-              <h6><a href="index.html">Innexgo LLC</a></h6>
-              <p><a href="cookiepolicy.html" style="color: inherit;">Cookie Policy</a></p>
-              <p><a href="faq.html" style="color: inherit;">Frequently Asked Questions</a></p>
-              <p><a href="privacypolicy.html" style="color: inherit;">Privacy Policy</a></p>
-              <p><a href="termsofservice.html" style="color: inherit;">Terms of Service</a></p>
-            </div>
-          </div>
-        </div>
+      <div class="footerlogo">
+        <img class="logoicon" src="img/innexgo_transparent_icon.png" alt="" />
+        <h6><a href="index.html">Innexgo LLC</a></h6>
+        <p><a href="cookiepolicy.html" style="color: inherit;">Cookie Policy</a></p>
+        <p><a href="faq.html" style="color: inherit;">Frequently Asked Questions</a></p>
+        <p><a href="privacypolicy.html" style="color: inherit;">Privacy Policy</a></p>
+        <p><a href="termsofservice.html" style="color: inherit;">Terms of Service</a></p>
+        <p style="color: inherit; margin-bottom:-50px">Copyright © Innexgo LLC, 2020. All Rights Reserved.</p>
       </div>
     </div>
   </footer>
+
 
 </body>
 

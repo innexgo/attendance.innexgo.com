@@ -3,7 +3,7 @@
 }
 
 .navbar .nav-link {
-    color: #fff;
+    color: #121212;
 }
 
 .navbar .nav-link:hover,
@@ -13,7 +13,7 @@
 }
 
 .navbar .navbar-brand {
-    color: #fff;
+    color: #121212;
 }
 
 /* Change navbar styling on scroll */

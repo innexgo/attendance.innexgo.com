@@ -4,68 +4,54 @@
     <meta charset="utf-8">
     <title>Innexgo</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Exo&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Ubuntu&display=swap" rel="stylesheet">
+
     <!-- CSS References -->
-    <link rel="stylesheet" href="vendor/bootstrap/css/bootstrapv2.css">
+    <link rel="stylesheet" href="vendor/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="vendor/bootstrap/css/bootstrap-responsive.css">
     <link rel="stylesheet" href="vendor/fontawesome-free/css/all.min.css">
+    <link rel="stylesheet" href="vendor/fontawesome-free/css/fontawesome.min.css">
     <link rel="stylesheet" href="css/homepage.css">
+    <link rel="stylesheet" href="css/headerfix_other.css">
     <link rel="stylesheet" href="css/footer.css">
+
     <!--JS Files -->
     <script src="vendor/jquery/jquery.js"></script>
+    <script src="vendor/jquery/jquery.slim.min.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="vendor/jquery/jquery-hover-effect.js"></script>
     <script src="vendor/jquery/jquery.ui.totop.js"></script>
+    <script src="js/homepage.js"></script>
+
 
     <!-- Favicon -->
     <link rel='icon' href='img/innexgo_gold_brandmark.png' type='image/png'/ >
 
   </head>
     <body>
-      <header>
-        <!-- Navbar -->
-        <div class="cbp-af-header">
-          <div class="cbp-af-inner">
-            <div class="container">
-              <div class="row">
-
-                <!-- logo -->
-                <div class="span6">
-                  <div class="logo">
-                    <img class="logoicon" src="img/innexgo_transparent_icon.png" alt="" style="" />
-                    <h1><a href="index.html">Innexgo </a></h1>
-                  </div>
-                </div>
-
-                <!-- top menu -->
-                <div class="span6">
-                  <div class="navbar">
-                    <div class="navbar-inner">
-                      <nav>
-                        <ul class="nav topnav">
-                          <li><a href="index.html">Home</a></li>
-                          <li><a href="about.html">About</a></li>
-                          <li><a href="faq.html">FAQs</a></li>
-                          <li><a href="login.html">Sign-In</a></li>
-                        </ul>
-                      </nav>
-                    </div>
-                  </div>
-                </div>
-              </div>
+      <header class="header">
+        <nav class="navbar navbar-expand-lg fixed-top py-3">
+          <div class="container"><a href="index.html" class="navbar-brand font-weight-bold">Innexgo</a>
+            <button type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler navbar-toggler-right"><i class="fa fa-bars"></i></button>
+            <div id="navbarSupportedContent" class="collapse navbar-collapse">
+              <ul class="navbar-nav ml-auto">
+                <li class="nav-item"><a href="about.html" class="nav-link font-weight-bold">About</a></li>
+                <li class="nav-item"><a href="faq.html" class="nav-link font-weight-bold">FAQ</a></li>
+                <li class="nav-item"><a href="login.html" class="nav-link font-weight-bold">Sign-In</a></li>
+              </ul>
             </div>
           </div>
-        </div>
+        </nav>
       </header>
 
       <section id="intro">
-        <div class="container-fluid">
+        <div class="container">
           <div class="row center">
-            <div class="">
-              <h2><strong>Our Story & Team</strong></h2>
-            </div>
+            <h2><strong>Our Story & Team</strong></h2>
           </div>
         </div>
       </section>
@@ -84,38 +70,42 @@
       <section>
         <div class="container">
         <h3>Our Team</h3>
+
           <div class="row">
-            <div class="span10 offset1">
+
+            <div class="span3 offset1">
               <div class="team">
-                <img class="img-circle" src="img/team/ng.jpg" alt="" />
-                <h4>Carole Ng</h4>
-                <p>Advisor</p>
+                <img class="img-circle" src="img/team/ganesh.jpg" alt="" />
+                <h4>Ganesh Pimpale</h4>
+                <p>Head of Hardware</p>
+              </div>
+            </div>
+
+            <div class="span3">
+              <div class="team">
+                <img src="img/team/govind.jpg" alt="" />
+                <h4>Govind Pimpale</h4>
+                <p>Co-Founder/Head of Software Development</p>
+              </div>
+            </div>
+
+            <div class="span3">
+              <div class="team">
+                <img src="img/team/richard.jpg" alt="" />
+                <h4>Richard Le</h4>
+                <p>Co-Founder/Executive Director</p>
               </div>
             </div>
 
           </div>
-        </div>
 
-        <br>
-        <br>
-        <br>
-
-        <div class="container">
           <div class="row">
 
-            <div class="span4">
+            <div class="span4 offset2">
               <div class="team">
-                <img class="img-circle" src="img/team/govind.jpg" alt="" />
-                <h4>Govind Pimpale</h4>
-                <p>Lead Coder</p>
-              </div>
-            </div>
-
-            <div class="span4">
-              <div class="team">
-                <img class="img-circle" src="img/team/ganesh.jpg" alt="" />
-                <h4>Ganesh Pimpale</h4>
-                <p>Coder</p>
+                <img class="img-circle" src="img/team/.jpg" alt="" />
+                <h3>Andrew Dang</h3>
+                <p>Backend Software Developer</p>
               </div>
             </div>
 
@@ -123,149 +113,105 @@
               <div class="team">
                 <img class="img-circle" src="img/team/henry.jpg" alt="" />
                 <h4>Henry Chen</h4>
-                <p>Coder</p>
+                <p>Hardware Engineering Lead</p>
               </div>
             </div>
 
           </div>
-        </div>
 
-        <div class="container">
           <div class="row">
 
-            <div class="span4">
+            <div class="span4 offset2">
               <div class="team">
                 <img class="img-circle" src="img/team/marek.jpg" alt="" />
                 <h4>Marek Pinto</h4>
-                <p>Coder</p>
+                <p>Backend Software Developer</p>
               </div>
             </div>
 
             <div class="span4">
               <div class="team">
-                <img class="img-circle" src="img/team/sanjana.jpg" alt="" />
+                <img class="img-circle" src="img/team/.jpg" alt="" />
                 <h4>Sanjana Nandi</h4>
-                <p>Coder</p>
-              </div>
-            </div>
-
-            <div class="span4">
-              <div class="team">
-                <img class="img-circle" src="img/team/jordan.jpg" alt="" />
-                <h4>Jordan Nguyen</h4>
-                <p>Coder</p>
+                <p>Software Refactoring Specialist</p>
               </div>
             </div>
 
           </div>
-        </div>
 
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-
-        <div class="container">
           <div class="row">
 
-            <div class="span4">
-              <div class="team">
-                <img class="img-circle" src="img/team/richard.jpg" alt="" />
-                <h3>Richard Le</h3>
-                <p>Lead Marketer</p>
-              </div>
-            </div>
-
-            <div class="span4">
-              <div class="team">
-                <img class="img-circle" src="img/team/jenny.jpg" alt="" />
-                <h3>Jenny Le</h3>
-                <p>Marketer</p>
-              </div>
-            </div>
-
-            <div class="span4">
-              <div class="team">
-                <img class="img-circle" src="img/team/andrew.jpg" alt="" />
-                <h3>Andrew Dang</h3>
-                <p>Marketer</p>
-              </div>
-            </div>
-
-          </div>
-        </div>
-
-        <div class="container">
-          <div class="row">
-
-            <div class="span6">
-              <div class="team">
-                <img class="img-circle" src="img/team/gayathri.jpg" alt="" />
-                <h3>Gayathri Eleswarapu</h3>
-                <p>Marketer</p>
-              </div>
-            </div>
-
-            <div class="span6">
+            <div class="span3 offset1">
               <div class="team">
                 <img class="img-circle" src="img/team/emily.jpg" alt="" />
                 <h3>Emily Park</h3>
-                <p>Marketer</p>
+                <p>Hardware Manufacturing Specialist</p>
               </div>
             </div>
 
-          </div>
-        </div>
-
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-
-        <div class="container">
-          <div class="row">
-
-            <div class="span6">
+            <div class="span3">
               <div class="team">
                 <img class="img-circle" src="img/team/jason.jpg" alt="" />
                 <h3>Jason Ly</h3>
-                <p>Hardware</p>
+                <p>Hardware Installation Specialist</p>
               </div>
             </div>
 
-            <div class="span6">
+            <div class="span3">
+              <div class="team">
+                <img class="img-circle" src="img/team/jenny.jpg" alt="" />
+                <h3>Jenny Le</h3>
+                <p>Hardware Installation Specialist</p>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="row">
+
+            <div class="span3 offset1">
+              <div class="team">
+                <img class="img-circle" src="img/team/.jpg" alt="" />
+                <h4>Jordan Nguyen</h4>
+                <p>Hardware Installation & Engineering Specialist</p>
+              </div>
+            </div>
+
+            <div class="span3">
               <div class="team">
                 <img class="img-circle" src="img/team/joshua.jpg" alt="" />
                 <h3>Joshua Sah</h3>
-                <p>Hardware</p>
+                <p>Hardware Installation Specialist</p>
+              </div>
+            </div>
+
+            <div class="span3">
+              <div class="team">
+                <img class="img-circle" src="img/team/.jpg" alt="" />
+                <h3>Gayathri Eleswarapu</h3>
+                <p>Hardware Installation Specalist</p>
               </div>
             </div>
 
           </div>
         </div>
-
-      </section>
+      </div>
 
       <!-- Footer -->
       <footer class="footer">
         <div class="container">
-          <div class="row">
-            <div class="span3">
-              <div class="widget">
-                <div class="footerlogo">
-                  <h6><a href="index.html">Innexgo LLC</a></h6>
-                  <p><a href="cookiepolicy.html" style="color: inherit;">Cookie Policy</a></p>
-                  <p><a href="faq.html" style="color: inherit;">Frequently Asked Questions</a></p>
-                  <p><a href="privacypolicy.html" style="color: inherit;">Privacy Policy</a></p>
-                  <p><a href="termsofservice.html" style="color: inherit;">Terms of Service</a></p>
-                </div>
-              </div>
-            </div>
+          <div class="footerlogo">
+            <img class="logoicon" src="img/innexgo_transparent_icon.png" alt="" />
+            <h6><a href="index.html">Innexgo LLC</a></h6>
+            <p><a href="cookiepolicy.html" style="color: inherit;">Cookie Policy</a></p>
+            <p><a href="faq.html" style="color: inherit;">Frequently Asked Questions</a></p>
+            <p><a href="privacypolicy.html" style="color: inherit;">Privacy Policy</a></p>
+            <p><a href="termsofservice.html" style="color: inherit;">Terms of Service</a></p>
+            <p style="color: inherit; margin-bottom:-50px">Copyright © Innexgo LLC, 2020. All Rights Reserved.</p>
           </div>
         </div>
       </footer>
+
 
     </body>
 </html>
