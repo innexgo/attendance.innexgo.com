@@ -205,7 +205,7 @@ async function recentActivity() {
 // Forever runs and updates currentStatus
 async function currentStatus() {
   let apiKey = Cookies.getJSON('apiKey');
-  let table = document.getElementById('current-status-table');
+  let table = $('#current-status-table');
   while (true) {
     let period = Cookies.getJSON('period');
     let courses = Cookies.getJSON('courses').sort((a, b) => (a.period > b.period ? -1 : 1));
@@ -216,7 +216,7 @@ async function currentStatus() {
     //bail if we dont have all of the necessary cookies
     if (apiKey == null || period == null) {
       console.log('lack necessary cookies to calculate current status');
-      table.innerHTML = '';
+      table[0].innerHTML = '';
       return;
     }
 
@@ -233,14 +233,18 @@ async function currentStatus() {
 
         $('#current-status-percent-attendance')[0].innerHTML = `${presentEnrolledStudents.length}/${students.length}`;
 
-        table.innerHTML = '';
+        table[0].innerHTML = '';
 
         students.sort((a, b) => (a.name > b.name) ? 1 : -1)
 
-        visitors.forEach(v => $('#current-status-table').append(
-          `<tr><td>${linkRelative(v.name, '/studentprofile.html?studentId=' + v.id)}</td>
+        visitors.forEach(v => table.append(
+          `<tr>
+            <td>${linkRelative(v.name, '/studentprofile.html?studentId=' + v.id)}</td>
             <td>${v.id}</td>
-            <td style="background-color:#ffccff;color:#cc00cc"><span class="fa fa-check"></span></td></tr>`));
+            <td style="background-color:#ffccff;color:#cc00cc">
+              <span class="fa fa-check"></span>
+            </td>
+          </tr>`));
 
         for (let i = 0; i < students.length; i++) {
           let text = '<span class="fa fa-check"></span>'
@@ -269,15 +273,15 @@ async function currentStatus() {
           }
 
           // put values in table
-          $('#current-status-table').append(
+          table.append(
             `<tr>
                 <td>${linkRelative(student.name, '/studentprofile.html?studentId=' + student.id)}</td>
                 <td>${student.id}</td>
                 <td style="background-color:${bgcolor};color:${fgcolor}">${text}</td>
-             <tr>`);
+             </tr>`);
         }
-        if (table.innerHTML == '') {
-          table.innerHTML = `<b>No Students Currently in Classroom</b>`;
+        if (table[0].innerHTML == '') {
+          table[0].innerHTML = `<b>No Students Currently in Classroom</b>`;
         }
       } catch (err) {
         console.log(err);
@@ -294,15 +298,17 @@ async function currentStatus() {
           let bgcolor = '#ccffcc';
           let fgcolor = '#00ff00';
           // Clear table
-          table.innerHTML = '';
+          table[0].innerHTML = '';
           // Students
           if (students.length == 0) {
-            table.innerHTML = `<b>No Students Currently in Classroom</b>`;
+            table[0].innerHTML = `<b>No Students Currently in Classroom</b>`;
           } else {
-            students.forEach(student => $('#current-status-table').append(
-              `<td>${linkRelative(student.name, '/studentprofile.html?studentId=' + student.id)}</td>
-                   <td>${student.id}</td>
-                   <td style="background-color:${bgcolor};color:${fgcolor}">${text}</td>`)
+            students.forEach(student => table.append(
+              `<tr>
+                <td>${linkRelative(student.name, '/studentprofile.html?studentId=' + student.id)}</td>
+                <td>${student.id}</td>
+                <td style="background-color:${bgcolor};color:${fgcolor}">${text}</td>
+              </tr>`)
             );
           }
         } catch (err) {

@@ -84,7 +84,7 @@
               <h5 id="studentprofile-name" class="card-title">Student Name</h5>
               <span class="input-group-btn ml-auto">
                 <button type="button" class="btn btn-sm" data-html="true" data-toggle="popover" title="Student Reports"
-                  data-placement="top" data-content="View basic information and courses of a student.">
+                  data-placement="top" data-content="">
                   <i class="fa fa-question"></i>
                 </button>
               </span>
@@ -105,10 +105,10 @@
                 <thead>
                   <tr class="table-header">
                     <td>Period</td>
-                    <td>Class</td>
+                    <td>Course</td>
                     <td>Teacher</td>
                     <td>Location</td>
-                    <td>Performance</td>
+                    <td></td>
                   </tr>
                 </thead>
                 <tbody id="studentprofile-courses"></tbody>
@@ -124,7 +124,8 @@
               <h5 class="card-title">Location</h5>
               <span class="input-group-btn ml-auto">
                 <button type="button" class="btn btn-sm" data-html="true" data-toggle="popover" title="Student Location"
-                  data-placement="top" data-content="A quick reference for the student's last known sign in or out.<br><br>
+                  data-placement="top"
+                  data-content="A quick reference for the student's last known sign in or out.<br><br>
                                   The location field describes the most recent location this student signed in.<br><br>
                                   The time field states the time and date of this event.<br><br>
                                   Present is true if the student is signed in at this classroom. If it's false, the student may not be in class.">

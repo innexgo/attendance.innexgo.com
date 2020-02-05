@@ -14,9 +14,8 @@ async function loadCourses(studentId, initialSemesterTime) {
     .forEach(course => courseTable.append(`
             <tr>
               <td>${course.period}</td>
-              <td>${linkRelative(course.subject,'/courseprofile.html?courseId='+course.id)}</td>
+              <td> ${linkRelative(course.subject,'/courseprofile.html?courseId='+course.id)}</td>
               <td>${linkRelative(course.teacher.name, '/userprofile.html?userId='+course.teacher.id)}</td>
-              <td>${linkRelative(course.location.name, '/locationprofile.html?locationId='+course.location.id)}</td>
               <td>${linkRelative(course.location.name, '/locationprofile.html?locationId='+course.location.id)}</td>
             </tr>
           `))

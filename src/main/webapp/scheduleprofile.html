@@ -26,7 +26,7 @@
   <script src="/js/signedin.js"></script>
   <script src="/js/loadprefs.js"></script>
   <script src="/js/sidebar.js"></script>
-  <script src="/js/studentprofile.js"></script>
+  <script src="/js/scheduleprofile.js"></script>
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css?family=Exo&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Ubuntu&display=swap" rel="stylesheet">
@@ -77,117 +77,8 @@
       <div id="alert-zone"></div>
       <div class="card-deck">
 
-        <!-- Student Stats -->
-        <div class="card col-sm-8 palette-level-two">
-          <div class="card-body">
-            <div class="input-group">
-              <h5 id="studentprofile-name" class="card-title">Student Name</h5>
-              <span class="input-group-btn ml-auto">
-                <button type="button" class="btn btn-sm" data-html="true" data-toggle="popover" title="Student Reports"
-                  data-placement="top" data-content="View basic information and courses of a student.">
-                  <i class="fa fa-question"></i>
-                </button>
-              </span>
-            </div>
-            <h1> YEEEEET </h1>
-            <table style="width:100%;">
-              <tr>
-                <td id="studentprofile-id">ID: </td>
-                <td id="studentprofile-grade" style='text-align: left'>Current Grade: </td>
-              </tr>
-            </table>
-            <br>
-            <p class="card-text">Courses taken in
-              <select id="studentprofile-grades">
-              </select>
-            </p>
-            <div class="table-height-standard">
-              <table class="table striped white">
-                <thead>
-                  <tr class="table-header">
-                    <td>Period</td>
-                    <td>Class</td>
-                    <td>Teacher</td>
-                    <td>Location</td>
-                  </tr>
-                </thead>
-                <tbody id="studentprofile-courses"></tbody>
-              </table>
-            </div>
-          </div>
-        </div>
+        
 
-        <!-- Student Location -->
-        <div class="card col-sm-4 palette-level-two">
-          <div class="card-body">
-            <div class="input-group">
-              <h5 class="card-title">Location</h5>
-              <span class="input-group-btn ml-auto">
-                <button type="button" class="btn btn-sm" data-html="true" data-toggle="popover" title="Student Location"
-                  data-placement="top" data-content="A quick reference for the student's last known sign in or out.<br><br>
-                                  The location field describes the most recent location this student signed in.<br><br>
-                                  The time field states the time and date of this event.<br><br>
-                                  Signed in is true if the student has not yet signed out of this location.">
-                  <i class="fa fa-question"></i>
-                </button>
-              </span>
-            </div>
-            <br>
-            <div class="card-text">
-              <p>Quick data about this student's most recent sign in.</p>
-            </div>
-            <table class="table striped white" style="width:100%;">
-              <tr>
-                <td>Location:</td>
-                <td style="text-align:right;" id="studentprofile-currentlocation-location">
-                  Location
-                </td>
-              </tr>
-              <tr>
-                <td>Time:</td>
-                <td style="text-align:right;" id="studentprofile-currentlocation-time">
-                  Time
-                </td>
-              </tr>
-              <tr>
-                <td>Signed in:</td>
-                <td style="text-align:right;" id="studentprofile-currentlocation-signedin">
-                  SignedIn
-                </td>
-              </tr>
-            </table>
-          </div>
-        </div>
-      </div>
-      <div class="card-deck my-3">
-        <!-- Student Irregularities -->
-        <div class="card col-sm-4 palette-level-two">
-          <div class="card-body">
-            <div class="input-group">
-              <h5 id="studentprofile-name" class="card-title">Recent Irregularities</h5>
-              <span class="input-group-btn ml-auto">
-                <button type="button" class="btn btn-sm" data-html="true" data-toggle="popover"
-                  title="Recent Irregularities" data-placement="top"
-                  data-content="Displays any recent irregularities associated with the student. <br>Examples include tardies, absences, leaving the clasroom, or forgetting to sign out.">
-                  <i class="fa fa-question"></i>
-                </button>
-              </span>
-            </div>
-            <p class="card-text">Irregularities associated with student</p>
-            <div class="table-height-standard">
-              <table class="table striped white ">
-                <thead>
-                  <tr class='table-header'>
-                    <td>Time</td>
-                    <td>Class</td>
-                    <td>Type</td>
-                  </tr>
-                </thead>
-                <tbody id="studentprofile-irregularities"></tbody>
-              </table>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   </div>

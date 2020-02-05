@@ -1,44 +1,5 @@
 "use strict"
 
-let irregularityPage = 0;
-
-async function loadPage(courseId, page) {
-  let apiKey = Cookies.getJSON('apiKey');
-
-  if(page == 0) {
-    $('#courseprofile-irregularities-new').attr("disabled", true);
-  } else {
-    $('#courseprofile-irregularities-new').attr("disabled", false);
-  }
-  // Count of irregularities per page
-  const c = 10;
-  try {
-    $('#courseprofile-irregularities').empty();
-
-    let irregularities = (await fetchJson(`${apiUrl()}/irregularity/?apiKey=${apiKey.key}&courseId=${courseId}&offset=${c * page}&count=${c}`))
-                          .sort((a, b) => (a > b) ? -1 : 1);
-    if(irregularities.length == c) {
-      $('#courseprofile-irregularities-old').attr("disabled", false);
-      irregularities.forEach(irregularity => $('#courseprofile-irregularities').append(`
-              <tr>
-                <td>${linkRelative(irregularity.student.name, '/studentprofile.html?studentId='+irregularity.student.id)}</td>
-                <td>${irregularity.type}</td>
-                <td>${moment(irregularity.time).format('MMM Do, YYYY')}</td>
-              </tr>`));
-    } else {
-      // no more irregularity or something
-      $('#courseprofile-irregularities-old').attr("disabled", true);
-      if(irregularities.length == 0) {
-        $('#courseprofile-irregularities')[0].innerHTML = "<b>No Irregularities</b>";
-      }
-    }
-  } catch(err) {
-    console.log(err);
-    givePermError('Failed to connect to server.');
-    return;
-  }
-}
-
 async function loadCourseProfile(courseId) {
   try {
     let apiKey = Cookies.getJSON('apiKey');
@@ -53,13 +14,14 @@ async function loadCourseProfile(courseId) {
     document.getElementById('courseprofile-period').innerHTML = 'Period: ' + course.period;
     document.getElementById('courseprofile-location').innerHTML = linkRelative(course.location.name, '/locationprofile.html?locationId='+course.location.id);
 
-    let students = (await fetchJson(`${apiUrl()}/schedule/?apiKey=${apiKey.key}&courseId=${courseId}&offset=0&count=${INT32_MAX}`))
-      .map(schedule => schedule.student);
-    document.getElementById('courseprofile-student-count').innerHTML = 'Number of students: ' + students.length;
-    students.forEach(student => $('#courseprofile-students').append(`
+    let schedules = await fetchJson(`${apiUrl()}/schedule/?apiKey=${apiKey.key}&courseId=${courseId}&scheduleTime=${Date.now()}&offset=0&count=${INT32_MAX}`);
+
+    document.getElementById('courseprofile-student-count').innerHTML = 'Number of students: ' + schedules.length;
+
+    schedules.forEach(schedule => $('#courseprofile-students').append(`
           <tr>
-            <td>${linkRelative(student.name, '/studentprofile.html?studentId='+student.id)}</td>
-            <td>${student.id}</td>
+            <td>${linkRelative(schedule.student.name, '/studentprofile.html?studentId='+schedule.student.id)}</td>
+            <td>${schedule.student.id}</td>
           </tr>`));
   } catch(err) {
     console.log(err);
@@ -94,16 +56,4 @@ $(document).ready(function() {
 
 
   loadCourseProfile(courseId);
-
-  // Handle paging
-  $('#courseprofile-irregularities-new').click(async function() {
-    irregularityPage--;
-    await loadPage(courseId, irregularityPage);
-  });
-  $('#courseprofile-irregularities-old').click(async function() {
-    irregularityPage++;
-    await loadPage(courseId, irregularityPage);
-  });
-
-  loadPage(courseId, irregularityPage)
 })

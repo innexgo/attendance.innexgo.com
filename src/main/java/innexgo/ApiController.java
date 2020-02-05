@@ -22,8 +22,6 @@ import java.time.*;
 import java.time.temporal.*;
 import java.util.*;
 import java.util.stream.Collectors;
-import org.apache.commons.csv.*;
-import org.apache.logging.log4j.LogManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,20 +32,9 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.core.io.Resource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import org.apache.pdfbox.pdmodel.PDDocument;
-import java.io.ByteArrayOutputStream;
 
 @CrossOrigin
-@RestController
+//@RestController
 @RequestMapping(value = {"/api"})
 public class ApiController {
 
@@ -73,28 +60,6 @@ public class ApiController {
   static final ResponseEntity<?> OK = new ResponseEntity<>(HttpStatus.OK);
   static final ResponseEntity<?> UNAUTHORIZED = new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
   static final ResponseEntity<?> NOT_FOUND = new ResponseEntity<>(HttpStatus.NOT_FOUND);
-
-  ResponseEntity<?> pdfToResponse(PDDocument pdf) {
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-
-        try {
-          pdf.save(bos);
-        } catch(Exception e){
-          e.printStackTrace();
-          return INTERNAL_SERVER_ERROR;
-        }
-
-        byte[] contents = bos.toByteArray();
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.parseMediaType("application/pdf"));
-        String filename = "output.pdf";
-        headers.setContentDispositionFormData(filename, filename);
-        headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
-        ResponseEntity<byte[]> response = new ResponseEntity<>(contents, headers, HttpStatus.OK);
-        return response;
-  }
-
 
   /**
    * Fills in jackson objects (User) for ApiKey
@@ -1088,9 +1053,8 @@ public class ApiController {
             Utils.parseLong(allRequestParam.get("studentId")),
             Utils.parseLong(allRequestParam.get("courseId")),
             Utils.parseBoolean(allRequestParam.get("scheduleHasStart")),
-            Utils.parseLong(allRequestParam.get("scheduleStartTime")),
             Utils.parseBoolean(allRequestParam.get("scheduleHasEnd")),
-            Utils.parseLong(allRequestParam.get("scheduleEndTime")),
+            Utils.parseLong(allRequestParam.get("scheduleTime")),
             Utils.parseLong(allRequestParam.get("userId")),
             Utils.parseLong(allRequestParam.get("locationId")),
             Utils.parseLong(allRequestParam.get("periodNumber")),
@@ -1252,10 +1216,20 @@ public class ApiController {
 
     // if school is currently going on, represents the current period
     Period currentPeriod = periodService.getCurrent();
+    Semester currentSemester = semesterService.getCurrent();
 
     // if there is currently a course going on, represents the current course
-    List<Course> currentCourses = courseService.getByPeriodStartTime(currentPeriod.startTime);
-    currentCourses.removeIf(cs -> cs.locationId != locationId);
+    List<Course> currentCourses = courseService.query(
+      null, // Long id
+      null, // Long teacherId
+      locationId, // Long locationId
+      studentId, // Long studentId
+      currentPeriod.number, // Long period
+      null, // String subject
+      currentSemester.startTime, // Long semesterStartTime
+      0, // long offset
+      1  // long count
+      );
 
     Course currentCourse = currentCourses.isEmpty() ? null : currentCourses.get(0);
 

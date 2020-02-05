@@ -95,7 +95,7 @@ public class CourseService {
       Long teacherId,
       Long locationId,
       Long studentId,
-      Long period,
+      Long periodNumber,
       String subject,
       Long semesterStartTime,
       long offset,
@@ -106,7 +106,7 @@ public class CourseService {
             + (studentId == null ? "" : " INNER JOIN schedule sc ON cs.id = sc.course_id")
             + " WHERE 1=1 "
             + (id == null ? "" : " AND cs.id = " + id)
-            + (period == null ? "" : " AND cs.period = " + period)
+            + (periodNumber == null ? "" : " AND cs.period = " + periodNumber)
             + (teacherId == null ? "" : " AND cs.teacher_id = " + teacherId)
             + (locationId == null ? "" : " AND cs.location_id = " + locationId)
             + (semesterStartTime == null ? "" : " AND of.semester_start_time = " + semesterStartTime)

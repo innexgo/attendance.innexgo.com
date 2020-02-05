@@ -103,10 +103,9 @@ public class ScheduleService {
       Long studentId,
       Long courseId,
       Boolean hasStart,
-      Long startTime,
       Boolean hasEnd,
-      Long endTime,
       Long teacherId,
+      Long time,
       Long locationId,
       Long period,
       long offset,
@@ -119,9 +118,8 @@ public class ScheduleService {
             + (studentId == null ? "" : " AND sch.student_id = " + studentId)
             + (courseId == null ? "" : " AND sch.course_id = " + courseId)
             + (hasStart == null ? "" : " AND sch.has_start = " + hasStart)
-            + (startTime == null ? "" : " AND sch.start_time = " + startTime)
             + (hasEnd == null ? "" : " AND sch.has_end = " + hasEnd)
-            + (endTime == null ? "" : " AND sch.end_time = " + endTime)
+            + (time == null ? "" : " AND (!sc.has_start OR sc.start_time <= "+time+ ") AND (!sc.has_end OR sc.end_time > "+time + ")")
             + (teacherId == null ? "" : " AND c.teacher_id = " + teacherId)
             + (locationId == null ? "" : " AND c.location_id = " + locationId)
             + (period == null ? "" : " AND c.period = " + period)
@@ -131,5 +129,10 @@ public class ScheduleService {
 
     RowMapper<Schedule> rowMapper = new ScheduleRowMapper();
     return this.jdbcTemplate.query(sql, rowMapper);
+  }
+
+
+  public List<Schedule> getByCourseId() {
+    return null;
   }
 }
