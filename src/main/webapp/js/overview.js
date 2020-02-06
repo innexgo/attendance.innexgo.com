@@ -204,6 +204,14 @@ async function recentActivity() {
 
 // Forever runs and updates currentStatus
 async function currentStatus() {
+
+  const makeEntry = (student, bgcolor, fgcolor, faClass, buttonText) =>
+      `<tr>
+        <td>${linkRelative(student.name, '/studentprofile.html?studentId=' + student.id)}</td>
+        <td>${student.id}</td>
+        <td style="background-color:${bgcolor};color:${fgcolor}"><span class="fa ${faClass}"></span></td>
+      </tr>`;
+
   let apiKey = Cookies.getJSON('apiKey');
   let table = $('#current-status-table');
   while (true) {
@@ -222,14 +230,15 @@ async function currentStatus() {
 
     if (course != null) {
       try {
-        let students = await fetchJson(`${apiUrl()}/misc/registeredForCourse/?courseId=${course.id}&time=${time}&apiKey=${apiKey.key}`);
-        let irregularities = await fetchJson(`${apiUrl()}/irregularity/?courseId=${course.id}&periodStartTime=${period.startTime}&offset=0&count=${INT32_MAX}&apiKey=${apiKey.key}`);
+        let irregularities = (await fetchJson(`${apiUrl()}/irregularity/?courseId=${course.id}&periodStartTime=${period.startTime}&offset=0&count=${INT32_MAX}&apiKey=${apiKey.key}`))
+          .filter(i => i.type != 'Forgot to Sign Out');
+
         let presentStudents = await fetchJson(`${apiUrl()}/misc/present/?locationId=${course.location.id}&time=${time}&apiKey=${apiKey.key}`);
+        let registeredStudents = await fetchJson(`${apiUrl()}/misc/registeredForCourse/?courseId=${course.id}&time=${time}&apiKey=${apiKey.key}`);
 
         // This statement is brute force. Oof to those who must read it
         // Is list of all present students who are not in students
-        let visitors = presentStudents.filter(v => students.filter(s => s.id == v.id).length == 0)
-        let presentEnrolledStudents = presentStudents.filter(v => students.filter(s => s.id == v.id).length != 0)
+        let visitors = presentStudents.filter(v => registeredStudents.filter(s => s.id == v.id).length == 0)
 
         $('#current-status-percent-attendance')[0].innerHTML = `${presentEnrolledStudents.length}/${students.length}`;
 
@@ -237,51 +246,34 @@ async function currentStatus() {
 
         students.sort((a, b) => (a.name > b.name) ? 1 : -1)
 
-        visitors.forEach(v => table.append(
-          `<tr>
-            <td>${linkRelative(v.name, '/studentprofile.html?studentId=' + v.id)}</td>
-            <td>${v.id}</td>
-            <td style="background-color:#ffccff;color:#cc00cc">
-              <span class="fa fa-check"></span>
-            </td>
-          </tr>`));
+        visitors.forEach(v => table.append(makeEntry(v, '#ffccff', '#cc00cc', 'fa-check', 'Sign Out')));
 
-        for (let i = 0; i < students.length; i++) {
-          let text = '<span class="fa fa-check"></span>'
-          let bgcolor = '#ccffcc';
-          let fgcolor = '#00ff00';
-          let student = students[i];
-
-          let irregularity = irregularities.filter(irr => irr.student.id == student.id).pop();
-          let type = irregularity == null ? null : irregularity.type;
-          if (type == 'Absent') {
-            text = '<span class="fa fa-times"></span>';
-            bgcolor = '#ffcccc';
-            fgcolor = '#ff0000';
-          } else if (type == 'Tardy') {
-            text = '<span class="fa fa-check"></span>';
-            bgcolor = '#ffffcc';
-            fgcolor = '#cccc00';
-          } else if (type == 'Left Early') {
-            text = '<span class="fa fa-times"></span>';
-            bgcolor = '#ccffff';
-            fgcolor = '#00cccc';
-          } else if (type == 'Left Temporarily') {
-            text = '<span class="fa fa-check"></span>';
-            bgcolor = '#ccffff';
-            fgcolor = '#00cccc';
-          }
-
-          // put values in table
-          table.append(
-            `<tr>
-                <td>${linkRelative(student.name, '/studentprofile.html?studentId=' + student.id)}</td>
-                <td>${student.id}</td>
-                <td style="background-color:${bgcolor};color:${fgcolor}">${text}</td>
-             </tr>`);
-        }
-        if (table[0].innerHTML == '') {
+        if(registeredStudents.length == 0) {
           table[0].innerHTML = `<b>No Students Currently in Classroom</b>`;
+        } else {
+          registeredStudents.forEach(student => {
+            let irregularity = irregularities.filter(irr => irr.student.id == student.id).pop();
+            if (irregularity != null) {
+              switch (irregularity.type) {
+                case 'Absent': {
+                  table.append(makeEntry(student, '#ffcccc', '#ff0000', 'fa-times', 'Sign In'));
+                  break;
+                }
+                case 'Tardy': {
+                  table.append(makeEntry(student, '#ffffcc', '#cccc00', 'fa-check', 'Sign Out'));
+                  break;
+                }
+                case 'Left Early': {
+                  table.append(makeEntry(student, '#ccffff', '#00cccc', 'fa-times', 'Sign In'));
+                  break;
+                }
+                case 'Left Temporarily': {
+                  table.append(makeEntry(student, '#ccffff', '#00cccc', 'fa-check', 'Sign Out'));
+                  break;
+                }
+              }
+            }
+          });
         }
       } catch (err) {
         console.log(err);
@@ -294,22 +286,13 @@ async function currentStatus() {
       if (locationId != null) {
         try {
           let students = await fetchJson(`${apiUrl()}/misc/present/?locationId=${locationId}&time=${time}&apiKey=${apiKey.key}`);
-          let text = '<span class="fa fa-check"></span>'
-          let bgcolor = '#ccffcc';
-          let fgcolor = '#00ff00';
           // Clear table
           table[0].innerHTML = '';
           // Students
           if (students.length == 0) {
             table[0].innerHTML = `<b>No Students Currently in Classroom</b>`;
           } else {
-            students.forEach(student => table.append(
-              `<tr>
-                <td>${linkRelative(student.name, '/studentprofile.html?studentId=' + student.id)}</td>
-                <td>${student.id}</td>
-                <td style="background-color:${bgcolor};color:${fgcolor}">${text}</td>
-              </tr>`)
-            );
+            students.forEach(student => table.append(makeEntry(student, '#ccffcc', '#00ff00', 'fa-check', 'Sign Out')));
           }
         } catch (err) {
           console.log(err);

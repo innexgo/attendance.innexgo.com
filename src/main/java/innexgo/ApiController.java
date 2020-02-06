@@ -327,8 +327,9 @@ public class ApiController {
               Period.CLASS_PERIOD,                                 // String type
               periodService.getByTime(inEncounter.time).startTime, // Long minStartTime
               outEncounter.time,                                   // Long maxStartTime
-              0,                                                   //  long offset
-              Long.MAX_VALUE                                       //  long count
+              null,                                                // Boolean temp
+              0,                                                   // long offset
+              Long.MAX_VALUE                                       // long count
               );
 
         // Find first period with a course at this location
@@ -371,7 +372,8 @@ public class ApiController {
           null,                       // Long number,
           null,                       // String type,
           System.currentTimeMillis(), // Long minStartTime,
-          null,                        // Long maxStartTime
+          null,                        // Long maxStartTime,
+          null,                        // Boolean temp
           0,
           Long.MAX_VALUE
           );
@@ -1029,6 +1031,7 @@ public class ApiController {
             allRequestParam.get("periodType"),
             Utils.parseLong(allRequestParam.get("minPeriodStartTime")),
             Utils.parseLong(allRequestParam.get("maxPeriodStartTime")),
+            Utils.parseBoolean(allRequestParam.get("periodTemp")),
             offset,
             count
           )
@@ -1312,7 +1315,8 @@ public class ApiController {
               null,                                                // Long number
               Period.CLASS_PERIOD,                                 // String type
               periodService.getByTime(encounter.time).startTime,   // Long minStartTime
-              outEncounter.time,                                    // Long maxStartTime
+              outEncounter.time,                                   // Long maxStartTime
+              null,                                                // Boolean temp
               0,
               Long.MAX_VALUE
               );

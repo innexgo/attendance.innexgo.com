@@ -85,13 +85,6 @@ public class PeriodService {
     return count != 0;
   }
 
-  public List<Period> getTemporary() {
-    String sql = "SELECT start_time, number, type, temp FROM period where temp=true";
-    RowMapper<Period> rowMapper = new PeriodRowMapper();
-    return this.jdbcTemplate.query(sql, rowMapper);
-  }
-
-
   public Period getCurrent() {
     return getByTime(System.currentTimeMillis());
   }
@@ -104,6 +97,7 @@ public class PeriodService {
       null,          // String type
       null,          // Long minStartTime
       time,          // Long maxStartTime
+      null,          // Boolean temp
       0,             // offset
       Long.MAX_VALUE // count
     );
@@ -117,6 +111,7 @@ public class PeriodService {
       null, // String type
       time, // Long minStartTime
       null, // Long maxStartTime
+      null, // Boolean temp
       0,    // offset
       1     // count
     );
@@ -130,6 +125,7 @@ public class PeriodService {
       String type,
       Long minStartTime,
       Long maxStartTime,
+      Boolean temp,
       long offset,
       long count
     ) {

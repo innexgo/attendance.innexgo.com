@@ -102,7 +102,16 @@ public class DevelopmentController {
   // deletes periods with a length of less than 4 min
   @RequestMapping("/deleteTestingPeriods/")
   public ResponseEntity<?> deleteTestingPeriods() {
-    List<Period> periodList = periodService.getTemporary();
+    List<Period> periodList = periodService.query(
+      null,          // Long startTime,
+      null,          // Long number,
+      null,          // String type,
+      null,          // Long minStartTime,
+      null,          // Long maxStartTime,
+      true,          // Boolean temp,
+      0,             // long offset,
+      Long.MAX_VALUE // long count
+      );
 
     for(Period currentPeriod : periodList) {
       // delete irregularities, as they reference periods
