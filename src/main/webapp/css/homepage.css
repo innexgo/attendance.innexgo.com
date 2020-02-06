@@ -31,7 +31,7 @@ h2 {
 .hero {
     align-items: center;
     background-attachment: fixed;
-    background-image: linear-gradient(rgba(0, 0, 0, 0.5),rgba(0, 0, 0, 0.5)), url("../img/temp_school.jpg");
+    background-image: linear-gradient(rgba(0, 0, 0, 0.3),rgba(0, 0, 0, 0.3)), url("../img/homepage-bg.png");
     background-position: center center;
     background-repeat: no-repeat;
     background-size: cover;

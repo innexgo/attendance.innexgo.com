@@ -34,7 +34,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @CrossOrigin
-//@RestController
+@RestController
 @RequestMapping(value = {"/api"})
 public class ApiController {
 
@@ -60,6 +60,7 @@ public class ApiController {
   static final ResponseEntity<?> OK = new ResponseEntity<>(HttpStatus.OK);
   static final ResponseEntity<?> UNAUTHORIZED = new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
   static final ResponseEntity<?> NOT_FOUND = new ResponseEntity<>(HttpStatus.NOT_FOUND);
+  static final ResponseEntity<?> CONFLICT = new ResponseEntity<>(HttpStatus.CONFLICT);
 
   /**
    * Fills in jackson objects (User) for ApiKey
