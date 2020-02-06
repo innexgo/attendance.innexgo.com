@@ -119,7 +119,7 @@ public class ScheduleService {
             + (courseId == null ? "" : " AND sch.course_id = " + courseId)
             + (hasStart == null ? "" : " AND sch.has_start = " + hasStart)
             + (hasEnd == null ? "" : " AND sch.has_end = " + hasEnd)
-            + (time == null ? "" : " AND (!sc.has_start OR sc.start_time <= "+time+ ") AND (!sc.has_end OR sc.end_time > "+time + ")")
+            + (time == null ? "" : " AND (!sch.has_start OR sch.start_time <= "+time+") AND (!sch.has_end OR sch.end_time > "+time+")")
             + (teacherId == null ? "" : " AND c.teacher_id = " + teacherId)
             + (locationId == null ? "" : " AND c.location_id = " + locationId)
             + (period == null ? "" : " AND c.period = " + period)
