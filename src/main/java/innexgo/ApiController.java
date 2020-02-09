@@ -1381,6 +1381,7 @@ public class ApiController {
             if (System.currentTimeMillis() > currentPeriod.startTime) {
               irregularity.type = Irregularity.TYPE_TARDY;
               irregularity.timeMissing = encounter.time - currentPeriod.startTime;
+              irregularity.time = encounter.time;
               irregularityService.update(irregularity);
             } else {
               // if they're present before the startTime
