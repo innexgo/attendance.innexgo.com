@@ -22,11 +22,14 @@
   <script src="/vendor/js-cookie/js.cookie.js"></script>
   <script src="/vendor/moment/moment.min.js"></script>
   <script src="/vendor/chart/js/Chart.min.js"></script>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.33/pdfmake.min.js'></script>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.33/vfs_fonts.js'></script>
   <script src="/js/common.js"></script>
   <script src="/js/signedin.js"></script>
   <script src="/js/loadprefs.js"></script>
   <script src="/js/sidebar.js"></script>
   <script src="/js/studentprofile.js"></script>
+  <script src="/js/studentpdf.js"></script>
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css?family=Exo&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Ubuntu&display=swap" rel="stylesheet">
@@ -93,6 +96,7 @@
               <tr>
                 <td id="studentprofile-id">ID: </td>
                 <td id="studentprofile-grade" style='text-align: left'>Current Grade: </td>
+                <td><button id="generate-pdf" type="input-button" class="btn mt-3 btn-block btn-warning" onclick="generateStudentPDF(); return true;">Generate PDF</button></td>
               </tr>
             </table>
             <br>
