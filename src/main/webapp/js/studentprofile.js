@@ -40,7 +40,7 @@ async function loadCurrentLocation(studentId) {
   let apiKey = Cookies.getJSON('apiKey');
   let mostRecentSession = (await fetchJson(`${apiUrl()}/session/?studentId=${studentId}&apiKey=${apiKey.key}&offset=0&count=1`))[0];
   if(mostRecentSession != null) {
-    $('#studentprofile-currentlocation-signedin')[0].innerHTML = !mostRecentSession.complete;
+    $('#studentprofile-currentlocation-signedin')[0].innerHTML = mostRecentSession.complete ? "No, not still here" : "Yes";
     let time = mostRecentSession.complete ? mostRecentSession.outEncounter.time : mostRecentSession.inEncounter.time;
     $('#studentprofile-currentlocation-time')[0].innerHTML = moment(time).format('h:mm A');
     $('#studentprofile-currentlocation-date')[0].innerHTML = moment(time).format('dddd, MMM Do, YYYY');
