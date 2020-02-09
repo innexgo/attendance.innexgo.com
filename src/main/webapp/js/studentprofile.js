@@ -82,7 +82,6 @@ async function initialize() {
 
     document.getElementById('studentprofile-name').innerHTML = student.name;
     document.getElementById('studentprofile-id').innerHTML = 'ID: ' + student.id;
-
     // Load semester chooser options
     try {
       let grades = await fetchJson(`${apiUrl()}/grade/?studentId=${studentId}&offset=0&count=${INT32_MAX}&apiKey=${apiKey.key}`);
@@ -157,7 +156,6 @@ async function initialize() {
     givePermError('Page loaded with invalid student id.');
   }
 }
-
 $(document).ready(async function () {
     await initialize();
 });
