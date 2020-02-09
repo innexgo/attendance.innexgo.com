@@ -12,8 +12,11 @@ let student1 = null;
 let studentId = null;
 let grades = null;
 let currentGrade = null;
+let courses = null;
+let initialSemesterTime = null;
+let apiKey = null;
 async function getStudentInfo(){
-  let apiKey = Cookies.getJSON('apiKey');
+  apiKey = Cookies.getJSON('apiKey');
   console.log(apiKey.key);
   if(apiKey == null){
     console.log('not signed in');
@@ -38,10 +41,8 @@ currentGrade = grades.filter(g => g.semester.startTime == semester.startTime)[0]
       console.log(err);
       givePermError('Failed to load student info');
     }
-   /* let initialSemesterTime = $('#studentprofile-grades').val();
-  (await fetchJson(`${apiUrl()}/course/?studentId=${studentId}&semesterStartTime=${initialSemesterTime}&offset=0&count=${INT32_MAX}&apiKey=${apiKey.key}`))
-    .sort((a, b) => (a.period > b.period) ? 1 : -1) // Sort in order
-    */
+   initialSemesterTime = $('#studentprofile-grades').val();
+    
   }
   catch(err){
     console.log(err);
@@ -49,15 +50,16 @@ currentGrade = grades.filter(g => g.semester.startTime == semester.startTime)[0]
   }
   createPDF();
 }
+
 let docDefinition = null;
 async function createPDF(){
 docDefinition = (await {
   footer: 
       function(currentPage, pageCount) { 
     return 'Page ' + currentPage.toString() + ' of ' + pageCount; 
-  }, 
-  header: { 
-    text: 'Student Report for ' + student1.name , fontSize: 22, bold: true, alignment: 'center', margin: 10 
+  },
+  header: {
+    text: 'Student Report for ' + student1.name , style: 'header'
   },
   content: [
     {
@@ -69,9 +71,48 @@ docDefinition = (await {
   ],
       columnGap: 20,
     },
-
+    {text: 'Course Schedule', style: 'header'},
+  {
+    layout: 'lightHorizontalLines',
+    table: {
+      headerRows: 1,
+      widths: [ '10%', '35%', '35%', '20%' ],
+      
+      body: [ ['Period', 'Course', 'Teacher', 'Location'] ]
+            .concat(
+            (await fetchJson(`${apiUrl()}/course/?studentId=${studentId}&semesterStartTime=${initialSemesterTime}&offset=0&count=${INT32_MAX}&apiKey=${apiKey.key}`))
+              .sort((a, b) => (a.period > b.period) ? 1 : -1) // Sort in order
+              .map(c => [c.period, c.subject, c.teacher.name, c.location.name])
+            ),
+    },
+  },
+    {text: 'Recent Irregularities', style: 'header'},
+  {
+    layout: 'lightHorizontalLines',
+    table: {
+      headerRows: 1,
+      widths: [ '20%', '20%', '30%', '30%'],
+      body:[
+        ['Date', 'Time', 'Class', 'Type'] ]
+          .concat(
+  (await fetchJson(`${apiUrl()}/irregularity/?studentId=${studentId}&irregularityMinTime=${0}&irregularityMaxTime=${moment().valueOf()}&offset=0&count=${INT32_MAX}&apiKey=${apiKey.key}`))
+    .sort((a,b) => (a.time > b.time) ? -1 : 1) // sort by time descending
+    .map(i => [moment(i.time).format('MMM Do, YYYY'), moment(i.time).format('h:mm A'), i.course.subject, i.type])
+          ),
+    },
+  },
+            
   ],
+  styles: {
+    header: {
+      fontSize: 22,
+      bold: true,
+      alignment: 'center',
+      margin: 10
+  },
+  }
 });
+
 }
 
 
