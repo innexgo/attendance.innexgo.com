@@ -239,8 +239,9 @@ async function currentStatus() {
         // This statement is brute force. Oof to those who must read it
         // Is list of all present students who are not in students
         let visitors = presentStudents.filter(v => registeredStudents.filter(s => s.id == v.id).length == 0)
+        let presentRegistered = presentStudents.filter(v => registeredStudents.filter(s => s.id == v.id).length > 0)
 
-        $('#current-status-percent-attendance')[0].innerHTML = `${presentEnrolledStudents.length}/${students.length}`;
+        $('#current-status-percent-attendance')[0].innerHTML = `${presentRegistered.length}/${registeredStudents.length}`;
 
         table[0].innerHTML = '';
 
