@@ -1,5 +1,11 @@
 "use strict"
 
+/*
+ global Cookies moment
+ apiUrl fetchJson linkRelative INT32_MAX ordinal_suffix_of
+ giveTempSuccess givePermError
+ */
+
 let course = null;
 let period = null;
 

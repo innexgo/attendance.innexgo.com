@@ -1,5 +1,11 @@
 "use strict"
 
+/*
+ global Cookies moment
+ apiUrl fetchJson linkRelative isEmpty sleep INT32_MAX
+ giveTempError giveTempInfo giveTempSuccess givePermError
+ */
+
 const beepup = new Audio('assets/beepup.wav');
 const beepdown = new Audio('assets/beepdown.wav');
 const error = new Audio('assets/error.wav');
@@ -80,7 +86,7 @@ function manualEntryFunction(event) {
 // Forever runs and updates locationOptions
 async function locationOptions() {
   let apiKey = Cookies.getJSON('apiKey');
-  while (true) {
+  for(;;) {
     try {
       let locations = await fetchJson(`${apiUrl()}/location/?offset=0&count=${INT32_MAX}&apiKey=${apiKey.key}`);
       let locationSelect = $('#overview-locationid');
@@ -126,8 +132,9 @@ async function recentActivityLoadPage(page) {
   let period = Cookies.getJSON('period');
   let course = Cookies.getJSON('courses').filter(c => c.period == period.number)[0];
   let locationId = course != null ? course.location.id : Cookies.getJSON('default-locationid');
+
   if (location == null) {
-    table.innerHTML = '<b>No Default Location Loaded</b>';
+    $('#recentactivity-events')[0].innerHTML = '<b>No Default Location Loaded</b>';
     return;
   }
 
@@ -191,7 +198,7 @@ async function recentActivity() {
     await recentActivityLoadPage(recentActivityPage);
   });
 
-  while (true) {
+  for(;;) {
     try {
       recentActivityLoadPage(recentActivityPage);
     } catch (err) {
@@ -214,7 +221,7 @@ async function currentStatus() {
 
   let apiKey = Cookies.getJSON('apiKey');
   let table = $('#current-status-table');
-  while (true) {
+  for (;;) {
     let period = Cookies.getJSON('period');
     let courses = Cookies.getJSON('courses').sort((a, b) => (a.period > b.period ? -1 : 1));
     let course = period == null ? null : courses.filter(c => c.period == period.number)[0];
@@ -245,14 +252,16 @@ async function currentStatus() {
 
         table[0].innerHTML = '';
 
-        students.sort((a, b) => (a.name > b.name) ? 1 : -1)
-
-        visitors.forEach(v => table.append(makeEntry(v, '#ffccff', '#cc00cc', 'fa-check', 'Sign Out')));
+        visitors
+          .sort((a, b) => (a.name > b.name) ? 1 : -1)
+          .forEach(v => table.append(makeEntry(v, '#ffccff', '#cc00cc', 'fa-check', 'Sign Out')));
 
         if(registeredStudents.length == 0) {
           table[0].innerHTML = `<b>No Students Currently in Classroom</b>`;
         } else {
-          registeredStudents.forEach(student => {
+          registeredStudents
+            .sort((a, b) => (a.name > b.name) ? 1 : -1)
+            .forEach(student => {
             let irregularity = irregularities.filter(irr => irr.student.id == student.id).pop();
             if (irregularity != null) {
               switch (irregularity.type) {
@@ -328,9 +337,6 @@ $(document).ready(async function () {
       manualEncounter(parseInt($('#manual-studentid').val()));
     }
   });
-
-  // Just double check...
-  await userInfo();
 
   // Start long running threads
   locationOptions();
