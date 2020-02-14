@@ -1,5 +1,7 @@
 "use strict"
 
+/* global Cookies fetchJson apiUrl linkRelative givePermError INT32_MAX */
+
 async function loadCourseProfile(courseId) {
   try {
     let apiKey = Cookies.getJSON('apiKey');

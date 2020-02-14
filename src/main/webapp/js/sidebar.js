@@ -1,6 +1,11 @@
+"use strict"
+
+/* global 
+ moment Cookies
+ linkRelative
+ */
+
 function displayInfo() {
-
-
   let info_time = document.getElementById('info-time');
   let info_period = document.getElementById('info-period');
   let info_location = document.getElementById('info-location');

@@ -1,9 +1,16 @@
 "use strict"
 
-$(document).ready(function(){
+/* global
+  Cookies moment
+  apiUrl isEmpty standardizeString
+  fetchJson linkRelative INT32_MAX
+  giveTempError givePermError giveTempSuccess
+  */
+
+$(document).ready(function () {
   //Bootstrap Popover - Alert Zones/Quick help for Card(s)
   $('[data-toggle="popover"]').popover({
-    trigger : 'hover'
+    trigger: 'hover'
   });
 
 
@@ -24,7 +31,7 @@ $(document).ready(function(){
     .forEach(course => $('#reports-courses').append(`
         <tr>
           <td>${course.period}</td>
-          <td>${linkRelative(course.subject, '/courseprofile.html?courseId='+course.id)}</td>
+          <td>${linkRelative(course.subject, '/courseprofile.html?courseId=' + course.id)}</td>
         </tr>
       `)
     );
@@ -43,7 +50,7 @@ async function loadClassSessionReports(date) {
   let dayEnd = moment(date).endOf('day');
 
 
-  if(moment().isBefore(dayEnd)) {
+  if (moment().isBefore(dayEnd)) {
     dayEnd = moment();
   }
 
@@ -53,7 +60,7 @@ async function loadClassSessionReports(date) {
   try {
     let semester = await fetchJson(`${apiUrl()}/misc/getSemesterByTime/?time=${date.valueOf()}&apiKey=${apiKey.key}`);
 
-    if(semester == null) {
+    if (semester == null) {
       console.log('No semester, so assuming no school!');
       return;
     }
@@ -63,19 +70,19 @@ async function loadClassSessionReports(date) {
     let periods = await fetchJson(`${apiUrl()}/period/?minPeriodStartTime=${dayBegin.valueOf()}&maxPeriodStartTime=${dayEnd.valueOf()}&offset=0&count=${INT32_MAX}&apiKey=${apiKey.key}`);
     let courses = await fetchJson(`${apiUrl()}/course/?semesterStartTime=${semester.startTime}&userId=${apiKey.user.id}&offset=0&count=${INT32_MAX}&apiKey=${apiKey.key}`);
 
-    for(let period of periods) {
+    for (let period of periods) {
       // for each course that has this period's id
-      for(let course of courses.filter(c => c.period === period.number)) {
+      for (let course of courses.filter(c => c.period === period.number)) {
         $('#reports-classes').append(`
                   <tr>
                     <td>${period.number}</td>
-                    <td>${linkRelative(course.subject, '/classprofile.html?courseId='+course.id+'&periodStartTime='+period.startTime)}</td>
+                    <td>${linkRelative(course.subject, '/classprofile.html?courseId=' + course.id + '&periodStartTime=' + period.startTime)}</td>
                   </tr>`)
       }
     }
-  } catch(err) {
+  } catch (err) {
     console.log(err);
-    giveAlert('Something went wrong while fetching courses from the server.', 'alert-danger', false);
+    giveTempError('Something went wrong while fetching courses from the server.');
   }
 }
 
@@ -95,8 +102,8 @@ $(document).ready(function () {
   });
 
   let button = document.getElementById('reports-student-submit');
-  button.addEventListener('click', function(event) {
-    if(!isEmpty(tbox.value)) {
+  button.addEventListener('click', function (event) {
+    if (!isEmpty(tbox.value)) {
       console.log('doing button');
       searchStudent(tbox.value);
       tbox.value = '';
@@ -109,8 +116,8 @@ $(document).ready(function () {
 async function searchStudent(name) {
   let apiKey = Cookies.getJSON('apiKey');
   let validatedName = standardizeString(name);
-  if(isEmpty(validatedName)) {
-    giveAlert('Invalid Name', 'alert-danger', false);
+  if (isEmpty(validatedName)) {
+    giveTempError('Invalid Name');
     return;
   }
 
@@ -119,15 +126,12 @@ async function searchStudent(name) {
 
   try {
     let studentList = await fetchJson(`${apiUrl()}/student/?studentNamePartial=${validatedName}&offset=0&count=${INT32_MAX}&apiKey=${apiKey.key}`);
-    for(let student of studentList) {
-      $('#reports-students').append(`
-              <tr>
-                <td>${linkRelative(student.name, '/studentprofile.html?studentId='+student.id)}</td>
-                <td>${student.id}</td>
-              </tr>
-            `);
-    }
-  } catch(err) {
+    studentList.forEach(student => $('#reports-students').append(`
+        <tr>
+          <td>${linkRelative(student.name, '/studentprofile.html?studentId=' + student.id)}</td>
+          <td>${student.id}</td>
+        </tr>`));
+  } catch (err) {
     console.log(err);
     giveTempError('Something went wrong while fetching students from the server.');
   }

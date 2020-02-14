@@ -1,4 +1,5 @@
-//load palette
+/* global Cookies */
+"use strict"
 
 function validPrefs() {
   var isValid = true;
@@ -35,7 +36,7 @@ function loadPref() {
       break;
   }
   document.getElementsByTagName('head')[0].appendChild(palette);
-};
+}
 
 $(document).ready(function () {
   if (validPrefs()) {

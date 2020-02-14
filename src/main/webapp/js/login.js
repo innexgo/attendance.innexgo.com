@@ -1,5 +1,10 @@
 "use strict"
 
+/* global
+  Cookies moment
+  isEmpty fetchJson staticUrl apiUrl
+*/
+
 function giveError(errormsg) {
   document.getElementById('error').innerHTML = errormsg;
 }

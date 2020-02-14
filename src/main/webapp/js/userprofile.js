@@ -1,5 +1,10 @@
 "use strict"
 
+/* global
+ Cookies
+ fetchJson apiUrl linkAbsolute linkRelative INT32_MAX
+ givePermError
+*/
 
 const position = {
   0:'Administrator',

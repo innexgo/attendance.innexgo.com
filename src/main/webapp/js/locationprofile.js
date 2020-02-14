@@ -1,11 +1,12 @@
 "use strict"
 
+/* globals moment Cookies fetchJson linkRelative apiUrl giveTempError givePermError sleep INT32_MAX */
 
 // Forever runs and updates currentStatus
 async function currentStatus(locationId) {
   let apiKey = Cookies.getJSON('apiKey');
   let table = document.getElementById('current-status-table');
-  while (true) {
+  for (; ;) {
     let period = Cookies.getJSON('period');
 
     let time = moment().valueOf();
@@ -46,13 +47,13 @@ async function currentStatus(locationId) {
 
 async function loadData() {
   let apiKey = Cookies.getJSON('apiKey');
-  if(apiKey == null) {
+  if (apiKey == null) {
     console.log('Not signed in');
     return;
   }
 
   let semester = Cookies.getJSON('semester');
-  if(semester == null) {
+  if (semester == null) {
     console.log('No semester, bailing');
     return;
   }
@@ -68,11 +69,11 @@ async function loadData() {
 
   try {
     let location = (await fetchJson(`${apiUrl()}/location/?locationId=${locationId}&offset=0&count=1&apiKey=${apiKey.key}`))[0]
-    if(location == null) {
+    if (location == null) {
       throw new Error('Location Id undefined in database!');
     }
     document.getElementById('location-name').innerHTML = location.name;
-  } catch(err) {
+  } catch (err) {
     console.log(err);
     givePermError('Page loaded with invalid location id.');
   }
@@ -87,23 +88,23 @@ async function loadData() {
       .forEach(course => $('#location-courses').append(`
             <tr>
               <td>${course.period}</td>
-              <td>${linkRelative(course.subject, '/courseprofile.html?courseId='+course.id)}</td>
-              <td>${linkRelative(course.teacher.name, '/userprofile.html?userId='+course.teacher.id)}</td>
+              <td>${linkRelative(course.subject, '/courseprofile.html?courseId=' + course.id)}</td>
+              <td>${linkRelative(course.teacher.name, '/userprofile.html?userId=' + course.teacher.id)}</td>
             </tr>`));
-  } catch(err) {
+  } catch (err) {
     console.log(err);
     givePermError('Error fetching courses.');
   }
 }
 
 //Bootstrap Popover - Alert Zones/Quick help for Card(s)
-$(document).ready(function(){
+$(document).ready(function () {
   $('[data-toggle="popover"]').popover({
-      trigger : 'hover'
+    trigger: 'hover'
   });
 });
 
-$(document).ready(function() {
+$(document).ready(function () {
   loadData();
 })
 

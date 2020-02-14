@@ -1,6 +1,6 @@
 "use strict"
 
-const INT32_MAX = 2147483647;
+const INT32_MAX = 0xffffffff;
 
 // use await sleep(some milliseconds)
 function sleep(ms) {
@@ -54,13 +54,15 @@ function ordinal_suffix_of(i) {
 var alertCounter = 0;
 function giveAlert(innerHTML, type, permanent) {
   var alertId = 'alert' + alertCounter;
+
   document.getElementById('alert-zone').innerHTML +=
-    '<div id="' + alertId + '" class="alert alert-dismissable ' + type + '" role="alert">' +
-    innerHTML +
-    '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
-    '<span aria-hidden="true">&times;</span>' +
-    '</button>' +
-    '</div>';
+    `<div id="${alertId}" class="alert alert-dismissable ${type}" role="alert">
+        ${innerHTML}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+    </div>`;
+
   if (!permanent) {
     $('#' + alertId).fadeTo(3000, 500).slideUp(500, function () {
       $('#' + alertId).slideUp(500);
@@ -96,7 +98,7 @@ function linkRelative(text, url) {
 
 // Returns a promise for the json given the response
 function parseResponse(response) {
-  if(!response.ok) {
+  if (!response.ok) {
     console.log(response);
     throw Error(response.statusText);
   }
@@ -106,7 +108,7 @@ function parseResponse(response) {
 // Fetches json given a URL
 async function fetchJson(url) {
   let response = await fetch(url);
-  if(!response.ok) {
+  if (!response.ok) {
     console.log(response);
     throw Error(response.statusText);
   }

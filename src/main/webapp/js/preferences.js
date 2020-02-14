@@ -1,20 +1,22 @@
 "use strict"
 
-$(document).ready(function(){
+/* global Cookies isEmpty */
+
+$(document).ready(function () {
   const idToPref = {
     "color-scheme": "colorScheme",
   }
 
-  var prefs = Cookies.getJSON('prefs');
-  var options = $('ul.segmented-buttons li');
+  let prefs = Cookies.getJSON('prefs');
+  let options = $('ul.segmented-buttons li');
 
-  for (var option of options) {
-    var prefName = prefs[
+  for (let option of options) {
+    let prefName = prefs[
       idToPref[
-        $(option)
+      $(option)
         .parent()[0]
         .id]
-      ];
+    ];
 
     if (!(isEmpty(option.id))) {
       if (option.id == prefName) {
@@ -31,20 +33,18 @@ $(document).ready(function(){
 
   $('.segmented-buttons').click(function (event) {
 
-    var innerElements = $('li', this);
-    var selectedElement = innerElements.filter(event.target)[0];
+    let innerElements = $('li', this);
+    let selectedElement = innerElements.filter(event.target)[0];
 
     innerElements
       .removeClass('selected')
       .filter(event.target)
       .addClass('selected');
 
-    if (!(isEmpty(selectedElement.id))) {
-      var prefVal = selectedElement.id;
-    }
-    else {
-      var prefVal = selectedElement.innerHTML.toLowerCase();
-    }
+    let prefVal = isEmpty(selectedElement.id)
+      ? selectedElement.innerHTML.toLowerCase()
+      : selectedElement.id;
+
     changePref(
       idToPref[this.id],
       prefVal

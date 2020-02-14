@@ -1,7 +1,10 @@
 "use strict"
 
-let student = null;
-let irregularities = null;
+/* global
+  moment Cookies
+  fetchJson apiUrl linkRelative INT32_MAX 
+  giveTempError givePermError 
+*/
 
 async function loadCourses(studentId, initialSemesterTime) {
   let apiKey = Cookies.getJSON('apiKey');
@@ -74,7 +77,7 @@ async function initialize() {
   let studentId = searchParams.get('studentId');
 
   try {
-    student = (await fetchJson(`${apiUrl()}/student/?studentId=${studentId}&offset=0&count=1&apiKey=${apiKey.key}`))[0];
+    let student = (await fetchJson(`${apiUrl()}/student/?studentId=${studentId}&offset=0&count=1&apiKey=${apiKey.key}`))[0];
 
     if(student == null) {
       throw new Error('Student Id invalid');

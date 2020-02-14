@@ -1,5 +1,13 @@
 "use strict"
 
+/* global
+ Cookies moment
+ modalAlert apiUrl staticUrl fetchJson sleep INT32_MAX
+ givePermError
+ */
+
+
+
 // Removes credentials and moves to login page
 function logOut() {
     Cookies.remove('apiKey');
@@ -63,7 +71,7 @@ async function userInfo() {
 }
 
 async function pollUserInfo() {
-  while(true) {
+  for(;;) {
     await userInfo();
     let nextPeriod = Cookies.getJSON('nextPeriod');
     await sleep(nextPeriod.startTime - moment().valueOf());
@@ -71,7 +79,7 @@ async function pollUserInfo() {
 }
 
 async function pollEnsureSignedIn() {
-  while(true) {
+  for(;;) {
     await ensureSignedIn();
     let apiKey = Cookies.getJSON('apiKey');
     await sleep(apiKey.expirationTime - moment().valueOf());
