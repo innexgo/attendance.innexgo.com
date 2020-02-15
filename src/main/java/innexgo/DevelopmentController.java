@@ -43,6 +43,8 @@ public class DevelopmentController {
   @Autowired StudentService studentService;
   @Autowired UserService userService;
 
+  @Autowired InnexgoService innexgoService;
+
   static final ResponseEntity<?> BAD_REQUEST = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
   static final ResponseEntity<?> INTERNAL_SERVER_ERROR =
       new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -52,9 +54,9 @@ public class DevelopmentController {
 
   String rootEmail = "root@example.com";
 
-  @RequestMapping("/signOutAtMidnight/")
-  public ResponseEntity<?> signOutAtMidnight() {
-    
+  @RequestMapping("/signEveryoneOut/")
+  public ResponseEntity<?> signEveryoneOut() {
+    innexgoService.signEveryoneOut();
     return OK;
   }
 
