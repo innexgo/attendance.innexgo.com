@@ -26,7 +26,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-//@RestController
+@RestController
 @RequestMapping(value = {"/dev/"})
 public class DevelopmentController {
 
@@ -51,6 +51,12 @@ public class DevelopmentController {
   static final ResponseEntity<?> NOT_FOUND = new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
   String rootEmail = "root@example.com";
+
+  @RequestMapping("/signOutAtMidnight/")
+  public ResponseEntity<?> signOutAtMidnight() {
+    
+    return OK;
+  }
 
   @RequestMapping("/populateUsers/")
   public ResponseEntity<?> populateUsers() {

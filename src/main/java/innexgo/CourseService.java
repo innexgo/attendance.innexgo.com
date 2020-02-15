@@ -99,7 +99,8 @@ public class CourseService {
       String subject,
       Long semesterStartTime,
       long offset,
-      long count) {
+      long count
+      ) {
     String sql = "SELECT DISTINCT cs.id, cs.teacher_id, cs.location_id, cs.period, cs.subject"
         + " FROM course cs"
             + (semesterStartTime == null ? "" : " INNER JOIN offering of ON cs.id = of.course_id")
@@ -120,7 +121,8 @@ public class CourseService {
     return this.jdbcTemplate.query(sql, rowMapper);
   }
 
-  // Returns all courses that are currently running at this period start time
+
+  // Returns all courses that would be running at this period start time
   public List<Course> getByPeriodStartTime(long periodStartTime) {
     Period period = periodService.getByStartTime(periodStartTime);
     Semester semester = semesterService.getByTime(periodStartTime);
