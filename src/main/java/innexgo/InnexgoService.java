@@ -391,7 +391,7 @@ public class InnexgoService {
           boolean alreadyAbsent = irregularityService.query(
               null,                     //  Long id
               student.id,               //  Long studentId
-              null,                     //  Long courseId
+              course.id,                //  Long courseId
               periodStartTime,          //  Long periodStartTime
               null,                     //  Long teacherId
               Irregularity.TYPE_ABSENT, //  String type
@@ -420,7 +420,7 @@ public class InnexgoService {
 
   }
 
-  public Session attends( long studentId, long locationId, boolean manual) 
+  public Session attends(long studentId, long locationId, boolean manual) 
   {
     Session returnableSession = null;
 
