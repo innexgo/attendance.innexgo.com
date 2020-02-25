@@ -1,5 +1,7 @@
 "use strict"
 
+/* global moment */
+
 const INT32_MAX = 0xffffffff;
 
 // use await sleep(some milliseconds)
@@ -26,6 +28,21 @@ function escapeHtml(unsafe) {
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#039;");
+}
+
+function readableTimestamp(ms) {
+  let diff = Date.now() - ms;
+  if(diff < 0) {
+    return moment(ms).format('h:mma M/D/YY');
+  } else if(diff < 30*1000) {
+    return 'a few seconds ago';
+  } else if (diff < 60*1000) {
+    return 'less than a minute ago';
+  } else if (diff < 15*60*1000) {
+    return `${Math.round(diff/(60*1000))} minutes ago`;
+  } else {
+    return moment(ms).format('h:mma M/D/YY');
+  }
 }
 
 function standardizeString(unsafe) {

@@ -2,7 +2,7 @@
 
 /*
  global Cookies moment
- apiUrl fetchJson linkRelative isEmpty sleep INT32_MAX
+ readableTimestamp apiUrl fetchJson linkRelative isEmpty sleep INT32_MAX
  giveTempError giveTempInfo giveTempSuccess givePermError
  */
 
@@ -13,12 +13,14 @@ const error = new Audio('assets/error.wav');
 // Page we're on
 let recentActivityPage = 0;
 
-//Bootstrap Popover - Alert Zones/Quick help for Card(s)
-$(document).ready(function () {
+function enableHover() {
   $('[data-toggle="popover"]').popover({
     trigger: 'hover'
   });
-});
+}
+
+//Bootstrap Popover - Alert Zones/Quick help for Card(s)
+$(document).ready(enableHover);
 
 
 async function manualEncounter(studentId) {
@@ -164,13 +166,13 @@ async function recentActivityLoadPage(page) {
             <tr>
               <td>${linkRelative(e.encounter.student.name, '/studentprofile.html?studentId=' + e.encounter.student.id)}</td>
               <td>${e.encounter.student.id}</td>
-              <td>${moment(e.encounter.time).fromNow()}</td>
-              <td> <h4 style="color:${e.in
-        ? '#66ff66'     // green if siginin
-        : e.encounter.type == 'virtual'
-          ? '#6666ff' // blue if virtual signout
-          : '#ff6666' // red if signout
-      }" class="fa ${e.in ? 'fa-sign-in-alt' : 'fa-sign-out-alt'}"></h4></td>
+              <td>${readableTimestamp(e.encounter.time)}</td>
+              <td>${e.virtual
+                  ? 'Out (Assumed)'
+                  : e.in
+                      ? 'In'
+                      : 'Out'}
+              </td>
             </tr>`));
 
   if (sessions.length == c) {
@@ -212,11 +214,13 @@ async function recentActivity() {
 // Forever runs and updates currentStatus
 async function currentStatus() {
 
-  const makeEntry = (student, bgcolor, fgcolor, faClass, buttonText) =>
+  const makeEntry = (student, bgcolor, fgcolor, faClass, toolTip) =>
       `<tr>
         <td>${linkRelative(student.name, '/studentprofile.html?studentId=' + student.id)}</td>
         <td>${student.id}</td>
-        <td style="background-color:${bgcolor};color:${fgcolor}"><span class="fa ${faClass}"></span></td>
+        <td title="${toolTip}" style="background-color:${bgcolor};color:${fgcolor}">
+            <span class="fa ${faClass}"></span>
+        </td>
       </tr>`;
 
   let apiKey = Cookies.getJSON('apiKey');
@@ -254,7 +258,7 @@ async function currentStatus() {
 
         visitors
           .sort((a, b) => (a.name > b.name) ? 1 : -1)
-          .forEach(v => table.append(makeEntry(v, '#ffccff', '#cc00cc', 'fa-check', 'Sign Out')));
+          .forEach(v => table.append(makeEntry(v, '#ffccff', '#cc00cc', 'fa-check', 'This student is not scheduled to be in your classroom right now.')));
 
         if(registeredStudents.length == 0) {
           table[0].innerHTML = `<b>No Students Currently in Classroom</b>`;
@@ -266,19 +270,19 @@ async function currentStatus() {
             if (irregularity != null) {
               switch (irregularity.type) {
                 case 'Absent': {
-                  table.append(makeEntry(student, '#ffcccc', '#ff0000', 'fa-times', 'Sign In'));
+                  table.append(makeEntry(student, '#ffcccc', '#ff0000', 'fa-times', 'Student was supposed to attend, but hasn\'t signed in yet.'));
                   break;
                 }
                 case 'Tardy': {
-                  table.append(makeEntry(student, '#ffffcc', '#cccc00', 'fa-check', 'Sign Out'));
+                  table.append(makeEntry(student, '#ffffcc', '#cccc00', 'fa-check', 'Student was supposed to attend and signed in late.'));
                   break;
                 }
                 case 'Left Early': {
-                  table.append(makeEntry(student, '#ccffff', '#00cccc', 'fa-times', 'Sign In'));
+                  table.append(makeEntry(student, '#ccffff', '#00cccc', 'fa-times', 'This student was supposed to attend, but has signed out of your classroom early.'));
                   break;
                 }
                 case 'Left Temporarily': {
-                  table.append(makeEntry(student, '#ccffff', '#00cccc', 'fa-check', 'Sign Out'));
+                  table.append(makeEntry(student, '#ccffff', '#00cccc', 'fa-check', 'This student left in the middle of class, but has now signed back in.'));
                   break;
                 }
               }
@@ -302,7 +306,7 @@ async function currentStatus() {
           if (students.length == 0) {
             table[0].innerHTML = `<b>No Students Currently in Classroom</b>`;
           } else {
-            students.forEach(student => table.append(makeEntry(student, '#ccffcc', '#00ff00', 'fa-check', 'Sign Out')));
+            students.forEach(student => table.append(makeEntry(student, '#ccffcc', '#00ff00', 'fa-check', 'You don\'t have a scheduled class at the moment, but this student is signed into your classroom.')));
           }
         } catch (err) {
           console.log(err);
