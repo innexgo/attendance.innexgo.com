@@ -146,7 +146,7 @@ async function recentActivityLoadPage(page) {
     $('#recentactivity-events-new').attr("disabled", false);
   }
   // Count of irregularities per page
-  const c = 5;
+  const c = 10;
   let sessions = await fetchJson(`${apiUrl()}/session/?apiKey=${apiKey.key}&locationId=${locationId}&offset=${c * page}&count=${c}`);
 
   // Clear table
@@ -167,7 +167,7 @@ async function recentActivityLoadPage(page) {
               <td>${linkRelative(e.encounter.student.name, '/studentprofile.html?studentId=' + e.encounter.student.id)}</td>
               <td>${e.encounter.student.id}</td>
               <td>${readableTimestamp(e.encounter.time)}</td>
-              <td>${e.virtual
+              <td>${e.encounter.type == 'virtual'
                   ? 'Out (Assumed)'
                   : e.in
                       ? 'In'
