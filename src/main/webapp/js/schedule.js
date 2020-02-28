@@ -6,11 +6,11 @@ var ctxD = document.getElementById("doughnutChart").getContext('2d');
 var myLineChart = new Chart(ctxD, {
 type: 'doughnut',
 data: {
-labels: ["Period 1", "Period 2", "Period 3", "Period 4", "Period 5", "Period 6", "Period 7"],
+labels: ["% Absence","% Present"],
 datasets: [{
-data: [3, 1, 1, 2, 0, 5, 1],
-backgroundColor: ["#F7464A", "#46BFBD", "#FDB45C", "#949FB1", "#4D5360","#DCEDC1", "#E8B562"],
-hoverBackgroundColor: ["#FF5A5E", "#5AD3D1", "#FFC870", "#A8B3C5", "#616774", "#E6F2D3", "#EECB91"]
+data: [1/100, 99/100],
+backgroundColor: ["#F7464A", "#DCEDC1"],
+hoverBackgroundColor: ["#FF5A5E","#E6F2D3"]
 }]
 },
 options: {

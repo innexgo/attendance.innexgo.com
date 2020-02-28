@@ -98,16 +98,20 @@
                 <td id="studentprofile-grade" style='text-align: left'>Current Grade: </td>
                 <td><button id="generate-pdf" type="input-button" class="btn mt-3 btn-block btn-warning" onclick="generateStudentPDF(); return true;">Generate PDF</button></td>
               </tr>
+              <tr>
+                <td id="courseprofile-name" class="card-title">Course Name:</td>
+                <td id="courseprofile-period">Course Period:</td>
+              </tr>
             </table>
+
             <br>
             <div class="table-height-standard">
               <table class="table striped white">
                 <thead>
                   <tr class="table-header">
-                    <td>Period</td>
-                    <td>Course</td>
-                    <td>Teacher</td>
-                    <td># of Absences</td>
+                    <td>Absence #</td>
+                    <td>Date</td>
+                    <td>Reason</td>
                     <td></td>
                   </tr>
                 </thead>
@@ -121,7 +125,7 @@
         <div class="card col-sm-6 palette-level-two">
           <div class="card-body m-10">
             <div class="input-group">
-              <h5 class="card-title">Number of Absences by Period</h5>
+              <h5 class="card-title">Attendance Record</h5>
               <span class="input-group-btn ml-auto">
                 <button type="button" class="btn btn-sm" data-html="true" data-toggle="popover" title="Absence Charts"
                   data-placement="top" data-content="">
@@ -131,7 +135,7 @@
             </div>
             <tr>
               <td><canvas id="doughnutChart" style="max-width: 500px; margin-bottom: 25px;"></canvas></td>
-              <td><h5 class="card-title">Total Cumulative Absences Over Time</h5></td>
+              <td><h5 class="card-title">Total Cumulative Absences Over Time (in Period)</h5></td>
               <canvas id="lineChart"style="max-width: 500px;"></canvas>
             </tr>
           </div>
