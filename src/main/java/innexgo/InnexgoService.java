@@ -1,14 +1,23 @@
 package innexgo;
 
-import java.time.*;
-import java.util.*;
-import java.time.temporal.*;
-import org.springframework.beans.factory.annotation.Autowired;
+import java.time.Duration;
+import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.Date;
+import java.util.IdentityHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ScheduledFuture;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
+import org.springframework.scheduling.support.ScheduledMethodRunnable;
 import org.springframework.stereotype.Service;
-
 
 @Service
 public class InnexgoService {
@@ -375,47 +384,47 @@ public class InnexgoService {
   }
 
   public void issueAbsences(long periodStartTime) {
-      logger.info("Period " + periodStartTime + " started, inserting absences");
-      // get courses at this period
-      List<Course> courseList = courseService.getByPeriodStartTime(periodStartTime);
+    logger.info("Period " + periodStartTime + " started, inserting absences");
+    // get courses at this period
+    List<Course> courseList = courseService.getByPeriodStartTime(periodStartTime);
 
-      // for all courses at this time
-      for (Course course : courseList) {
-        // subtract present students from all students taking the course
-        List<Student> absentees = studentService.registeredForCourse(course.id, periodStartTime);
-        absentees.removeAll(studentService.present(course.locationId, periodStartTime));
+    // for all courses at this time
+    for (Course course : courseList) {
+      // subtract present students from all students taking the course
+      List<Student> absentees = studentService.registeredForCourse(course.id, periodStartTime);
+      absentees.removeAll(studentService.present(course.locationId, periodStartTime));
 
-        // mark all students not there as absent
-        for (Student student : absentees) {
-          // Check if already absent. if not, don't add
-          boolean alreadyAbsent = irregularityService.query(
-              null,                     //  Long id
-              student.id,               //  Long studentId
-              course.id,                //  Long courseId
-              periodStartTime,          //  Long periodStartTime
-              null,                     //  Long teacherId
-              Irregularity.TYPE_ABSENT, //  String type
-              null,                     //  Long time
-              null,                     //  Long minTime
-              null,                     //  Long maxTime
-              0,                        //  long count
-              Long.MAX_VALUE            //  long count
-              ).size() > 0;
-          // if not already absent
-          if (!alreadyAbsent) {
-            Irregularity irregularity = new Irregularity();
-            irregularity.studentId = student.id;
-            irregularity.courseId = course.id;
-            irregularity.periodStartTime = periodStartTime;
-            irregularity.type = Irregularity.TYPE_ABSENT;
-            irregularity.time = periodStartTime;
-            irregularity.timeMissing = periodService
-              .getNextByTime(periodStartTime+1)
-              .startTime - periodStartTime;
-            irregularityService.add(irregularity);
-          }
+      // mark all students not there as absent
+      for (Student student : absentees) {
+        // Check if already absent. if not, don't add
+        boolean alreadyAbsent = irregularityService.query(
+            null,                     //  Long id
+            student.id,               //  Long studentId
+            course.id,                //  Long courseId
+            periodStartTime,          //  Long periodStartTime
+            null,                     //  Long teacherId
+            Irregularity.TYPE_ABSENT, //  String type
+            null,                     //  Long time
+            null,                     //  Long minTime
+            null,                     //  Long maxTime
+            0,                        //  long count
+            Long.MAX_VALUE            //  long count
+            ).size() > 0;
+        // if not already absent
+        if (!alreadyAbsent) {
+          Irregularity irregularity = new Irregularity();
+          irregularity.studentId = student.id;
+          irregularity.courseId = course.id;
+          irregularity.periodStartTime = periodStartTime;
+          irregularity.type = Irregularity.TYPE_ABSENT;
+          irregularity.time = periodStartTime;
+          irregularity.timeMissing = periodService
+            .getNextByTime(periodStartTime+1)
+            .startTime - periodStartTime;
+          irregularityService.add(irregularity);
         }
       }
+    }
 
 
   }
@@ -444,16 +453,16 @@ public class InnexgoService {
 
     // if there is currently a course going on, represents the current course
     List<Course> currentCourses = courseService.query(
-      null, // Long id
-      null, // Long teacherId
-      locationId, // Long locationId
-      studentId, // Long studentId
-      currentPeriod.number, // Long period
-      null, // String subject
-      currentSemester.startTime, // Long semesterStartTime
-      0, // long offset
-      1  // long count
-      );
+        null, // Long id
+        null, // Long teacherId
+        locationId, // Long locationId
+        studentId, // Long studentId
+        currentPeriod.number, // Long period
+        null, // String subject
+        currentSemester.startTime, // Long semesterStartTime
+        0, // long offset
+        1  // long count
+        );
 
     Course currentCourse = currentCourses.isEmpty() ? null : currentCourses.get(0);
 
@@ -618,4 +627,41 @@ public class InnexgoService {
     }
     return returnableSession;
   }
+
+  private final Map<Object, ScheduledFuture<?>> scheduledTasks =
+    new IdentityHashMap<>();
+
+  @Scheduled(fixedRate = 2000)
+  public void fixedRateJob() {
+    System.out.println("Something to be done every 2 secs");
+  }
+
+  @Bean
+  public TaskScheduler poolScheduler() {
+    return new CustomTaskScheduler();
+  }
+
+  class CustomTaskScheduler extends ThreadPoolTaskScheduler {
+
+    @Override
+    public ScheduledFuture<?> scheduleAtFixedRate(Runnable task, long period) {
+      ScheduledFuture<?> future = super.scheduleAtFixedRate(task, period);
+
+      ScheduledMethodRunnable runnable = (ScheduledMethodRunnable) task;
+      scheduledTasks.put(runnable.getTarget(), future);
+
+      return future;
+    }
+
+    @Override
+    public ScheduledFuture<?> scheduleAtFixedRate(Runnable task, Date startTime, long period) {
+      ScheduledFuture<?> future = super.scheduleAtFixedRate(task, startTime, period);
+
+      ScheduledMethodRunnable runnable = (ScheduledMethodRunnable) task;
+      scheduledTasks.put(runnable.getTarget(), future);
+
+      return future;
+    }
+  }
 }
+
