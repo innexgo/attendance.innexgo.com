@@ -35,6 +35,8 @@ public class InnexgoService {
   @Autowired StudentService studentService;
   @Autowired UserService userService;
 
+  private final Map<Object, ScheduledFuture<?>> scheduledTasks =
+    new IdentityHashMap<>();
 
   Logger logger = LoggerFactory.getLogger(InnexgoService.class);
 
@@ -628,40 +630,32 @@ public class InnexgoService {
     return returnableSession;
   }
 
-  private final Map<Object, ScheduledFuture<?>> scheduledTasks =
-    new IdentityHashMap<>();
-
-  @Scheduled(fixedRate = 2000)
-  public void fixedRateJob() {
-    System.out.println("Something to be done every 2 secs");
-  }
 
   @Bean
   public TaskScheduler poolScheduler() {
-    return new CustomTaskScheduler();
-  }
+    ThreadPoolTaskScheduler customScheduler = new ThreadPoolTaskScheduler() {
+      @Override
+      public ScheduledFuture<?> scheduleAtFixedRate(Runnable task, long period) {
+        ScheduledFuture<?> future = super.scheduleAtFixedRate(task, period);
 
-  class CustomTaskScheduler extends ThreadPoolTaskScheduler {
+        ScheduledMethodRunnable runnable = (ScheduledMethodRunnable) task;
+        scheduledTasks.put(runnable.getTarget(), future);
 
-    @Override
-    public ScheduledFuture<?> scheduleAtFixedRate(Runnable task, long period) {
-      ScheduledFuture<?> future = super.scheduleAtFixedRate(task, period);
+        return future;
+      }
 
-      ScheduledMethodRunnable runnable = (ScheduledMethodRunnable) task;
-      scheduledTasks.put(runnable.getTarget(), future);
+      @Override
+      public ScheduledFuture<?> scheduleAtFixedRate(Runnable task, Date startTime, long period) {
+        ScheduledFuture<?> future = super.scheduleAtFixedRate(task, startTime, period);
 
-      return future;
-    }
+        ScheduledMethodRunnable runnable = (ScheduledMethodRunnable) task;
+        scheduledTasks.put(runnable.getTarget(), future);
 
-    @Override
-    public ScheduledFuture<?> scheduleAtFixedRate(Runnable task, Date startTime, long period) {
-      ScheduledFuture<?> future = super.scheduleAtFixedRate(task, startTime, period);
-
-      ScheduledMethodRunnable runnable = (ScheduledMethodRunnable) task;
-      scheduledTasks.put(runnable.getTarget(), future);
-
-      return future;
-    }
+        return future;
+      }
+    };
+    customScheduler.setPoolSize(4);
+    return customScheduler;
   }
 }
 
