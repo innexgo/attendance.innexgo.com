@@ -10,9 +10,6 @@ const beepup = new Audio('assets/beepup.wav');
 const beepdown = new Audio('assets/beepdown.wav');
 const error = new Audio('assets/error.wav');
 
-// Page we're on
-let recentActivityPage = 0;
-
 function enableHover() {
   $('[data-toggle="popover"]').popover({
     trigger: 'hover'
@@ -129,7 +126,7 @@ async function locationOptions() {
 }
 
 // Loads data in reverse chronological order into the page
-async function recentActivityLoadPage(page) {
+async function recentActivityLoadPage() {
   let apiKey = Cookies.getJSON('apiKey');
   let period = Cookies.getJSON('period');
   let course = Cookies.getJSON('courses').filter(c => c.period == period.number)[0];
@@ -140,14 +137,9 @@ async function recentActivityLoadPage(page) {
     return;
   }
 
-  if (page == 0) {
-    $('#recentactivity-events-new').attr("disabled", true);
-  } else {
-    $('#recentactivity-events-new').attr("disabled", false);
-  }
-  // Count of irregularities per page
+  // Count of sessions per page
   const c = 10;
-  let sessions = await fetchJson(`${apiUrl()}/session/?apiKey=${apiKey.key}&locationId=${locationId}&offset=${c * page}&count=${c}`);
+  let sessions = await fetchJson(`${apiUrl()}/session/?apiKey=${apiKey.key}&locationId=${locationId}&offset=0&count=${c}`);
 
   // Clear table
   $('#recentactivity-events').empty();
@@ -187,22 +179,9 @@ async function recentActivityLoadPage(page) {
 }
 
 async function recentActivity() {
-  let apiKey = Cookies.getJSON('apiKey');
-  let table = $('recentactivity-events')[0];
-
-  // Handle paging
-  $('#recentactivity-events-new').click(async function () {
-    recentActivityPage--;
-    await recentActivityLoadPage(recentActivityPage);
-  });
-  $('#recentactivity-events-old').click(async function () {
-    recentActivityPage++;
-    await recentActivityLoadPage(recentActivityPage);
-  });
-
   for(;;) {
     try {
-      recentActivityLoadPage(recentActivityPage);
+      recentActivityLoadPage();
     } catch (err) {
       console.log(err);
       giveTempError('Failed to fetch recent activity data.');
@@ -266,7 +245,6 @@ async function currentStatus() {
           registeredStudents
             .sort((a, b) => (a.name > b.name) ? 1 : -1)
             .forEach(student => {
-              console.log(student);
               let irregularity = irregularities.filter(irr => irr.student.id == student.id).pop();
               if (irregularity != null) {
                 console.log(irregularity.type);
