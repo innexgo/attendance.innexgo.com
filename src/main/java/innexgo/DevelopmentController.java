@@ -107,18 +107,25 @@ public class DevelopmentController {
 
   /* TESTING */
   @RequestMapping("/populateTestingPeriods/")
-  public ResponseEntity<?> populateTestingPeriods() {
-    long minute = 1 * 60 * 1000;
-    long initialTime = System.currentTimeMillis() - 3 * minute;
-    for (int i = 1; i < 7; i++) {
-      Period period = new Period();
-      period.startTime = initialTime + minute * i * 3;
-      period.number = i;
-      period.type = Period.CLASS_PERIOD;
-      period.temp = true;
-      periodService.add(period);
+  public ResponseEntity<?> populateTestingPeriods(
+      @RequestParam("apiKey") String apiKey) {
+    if(innexgoService.isAdministrator(apiKey)) {
+      long minute = 1 * 60 * 1000;
+      long initialTime = System.currentTimeMillis() - 3 * minute;
+      for (int i = 1; i < 7; i++) {
+        Period period = new Period();
+        period.startTime = initialTime + minute * i * 3;
+        period.number = i;
+        period.type = Period.CLASS_PERIOD;
+        period.temp = true;
+        periodService.add(period);
+      }
+      // We need to restart this so that it works properly
+      innexgoService.restartInsertAbsences();
+      return OK;
+    } else {
+      return UNAUTHORIZED;
     }
-    return OK;
   }
 
   // deletes periods with a length of less than 4 min
@@ -158,6 +165,8 @@ public class DevelopmentController {
         }
         periodService.deleteByStartTime(currentPeriod.startTime);
       }
+      // We need to restart this so that it works properly
+      innexgoService.restartInsertAbsences();
       return OK;
     } else {
       return UNAUTHORIZED;
@@ -260,6 +269,8 @@ public class DevelopmentController {
         addPeriod(thisFriday, 6, Period.CLASS_PERIOD, "13:05");
         addPeriod(thisFriday, 0, Period.NO_PERIOD, "14:45");
       }
+      // We need to restart this so that it works properly
+      innexgoService.restartInsertAbsences();
       return OK;
     } else {
       return UNAUTHORIZED;

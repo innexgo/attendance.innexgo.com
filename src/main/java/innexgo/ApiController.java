@@ -54,6 +54,7 @@ public class ApiController {
   @Autowired UserService userService;
 
   @Autowired InnexgoService innexgoService;
+  @Autowired SchedulerService schedulerService;
 
   static final ResponseEntity<?> BAD_REQUEST = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
   static final ResponseEntity<?> INTERNAL_SERVER_ERROR =
@@ -280,6 +281,7 @@ public class ApiController {
       pr.number = number;
       pr.type = type;
       periodService.add(pr);
+      innexgoService.restartInsertAbsences();
       return new ResponseEntity<>(innexgoService.fillPeriod(pr), HttpStatus.OK);
     } else {
       return UNAUTHORIZED;

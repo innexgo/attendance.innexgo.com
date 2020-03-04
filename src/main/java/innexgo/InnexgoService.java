@@ -3,20 +3,12 @@ package innexgo;
 import java.time.Duration;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.Date;
-import java.util.IdentityHashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ScheduledFuture;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
-import org.springframework.scheduling.support.ScheduledMethodRunnable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -35,8 +27,7 @@ public class InnexgoService {
   @Autowired StudentService studentService;
   @Autowired UserService userService;
 
-  private final Map<Object, ScheduledFuture<?>> scheduledTasks =
-    new IdentityHashMap<>();
+  @Autowired SchedulerService schedulerService;
 
   Logger logger = LoggerFactory.getLogger(InnexgoService.class);
 
@@ -244,7 +235,7 @@ public class InnexgoService {
    */
   @Scheduled(fixedDelay = 5000)
   public void signOutAtMidnight() {
-    System.out.println("Starting sign out at midnight process");
+    logger.info("Starting sign out at midnight process");
     while (true) {
       try {
         ZonedDateTime now = ZonedDateTime.now(Utils.TIMEZONE);
@@ -253,7 +244,8 @@ public class InnexgoService {
         logger.info("Next mass sign out at: " + millisTillMidnight / 1000);
         Thread.sleep(millisTillMidnight);
       } catch (Exception e) {
-        e.printStackTrace();
+        // We will bail pretty regularly whenever someone updates the course and decides to kill
+        return;
       }
       signEveryoneOut();
     }
@@ -351,6 +343,10 @@ public class InnexgoService {
 
   }
 
+  public void restartInsertAbsences() {
+    schedulerService.restartTask("insertAbsences");
+  }
+
   /**
    * For all the courses at the current time, create irregularities { If the student has not signed
    * in yet before or during the period { generate an absent irregularity } }
@@ -379,7 +375,8 @@ public class InnexgoService {
         logger.info("Inserting absences in: " +  timeToSleep / 1000 + " seconds");
         Thread.sleep(timeToSleep);
       } catch (InterruptedException e) {
-        e.printStackTrace();
+        logger.info("insertAbsences thread INTERRUPTED, bailing");
+        return;
       }
       issueAbsences(period.startTime);
     }
@@ -628,46 +625,6 @@ public class InnexgoService {
       }
     }
     return returnableSession;
-  }
-
-
-  @Bean
-  public TaskScheduler poolScheduler() {
-    ThreadPoolTaskScheduler customScheduler = new ThreadPoolTaskScheduler() {
-
-      @Override
-      public ScheduledFuture<?> scheduleWithFixedDelay(Runnable task, long delay) {
-        ScheduledFuture<?> future = super.scheduleWithFixedDelay(task, delay);
-
-        ScheduledMethodRunnable runnable = (ScheduledMethodRunnable) task;
-        scheduledTasks.put(runnable.getTarget(), future);
-
-        return future;
-      }
-
-
-      @Override
-      public ScheduledFuture<?> scheduleAtFixedRate(Runnable task, long period) {
-        ScheduledFuture<?> future = super.scheduleAtFixedRate(task, period);
-
-        ScheduledMethodRunnable runnable = (ScheduledMethodRunnable) task;
-        scheduledTasks.put(runnable.getTarget(), future);
-
-        return future;
-      }
-
-      @Override
-      public ScheduledFuture<?> scheduleAtFixedRate(Runnable task, Date startTime, long period) {
-        ScheduledFuture<?> future = super.scheduleAtFixedRate(task, startTime, period);
-
-        ScheduledMethodRunnable runnable = (ScheduledMethodRunnable) task;
-        scheduledTasks.put(runnable.getTarget(), future);
-
-        return future;
-      }
-    };
-    customScheduler.setPoolSize(4);
-    return customScheduler;
   }
 }
 
