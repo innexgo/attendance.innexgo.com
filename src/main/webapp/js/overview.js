@@ -266,28 +266,32 @@ async function currentStatus() {
           registeredStudents
             .sort((a, b) => (a.name > b.name) ? 1 : -1)
             .forEach(student => {
-            let irregularity = irregularities.filter(irr => irr.student.id == student.id).pop();
-            if (irregularity != null) {
-              switch (irregularity.type) {
-                case 'Absent': {
-                  table.append(makeEntry(student, '#ffcccc', '#ff0000', 'fa-times', 'Student was supposed to attend, but hasn\'t signed in yet.'));
-                  break;
+              console.log(student);
+              let irregularity = irregularities.filter(irr => irr.student.id == student.id).pop();
+              if (irregularity != null) {
+                console.log(irregularity.type);
+                switch (irregularity.type) {
+                  case 'Absent': {
+                    table.append(makeEntry(student, '#ffcccc', '#ff0000', 'fa-times', 'Student was supposed to attend, but hasn\'t signed in yet.'));
+                    break;
+                  }
+                  case 'Tardy': {
+                    table.append(makeEntry(student, '#ffffcc', '#cccc00', 'fa-check', 'Student was supposed to attend and signed in late.'));
+                    break;
+                  }
+                  case 'Left Early': {
+                    table.append(makeEntry(student, '#ccffff', '#00cccc', 'fa-times', 'This student was supposed to attend, but has signed out of your classroom early.'));
+                    break;
+                  }
+                  case 'Left Temporarily': {
+                    table.append(makeEntry(student, '#ccffff', '#00cccc', 'fa-check', 'This student left in the middle of class, but has now signed back in.'));
+                    break;
+                  }
                 }
-                case 'Tardy': {
-                  table.append(makeEntry(student, '#ffffcc', '#cccc00', 'fa-check', 'Student was supposed to attend and signed in late.'));
-                  break;
-                }
-                case 'Left Early': {
-                  table.append(makeEntry(student, '#ccffff', '#00cccc', 'fa-times', 'This student was supposed to attend, but has signed out of your classroom early.'));
-                  break;
-                }
-                case 'Left Temporarily': {
-                  table.append(makeEntry(student, '#ccffff', '#00cccc', 'fa-check', 'This student left in the middle of class, but has now signed back in.'));
-                  break;
-                }
+              } else {
+                table.append(makeEntry(student, '#ccffcc', '#00ff00', 'fa-check', 'Student is present.'));
               }
-            }
-          });
+            });
         }
       } catch (err) {
         console.log(err);

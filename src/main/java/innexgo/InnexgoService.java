@@ -3,7 +3,10 @@ package innexgo;
 import java.time.Duration;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -389,8 +392,15 @@ public class InnexgoService {
     // for all courses at this time
     for (Course course : courseList) {
       // subtract present students from all students taking the course
-      List<Student> absentees = studentService.registeredForCourse(course.id, periodStartTime);
-      absentees.removeAll(studentService.present(course.locationId, periodStartTime));
+      Set<Long> presentStudentIds = studentService.present(course.locationId, periodStartTime)
+                                                  .stream()
+                                                  .map(s -> s.id)
+                                                  .collect(Collectors.toSet());
+
+      List<Student> absentees = studentService.registeredForCourse(course.id, periodStartTime)
+                                              .stream()
+                                              .filter(s -> !presentStudentIds.contains(s.id))
+                                              .collect(Collectors.toList());
 
       // mark all students not there as absent
       for (Student student : absentees) {

@@ -113,8 +113,15 @@ public class DevelopmentController {
       long minute = 1 * 60 * 1000;
       long initialTime = System.currentTimeMillis() - 3 * minute;
       for (int i = 1; i < 7; i++) {
+        Period passingPeriod = new Period();
+        passingPeriod.startTime = initialTime + minute * i * 3;
+        passingPeriod.number = 100+i;
+        passingPeriod.type = Period.PASSING_PERIOD;
+        passingPeriod.temp = true;
+        periodService.add(passingPeriod);
+
         Period period = new Period();
-        period.startTime = initialTime + minute * i * 3;
+        period.startTime = initialTime + minute * i * 3 + minute;
         period.number = i;
         period.type = Period.CLASS_PERIOD;
         period.temp = true;
