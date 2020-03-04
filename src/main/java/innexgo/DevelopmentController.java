@@ -133,7 +133,8 @@ public class DevelopmentController {
   public ResponseEntity<?> deleteTestingPeriods(
       @RequestParam("apiKey") String apiKey) {
     if(innexgoService.isAdministrator(apiKey)) {
-      List<Period> periodList = periodService.query(null, // Long startTime,
+      List<Period> periodList = periodService.query(
+          null, // Long startTime,
           null, // Long number,
           null, // String type,
           null, // Long minStartTime,

@@ -137,6 +137,7 @@ public class PeriodService {
             + (type == null ? "" : " AND prd.type = " + Utils.escape(type))
             + (minStartTime == null ? "" : " AND prd.start_time >= " + minStartTime)
             + (maxStartTime == null ? "" : " AND prd.start_time <= " + maxStartTime)
+            + (temp == null ? "" : " AND prd.temp = " + temp)
             + (" ORDER BY prd.start_time")
             + (" LIMIT " + offset + ", "  + count)
             + ";";

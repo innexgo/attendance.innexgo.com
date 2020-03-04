@@ -366,7 +366,6 @@ public class InnexgoService {
           0,
           Long.MAX_VALUE
           );
-
     for (int i = 0; i < periodList.size(); i++) {
       Period period = periodList.get(i);
       // wait till we are at the right time
