@@ -634,6 +634,18 @@ public class InnexgoService {
   @Bean
   public TaskScheduler poolScheduler() {
     ThreadPoolTaskScheduler customScheduler = new ThreadPoolTaskScheduler() {
+
+      @Override
+      public ScheduledFuture<?> scheduleWithFixedDelay(Runnable task, long delay) {
+        ScheduledFuture<?> future = super.scheduleWithFixedDelay(task, delay);
+
+        ScheduledMethodRunnable runnable = (ScheduledMethodRunnable) task;
+        scheduledTasks.put(runnable.getTarget(), future);
+
+        return future;
+      }
+
+
       @Override
       public ScheduledFuture<?> scheduleAtFixedRate(Runnable task, long period) {
         ScheduledFuture<?> future = super.scheduleAtFixedRate(task, period);
