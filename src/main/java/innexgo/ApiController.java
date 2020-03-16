@@ -73,35 +73,33 @@ public class ApiController {
       @RequestParam(value = "userEmail", defaultValue = "") String email,
       @RequestParam("expirationTime") Long expirationTime,
       @RequestParam("userPassword") String password) {
-
-      // if they gave a username instead of a userId
-      if (userId == -1 && !Utils.isEmpty(email)) {
-
-        // if the email is registered
-        if (userService.existsByEmail(email)) {
-          // get email
-          userId = userService.getByEmail(email).id;
-        }
+    // if they gave a username instead of a userId
+    if (userId == -1 && !Utils.isEmpty(email)) {
+      // if the email is registered
+      if (userService.existsByEmail(email)) {
+        // get email
+        userId = userService.getByEmail(email).id;
       }
-
-      // now actually make apiKey
-      if (userService.existsById(userId)) {
-        User u = userService.getById(userId);
-        if (Utils.matchesPassword(password, u.passwordHash)) {
-          ApiKey apiKey = new ApiKey();
-          apiKey.userId = userId;
-          apiKey.creationTime = System.currentTimeMillis();
-          apiKey.expirationTime = expirationTime;
-          apiKey.key = Utils.generateKey();
-          apiKey.keyHash = Utils.encodeApiKey(apiKey.key);
-          apiKeyService.add(apiKey);
-          return new ResponseEntity<>(innexgoService.fillApiKey(apiKey), HttpStatus.OK);
-        } else {
-          return Error.MUST_BE_USER.getResponse();
-        }
-      }
-      return BAD_REQUEST;
-      }
+    }
+    // Ensure user exists
+    if(!userService.existsById(userId)) {
+      return Error.USER_NONEXISTENT.getResponse();
+    }
+    // Ensure password is valid
+    User u = userService.getById(userId);
+    if (!Utils.matchesPassword(password, u.passwordHash)) {
+      return Error.PASSWORD_INCORRECT.getResponse();
+    }
+    // now actually make apiKey
+    ApiKey apiKey = new ApiKey();
+    apiKey.userId = userId;
+    apiKey.creationTime = System.currentTimeMillis();
+    apiKey.expirationTime = expirationTime;
+    apiKey.key = Utils.generateKey();
+    apiKey.keyHash = Utils.encodeApiKey(apiKey.key);
+    apiKeyService.add(apiKey);
+    return new ResponseEntity<>(innexgoService.fillApiKey(apiKey), HttpStatus.OK);
+  }
 
 
   /**
@@ -123,24 +121,26 @@ public class ApiController {
       @RequestParam("periodNumber") Long period,
       @RequestParam("courseSubject") String subject,
       @RequestParam("apiKey") String apiKey) {
-    if (innexgoService.isAdministrator(apiKey)) {
-      if (!Utils.isEmpty(subject)
-          && locationService.existsById(locationId)
-          && userService.existsById(teacherId)) {
-        Course course = new Course();
-        course.teacherId = teacherId;
-        course.locationId = locationId;
-        course.period = period;
-        course.subject = subject;
-        courseService.add(course);
-        // return the innexgoService.filled course on success
-        return new ResponseEntity<>(innexgoService.fillCourse(course), HttpStatus.OK);
-      } else {
-        return BAD_REQUEST;
-      }
-    } else {
+    if(!innexgoService.isAdministrator(apiKey)) {
       return Error.MUST_BE_ADMIN.getResponse();
     }
+    if(!locationService.existsById(locationId)) {
+      return Error.LOCATION_NONEXISTENT.getResponse();
+    }
+    if(!userService.existsById(teacherId)) {
+      return Error.USER_NONEXISTENT.getResponse();
+    }
+    if(Utils.isEmpty(subject)) {
+      return Error.COURSE_SUBJECT_EMPTY.getResponse();
+    }
+    Course course = new Course();
+    course.teacherId = teacherId;
+    course.locationId = locationId;
+    course.period = period;
+    course.subject = subject;
+    courseService.add(course);
+    // return the innexgoService.filled course on success
+    return new ResponseEntity<>(innexgoService.fillCourse(course), HttpStatus.OK);
   }
 
   /**
@@ -160,24 +160,24 @@ public class ApiController {
       @RequestParam("locationId") Long locationId,
       @RequestParam("manual") Boolean manual,
       @RequestParam("apiKey") String apiKey) {
-    if (innexgoService.isTrusted(apiKey)) {
-      if (locationService.existsById(locationId)
-          && studentService.existsById(studentId)) {
-        Encounter encounter = new Encounter();
-        encounter.locationId = locationId;
-        encounter.studentId = studentId;
-        encounter.time = System.currentTimeMillis();
-        encounter.type = manual
-          ? Encounter.MANUAL_ENCOUNTER
-          : Encounter.DEFAULT_ENCOUNTER;
-        encounterService.add(encounter);
-        return new ResponseEntity<>(innexgoService.fillEncounter(encounter), HttpStatus.OK);
-      } else {
-        return BAD_REQUEST;
-      }
-    } else {
+    if(!innexgoService.isTrusted(apiKey)) {
       return Error.MUST_BE_USER.getResponse();
     }
+    if(!locationService.existsById(locationId)) {
+      return Error.LOCATION_NONEXISTENT.getResponse();
+    }
+    if(!studentService.existsById(studentId)) {
+      return Error.STUDENT_NONEXISTENT.getResponse();
+    }
+    Encounter encounter = new Encounter();
+    encounter.locationId = locationId;
+    encounter.studentId = studentId;
+    encounter.time = System.currentTimeMillis();
+    encounter.type = manual
+      ? Encounter.MANUAL_ENCOUNTER
+      : Encounter.DEFAULT_ENCOUNTER;
+    encounterService.add(encounter);
+    return new ResponseEntity<>(innexgoService.fillEncounter(encounter), HttpStatus.OK);
   }
 
   @RequestMapping("/grade/new/")
@@ -186,22 +186,22 @@ public class ApiController {
       @RequestParam("semesterStartTime") Long semesterStartTime,
       @RequestParam("gradeNumber") Long number,
       @RequestParam("apiKey") String apiKey) {
-    if (innexgoService.isAdministrator(apiKey)) {
-      if (studentService.existsById(studentId)
-          && semesterService.existsByStartTime(semesterStartTime)
-          && !gradeService.existsByStudentIdSemesterStartTime(studentId, semesterStartTime)) {
-        Grade grade = new Grade();
-        grade.studentId = studentId;
-        grade.semesterStartTime = semesterStartTime;
-        grade.number = number;
-        gradeService.add(grade);
-        return new ResponseEntity<>(innexgoService.fillGrade(grade), HttpStatus.OK);
-      } else {
-        return BAD_REQUEST;
-      }
-    } else {
+    if(!innexgoService.isAdministrator(apiKey)) {
       return Error.MUST_BE_ADMIN.getResponse();
     }
+    if(!studentService.existsById(studentId)) {
+      return Error.STUDENT_NONEXISTENT.getResponse();
+    }
+    if(gradeService.existsByStudentIdSemesterStartTime(studentId, semesterStartTime)) {
+      return Error.GRADE_EXISTENT.getResponse();
+    }
+
+    Grade grade = new Grade();
+    grade.studentId = studentId;
+    grade.semesterStartTime = semesterStartTime;
+    grade.number = number;
+    gradeService.add(grade);
+    return new ResponseEntity<>(innexgoService.fillGrade(grade), HttpStatus.OK);
   }
 
   /**
@@ -218,20 +218,20 @@ public class ApiController {
       @RequestParam("locationId") Long locationId,
       @RequestParam("locationName") String name,
       @RequestParam("apiKey") String apiKey) {
-    if (innexgoService.isAdministrator(apiKey)) {
-      if (!locationService.existsById(locationId)
-          && !Utils.isEmpty(name)) {
-        Location location = new Location();
-        location.id = locationId;
-        location.name = name;
-        locationService.add(location);
-        return new ResponseEntity<>(innexgoService.fillLocation(location), HttpStatus.OK);
-      } else {
-        return BAD_REQUEST;
-      }
-    } else {
+    if(!innexgoService.isAdministrator(apiKey)) {
       return Error.MUST_BE_ADMIN.getResponse();
     }
+    if(locationService.existsById(locationId)) {
+      return Error.LOCATION_EXISTENT.getResponse();
+    }
+    if(Utils.isEmpty(name)) {
+      return Error.LOCATION_NAME_EMPTY.getResponse();
+    }
+    Location location = new Location();
+    location.id = locationId;
+    location.name = name;
+    locationService.add(location);
+    return new ResponseEntity<>(innexgoService.fillLocation(location), HttpStatus.OK);
   }
 
   @RequestMapping("/offering/new/")
@@ -239,24 +239,26 @@ public class ApiController {
       @RequestParam("semesterStartTime") Long semesterStartTime,
       @RequestParam("courseId") Long courseId,
       @RequestParam("apiKey") String apiKey) {
-    if (innexgoService.isAdministrator(apiKey)) {
-      if (semesterService.existsByStartTime(semesterStartTime)
-          && courseService.existsById(courseId)
-          && offeringService.getOfferingBySemesterStartTimeCourseId(
-              semesterStartTime,
-              courseId)
-            == null) {
-        Offering offering = new Offering();
-        offering.semesterStartTime = semesterStartTime;
-        offering.courseId = courseId;
-        offeringService.add(offering);
-        return new ResponseEntity<>(innexgoService.fillOffering(offering), HttpStatus.OK);
-      } else {
-        return BAD_REQUEST;
-      }
-    } else {
+    if(!innexgoService.isAdministrator(apiKey)) {
       return Error.MUST_BE_ADMIN.getResponse();
     }
+    if(!semesterService.existsByStartTime(semesterStartTime)) {
+      return Error.SEMESTER_NONEXISTENT.getResponse();
+    }
+    if(!courseService.existsById(courseId)) {
+      return Error.COURSE_NONEXISTENT.getResponse();
+    }
+    if(offeringService.getOfferingBySemesterStartTimeCourseId(
+              semesterStartTime,
+              courseId)
+            != null) {
+      return Error.OFFERING_EXISTENT.getResponse();
+    }
+    Offering offering = new Offering();
+    offering.semesterStartTime = semesterStartTime;
+    offering.courseId = courseId;
+    offeringService.add(offering);
+    return new ResponseEntity<>(innexgoService.fillOffering(offering), HttpStatus.OK);
   }
 
   @RequestMapping("/period/new/")
