@@ -29,7 +29,7 @@ public class PeriodRowMapper implements RowMapper<Period> {
     Period period = new Period();
     period.startTime = row.getLong("start_time");
     period.number = row.getLong("number");
-    period.type = row.getString("type");
+    period.type = PeriodType.valueOf(row.getString("type"));
     period.temp = row.getBoolean("temp");
     return period;
   }

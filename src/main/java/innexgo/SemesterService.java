@@ -105,7 +105,7 @@ public class SemesterService {
   public List<Semester> query(
       Long startTime,
       Long year,
-      String type,
+      SemesterType type,
       Long minStartTime,
       Long maxStartTime,
       long offset,
@@ -116,7 +116,7 @@ public class SemesterService {
             + " WHERE 1=1 "
             + (startTime == null ? "" : " AND se.start_time = " + startTime)
             + (year == null ? "" : " AND se.year = " + year)
-            + (type == null ? "" : " AND se.type = " + Utils.escape(type))
+            + (type == null ? "" : " AND se.type = " + type)
             + (minStartTime == null ? "" : " AND se.start_time >= " + minStartTime)
             + (maxStartTime == null ? "" : " AND se.start_time <= " + maxStartTime)
             + (" ORDER BY se.start_time")

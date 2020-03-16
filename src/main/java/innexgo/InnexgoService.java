@@ -303,7 +303,7 @@ public class InnexgoService {
         periodService.query(
             null,                                                // Long startTime
             null,                                                // Long number
-            Period.CLASS_PERIOD,                                 // String type
+            PeriodType.CLASS,                                    // String type
             periodService.getByTime(inEncounter.time).startTime, // Long minStartTime
             outEncounter.time,                                   // Long maxStartTime
             null,                                                // Boolean temp
@@ -550,7 +550,7 @@ public class InnexgoService {
           periodService.query(
               null,                                                // Long startTime
               null,                                                // Long number
-              Period.CLASS_PERIOD,                                 // String type
+              PeriodType.CLASS,                                    // String type
               periodService.getByTime(encounter.time).startTime,   // Long minStartTime
               outEncounter.time,                                   // Long maxStartTime
               null,                                                // Boolean temp

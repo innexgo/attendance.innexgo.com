@@ -122,7 +122,7 @@ public class PeriodService {
   public List<Period> query(
       Long startTime,
       Long number,
-      String type,
+      PeriodType type,
       Long minStartTime,
       Long maxStartTime,
       Boolean temp,
@@ -134,7 +134,7 @@ public class PeriodService {
             + " WHERE 1=1"
             + (startTime == null ? "" : " AND prd.start_time = " + startTime)
             + (number == null ? "" : " AND prd.number = " + number)
-            + (type == null ? "" : " AND prd.type = " + Utils.escape(type))
+            + (type == null ? "" : " AND prd.type = " + type)
             + (minStartTime == null ? "" : " AND prd.start_time >= " + minStartTime)
             + (maxStartTime == null ? "" : " AND prd.start_time <= " + maxStartTime)
             + (temp == null ? "" : " AND prd.temp = " + temp)
