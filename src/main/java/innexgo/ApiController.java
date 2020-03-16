@@ -56,15 +56,6 @@ public class ApiController {
   @Autowired InnexgoService innexgoService;
   @Autowired SchedulerService schedulerService;
 
-  static final ResponseEntity<?> BAD_REQUEST = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-  static final ResponseEntity<?> INTERNAL_SERVER_ERROR =
-    new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-  static final ResponseEntity<?> OK = new ResponseEntity<>(HttpStatus.OK);
-  static final ResponseEntity<?> UNAUTHORIZED = new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-  static final ResponseEntity<?> NOT_FOUND = new ResponseEntity<>(HttpStatus.NOT_FOUND);
-  static final ResponseEntity<?> CONFLICT = new ResponseEntity<>(HttpStatus.CONFLICT);
-
-
   /**
    * Create a new apiKey for a User
    *
@@ -106,7 +97,7 @@ public class ApiController {
           apiKeyService.add(apiKey);
           return new ResponseEntity<>(innexgoService.fillApiKey(apiKey), HttpStatus.OK);
         } else {
-          return UNAUTHORIZED;
+          return Error.MUST_BE_USER.getResponse();
         }
       }
       return BAD_REQUEST;
@@ -148,7 +139,7 @@ public class ApiController {
         return BAD_REQUEST;
       }
     } else {
-      return UNAUTHORIZED;
+      return Error.MUST_BE_ADMIN.getResponse();
     }
   }
 
@@ -185,7 +176,7 @@ public class ApiController {
         return BAD_REQUEST;
       }
     } else {
-      return UNAUTHORIZED;
+      return Error.MUST_BE_USER.getResponse();
     }
   }
 
@@ -209,7 +200,7 @@ public class ApiController {
         return BAD_REQUEST;
       }
     } else {
-      return UNAUTHORIZED;
+      return Error.MUST_BE_ADMIN.getResponse();
     }
   }
 
@@ -239,7 +230,7 @@ public class ApiController {
         return BAD_REQUEST;
       }
     } else {
-      return UNAUTHORIZED;
+      return Error.MUST_BE_ADMIN.getResponse();
     }
   }
 
@@ -264,7 +255,7 @@ public class ApiController {
         return BAD_REQUEST;
       }
     } else {
-      return UNAUTHORIZED;
+      return Error.MUST_BE_ADMIN.getResponse();
     }
   }
 
@@ -284,7 +275,7 @@ public class ApiController {
       innexgoService.restartInsertAbsences();
       return new ResponseEntity<>(innexgoService.fillPeriod(pr), HttpStatus.OK);
     } else {
-      return UNAUTHORIZED;
+      return Error.MUST_BE_ADMIN.getResponse();
     }
   }
 
@@ -316,7 +307,7 @@ public class ApiController {
         return BAD_REQUEST;
       }
     } else {
-      return UNAUTHORIZED;
+      return Error.MUST_BE_ADMIN.getResponse();
     }
   }
 
@@ -337,7 +328,7 @@ public class ApiController {
         return BAD_REQUEST;
       }
     } else {
-      return UNAUTHORIZED;
+      return Error.MUST_BE_ADMIN.getResponse();
     }
   }
 
@@ -364,7 +355,7 @@ public class ApiController {
         return BAD_REQUEST;
       }
     } else {
-      return UNAUTHORIZED;
+      return Error.MUST_BE_ADMIN.getResponse();
     }
   }
 

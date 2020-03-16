@@ -22,7 +22,5 @@ dependencies {
   implementation 'org.springframework.boot:spring-boot-starter-tomcat'
   implementation 'org.springframework.boot:spring-boot-starter-websocket'
   implementation 'org.springframework.boot:spring-boot-starter-security'
-  implementation 'org.apache.commons:commons-csv:1.4'
-  implementation 'org.apache.pdfbox:pdfbox:2.0.17'
   runtimeOnly 'mysql:mysql-connector-java'
 }
