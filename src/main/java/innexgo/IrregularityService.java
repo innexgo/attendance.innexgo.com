@@ -113,7 +113,7 @@ public class IrregularityService {
       Long courseId,
       Long periodStartTime,
       Long teacherId,
-      String type,
+      IrregularityType type,
       Long time,
       Long minTime,
       Long maxTime,
@@ -129,7 +129,7 @@ public class IrregularityService {
             + (courseId == null ? "" : " AND irr.course_id = " + courseId)
             + (periodStartTime == null ? "" : " AND irr.period_start_time = " + periodStartTime)
             + (teacherId == null ? "" : " AND crs.teacher_id = " + teacherId)
-            + (type == null ? "" : " AND irr.type = " + Utils.escape(type))
+            + (type == null ? "" : " AND irr.type = " + type)
             + (time == null ? "" : " AND irr.time = " + time)
             + (minTime == null ? "" : " AND irr.time >= " + minTime)
             + (maxTime == null ? "" : " AND irr.time <= " + maxTime)

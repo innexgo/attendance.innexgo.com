@@ -30,7 +30,7 @@ public class IrregularityRowMapper implements RowMapper<Irregularity> {
     irregularity.studentId = row.getLong("student_id");
     irregularity.courseId = row.getLong("course_id");
     irregularity.periodStartTime = row.getLong("period_start_time");
-    irregularity.type = row.getString("type");
+    irregularity.type = IrregularityType.valueOf(row.getString("type"));
     irregularity.time = row.getLong("time");
     irregularity.timeMissing = row.getLong("time_missing");
     return irregularity;

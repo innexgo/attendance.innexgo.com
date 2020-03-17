@@ -296,29 +296,31 @@ public class ApiController {
       @RequestParam(value="scheduleStartTime", defaultValue="-1") Long startTime,
       @RequestParam(value="scheduleEndTime", defaultValue="-1") Long endTime,
       @RequestParam("apiKey") String apiKey) {
-    if (innexgoService.isAdministrator(apiKey)) {
-      if (studentService.existsById(studentId)
-          && courseService.existsById(courseId)
-          && scheduleService.getScheduleByStudentIdCourseId(studentId, courseId) == null) {
-        Schedule schedule = new Schedule();
-        schedule.studentId = studentId;
-        schedule.courseId = courseId;
-        schedule.hasStart = startTime >= 0;
-        if(schedule.hasStart) {
-          schedule.startTime = startTime;
-        }
-        schedule.hasEnd = endTime >= 0;
-        if(schedule.hasEnd) {
-          schedule.endTime = endTime;
-        }
-        scheduleService.add(schedule);
-        return new ResponseEntity<>(innexgoService.fillSchedule(schedule), HttpStatus.OK);
-      } else {
-        return BAD_REQUEST;
-      }
-    } else {
+    if (!innexgoService.isAdministrator(apiKey)) {
       return Errors.MUST_BE_ADMIN.getResponse();
     }
+    if (!studentService.existsById(studentId)) {
+      return Errors.STUDENT_NONEXISTENT.getResponse();
+    }
+    if(!courseService.existsById(courseId)) {
+      return Errors.COURSE_NONEXISTENT.getResponse();
+    }
+    if(scheduleService.existsByStudentIdCourseId(studentId, courseId)) {
+      return Errors.SCHEDULE_EXISTENT.getResponse();
+    }
+    Schedule schedule = new Schedule();
+    schedule.studentId = studentId;
+    schedule.courseId = courseId;
+    schedule.hasStart = startTime >= 0;
+    if(schedule.hasStart) {
+      schedule.startTime = startTime;
+    }
+    schedule.hasEnd = endTime >= 0;
+    if(schedule.hasEnd) {
+      schedule.endTime = endTime;
+    }
+    scheduleService.add(schedule);
+    return new ResponseEntity<>(innexgoService.fillSchedule(schedule), HttpStatus.OK);
   }
 
   @RequestMapping("/student/new/")
@@ -326,20 +328,20 @@ public class ApiController {
       @RequestParam("studentId") Long studentId,
       @RequestParam("studentName") String name,
       @RequestParam("apiKey") String apiKey) {
-    if (innexgoService.isAdministrator(apiKey)) {
-      if (!studentService.existsById(studentId)
-          && !Utils.isEmpty(name)) {
-        Student student = new Student();
-        student.id = studentId;
-        student.name = name.toUpperCase();
-        studentService.add(student);
-        return new ResponseEntity<>(innexgoService.fillStudent(student), HttpStatus.OK);
-      } else {
-        return BAD_REQUEST;
-      }
-    } else {
+    if (!innexgoService.isAdministrator(apiKey)) {
       return Errors.MUST_BE_ADMIN.getResponse();
     }
+    if(studentService.existsById(studentId)) {
+      return Errors.STUDENT_EXISTENT.getResponse();
+    }
+    if(Utils.isEmpty(name)) {
+      return Errors.STUDENT_NAME_EMPTY.getResponse();
+    }
+    Student student = new Student();
+    student.id = studentId;
+    student.name = name.toUpperCase();
+    studentService.add(student);
+    return new ResponseEntity<>(innexgoService.fillStudent(student), HttpStatus.OK);
   }
 
   @RequestMapping("/user/new/")
@@ -349,24 +351,25 @@ public class ApiController {
       @RequestParam("userPassword") String password,
       @RequestParam("userRing") Integer ring,
       @RequestParam("apiKey") String apiKey) {
-    if (innexgoService.isAdministrator(apiKey)) {
-      if (!Utils.isEmpty(name)
-          && !Utils.isEmpty(password)
-          && !Utils.isEmpty(email)
-          && !userService.existsByEmail(email)) {
-        User u = new User();
-        u.name = name;
-        u.email = email;
-        u.passwordHash = Utils.encodePassword(password);
-        u.ring = ring;
-        userService.add(u);
-        return new ResponseEntity<>(innexgoService.fillUser(u), HttpStatus.OK);
-      } else {
-        return BAD_REQUEST;
-      }
-    } else {
+    if (!innexgoService.isAdministrator(apiKey)) {
       return Errors.MUST_BE_ADMIN.getResponse();
     }
+    if(Utils.isEmpty(email)) {
+      return Errors.USER_EMAIL_EMPTY.getResponse();
+    }
+    if(Utils.isEmpty(name)) {
+      return Errors.USER_NAME_EMPTY.getResponse();
+    }
+    if(userService.existsByEmail(email)) {
+      return Errors.USER_EXISTENT.getResponse();
+    }
+    User u = new User();
+    u.name = name;
+    u.email = email;
+    u.passwordHash = Utils.encodePassword(password);
+    u.ring = ring;
+    userService.add(u);
+    return new ResponseEntity<>(innexgoService.fillUser(u), HttpStatus.OK);
   }
 
   // This method updates the password for same user only
@@ -375,19 +378,20 @@ public class ApiController {
       @RequestParam("userId") Long userId,
       @RequestParam("userOldPassword") String oldPassword,
       @RequestParam("userNewPassword") String newPassword) {
+
     if(!userService.existsById(userId)) {
-      return BAD_REQUEST;
+      return Errors.USER_NONEXISTENT.getResponse();
     }
 
     User user = userService.getById(userId);
 
     if(!Utils.isEmpty(oldPassword)
         && Utils.matchesPassword(oldPassword, user.passwordHash)) {
-      return UNAUTHORIZED;
+      return Errors.PASSWORD_INCORRECT.getResponse();
     }
 
     if(Utils.isEmpty(newPassword)) {
-      return BAD_REQUEST;
+      return Errors.PASSWORD_INSECURE.getResponse();
     }
 
     user.passwordHash = Utils.encodePassword(newPassword);
@@ -399,15 +403,13 @@ public class ApiController {
   public ResponseEntity<?> deleteApiKey(
       @RequestParam("apiKeyId") Long apiKeyId,
       @RequestParam("apiKey") String apiKey) {
-    if (innexgoService.isAdministrator(apiKey)) {
-      if (apiKeyService.existsById(apiKeyId)) {
-        return new ResponseEntity<>(innexgoService.fillApiKey(apiKeyService.deleteById(apiKeyId)), HttpStatus.OK);
-      } else {
-        return BAD_REQUEST;
-      }
-    } else {
-      return UNAUTHORIZED;
+    if (!innexgoService.isAdministrator(apiKey)) {
+      return Errors.MUST_BE_ADMIN.getResponse();
     }
+    if(!apiKeyService.existsById(apiKeyId)) {
+      return Errors.APIKEY_NONEXISTENT.getResponse();
+    }
+    return new ResponseEntity<>(innexgoService.fillApiKey(apiKeyService.deleteById(apiKeyId)), HttpStatus.OK);
   }
 
   @RequestMapping("/grade/delete/")
