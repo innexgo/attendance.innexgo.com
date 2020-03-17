@@ -57,7 +57,7 @@ public class IrregularityService {
         irregularity.studentId,
         irregularity.courseId,
         irregularity.periodStartTime,
-        irregularity.type,
+        irregularity.type.name(),
         irregularity.time,
         irregularity.timeMissing);
 
@@ -71,7 +71,7 @@ public class IrregularityService {
             irregularity.studentId,
             irregularity.courseId,
             irregularity.periodStartTime,
-            irregularity.type,
+            irregularity.type.name(),
             irregularity.time,
             irregularity.timeMissing);
 
@@ -88,7 +88,7 @@ public class IrregularityService {
         irregularity.studentId,
         irregularity.courseId,
         irregularity.periodStartTime,
-        irregularity.type,
+        irregularity.type.name(),
         irregularity.time,
         irregularity.timeMissing,
         irregularity.id);
@@ -129,7 +129,7 @@ public class IrregularityService {
             + (courseId == null ? "" : " AND irr.course_id = " + courseId)
             + (periodStartTime == null ? "" : " AND irr.period_start_time = " + periodStartTime)
             + (teacherId == null ? "" : " AND crs.teacher_id = " + teacherId)
-            + (type == null ? "" : " AND irr.type = " + type)
+            + (type == null ? "" : " AND irr.type = " + Utils.toSQLString(type))
             + (time == null ? "" : " AND irr.time = " + time)
             + (minTime == null ? "" : " AND irr.time >= " + minTime)
             + (maxTime == null ? "" : " AND irr.time <= " + maxTime)

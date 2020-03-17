@@ -49,7 +49,7 @@ public class SemesterService {
     String sql =
         "INSERT INTO semester (start_time, year, type) values (?, ?, ?)";
     jdbcTemplate.update(
-        sql, semester.startTime, semester.year, semester.type);
+        sql, semester.startTime, semester.year, semester.type.name());
   }
 
   public void update(Semester semester) {
@@ -59,7 +59,7 @@ public class SemesterService {
         sql,
         semester.startTime,
         semester.year,
-        semester.type,
+        semester.type.name(),
         semester.startTime);
   }
 
@@ -116,7 +116,7 @@ public class SemesterService {
             + " WHERE 1=1 "
             + (startTime == null ? "" : " AND se.start_time = " + startTime)
             + (year == null ? "" : " AND se.year = " + year)
-            + (type == null ? "" : " AND se.type = " + type)
+            + (type == null ? "" : " AND se.type = " + Utils.toSQLString(type))
             + (minStartTime == null ? "" : " AND se.start_time >= " + minStartTime)
             + (maxStartTime == null ? "" : " AND se.start_time <= " + maxStartTime)
             + (" ORDER BY se.start_time")

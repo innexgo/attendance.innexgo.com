@@ -29,9 +29,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 public class PeriodService {
 
-  @Autowired private EncounterService encounterService;
-  @Autowired private SessionService sessionService;
-
   @Autowired private JdbcTemplate jdbcTemplate;
 
   public Period getByStartTime(long startTime) {
@@ -52,7 +49,7 @@ public class PeriodService {
     String sql =
         "INSERT INTO period (start_time, number, type, temp) values (?, ?, ?, ?)";
     jdbcTemplate.update(
-        sql, period.startTime, period.number, period.type, period.temp);
+        sql, period.startTime, period.number, period.type.name(), period.temp);
   }
 
   public void update(Period period) {
@@ -62,7 +59,7 @@ public class PeriodService {
         sql,
         period.startTime,
         period.number,
-        period.type,
+        period.type.name(),
         period.temp);
   }
 
@@ -129,12 +126,11 @@ public class PeriodService {
       long offset,
       long count
     ) {
-
     String sql = "SELECT prd.start_time, prd.number, prd.type, prd.temp FROM period prd"
             + " WHERE 1=1"
             + (startTime == null ? "" : " AND prd.start_time = " + startTime)
             + (number == null ? "" : " AND prd.number = " + number)
-            + (type == null ? "" : " AND prd.type = " + type)
+            + (type == null ? "" : " AND prd.type = " + Utils.toSQLString(type))
             + (minStartTime == null ? "" : " AND prd.start_time >= " + minStartTime)
             + (maxStartTime == null ? "" : " AND prd.start_time <= " + maxStartTime)
             + (temp == null ? "" : " AND prd.temp = " + temp)

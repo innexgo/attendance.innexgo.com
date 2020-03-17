@@ -48,7 +48,7 @@ public class EncounterService {
     // Add encounter
     String sql = "INSERT INTO encounter(id, time, location_id, student_id, type) values (?, ?, ?, ?, ?)";
     jdbcTemplate.update(
-        sql, encounter.id, encounter.time, encounter.locationId, encounter.studentId, encounter.type);
+        sql, encounter.id, encounter.time, encounter.locationId, encounter.studentId, encounter.type.name());
 
     RowMapper<Encounter> rowMapper = new EncounterRowMapper();
 
@@ -63,7 +63,7 @@ public class EncounterService {
   public void update(Encounter encounter) {
     String sql = "UPDATE encounter SET id=?, time=?, location_id=?, student_id=?, type=? WHERE id=?";
     jdbcTemplate.update(
-        sql, encounter.id, encounter.time, encounter.locationId, encounter.studentId, encounter.type, encounter.id);
+        sql, encounter.id, encounter.time, encounter.locationId, encounter.studentId, encounter.type.name(), encounter.id);
   }
 
   public Encounter delete(long id) {
@@ -96,7 +96,7 @@ public class EncounterService {
             + (encounterId == null ? "" : " AND e.id=" + encounterId)
             + (studentId == null ? "" : " AND e.student_id=" + studentId)
             + (locationId == null ? "" : " AND e.location_id=" + locationId)
-            + (type == null ? "" : " AND e.type=" + type)
+            + (type == null ? "" : " AND e.type=" + Utils.toSQLString(type))
             + (minTime == null ? "" : " AND e.time >= " + minTime)
             + (maxTime == null ? "" : " AND e.time <= " + maxTime)
             + (" ORDER BY e.id")
