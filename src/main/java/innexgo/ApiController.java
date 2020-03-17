@@ -416,16 +416,13 @@ public class ApiController {
   public ResponseEntity<?> deleteGrade(
       @RequestParam("gradeId") Integer gradeId,
       @RequestParam("apiKey") String apiKey) {
-    if (innexgoService.isAdministrator(apiKey)) {
-      if (gradeService.existsById(gradeId)) {
-        return new ResponseEntity<>(
-            innexgoService.fillGrade(gradeService.deleteById(gradeId)), HttpStatus.OK);
-      } else {
-        return BAD_REQUEST;
-      }
-    } else {
-      return UNAUTHORIZED;
+    if (!innexgoService.isAdministrator(apiKey)) {
+      return Errors.MUST_BE_ADMIN.getResponse();
     }
+    if(!gradeService.existsById(gradeId)) {
+      return Errors.GRADE_NONEXISTENT.getResponse();
+    }
+    return new ResponseEntity<>(innexgoService.fillGrade(gradeService.deleteById(gradeId)), HttpStatus.OK);
   }
 
 
@@ -433,32 +430,26 @@ public class ApiController {
   public ResponseEntity<?> deleteIrregularity(
       @RequestParam("irregularityId") Long irregularityId,
       @RequestParam("apiKey") String apiKey) {
-    if (innexgoService.isAdministrator(apiKey)) {
-      if (irregularityService.existsById(irregularityId)) {
-        return new ResponseEntity<>(
-            innexgoService.fillIrregularity(irregularityService.deleteById(irregularityId)), HttpStatus.OK);
-      } else {
-        return BAD_REQUEST;
-      }
-    } else {
-      return UNAUTHORIZED;
+    if (!innexgoService.isAdministrator(apiKey)) {
+      return Errors.MUST_BE_ADMIN.getResponse();
     }
+    if(!irregularityService.existsById(irregularityId)) {
+      return Errors.IRREGULARITY_NONEXISTENT.getResponse();
+    }
+    return new ResponseEntity<>(innexgoService.fillIrregularity(irregularityService.deleteById(irregularityId)), HttpStatus.OK);
   }
 
   @RequestMapping("/schedule/delete/")
   public ResponseEntity<?> deleteSchedule(
       @RequestParam("scheduleId") Integer scheduleId,
       @RequestParam("apiKey") String apiKey) {
-    if (innexgoService.isAdministrator(apiKey)) {
-      if (scheduleService.existsById(scheduleId)) {
-        return new ResponseEntity<>(
-            innexgoService.fillSchedule(scheduleService.deleteById(scheduleId)), HttpStatus.OK);
-      } else {
-        return BAD_REQUEST;
-      }
-    } else {
-      return UNAUTHORIZED;
+    if (!innexgoService.isAdministrator(apiKey)) {
+      return Errors.MUST_BE_ADMIN.getResponse();
     }
+    if(!scheduleService.existsById(scheduleId)) {
+      return Errors.SCHEDULE_NONEXISTENT.getResponse();
+    }
+    return new ResponseEntity<>(innexgoService.fillSchedule(scheduleService.deleteById(scheduleId)), HttpStatus.OK);
   }
 
   @RequestMapping("/apiKey/")
@@ -466,27 +457,26 @@ public class ApiController {
       @RequestParam("offset") Long offset,
       @RequestParam("count") Long count,
       @RequestParam Map<String, String> allRequestParam) {
-    if (allRequestParam.containsKey("apiKey")
-        && innexgoService.isTrusted(allRequestParam.get("apiKey"))) {
-      List<ApiKey> list =
-        apiKeyService
-        .query(
-            Utils.parseLong(allRequestParam.get("apiKeyId")),
-            Utils.parseLong(allRequestParam.get("userId")),
-            Utils.parseLong(allRequestParam.get("apiKeyMinCreationTime")),
-            Utils.parseLong(allRequestParam.get("apiKeyMaxCreationTime")),
-            allRequestParam.containsKey("apiKeyData")
-              ? Utils.encodeApiKey(allRequestParam.get("apiKeyData"))
-              : null,
-            offset,
-            count)
-        .stream()
-        .map(x -> innexgoService.fillApiKey(x))
-        .collect(Collectors.toList());
-      return new ResponseEntity<>(list, HttpStatus.OK);
-    } else {
-      return UNAUTHORIZED;
+    String apiKey = allRequestParam.get("apiKey");
+    if(!innexgoService.isTrusted(apiKey)) {
+      return Errors.MUST_BE_USER.getResponse();
     }
+    List<ApiKey> list =
+      apiKeyService
+      .query(
+          Utils.parseLong(allRequestParam.get("apiKeyId")),
+          Utils.parseLong(allRequestParam.get("userId")),
+          Utils.parseLong(allRequestParam.get("apiKeyMinCreationTime")),
+          Utils.parseLong(allRequestParam.get("apiKeyMaxCreationTime")),
+          allRequestParam.containsKey("apiKeyData")
+            ? Utils.encodeApiKey(allRequestParam.get("apiKeyData"))
+            : null,
+          offset,
+          count)
+      .stream()
+      .map(x -> innexgoService.fillApiKey(x))
+      .collect(Collectors.toList());
+    return new ResponseEntity<>(list, HttpStatus.OK);
   }
 
   @RequestMapping("/course/")
@@ -495,27 +485,26 @@ public class ApiController {
       @RequestParam("count") Long count,
       @RequestParam Map<String, String> allRequestParam) {
     String apiKey = allRequestParam.get("apiKey");
-    if (innexgoService.isTrusted(apiKey)) {
-      List<Course> els =
-        courseService
-        .query(
-            Utils.parseLong(allRequestParam.get("courseId")),
-            Utils.parseLong(allRequestParam.get("userId")),
-            Utils.parseLong(allRequestParam.get("locationId")),
-            Utils.parseLong(allRequestParam.get("studentId")),
-            Utils.parseLong(allRequestParam.get("periodNumber")),
-            allRequestParam.get("courseSubject"),
-            Utils.parseLong(allRequestParam.get("semesterStartTime")),
-            offset,
-            count
-          )
-        .stream()
-        .map(x -> innexgoService.fillCourse(x))
-        .collect(Collectors.toList());
-      return new ResponseEntity<>(els, HttpStatus.OK);
-    } else {
-      return UNAUTHORIZED;
+    if (!innexgoService.isTrusted(apiKey)) {
+      return Errors.MUST_BE_USER.getResponse();
     }
+    List<Course> els =
+      courseService
+      .query(
+          Utils.parseLong(allRequestParam.get("courseId")),
+          Utils.parseLong(allRequestParam.get("userId")),
+          Utils.parseLong(allRequestParam.get("locationId")),
+          Utils.parseLong(allRequestParam.get("studentId")),
+          Utils.parseLong(allRequestParam.get("periodNumber")),
+          allRequestParam.get("courseSubject"),
+          Utils.parseLong(allRequestParam.get("semesterStartTime")),
+          offset,
+          count
+        )
+      .stream()
+      .map(x -> innexgoService.fillCourse(x))
+      .collect(Collectors.toList());
+    return new ResponseEntity<>(els, HttpStatus.OK);
   }
 
   @RequestMapping("/encounter/")
@@ -524,26 +513,35 @@ public class ApiController {
       @RequestParam("count") Long count,
       @RequestParam Map<String, String> allRequestParam) {
     String apiKey = allRequestParam.get("apiKey");
-    if (innexgoService.isTrusted(apiKey)) {
-      List<Encounter> els =
-        encounterService
-        .query(
-            Utils.parseLong(allRequestParam.get("encounterId")),
-            Utils.parseLong(allRequestParam.get("studentId")),
-            Utils.parseLong(allRequestParam.get("locationId")),
-            Utils.parseLong(allRequestParam.get("encounterMinTime")),
-            Utils.parseLong(allRequestParam.get("encounterMaxTime")),
-            allRequestParam.get("type"),
-            offset,
-            count
-          )
-        .stream()
-        .map(x -> innexgoService.fillEncounter(x))
-        .collect(Collectors.toList());
-      return new ResponseEntity<>(els, HttpStatus.OK);
-    } else {
-      return UNAUTHORIZED;
+    if (!innexgoService.isTrusted(apiKey)) {
+      return Errors.MUST_BE_USER.getResponse();
     }
+
+    EncounterType type = null;
+    if(allRequestParam.containsKey("encounterType")) {
+      String encounterTypeStr = allRequestParam.get("encounterType");
+      if(EncounterType.contains(encounterTypeStr)) {
+        type = EncounterType.valueOf(encounterTypeStr);
+      } else {
+        return Errors.INVALID_ENCOUNTER_TYPE.getResponse();
+      }
+    }
+
+    List<Encounter> els = encounterService
+        .query(
+          Utils.parseLong(allRequestParam.get("encounterId")),
+          Utils.parseLong(allRequestParam.get("studentId")),
+          Utils.parseLong(allRequestParam.get("locationId")),
+          Utils.parseLong(allRequestParam.get("encounterMinTime")),
+          Utils.parseLong(allRequestParam.get("encounterMaxTime")),
+          type,
+          offset,
+          count
+        )
+      .stream()
+      .map(x -> innexgoService.fillEncounter(x))
+      .collect(Collectors.toList());
+    return new ResponseEntity<>(els, HttpStatus.OK);
   }
 
   @RequestMapping("/grade/")
@@ -552,24 +550,24 @@ public class ApiController {
       @RequestParam("count") Long count,
       @RequestParam Map<String, String> allRequestParam) {
     String apiKey = allRequestParam.get("apiKey");
-    if (innexgoService.isTrusted(apiKey)) {
-      List<Grade> els =
-        gradeService
-        .query(
-            Utils.parseLong(allRequestParam.get("gradeId")),
-            Utils.parseLong(allRequestParam.get("studentId")),
-            Utils.parseLong(allRequestParam.get("semesterStartTime")),
-            Utils.parseLong(allRequestParam.get("periodNumber")),
-            offset,
-            count
-          )
-        .stream()
-        .map(x -> innexgoService.fillGrade(x))
-        .collect(Collectors.toList());
-      return new ResponseEntity<>(els, HttpStatus.OK);
-    } else {
-      return UNAUTHORIZED;
+    if (!innexgoService.isTrusted(apiKey)) {
+      return Errors.MUST_BE_USER.getResponse();
     }
+
+    List<Grade> els =
+      gradeService
+      .query(
+          Utils.parseLong(allRequestParam.get("gradeId")),
+          Utils.parseLong(allRequestParam.get("studentId")),
+          Utils.parseLong(allRequestParam.get("semesterStartTime")),
+          Utils.parseLong(allRequestParam.get("periodNumber")),
+          offset,
+          count
+        )
+      .stream()
+      .map(x -> innexgoService.fillGrade(x))
+      .collect(Collectors.toList());
+    return new ResponseEntity<>(els, HttpStatus.OK);
   }
 
   @RequestMapping("/irregularity/")
@@ -578,29 +576,38 @@ public class ApiController {
       @RequestParam("count") Long count,
       @RequestParam Map<String, String> allRequestParam) {
     String apiKey = allRequestParam.get("apiKey");
-    if (innexgoService.isTrusted(apiKey)) {
-      List<Irregularity> els =
-        irregularityService
-        .query(
-            Utils.parseLong(allRequestParam.get("irregularityId")),
-            Utils.parseLong(allRequestParam.get("studentId")),
-            Utils.parseLong(allRequestParam.get("courseId")),
-            Utils.parseLong(allRequestParam.get("periodStartTime")),
-            Utils.parseLong(allRequestParam.get("userId")),
-            allRequestParam.get("irregularityType"),
-            Utils.parseLong(allRequestParam.get("irregularityTime")),
-            Utils.parseLong(allRequestParam.get("irregularityMinTime")),
-            Utils.parseLong(allRequestParam.get("irregularityMaxTime")),
-            offset,
-            count
-          )
-        .stream()
-        .map(x -> innexgoService.fillIrregularity(x))
-        .collect(Collectors.toList());
-      return new ResponseEntity<>(els, HttpStatus.OK);
-    } else {
-      return UNAUTHORIZED;
+    if (!innexgoService.isTrusted(apiKey)) {
+      return Errors.MUST_BE_USER.getResponse();
     }
+
+    IrregularityType type = null;
+    if(allRequestParam.containsKey("irregularityType")) {
+      String irregularityTypeStr = allRequestParam.get("irregularityType");
+      if(IrregularityType.contains(irregularityTypeStr)) {
+        type = IrregularityType.valueOf(irregularityTypeStr);
+      } else {
+        return Errors.INVALID_IRREGULARITY_TYPE.getResponse();
+      }
+    }
+    List<Irregularity> els =
+      irregularityService
+      .query(
+          Utils.parseLong(allRequestParam.get("irregularityId")),
+          Utils.parseLong(allRequestParam.get("studentId")),
+          Utils.parseLong(allRequestParam.get("courseId")),
+          Utils.parseLong(allRequestParam.get("periodStartTime")),
+          Utils.parseLong(allRequestParam.get("userId")),
+          type,
+          Utils.parseLong(allRequestParam.get("irregularityTime")),
+          Utils.parseLong(allRequestParam.get("irregularityMinTime")),
+          Utils.parseLong(allRequestParam.get("irregularityMaxTime")),
+          offset,
+          count
+        )
+      .stream()
+      .map(x -> innexgoService.fillIrregularity(x))
+      .collect(Collectors.toList());
+    return new ResponseEntity<>(els, HttpStatus.OK);
   }
 
   @RequestMapping("/location/")
@@ -608,22 +615,22 @@ public class ApiController {
       @RequestParam("offset") Long offset,
       @RequestParam("count") Long count,
       @RequestParam Map<String, String> allRequestParam) {
-    if (allRequestParam.containsKey("apiKey") && innexgoService.isTrusted(allRequestParam.get("apiKey"))) {
-      List<Location> list =
-        locationService
-        .query(
-            Utils.parseLong(allRequestParam.get("locationId")),
-            allRequestParam.get("locationName"),
-            offset,
-            count
-          )
-        .stream()
-        .map(x -> innexgoService.fillLocation(x))
-        .collect(Collectors.toList());
-      return new ResponseEntity<>(list, HttpStatus.OK);
-    } else {
-      return UNAUTHORIZED;
+    String apiKey = allRequestParam.get("apiKey");
+    if (!innexgoService.isTrusted(apiKey)) {
+      return Errors.MUST_BE_USER.getResponse();
     }
+    List<Location> list =
+      locationService
+      .query(
+          Utils.parseLong(allRequestParam.get("locationId")),
+          allRequestParam.get("locationName"),
+          offset,
+          count
+        )
+      .stream()
+      .map(x -> innexgoService.fillLocation(x))
+      .collect(Collectors.toList());
+    return new ResponseEntity<>(list, HttpStatus.OK);
   }
 
 
@@ -633,23 +640,22 @@ public class ApiController {
       @RequestParam("count") Long count,
       @RequestParam Map<String, String> allRequestParam) {
     String apiKey = allRequestParam.get("apiKey");
-    if (innexgoService.isTrusted(apiKey)) {
-      List<Offering> els =
-        offeringService
-        .query(
-            Utils.parseLong(allRequestParam.get("offeringId")),
-            Utils.parseLong(allRequestParam.get("semesterStartTime")),
-            Utils.parseLong(allRequestParam.get("courseId")),
-            offset,
-            count
-          )
-        .stream()
-        .map(x -> innexgoService.fillOffering(x))
-        .collect(Collectors.toList());
-      return new ResponseEntity<>(els, HttpStatus.OK);
-    } else {
-      return UNAUTHORIZED;
+    if (!innexgoService.isTrusted(apiKey)) {
+      return Errors.MUST_BE_USER.getResponse();
     }
+    List<Offering> els =
+      offeringService
+      .query(
+          Utils.parseLong(allRequestParam.get("offeringId")),
+          Utils.parseLong(allRequestParam.get("semesterStartTime")),
+          Utils.parseLong(allRequestParam.get("courseId")),
+          offset,
+          count
+        )
+      .stream()
+      .map(x -> innexgoService.fillOffering(x))
+      .collect(Collectors.toList());
+    return new ResponseEntity<>(els, HttpStatus.OK);
   }
 
   @RequestMapping("/period/")
@@ -658,26 +664,34 @@ public class ApiController {
       @RequestParam("count") Long count,
       @RequestParam Map<String, String> allRequestParam) {
     String apiKey = allRequestParam.get("apiKey");
-    if (innexgoService.isTrusted(apiKey)) {
-      List<Period> els =
-        periodService
-        .query(
-            Utils.parseLong(allRequestParam.get("periodStartTime")),
-            Utils.parseLong(allRequestParam.get("periodNumber")),
-            allRequestParam.get("periodType"),
-            Utils.parseLong(allRequestParam.get("minPeriodStartTime")),
-            Utils.parseLong(allRequestParam.get("maxPeriodStartTime")),
-            Utils.parseBoolean(allRequestParam.get("periodTemp")),
-            offset,
-            count
-          )
-        .stream()
-        .map(x -> innexgoService.fillPeriod(x))
-        .collect(Collectors.toList());
-      return new ResponseEntity<>(els, HttpStatus.OK);
-    } else {
-      return UNAUTHORIZED;
+    if (!innexgoService.isTrusted(apiKey)) {
+      return Errors.MUST_BE_USER.getResponse();
     }
+    PeriodType type = null;
+    if(allRequestParam.containsKey("periodType")) {
+      String periodTypeStr = allRequestParam.get("periodType");
+      if(PeriodType.contains(periodTypeStr)) {
+        type = PeriodType.valueOf(periodTypeStr);
+      } else {
+        return Errors.INVALID_PERIOD_TYPE.getResponse();
+      }
+    }
+    List<Period> els =
+      periodService
+      .query(
+          Utils.parseLong(allRequestParam.get("periodStartTime")),
+          Utils.parseLong(allRequestParam.get("periodNumber")),
+          type,
+          Utils.parseLong(allRequestParam.get("minPeriodStartTime")),
+          Utils.parseLong(allRequestParam.get("maxPeriodStartTime")),
+          Utils.parseBoolean(allRequestParam.get("periodTemp")),
+          offset,
+          count
+        )
+      .stream()
+      .map(x -> innexgoService.fillPeriod(x))
+      .collect(Collectors.toList());
+    return new ResponseEntity<>(els, HttpStatus.OK);
   }
 
   @RequestMapping("/schedule/")
@@ -685,29 +699,29 @@ public class ApiController {
       @RequestParam("offset") Long offset,
       @RequestParam("count") Long count,
       @RequestParam Map<String, String> allRequestParam) {
-    if (allRequestParam.containsKey("apiKey") && innexgoService.isTrusted(allRequestParam.get("apiKey"))) {
-      List<Schedule> list =
-        scheduleService
-        .query(
-            Utils.parseLong(allRequestParam.get("scheduleId")),
-            Utils.parseLong(allRequestParam.get("studentId")),
-            Utils.parseLong(allRequestParam.get("courseId")),
-            Utils.parseBoolean(allRequestParam.get("scheduleHasStart")),
-            Utils.parseBoolean(allRequestParam.get("scheduleHasEnd")),
-            Utils.parseLong(allRequestParam.get("userId")),
-            Utils.parseLong(allRequestParam.get("scheduleTime")),
-            Utils.parseLong(allRequestParam.get("locationId")),
-            Utils.parseLong(allRequestParam.get("periodNumber")),
-            offset,
-            count
-          )
-        .stream()
-        .map(x -> innexgoService.fillSchedule(x))
-        .collect(Collectors.toList());
-      return new ResponseEntity<>(list, HttpStatus.OK);
-    } else {
-      return UNAUTHORIZED;
+    String apiKey = allRequestParam.get("apiKey");
+    if (!innexgoService.isTrusted(apiKey)) {
+      return Errors.MUST_BE_USER.getResponse();
     }
+    List<Schedule> list =
+      scheduleService
+      .query(
+          Utils.parseLong(allRequestParam.get("scheduleId")),
+          Utils.parseLong(allRequestParam.get("studentId")),
+          Utils.parseLong(allRequestParam.get("courseId")),
+          Utils.parseBoolean(allRequestParam.get("scheduleHasStart")),
+          Utils.parseBoolean(allRequestParam.get("scheduleHasEnd")),
+          Utils.parseLong(allRequestParam.get("userId")),
+          Utils.parseLong(allRequestParam.get("scheduleTime")),
+          Utils.parseLong(allRequestParam.get("locationId")),
+          Utils.parseLong(allRequestParam.get("periodNumber")),
+          offset,
+          count
+        )
+      .stream()
+      .map(x -> innexgoService.fillSchedule(x))
+      .collect(Collectors.toList());
+    return new ResponseEntity<>(list, HttpStatus.OK);
   }
 
   @RequestMapping("/semester/")
@@ -716,25 +730,26 @@ public class ApiController {
       @RequestParam("count") Long count,
       @RequestParam Map<String, String> allRequestParam) {
     String apiKey = allRequestParam.get("apiKey");
-    if(!innexgoService.isTrusted(apiKey)) {
+    if (!innexgoService.isTrusted(apiKey)) {
       return Errors.MUST_BE_USER.getResponse();
     }
-    String typeStr = allRequestParam.get("semesterType");
-    SemesterType type = null;
-    if(typeStr != null) {
-      if(SemesterType.contains(typeStr)) {
-        type = SemesterType.valueOf(typeStr);
-      } else 
 
-    if(allRequestParam.containsKey("semesterType") && !SemesterType.contains(allRequestParam.get("semesterType"))) {
-      return Errors.INVALID_SEMESTER_TYPE.getResponse();
+    SemesterType type = null;
+    if(allRequestParam.containsKey("semesterType")) {
+      String semesterTypeStr = allRequestParam.get("semesterType");
+      if(SemesterType.contains(semesterTypeStr)) {
+        type = SemesterType.valueOf(semesterTypeStr);
+      } else {
+        return Errors.INVALID_SEMESTER_TYPE.getResponse();
+      }
     }
+
     List<Semester> list =
       semesterService
       .query(
           Utils.parseLong(allRequestParam.get("semesterStartTime")),
           Utils.parseLong(allRequestParam.get("semesterYear")),
-          allRequestParam.get("semesterType"),
+          type,
           Utils.parseLong(allRequestParam.get("minSemesterStartTime")),
           Utils.parseLong(allRequestParam.get("maxSemesterStartTime")),
           offset,
@@ -744,9 +759,6 @@ public class ApiController {
       .map(x -> innexgoService.fillSemester(x))
       .collect(Collectors.toList());
     return new ResponseEntity<>(list, HttpStatus.OK);
-    } else {
-      return UNAUTHORIZED;
-    }
   }
 
   @RequestMapping("/session/")
@@ -754,32 +766,32 @@ public class ApiController {
       @RequestParam("offset") Long offset,
       @RequestParam("count") Long count,
       @RequestParam Map<String, String> allRequestParam) {
-    if (allRequestParam.containsKey("apiKey") && innexgoService.isTrusted(allRequestParam.get("apiKey"))) {
-      List<Session> list =
-        sessionService
-        .query(
-            Utils.parseLong(allRequestParam.get("sessionId")),
-            Utils.parseLong(allRequestParam.get("inEncounterId")),
-            Utils.parseLong(allRequestParam.get("outEncounterId")),
-            Utils.parseLong(allRequestParam.get("anyEncounterId")),
-            Utils.parseBoolean(allRequestParam.get("sessionComplete")),
-            Utils.parseLong(allRequestParam.get("studentId")),
-            Utils.parseLong(allRequestParam.get("locationId")),
-            Utils.parseLong(allRequestParam.get("sessionIncludesTime")),
-            Utils.parseLong(allRequestParam.get("inTimeBegin")),
-            Utils.parseLong(allRequestParam.get("inTimeEnd")),
-            Utils.parseLong(allRequestParam.get("outTimeBegin")),
-            Utils.parseLong(allRequestParam.get("outTimeEnd")),
-            offset,
-            count
-          )
-        .stream()
-        .map(x -> innexgoService.fillSession(x))
-        .collect(Collectors.toList());
-      return new ResponseEntity<>(list, HttpStatus.OK);
-    } else {
-      return UNAUTHORIZED;
+    String apiKey = allRequestParam.get("apiKey");
+    if (!innexgoService.isTrusted(apiKey)) {
+      return Errors.MUST_BE_USER.getResponse();
     }
+    List<Session> list =
+      sessionService
+      .query(
+          Utils.parseLong(allRequestParam.get("sessionId")),
+          Utils.parseLong(allRequestParam.get("inEncounterId")),
+          Utils.parseLong(allRequestParam.get("outEncounterId")),
+          Utils.parseLong(allRequestParam.get("anyEncounterId")),
+          Utils.parseBoolean(allRequestParam.get("sessionComplete")),
+          Utils.parseLong(allRequestParam.get("studentId")),
+          Utils.parseLong(allRequestParam.get("locationId")),
+          Utils.parseLong(allRequestParam.get("sessionIncludesTime")),
+          Utils.parseLong(allRequestParam.get("inTimeBegin")),
+          Utils.parseLong(allRequestParam.get("inTimeEnd")),
+          Utils.parseLong(allRequestParam.get("outTimeBegin")),
+          Utils.parseLong(allRequestParam.get("outTimeEnd")),
+          offset,
+          count
+        )
+      .stream()
+      .map(x -> innexgoService.fillSession(x))
+      .collect(Collectors.toList());
+    return new ResponseEntity<>(list, HttpStatus.OK);
   }
 
   @RequestMapping("/student/")
@@ -787,24 +799,23 @@ public class ApiController {
       @RequestParam("offset") Long offset,
       @RequestParam("count") Long count,
       @RequestParam Map<String, String> allRequestParam) {
-    if (allRequestParam.containsKey("apiKey")
-        && innexgoService.isTrusted(allRequestParam.get("apiKey"))) {
-      List<Student> list =
-        studentService
-        .query(
-            Utils.parseLong(allRequestParam.get("studentId")),
-            allRequestParam.get("studentName"),
-            allRequestParam.get("studentNamePartial"),
-            offset,
-            count
-          )
-        .stream()
-        .map(x -> innexgoService.fillStudent(x))
-        .collect(Collectors.toList());
-      return new ResponseEntity<>(list, HttpStatus.OK);
-    } else {
-      return UNAUTHORIZED;
+    String apiKey = allRequestParam.get("apiKey");
+    if (!innexgoService.isTrusted(apiKey)) {
+      return Errors.MUST_BE_USER.getResponse();
     }
+    List<Student> list =
+      studentService
+      .query(
+          Utils.parseLong(allRequestParam.get("studentId")),
+          allRequestParam.get("studentName"),
+          allRequestParam.get("studentNamePartial"),
+          offset,
+          count
+        )
+      .stream()
+      .map(x -> innexgoService.fillStudent(x))
+      .collect(Collectors.toList());
+    return new ResponseEntity<>(list, HttpStatus.OK);
   }
 
   @RequestMapping("/user/")
@@ -812,25 +823,24 @@ public class ApiController {
       @RequestParam("offset") Long offset,
       @RequestParam("count") Long count,
       @RequestParam Map<String, String> allRequestParam) {
-    if (allRequestParam.containsKey("apiKey")
-        && innexgoService.isTrusted(allRequestParam.get("apiKey"))) {
-      List<User> list =
-        userService
-        .query(
-            Utils.parseLong(allRequestParam.get("userId")),
-            allRequestParam.get("userName"),
-            allRequestParam.get("userEmail"),
-            Utils.parseInteger(allRequestParam.get("userRing")),
-            offset,
-            count
-          )
-        .stream()
-        .map(x -> innexgoService.fillUser(x))
-        .collect(Collectors.toList());
-      return new ResponseEntity<>(list, HttpStatus.OK);
-    } else {
-      return UNAUTHORIZED;
+    String apiKey = allRequestParam.get("apiKey");
+    if (!innexgoService.isTrusted(apiKey)) {
+      return Errors.MUST_BE_USER.getResponse();
     }
+    List<User> list =
+      userService
+      .query(
+          Utils.parseLong(allRequestParam.get("userId")),
+          allRequestParam.get("userName"),
+          allRequestParam.get("userEmail"),
+          Utils.parseInteger(allRequestParam.get("userRing")),
+          offset,
+          count
+        )
+      .stream()
+      .map(x -> innexgoService.fillUser(x))
+      .collect(Collectors.toList());
+    return new ResponseEntity<>(list, HttpStatus.OK);
   }
 
   /* SPECIAL METHODS */
@@ -843,12 +853,15 @@ public class ApiController {
     )
   {
     if(!innexgoService.isTrusted(apiKey)) {
-      return UNAUTHORIZED;
+      return Errors.MUST_BE_USER.getResponse();
     }
 
-    if(!locationService.existsById(locationId) || !studentService.existsById(studentId))
+    if(!locationService.existsById(locationId)) {
+      return Errors.LOCATION_NONEXISTENT.getResponse();
+    }
+    if(!studentService.existsById(studentId))
     {
-      return BAD_REQUEST;
+      return Errors.STUDENT_NONEXISTENT.getResponse();
     }
 
     Session s = innexgoService.attends(studentId, locationId, manual);
@@ -859,38 +872,35 @@ public class ApiController {
 
   @RequestMapping("/misc/validate/")
   public ResponseEntity<?> validateTrusted(@RequestParam("apiKey") String apiKey) {
-    return innexgoService.isTrusted(apiKey) ? OK : UNAUTHORIZED;
+    return innexgoService.isTrusted(apiKey) ? Errors.OK.getResponse() : Errors.MUST_BE_USER.getResponse();
   }
 
   @RequestMapping("/misc/getSemesterByTime/")
   public ResponseEntity<?> getSemesterByTime(
       @RequestParam("time") Long time,
       @RequestParam("apiKey") String apiKey) {
-    if(innexgoService.isTrusted(apiKey)) {
-      return new ResponseEntity<>(semesterService.getByTime(time), HttpStatus.OK);
-    } else {
-      return UNAUTHORIZED;
+    if(!innexgoService.isTrusted(apiKey)) {
+      return Errors.MUST_BE_USER.getResponse();
     }
+    return new ResponseEntity<>(semesterService.getByTime(time), HttpStatus.OK);
   }
 
   @RequestMapping("/misc/getPeriodByTime/")
   public ResponseEntity<?> currentPeriod(
       @RequestParam("time") Long time,
       @RequestParam("apiKey") String apiKey) {
-    if(innexgoService.isTrusted(apiKey)) {
-      return new ResponseEntity<>(periodService.getByTime(time), HttpStatus.OK);
-    } else {
-      return UNAUTHORIZED;
+    if(!innexgoService.isTrusted(apiKey)) {
+      return Errors.MUST_BE_USER.getResponse();
     }
+    return new ResponseEntity<>(periodService.getByTime(time), HttpStatus.OK);
   }
 
   @RequestMapping("/misc/nextPeriod/")
   public ResponseEntity<?> nextPeriod(@RequestParam("apiKey") String apiKey) {
-    if(innexgoService.isTrusted(apiKey)) {
-      return new ResponseEntity<>(periodService.getNextByTime(System.currentTimeMillis()), HttpStatus.OK);
-    } else {
-      return UNAUTHORIZED;
+    if(!innexgoService.isTrusted(apiKey)) {
+      return Errors.MUST_BE_USER.getResponse();
     }
+    return new ResponseEntity<>(periodService.getNextByTime(System.currentTimeMillis()), HttpStatus.OK);
   }
 
   @RequestMapping("/misc/registeredForCourse/")
@@ -898,11 +908,10 @@ public class ApiController {
       @RequestParam("courseId") Long courseId,
       @RequestParam("time") Long time,
       @RequestParam("apiKey") String apiKey) {
-    if(innexgoService.isTrusted(apiKey)) {
-      return new ResponseEntity<>(studentService.registeredForCourse(courseId, time), HttpStatus.OK);
-    } else {
-      return UNAUTHORIZED;
+    if(!innexgoService.isTrusted(apiKey)) {
+      return Errors.MUST_BE_ADMIN.getResponse();
     }
+    return new ResponseEntity<>(studentService.registeredForCourse(courseId, time), HttpStatus.OK);
   }
 
   @RequestMapping("/misc/present/")
@@ -910,10 +919,9 @@ public class ApiController {
       @RequestParam("locationId") Long locationId,
       @RequestParam("time") Long time,
       @RequestParam("apiKey") String apiKey) {
-    if(innexgoService.isTrusted(apiKey)) {
-      return new ResponseEntity<>(studentService.present(locationId, time), HttpStatus.OK);
-    } else {
-      return UNAUTHORIZED;
+    if(!innexgoService.isTrusted(apiKey)) {
+      return Errors.MUST_BE_USER.getResponse();
     }
+    return new ResponseEntity<>(studentService.present(locationId, time), HttpStatus.OK);
   }
 }

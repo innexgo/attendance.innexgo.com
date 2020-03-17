@@ -288,7 +288,7 @@ public class InnexgoService {
       outEncounter.locationId = inEncounter.locationId;
       outEncounter.studentId = inEncounter.studentId;
       outEncounter.time = currentTime;
-      outEncounter.type = Encounter.VIRTUAL_ENCOUNTER;
+      outEncounter.type = EncounterType.VIRTUAL;
       encounterService.add(outEncounter);
 
       // now close session
@@ -330,7 +330,7 @@ public class InnexgoService {
           forgotToSignOut.studentId = inEncounter.studentId;
           forgotToSignOut.courseId = irregCourse.id;
           forgotToSignOut.periodStartTime = irregPeriod.startTime;
-          forgotToSignOut.type = Irregularity.TYPE_FORGOT_SIGN_OUT;
+          forgotToSignOut.type = IrregularityType.FORGOT_SIGN_OUT;
           forgotToSignOut.time = currentTime;
           forgotToSignOut.timeMissing = 0;
           irregularityService.add(forgotToSignOut);
@@ -411,7 +411,7 @@ public class InnexgoService {
             course.id,                //  Long courseId
             periodStartTime,          //  Long periodStartTime
             null,                     //  Long teacherId
-            Irregularity.TYPE_ABSENT, //  String type
+            IrregularityType.ABSENT, //  String type
             null,                     //  Long time
             null,                     //  Long minTime
             null,                     //  Long maxTime
@@ -424,7 +424,7 @@ public class InnexgoService {
           irregularity.studentId = student.id;
           irregularity.courseId = course.id;
           irregularity.periodStartTime = periodStartTime;
-          irregularity.type = Irregularity.TYPE_ABSENT;
+          irregularity.type = IrregularityType.ABSENT;
           irregularity.time = periodStartTime;
           irregularity.timeMissing = periodService
             .getNextByTime(periodStartTime+1)
@@ -516,7 +516,7 @@ public class InnexgoService {
           irregularity.courseId = currentCourse.id;
           irregularity.periodStartTime = currentPeriod.startTime;
           // if before the period has actually started, make absent instead of left early
-          irregularity.type = Irregularity.TYPE_LEFT_EARLY;
+          irregularity.type = IrregularityType.LEAVE_NORETURN;
           irregularity.time = encounter.time;
           irregularity.timeMissing = periodService
             .getNextByTime(encounter.time)
@@ -574,7 +574,7 @@ public class InnexgoService {
           forgotToSignOut.studentId = inEncounter.studentId;
           forgotToSignOut.courseId = irregCourse.id;
           forgotToSignOut.periodStartTime = irregPeriod.startTime;
-          forgotToSignOut.type = Irregularity.TYPE_FORGOT_SIGN_OUT;
+          forgotToSignOut.type = IrregularityType.FORGOT_SIGN_OUT;
           forgotToSignOut.time = irregPeriod.startTime;
           forgotToSignOut.timeMissing = 0;
           irregularityService.add(forgotToSignOut);
@@ -612,10 +612,10 @@ public class InnexgoService {
               );
 
         for (Irregularity irregularity : irregularities) {
-          if (irregularity.type.equals(Irregularity.TYPE_ABSENT)) {
+          if (irregularity.type.equals(IrregularityType.ABSENT)) {
             // if there is absence, convert it to a tardy or delete it
             if (System.currentTimeMillis() > currentPeriod.startTime) {
-              irregularity.type = Irregularity.TYPE_TARDY;
+              irregularity.type = IrregularityType.TARDY;
               irregularity.timeMissing = encounter.time - currentPeriod.startTime;
               irregularity.time = encounter.time;
               irregularityService.update(irregularity);
@@ -623,9 +623,9 @@ public class InnexgoService {
               // if they're present before the startTime
               irregularityService.deleteById(irregularity.id);
             }
-          } else if (irregularity.type.equals(Irregularity.TYPE_LEFT_EARLY)) {
+          } else if (irregularity.type.equals(IrregularityType.LEAVE_NORETURN)) {
             // if there is a leftEarly, convert it to a leftTemporarily
-            irregularity.type = Irregularity.TYPE_LEFT_TEMPORARILY;
+            irregularity.type = IrregularityType.LEAVE_RETURN;
             irregularity.timeMissing = encounter.time - irregularity.time;
             irregularityService.update(irregularity);
           }

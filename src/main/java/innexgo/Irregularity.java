@@ -38,7 +38,7 @@ enum IrregularityType {
   TARDY,
   LEAVE_NORETURN,
   LEAVE_RETURN,
-  FORGET_SIGNOUT;
+  FORGOT_SIGN_OUT;
 
   public static boolean contains(String str) {
     for(IrregularityType irregularityType : IrregularityType.values()) {
