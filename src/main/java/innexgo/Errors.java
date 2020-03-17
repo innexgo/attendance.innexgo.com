@@ -21,6 +21,8 @@ public enum Errors {
   STUDENT_NONEXISTENT("the student you are trying to perform this operation on does not exist", HttpStatus.BAD_REQUEST),
   PERIOD_NONEXISTENT("the period you are trying to perform this operation on does not exist", HttpStatus.BAD_REQUEST),
   INVALID_PERIOD_TYPE("this is not a valid type for a period", HttpStatus.BAD_REQUEST),
+  INVALID_ENCOUNTER_TYPE("this is not a valid type for an encounter", HttpStatus.BAD_REQUEST),
+  INVALID_SEMESTER_TYPE("this is not a valid type for a semester", HttpStatus.BAD_REQUEST),
   GRADE_NONEXISTENT("the grade you are trying to perform this operation on does not exist", HttpStatus.BAD_REQUEST),
   GRADE_EXISTENT("the grade you are trying to create already exists", HttpStatus.BAD_REQUEST),
   COURSE_SUBJECT_EMPTY("the course subject must not be empty", HttpStatus.BAD_REQUEST),

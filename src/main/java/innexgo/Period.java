@@ -35,4 +35,13 @@ enum PeriodType {
   LUNCH,
   TUTORIAL,
   NONE;
+
+  public static boolean contains(String str) {
+    for(PeriodType periodType : PeriodType.values()) {
+      if(periodType.name().equals(str)) {
+        return true;
+      }
+    }
+    return false;
+  }
 }

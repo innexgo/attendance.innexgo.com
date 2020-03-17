@@ -450,10 +450,9 @@ public class InnexgoService {
     encounter.studentId = student.id;
     encounter.time = System.currentTimeMillis();
     encounter.type = manual
-      ? Encounter.MANUAL_ENCOUNTER
-      : Encounter.DEFAULT_ENCOUNTER;
+      ? EncounterType.MANUAL
+      : EncounterType.DEFAULT;
     encounterService.add(encounter);
-
 
     // if school is currently going on, represents the current period
     Period currentPeriod = periodService.getCurrent();
@@ -534,7 +533,7 @@ public class InnexgoService {
         outEncounter.locationId = inEncounter.locationId;
         outEncounter.studentId = inEncounter.studentId;
         outEncounter.time = encounter.time;
-        outEncounter.type = Encounter.VIRTUAL_ENCOUNTER;
+        outEncounter.type = EncounterType.VIRTUAL;
         encounterService.add(outEncounter);
 
         // now close session

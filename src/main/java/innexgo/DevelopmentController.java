@@ -301,9 +301,9 @@ public class DevelopmentController {
     if(innexgoService.isAdministrator(apiKey)) {
       semesterService.deleteAll();
       for (int year = 2018; year < 2023; year++) {
-        addSemester(Semester.SPRING_SEMESTER, LocalDate.of(year, 1, 1));
-        addSemester(Semester.SUMMER_SEMESTER, LocalDate.of(year, 6, 1));
-        addSemester(Semester.FALL_SEMESTER, LocalDate.of(year, 8, 1));
+        addSemester(SemesterType.SPRING, LocalDate.of(year, 1, 1));
+        addSemester(SemesterType.SUMMER, LocalDate.of(year, 6, 1));
+        addSemester(SemesterType.FALL, LocalDate.of(year, 8, 1));
       }
       return OK;
     } else {
@@ -311,7 +311,7 @@ public class DevelopmentController {
     }
   }
 
-  void addSemester(String type, LocalDate date) {
+  void addSemester(SemesterType type, LocalDate date) {
     Semester semester = new Semester();
     semester.startTime = date.atTime(0, 0).atZone(Utils.TIMEZONE).toInstant().toEpochMilli();
     semester.year = date.getYear();

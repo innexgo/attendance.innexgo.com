@@ -85,7 +85,7 @@ public class EncounterService {
       Long locationId,
       Long minTime,
       Long maxTime,
-      String type,
+      EncounterType type,
       long offset,
       long count
       ) {
@@ -96,7 +96,7 @@ public class EncounterService {
             + (encounterId == null ? "" : " AND e.id=" + encounterId)
             + (studentId == null ? "" : " AND e.student_id=" + studentId)
             + (locationId == null ? "" : " AND e.location_id=" + locationId)
-            + (type == null ? "" : " AND e.type=" + Utils.escape(type))
+            + (type == null ? "" : " AND e.type=" + type)
             + (minTime == null ? "" : " AND e.time >= " + minTime)
             + (maxTime == null ? "" : " AND e.time <= " + maxTime)
             + (" ORDER BY e.id")

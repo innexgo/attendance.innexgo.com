@@ -181,8 +181,8 @@ public class ApiController {
     encounter.studentId = studentId;
     encounter.time = System.currentTimeMillis();
     encounter.type = manual
-      ? Encounter.MANUAL_ENCOUNTER
-      : Encounter.DEFAULT_ENCOUNTER;
+      ? EncounterType.MANUAL
+      : EncounterType.DEFAULT;
     encounterService.add(encounter);
     return new ResponseEntity<>(innexgoService.fillEncounter(encounter), HttpStatus.OK);
   }
@@ -277,7 +277,7 @@ public class ApiController {
     if (!innexgoService.isAdministrator(apiKey)) {
       return Errors.MUST_BE_ADMIN.getResponse();
     }
-    if(!Arrays.asList(PeriodType.values()).contains(type)) {
+    if(!PeriodType.contains(type)) {
       return Errors.INVALID_PERIOD_TYPE.getResponse();
     }
     Period pr = new Period();
@@ -713,22 +713,35 @@ public class ApiController {
       @RequestParam("offset") Long offset,
       @RequestParam("count") Long count,
       @RequestParam Map<String, String> allRequestParam) {
-    if (allRequestParam.containsKey("apiKey") && innexgoService.isTrusted(allRequestParam.get("apiKey"))) {
-      List<Semester> list =
-        semesterService
-        .query(
-            Utils.parseLong(allRequestParam.get("semesterStartTime")),
-            Utils.parseLong(allRequestParam.get("semesterYear")),
-            allRequestParam.get("semesterType"),
-            Utils.parseLong(allRequestParam.get("minSemesterStartTime")),
-            Utils.parseLong(allRequestParam.get("maxSemesterStartTime")),
-            offset,
-            count
-          )
-        .stream()
-        .map(x -> innexgoService.fillSemester(x))
-        .collect(Collectors.toList());
-      return new ResponseEntity<>(list, HttpStatus.OK);
+    String apiKey = allRequestParam.get("apiKey");
+    if(!innexgoService.isTrusted(apiKey)) {
+      return Errors.MUST_BE_USER.getResponse();
+    }
+    String typeStr = allRequestParam.get("semesterType");
+    SemesterType type = null;
+    if(typeStr != null) {
+      if(SemesterType.contains(typeStr)) {
+        type = SemesterType.valueOf(typeStr);
+      } else 
+
+    if(allRequestParam.containsKey("semesterType") && !SemesterType.contains(allRequestParam.get("semesterType"))) {
+      return Errors.INVALID_SEMESTER_TYPE.getResponse();
+    }
+    List<Semester> list =
+      semesterService
+      .query(
+          Utils.parseLong(allRequestParam.get("semesterStartTime")),
+          Utils.parseLong(allRequestParam.get("semesterYear")),
+          allRequestParam.get("semesterType"),
+          Utils.parseLong(allRequestParam.get("minSemesterStartTime")),
+          Utils.parseLong(allRequestParam.get("maxSemesterStartTime")),
+          offset,
+          count
+        )
+      .stream()
+      .map(x -> innexgoService.fillSemester(x))
+      .collect(Collectors.toList());
+    return new ResponseEntity<>(list, HttpStatus.OK);
     } else {
       return UNAUTHORIZED;
     }

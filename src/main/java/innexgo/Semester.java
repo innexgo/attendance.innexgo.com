@@ -28,4 +28,13 @@ enum SemesterType {
   SUMMER,
   FALL,
   SPRING;
+
+  public static boolean contains(String str) {
+    for(SemesterType semesterType : SemesterType.values()) {
+      if(semesterType.name().equals(str)) {
+        return true;
+      }
+    }
+    return false;
+  }
 }
