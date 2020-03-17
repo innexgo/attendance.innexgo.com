@@ -50,8 +50,6 @@ public class EncounterService {
     jdbcTemplate.update(
         sql, encounter.id, encounter.time, encounter.locationId, encounter.studentId, encounter.type.name());
 
-    RowMapper<Encounter> rowMapper = new EncounterRowMapper();
-
     // Fetch encounter id
     sql = "SELECT id FROM encounter WHERE time=? AND location_id=? AND student_id=?";
     long id =

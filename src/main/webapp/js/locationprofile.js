@@ -4,8 +4,17 @@
 
 // Forever runs and updates currentStatus
 async function currentStatus(locationId) {
+  const makeEntry = (student, bgcolor, fgcolor, faClass, toolTip) =>
+    `<tr>
+        <td>${linkRelative(student.name, '/studentprofile.html?studentId=' + student.id)}</td>
+        <td>${student.id}</td>
+        <td title="${toolTip}" style="background-color:${bgcolor};color:${fgcolor}">
+            <span class="fa ${faClass}"></span>
+        </td>
+      </tr>`;
+
   let apiKey = Cookies.getJSON('apiKey');
-  let table = document.getElementById('current-status-table');
+  let table = $('#current-status-table');
   for (; ;) {
     let period = Cookies.getJSON('period');
 
@@ -19,21 +28,22 @@ async function currentStatus(locationId) {
     }
 
     try {
-      let students = await fetchJson(`${apiUrl()}/misc/present/?locationId=${locationId}&time=${time}&apiKey=${apiKey.key}`);
-      let text = '<span class="fa fa-check"></span>'
-      let bgcolor = '#ccffcc';
-      let fgcolor = '#00ff00';
       // Clear table
       table.innerHTML = '';
       // Students
-      if (students.length == 0) {
-        table.innerHTML = `<b>No Students Currently at Location</b>`;
-      } else {
-        students.forEach(student => $('#current-status-table').append(
-          `<td>${linkRelative(student.name, '/studentprofile.html?studentId=' + student.id)}</td>
-                   <td>${student.id}</td>
-                   <td style="background-color:${bgcolor};color:${fgcolor}">${text}</td>`)
-        );
+      try {
+        let students = await fetchJson(`${apiUrl()}/misc/present/?locationId=${locationId}&time=${time}&apiKey=${apiKey.key}`);
+        // Clear table
+        table[0].innerHTML = '';
+        // Students
+        if (students.length == 0) {
+          table[0].innerHTML = `<b>No Students Currently in Classroom</b>`;
+        } else {
+          students.forEach(student => table.append(makeEntry(student, '#ccffcc', '#00ff00', 'fa-check', 'You don\'t have a scheduled class at the moment, but this student is signed into your classroom.')));
+        }
+      } catch (err) {
+        console.log(err);
+        giveTempError('Failed to correctly fetch student data, try refreshing');
       }
     } catch (err) {
       console.log(err);
