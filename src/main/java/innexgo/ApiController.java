@@ -18,7 +18,6 @@
 
 package innexgo;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -56,12 +55,6 @@ public class ApiController {
 
   @Autowired InnexgoService innexgoService;
   @Autowired SchedulerService schedulerService;
-
-  static final ResponseEntity<?> BAD_REQUEST = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-  static final ResponseEntity<?> INTERNAL_SERVER_ERROR = new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-  static final ResponseEntity<?> OK = new ResponseEntity<>(HttpStatus.OK);
-  static final ResponseEntity<?> UNAUTHORIZED = new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-  static final ResponseEntity<?> NOT_FOUND = new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
   /**
    * Create a new apiKey for a User

@@ -9,6 +9,7 @@ public enum Errors {
   MUST_BE_ROOT("this api key is not registered to a root user", HttpStatus.UNAUTHORIZED),
   MUST_BE_ADMIN("this api key is not registered to an admin user", HttpStatus.UNAUTHORIZED),
   MUST_BE_USER("this api key is not registered to a user", HttpStatus.UNAUTHORIZED),
+  DATABASE_INITIALIZED("the database already contains some users", HttpStatus.UNAUTHORIZED),
   PASSWORD_INCORRECT("this password is not valid for this user", HttpStatus.UNAUTHORIZED),
   PASSWORD_INSECURE("this password does not meet security requirements", HttpStatus.UNAUTHORIZED),
   USER_NONEXISTENT("the user you are trying to perform this operation on does not exist", HttpStatus.BAD_REQUEST),
