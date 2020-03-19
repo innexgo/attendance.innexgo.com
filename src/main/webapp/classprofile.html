@@ -106,6 +106,27 @@
                 </div>
               </div>
             </div>
+
+            <!-- Chart/Analysis -->
+            <div class="card col-sm-6 palette-level-two">
+              <div class="card-body m-10">
+                <div class="input-group">
+                  <h5 class="card-title">Attendance Record</h5>
+                  <span class="input-group-btn ml-auto">
+                    <button type="button" class="btn btn-sm" data-html="true" data-toggle="popover" title="Attendance Record Charts"
+                      data-placement="top" data-content="<strong>Attendance Record:</strong> It shows the percent of this class session who is absent and present. <br><br> <strong>Common Leaving Times:</strong> It shows the number of students from this class session that leaves in increments of 10 minutes. ">
+                      <i class="fa fa-question"></i>
+                    </button>
+                  </span>
+                </div>
+                <tr>
+                  <td><canvas id="doughnutChart" style="max-width: 500px; margin-bottom: 25px;"></canvas></td>
+                  <td><h5 class="card-title">Common Leaving Times</h5></td>
+                  <canvas id="lineChart"style="max-width: 500px;"></canvas>
+                </tr>
+              </div>
+            </div>
+
           </div>
         </div>
       </div>

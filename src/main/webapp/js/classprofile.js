@@ -126,3 +126,47 @@ $(document).ready(function(){
     trigger : 'hover'
   });
 });
+
+$(document).ready(function(){
+
+  var ctx = document.getElementById("doughnutChart").getContext('2d');
+  var ctxD = document.getElementById("doughnutChart").getContext('2d');
+  var myLineChart = new Chart(ctxD, {
+    type: 'doughnut',
+    data: {
+      labels: ["% Absence","% Present"],
+      datasets: [{
+        data: [1/100, 99/100],
+        backgroundColor: ["#F7464A", "#DCEDC1"],
+        hoverBackgroundColor: ["#FF5A5E","#E6F2D3"]
+      }]
+    },
+    options: {
+      responsive: true
+    }
+  });
+
+  var ctxL = document.getElementById("lineChart").getContext('2d');
+  var myLineChart = new Chart(ctxL, {
+    type: 'line',
+    data: {
+      labels: ["00:10", "00:20", "00:30", "00:40", "00:50", "00:60", "01:00", "01:10", "01:20", "01:30"],
+      datasets: [{
+        label: "# of Students Leaving at a Specific Time",
+        data: [0, 0, 1, 2, 0, 0, 3, 2, 1, 1],
+        backgroundColor: [
+'rgba(105, 0, 132, .2)',
+        ],
+        borderColor: [
+'rgba(200, 99, 132, .7)',
+        ],
+        borderWidth: 2
+      },
+      ]
+    },
+    options: {
+      responsive: true
+    }
+  });
+
+});

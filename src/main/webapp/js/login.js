@@ -9,7 +9,7 @@ function giveError(errormsg) {
   document.getElementById('error').innerHTML = errormsg;
 }
 
-//Checks for blank password or user id, or other obvious misconfigurations 
+//Checks for blank password or user id, or other obvious misconfigurations
 function validateattempt(userName, password)  {
   if(isEmpty(userName)){
     giveError('Please enter your email')

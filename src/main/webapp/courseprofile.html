@@ -114,6 +114,61 @@
                 </div>
               </div>
             </div>
+
+            <!-- Chart/Analysis -->
+            <div class="card col-sm-6 palette-level-two">
+              <div class="card-body m-10">
+                <div class="input-group">
+                  <h5 class="card-title">Attendance Record (Alltime)</h5>
+                  <span class="input-group-btn ml-auto">
+                    <button type="button" class="btn btn-sm" data-html="true" data-toggle="popover" title="Class Attendance Reports"
+                      data-placement="top" data-content="<strong>Attendance Record (Alltime):</strong> It shows the percentage of absenses of this students for this particular course throughout the entire school year. <br><br> <strong>Total Cumulative Absences Over Time:</strong> It shows the average number of minutes missed by a student in your class.">
+                      <i class="fa fa-question"></i>
+                    </button>
+                  </span>
+                </div>
+                <tr>
+                  <td><canvas id="doughnutChart" style="max-width: 500px; margin-bottom: 25px;"></canvas></td>
+                  <td><h5 class="card-title">Total Cumulative Absences Over Time</h5></td>
+                  <canvas id="lineChart"style="max-width: 500px;"></canvas>
+                </tr>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="my-3 px-3">
+
+            <!-- # of Absenses by Student -->
+            <div class="card palette-level-two">
+              <div class="card-body">
+                <div class="input-group">
+                  <h5 class="card-title">Number of Absenses/Tardies (by Student)</h5>
+                  <span class="input-group-btn ml-auto">
+                    <button type="button" class="btn btn-sm" data-html="true" data-toggle="popover" title="Course Report" data-placement="top"
+                                                                                                                          data-content="View basic statistics and information associated with a course.">
+                      <i class="fa fa-question"></i>
+                    </button>
+                  </span>
+                </div>
+                <br>
+                <p class="card-text">Students taking course:</p>
+                <div class="table-height-standard">
+                  <table class="table striped white">
+                    <thead>
+                      <tr class="table-header">
+                        <td>Name</td>
+                        <td>ID</td>
+                        <td>Number of Absenses<i class="fa fa-fw fa-sort"></i></td>
+                        <td>Number of Tardies<i class="fa fa-fw fa-sort"></i></td>
+                      </tr>
+                    </thead>
+                    <tbody id="courseprofile-students"></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
           </div>
         </div>
       </div>
