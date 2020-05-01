@@ -6,15 +6,22 @@ $(document).ready(function(){
   var myLineChart = new Chart(ctxD, {
     type: 'doughnut',
     data: {
-      labels: ["% Absence","% Present"],
+      labels: ["% Absence","% Late", "% Present"],
       datasets: [{
-        data: [1/100, 99/100],
-        backgroundColor: ["#F7464A", "#DCEDC1"],
-        hoverBackgroundColor: ["#FF5A5E","#E6F2D3"]
+        data: [13,10,76],
+        backgroundColor: ["#F7464A","#ffff99","#DCEDC1"],
+        hoverBackgroundColor: ["#FF5A5E","#ffffe5","#E6F2D3"]
       }]
     },
     options: {
-      responsive: true
+      responsive: true,
+      legend: {
+        position: 'right',
+        labels: {
+          padding: 20,
+          boxWidth: 10
+        }
+      },
     }
   });
 

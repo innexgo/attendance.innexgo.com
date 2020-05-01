@@ -129,20 +129,26 @@ $(document).ready(function(){
 
 $(document).ready(function(){
 
-  var ctx = document.getElementById("doughnutChart").getContext('2d');
   var ctxD = document.getElementById("doughnutChart").getContext('2d');
   var myLineChart = new Chart(ctxD, {
     type: 'doughnut',
     data: {
-      labels: ["% Absence","% Present"],
+      labels: ["# Absence","# Late", "# Present"],
       datasets: [{
-        data: [1/100, 99/100],
-        backgroundColor: ["#F7464A", "#DCEDC1"],
-        hoverBackgroundColor: ["#FF5A5E","#E6F2D3"]
+        data: [1,5,30],
+        backgroundColor: ["#F7464A","#ffff99","#DCEDC1"],
+        hoverBackgroundColor: ["#FF5A5E","#ffffe5","#E6F2D3"]
       }]
     },
     options: {
-      responsive: true
+      responsive: true,
+      legend: {
+        position: 'right',
+        labels: {
+          padding: 20,
+          boxWidth: 10
+        }
+      },
     }
   });
 
@@ -152,7 +158,7 @@ $(document).ready(function(){
     data: {
       labels: ["00:10", "00:20", "00:30", "00:40", "00:50", "00:60", "01:00", "01:10", "01:20", "01:30"],
       datasets: [{
-        label: "# of Students Leaving at a Specific Time",
+        label: "# of Students Leaving",
         data: [0, 0, 1, 2, 0, 0, 3, 2, 1, 1],
         backgroundColor: [
 'rgba(105, 0, 132, .2)',
@@ -169,4 +175,26 @@ $(document).ready(function(){
     }
   });
 
+  var ctxL = document.getElementById("lineChart2").getContext('2d');
+  var myLineChart = new Chart(ctxL, {
+    type: 'line',
+    data: {
+      labels: ["00:10", "00:20", "00:30", "00:40", "00:50", "00:60", "01:00", "01:10", "01:20", "01:30"],
+      datasets: [{
+        label: "# of Students Re-Entering",
+        data: [0, 3, 2, 1, 4, 0, 1, 0, 0, 2],
+        backgroundColor: [
+'rgba(0, 137, 132, .2)',
+        ],
+        borderColor: [
+'rgba(0, 10, 130, .7)',
+        ],
+        borderWidth: 2
+      },
+      ]
+    },
+    options: {
+      responsive: true
+    }
+  });
 });

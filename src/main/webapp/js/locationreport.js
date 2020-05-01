@@ -118,3 +118,85 @@ $(document).ready(function () {
   loadData();
 })
 
+$(document).ready(function(){
+
+  var ctxL = document.getElementById("lineChart2").getContext('2d');
+  var myLineChart = new Chart(ctxL, {
+    type: 'line',
+    data: {
+      labels: ["August", "September", "October", "November", "December", "January", "February", "March", "April", "May"],
+      datasets: [{
+        label: "Period 1",
+        data: [7.2, 5.4, 4.5, 4.8, 4.5, 4.9, 7.1, 6.8, 7.5, 8.5],
+        backgroundColor: [
+          'rgb(0, 0, 0, .0)',
+        ],
+        borderColor: [
+          'rgba(200, 99, 132, .7)',
+        ],
+        borderWidth: 2
+      },
+      {
+        label: "Period 2",
+        data: [3.5, 2.1, 1.5, 1.9, 2.3, 2.5, 2.1, 3.1, 3.4, 4.1],
+        backgroundColor: [
+            'rgb(0, 0, 0, .0)',
+        ],
+        borderColor: [
+          'rgba(0, 10, 130, .7)',
+        ],
+        borderWidth: 2
+      },
+      {
+        label: "Period 3",
+        data: [6.4, 7.1, 5.2, 6.8, 7.1, 7.3, 7.4, 7.8, 8.3, 8.4],
+        backgroundColor: [
+          'rgb(0, 0, 0, .0)',
+        ],
+        borderColor: [
+          'rgb(127, 255, 0, .7)',
+        ],
+        borderWidth: 2
+      },
+      {
+        label: "Period 4",
+        data: [6.7, 7.2, 6.8, 7.3, 7.6, 8.1, 8.2, 8.8, 9.0, 10.2],
+        backgroundColor: [
+          'rgb(0, 0, 0, .0)',
+        ],
+        borderColor: [
+          'rgb(188, 143, 143, .7)',
+        ],
+        borderWidth: 2
+      },
+      {
+        label: "Period 5",
+        data: [1.2, 1.4, 1.8, 1.2, 1.7, 1.9, 2.0, 2.4, 2.2, 2.8],
+        backgroundColor: [
+          'rgb(0, 0, 0, .0)',
+        ],
+        borderColor: [
+          'rgb(192, 192, 192, .7)',
+        ],
+        borderWidth: 2
+      },
+      {
+        label: "Period 6",
+        data: [5.6, 5.8, 6.7, 15.2, 7.2, 7.1, 8.1, 8.2, 9.1, 10.1],
+        backgroundColor: [
+          'rgb(0, 0, 0, .0)',
+        ],
+        borderColor: [
+          'rgb(75, 0, 130, .7)',
+        ],
+        borderWidth: 2
+      }
+    ]
+  },
+
+    options: {
+      responsive: true
+    }
+  });
+
+});

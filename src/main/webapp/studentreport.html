@@ -3,7 +3,7 @@
 
 <head>
   <!--Background Information -->
-  <title>Innexgo: Student Profile</title>
+  <title>Student Report</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -28,7 +28,7 @@
   <script src="/js/signedin.js"></script>
   <script src="/js/loadprefs.js"></script>
   <script src="/js/sidebar.js"></script>
-  <script src="/js/studentprofile.js"></script>
+  <script src="/js/studentreport.js"></script>
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css?family=Exo&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Ubuntu&display=swap" rel="stylesheet">
@@ -120,8 +120,63 @@
           </div>
         </div>
 
-        <!-- Student Location -->
+        <!-- Chart/Analysis -->
         <div class="card col-sm-4 palette-level-two">
+          <div class="card-body m-10">
+            <div class="input-group">
+              <h5 class="card-title">Attendance Record (For Courses)</h5>
+              <span class="input-group-btn ml-auto">
+                <button type="button" class="btn btn-sm" data-html="true" data-toggle="popover" title="Student-Specific Attendance Reports"
+                  data-placement="top" data-content="<strong>Attendance Record:</strong> It shows the percentage of absenses of this students for this particular course. <br><br> <strong>Total Cumulative Absences Over Time (in Period):</strong> It shows the total number of absences that this student totaled in your class compared to the average number of absences by a student in your class.">
+                  <i class="fa fa-question"></i>
+                </button>
+              </span>
+            </div>
+            <tr>
+              <td><canvas id="doughnutChart" style="margin-bottom: 50px;"></canvas></td>
+              <td><h5 class="card-title"># of Absences per Period</h5></td>
+              <td><canvas id="barChart"></canvas></td>
+            </tr>
+          </div>
+        </div>
+
+      </div>
+
+        <div class="my-3">
+          <div id="alert-zone"></div>
+          <div class="card-deck">
+            <!-- Student Irregularities -->
+            <div class="card palette-level-two">
+              <div class="card-body">
+                <div class="input-group">
+              <h5 id="studentprofile-name" class="card-title">Recent Irregularities</h5>
+              <span class="input-group-btn ml-auto">
+                <button type="button" class="btn btn-sm" data-html="true" data-toggle="popover"
+                  title="Recent Irregularities" data-placement="top"
+                  data-content="Displays any recent irregularities associated with the student. <br>Examples include tardies, absences, leaving the clasroom, or forgetting to sign out.">
+                  <i class="fa fa-question"></i>
+                </button>
+              </span>
+            </div>
+            <p class="card-text">Irregularities associated with student</p>
+            <div class="table-height-standard">
+              <table class="table striped white ">
+                <thead>
+                  <tr class='table-header'>
+                    <td>Date</td>
+                    <td>Time</td>
+                    <td>Class</td>
+                    <td>Type</td>
+                  </tr>
+                </thead>
+                <tbody id="studentprofile-irregularities"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Student Location -->
+        <div class="card col-sm-6 palette-level-two">
           <div class="card-body">
             <div class="input-group">
               <h5 class="card-title">Location</h5>
@@ -170,38 +225,8 @@
           </div>
         </div>
       </div>
-      <div class="card-deck my-3">
-        <!-- Student Irregularities -->
-        <div class="card col-sm-5 palette-level-two">
-          <div class="card-body">
-            <div class="input-group">
-              <h5 id="studentprofile-name" class="card-title">Recent Irregularities</h5>
-              <span class="input-group-btn ml-auto">
-                <button type="button" class="btn btn-sm" data-html="true" data-toggle="popover"
-                  title="Recent Irregularities" data-placement="top"
-                  data-content="Displays any recent irregularities associated with the student. <br>Examples include tardies, absences, leaving the clasroom, or forgetting to sign out.">
-                  <i class="fa fa-question"></i>
-                </button>
-              </span>
-            </div>
-            <p class="card-text">Irregularities associated with student</p>
-            <div class="table-height-standard">
-              <table class="table striped white ">
-                <thead>
-                  <tr class='table-header'>
-                    <td>Date</td>
-                    <td>Time</td>
-                    <td>Class</td>
-                    <td>Type</td>
-                  </tr>
-                </thead>
-                <tbody id="studentprofile-irregularities"></tbody>
-              </table>
-            </div>
-          </div>
-        </div>
       </div>
-    </div>
+
   </div>
     <script src="/js/studentpdf.js"></script>
 </body>

@@ -67,15 +67,22 @@ $(document).ready(function(){
   var myLineChart = new Chart(ctxD, {
     type: 'doughnut',
     data: {
-      labels: ["% Absence","% Present"],
+      labels: ["% Absence","% Late", "% Present"],
       datasets: [{
-        data: [1/100, 99/100],
-        backgroundColor: ["#F7464A", "#DCEDC1"],
-        hoverBackgroundColor: ["#FF5A5E","#E6F2D3"]
+        data: [5.50,4.25,90.25],
+        backgroundColor: ["#F7464A","#ffff99","#DCEDC1"],
+        hoverBackgroundColor: ["#FF5A5E","#ffffe5","#E6F2D3"]
       }]
     },
     options: {
-      responsive: true
+      responsive: true,
+      legend: {
+        position: 'right',
+        labels: {
+          padding: 20,
+          boxWidth: 10
+        }
+      },
     }
   });
 
@@ -85,18 +92,87 @@ $(document).ready(function(){
     data: {
       labels: ["August", "September", "October", "November", "December", "January", "February", "March", "April", "May"],
       datasets: [{
-          label: "Average Cumulative Absence Record",
-          data: [1, 1, 3, 4, 6, 6, 8, 9, 14, 17],
-          backgroundColor: [
-'rgba(0, 137, 132, .2)',
-          ],
-          borderColor: [
-'rgba(0, 10, 130, .7)',
-          ],
-          borderWidth: 2
-        }
-      ]
-    },
+        label: "Cumulative Absences in Course",
+        data: [7, 22, 39, 51, 72, 86, 111, 139, 170, 212],
+        backgroundColor: [
+          'rgba(105, 0, 132, .2)',
+        ],
+        borderColor: [
+          'rgba(200, 99, 132, .7)',
+        ],
+        borderWidth: 2
+      },
+      {
+        label: "Average Cumulative Absences in All Courses by Instructor",
+        data: [5, 26, 43, 67, 86, 107, 130, 157, 185, 220],
+        backgroundColor: [
+          'rgba(0, 137, 132, .2)',
+        ],
+        borderColor: [
+          'rgba(0, 10, 130, .7)',
+        ],
+        borderWidth: 2
+      },
+      {
+        label: "Average Cumulative Absences in Department",
+        data: [12, 37, 66, 97, 125, 152, 186, 221, 260, 306], 
+        backgroundColor: [
+          'rgb(0, 100, 0, .2)',
+        ],
+        borderColor: [
+          'rgb(127, 255, 0, .7)',
+        ],
+        borderWidth: 2
+      }
+    ]
+  },
+
+    options: {
+      responsive: true
+    }
+  });
+
+  var ctxL = document.getElementById("lineChart2").getContext('2d');
+  var myLineChart = new Chart(ctxL, {
+    type: 'line',
+    data: {
+      labels: ["August", "September", "October", "November", "December", "January", "February", "March", "April", "May"],
+      datasets: [{
+        label: "Absences in Course",
+        data: [7, 15, 17, 12, 21, 14, 25, 28, 31, 42],
+        backgroundColor: [
+          'rgba(105, 0, 132, .2)',
+        ],
+        borderColor: [
+          'rgba(200, 99, 132, .7)',
+        ],
+        borderWidth: 2
+      },
+      {
+        label: "Average # of Absences in All Courses by Instructor",
+        data: [5, 21, 17, 24, 19, 21, 23, 27, 28, 35],
+        backgroundColor: [
+          'rgba(0, 137, 132, .2)',
+        ],
+        borderColor: [
+          'rgba(0, 10, 130, .7)',
+        ],
+        borderWidth: 2
+      },
+      {
+        label: "Average # of Absences in Department",
+        data: [12, 25, 29, 31, 28, 27, 34, 35, 39, 46],
+        backgroundColor: [
+          'rgb(0, 100, 0, .2)',
+        ],
+        borderColor: [
+          'rgb(127, 255, 0, .7)',
+        ],
+        borderWidth: 2
+      }
+    ]
+  },
+
     options: {
       responsive: true
     }
