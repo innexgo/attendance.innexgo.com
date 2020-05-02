@@ -6,7 +6,7 @@
 async function currentStatus(locationId) {
   const makeEntry = (student, bgcolor, fgcolor, faClass, toolTip) =>
     `<tr>
-        <td>${linkRelative(student.name, '/studentprofile.html?studentId=' + student.id)}</td>
+        <td>${linkRelative(student.name, '/studentreport.html?studentId=' + student.id)}</td>
         <td>${student.id}</td>
         <td title="${toolTip}" style="background-color:${bgcolor};color:${fgcolor}">
             <span class="fa ${faClass}"></span>
@@ -98,7 +98,7 @@ async function loadData() {
       .forEach(course => $('#location-courses').append(`
             <tr>
               <td>${course.period}</td>
-              <td>${linkRelative(course.subject, '/courseprofile.html?courseId=' + course.id)}</td>
+              <td>${linkRelative(course.subject, '/coursereport.html?courseId=' + course.id)}</td>
               <td>${linkRelative(course.teacher.name, '/userprofile.html?userId=' + course.teacher.id)}</td>
             </tr>`));
   } catch (err) {

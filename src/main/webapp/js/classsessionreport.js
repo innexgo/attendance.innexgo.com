@@ -60,7 +60,7 @@ async function loadClassProfile() {
       // put values in table
       var newrow = table.insertRow(0);
       newrow.innerHTML =
-        ('<td>' + linkRelative(student.name, '/studentprofile.html?studentId='+student.id)+ '</td>' +
+        ('<td>' + linkRelative(student.name, '/studentreport.html?studentId='+student.id)+ '</td>' +
           '<td>' + student.id + '</td>' +
           '<td style="background-color:' + bgcolor + ';color:' + fgcolor + '">' + text + '</td>');
       newrow.className = 'id-' + student.id;
@@ -105,7 +105,7 @@ async function initialize() {
     period = periods[0];
 
     text.innerHTML = 'View students who attended ' +
-      linkRelative(course.subject, '/courseprofile.html?courseId='+course.id) +
+      linkRelative(course.subject, '/coursereport.html?courseId='+course.id) +
       ' ('+linkRelative(course.teacher.name, '/userprofile.html?userId='+course.teacher.id)+') on ' +
       moment(period.startTime).format('dddd, MMMM Do YYYY') + ' ' + ordinal_suffix_of(course.period) + ' period.';
   } catch(err) {

@@ -17,9 +17,9 @@ async function loadCourses(studentId, initialSemesterTime) {
     .forEach(course => courseTable.append(`
             <tr>
               <td>${course.period}</td>
-              <td> ${linkRelative(course.subject,'/courseprofile.html?courseId='+course.id)}</td>
+              <td> ${linkRelative(course.subject,'/coursereport.html?courseId='+course.id)}</td>
               <td>${linkRelative(course.teacher.name, '/userprofile.html?userId='+course.teacher.id)}</td>
-              <td>${linkRelative(course.location.name, '/locationprofile.html?locationId='+course.location.id)}</td>
+              <td>${linkRelative(course.location.name, '/locationreport.html?locationId='+course.location.id)}</td>
             </tr>
           `))
 }
@@ -33,7 +33,7 @@ async function loadIrregularityPage(studentId, minTime, maxTime) {
             <tr>
               <td>${moment(irregularity.time).format('MMM Do, YYYY')}</td>
               <td>${moment(irregularity.time).format('h:mm A')}</td>
-              <td>${linkRelative(irregularity.course.subject,'/courseprofile.html?courseId='+irregularity.course.id)}</td>
+              <td>${linkRelative(irregularity.course.subject,'/coursereport.html?courseId='+irregularity.course.id)}</td>
               <td>${irregularity.type}</td>
             </tr>
           `)); // Append row
@@ -48,7 +48,7 @@ async function loadCurrentLocation(studentId) {
     $('#studentprofile-currentlocation-time')[0].innerHTML = moment(time).format('h:mm A');
     $('#studentprofile-currentlocation-date')[0].innerHTML = moment(time).format('dddd, MMM Do, YYYY');
     let loc = mostRecentSession.inEncounter.location;
-    $('#studentprofile-currentlocation-location')[0].innerHTML = linkRelative(loc.name, '/locationprofile.html?locationId='+loc.id);
+    $('#studentprofile-currentlocation-location')[0].innerHTML = linkRelative(loc.name, '/locationreport.html?locationId='+loc.id);
   }
 }
 

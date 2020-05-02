@@ -14,7 +14,7 @@ async function loadCourseProfile(courseId) {
     document.getElementById('courseprofile-name').innerHTML = course.subject;
     document.getElementById('courseprofile-teacher').innerHTML = 'Teacher: ' + linkRelative(course.teacher.name, '/userprofile.html?userId=' + course.teacher.id);
     document.getElementById('courseprofile-period').innerHTML = 'Period: ' + course.period;
-    document.getElementById('courseprofile-location').innerHTML = linkRelative(course.location.name, '/locationprofile.html?locationId='+course.location.id);
+    document.getElementById('courseprofile-location').innerHTML = linkRelative(course.location.name, '/locationreport.html?locationId='+course.location.id);
 
     let schedules = await fetchJson(`${apiUrl()}/schedule/?apiKey=${apiKey.key}&courseId=${courseId}&scheduleTime=${Date.now()}&offset=0&count=${INT32_MAX}`);
 
@@ -22,8 +22,10 @@ async function loadCourseProfile(courseId) {
 
     schedules.forEach(schedule => $('#courseprofile-students').append(`
           <tr>
-            <td>${linkRelative(schedule.student.name, '/studentprofile.html?studentId='+schedule.student.id)}</td>
+            <td>${linkRelative(schedule.student.name, '/studentreport.html?studentId='+schedule.student.id)}</td>
             <td>${schedule.student.id}</td>
+            <td></td>
+            <td></td>
           </tr>`));
   } catch(err) {
     console.log(err);
@@ -115,7 +117,7 @@ $(document).ready(function(){
       },
       {
         label: "Average Cumulative Absences in Department",
-        data: [12, 37, 66, 97, 125, 152, 186, 221, 260, 306], 
+        data: [12, 37, 66, 97, 125, 152, 186, 221, 260, 306],
         backgroundColor: [
           'rgb(0, 100, 0, .2)',
         ],

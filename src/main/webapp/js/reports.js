@@ -31,7 +31,7 @@ $(document).ready(function () {
     .forEach(course => $('#reports-courses').append(`
         <tr>
           <td>${course.period}</td>
-          <td>${linkRelative(course.subject, '/courseprofile.html?courseId=' + course.id)}</td>
+          <td>${linkRelative(course.subject, '/coursereport.html?courseId=' + course.id)}</td>
         </tr>
       `)
     );
@@ -76,7 +76,7 @@ async function loadClassSessionReports(date) {
         $('#reports-classes').append(`
                   <tr>
                     <td>${period.number}</td>
-                    <td>${linkRelative(course.subject, '/classprofile.html?courseId=' + course.id + '&periodStartTime=' + period.startTime)}</td>
+                    <td>${linkRelative(course.subject, '/classsessionreport.html?courseId=' + course.id + '&periodStartTime=' + period.startTime)}</td>
                   </tr>`)
       }
     }
@@ -128,7 +128,7 @@ async function searchStudent(name) {
     let studentList = await fetchJson(`${apiUrl()}/student/?studentNamePartial=${validatedName}&offset=0&count=${INT32_MAX}&apiKey=${apiKey.key}`);
     studentList.forEach(student => $('#reports-students').append(`
         <tr>
-          <td>${linkRelative(student.name, '/studentprofile.html?studentId=' + student.id)}</td>
+          <td>${linkRelative(student.name, '/studentreport.html?studentId=' + student.id)}</td>
           <td>${student.id}</td>
         </tr>`));
   } catch (err) {
@@ -136,3 +136,7 @@ async function searchStudent(name) {
     giveTempError('Something went wrong while fetching students from the server.');
   }
 }
+
+$(document).ready(function () {
+
+});

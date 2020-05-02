@@ -53,6 +53,8 @@
         <div id="sidebar-navigation">
           <a class="sidebar-item navbar-palette" href="#" id="my-overview"><i class="fa fa-tachometer-alt"></i> Overview</a>
           <a class="sidebar-item navbar-palette active" href="reports.html" id="my-reports"><i class="fa fa-chart-bar"></i> Reports</a>
+          <a class="sidebar-item navbar-palette" href="studentactivitysearch.html" id="detailed-search"><i class="fa fa-chart-bar"></i> Student Activity Search</a>
+          <a class="sidebar-item navbar-palette" href="irregularitiessearch.html" id=""><i class="fa fa-chart-bar"></i> Irregularities Search</a>
         </div>
         <div class="sidebar-bottom">
           <a class="sidebar-item navbar-palette" href="settings.html"><i class="fa fa-cog"></i>  Settings</a>
@@ -81,7 +83,7 @@
             <div class="card col-sm-4 palette-level-two">
               <div class="card-body">
                 <div class="input-group">
-                  <h5 class="card-title">Course Reports</h5>
+                  <h5 class="card-title">Semester Course Reports</h5>
                   <span class="input-group-btn ml-auto">
                     <button type="button" class="btn btn-sm" data-html="true" data-toggle="popover" title="Course Reports" data-placement="top"
                                                                                                                            data-content="Click on the course name in the table to view a report for that course.">
@@ -108,7 +110,7 @@
             <div class="card col-sm-4 palette-level-two">
               <div class="card-body">
                 <div class="input-group">
-                  <h5 class="card-title text-center">Class Session Reports</h5>
+                  <h5 class="card-title text-center">One-Time Class Session Reports</h5>
                   <span class="input-group-btn ml-auto">
                     <button type="button" class="btn btn-sm" data-html="true" data-toggle="popover" title="Manual Attendance" data-placement="top"
                                                                                                                               data-content="Use the calendar to choose a day to view periods for. The default is today. Click on the period number to view a report for that period on that day.">
@@ -143,7 +145,7 @@
             <div class="card col-sm-4 palette-level-two">
               <div class="card-body">
                 <div class="input-group">
-                  <h5 class="card-title">Search Student Report</h5>
+                  <h5 class="card-title">Student Reports</h5>
                   <span class="input-group-btn ml-auto">
                     <button type="button" class="btn btn-sm" data-html="true" data-toggle="popover" title="Search Student Reports" data-placement="top"
                                                                                                                                    data-content="Enter part of a student name, and click the search button to view a list of all students who match part of this name. Click on the student names to access their reports. Names must be spelled correctly.">
@@ -173,6 +175,45 @@
             </div>
           </div>
         </div>
+
+        <div class="px-3 my-3">
+          <div id="alert-zone"></div>
+          <div class="card-deck">
+
+            <div class="card palette-level-two">
+              <div class="card-body">
+                <div class="input-group">
+                  <h5 class="card-title text-center">Student Class Period Reports</h5>
+                  <span class="input-group-btn ml-auto">
+                    <button type="button" class="btn btn-sm" data-html="true" data-toggle="popover" title="Manual Attendance" data-placement="top"
+                            data-content="Use the calendar to choose a day to view periods for. The default is today. Click on the period number to view a report for that period on that day.">
+                      <i class="fa fa-question"></i>
+                    </button>
+                  </span>
+                </div>
+                <p class="card-text">View the attendance report for a student in one specific class period.</p>
+                <form>
+                  <select class="form-control" id='periodList' name='periodList'></select>
+                </form>
+                <div class="table-height-standard">
+                  <table class="table striped white">
+                    <thead>
+                      <tr class="table-header">
+                        <td>Name</td>
+                        <td>ID</td>
+                      </tr>
+                    </thead>
+                    <tbody id="reports-classes"></tbody>
+                  </table>
+                </div>
+
+              </div>
+            </div>
+
+
+          </div>
+        </div>
+
       </div>
     </body>
 </html>

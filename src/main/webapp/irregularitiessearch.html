@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <!--Background Information -->
+      <title>Innexgo</title>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <!-- CSS References -->
+      <link rel="stylesheet" href="vendor/bootstrap/css/bootstrap.min.css">
+      <link rel="stylesheet" href="vendor/fontawesome-free/css/all.min.css">
+      <link rel="stylesheet" href="vendor/bootstrap4-toggle/css/bootstrap4-toggle.min.css">
+      <link rel="stylesheet" href="/vendor/tempus-dominus/tempusdominus-bootstrap-4.min.css">
+      <link rel="stylesheet" href="css/common.css">
+      <link rel="stylesheet" href="css/sidebar.css">
+      <!-- JS References -->
+      <script src="vendor/jquery/jquery.min.js"></script>
+      <script src="vendor/bootstrap/js/bootstrap.bundle.js"></script>
+      <script src="vendor/bootstrap4-toggle/js/bootstrap4-toggle.min.js"></script>
+      <script src="vendor/js-cookie/js.cookie.js"></script>
+      <script src="vendor/moment/moment.min.js"></script>
+      <script src="/vendor/tempus-dominus/tempusdominus-bootstrap-4.min.js"></script>
+      <script src="js/common.js"></script>
+      <script src="/js/signedin.js">
+      <script src="js/loadprefs.js"></script>
+      <script src="js/sidebar.js"></script>
+      <script src="js/detailedsearch.js"></script>
+
+      <!-- Fonts -->
+      <link href="https://fonts.googleapis.com/css?family=Exo&display=swap" rel="stylesheet">
+      <link href="https://fonts.googleapis.com/css?family=Ubuntu&display=swap" rel="stylesheet">
+
+      <!-- Favicon -->
+      <link rel='icon' href='img/innexgo_gold_brandmark.png' type='image/png'/ >
+   </head>
+
+      <body class="palette-level-one">
+
+      <!-- Sidebar -->
+      <nav id="sidebar" class="navbar-palette sidebar-fixed">
+        <nav class="navbar sidebar-top">
+          <div style="margin:auto;display:block">
+            <h6 id="info-time" style="font-family:'Exo', sans-serif;">Current Time</h6>
+          </div>
+        </nav>
+        <div class="sidebar-item sidebar-info-list navbar-palette" style="">
+          <h6 id="info-name">Teacher Name</h6>
+          <h6 id="info-period">Current Period</h6>
+          <h6 id="info-location">Current Location</h6>
+        </div>
+        <div id="sidebar-navigation">
+          <a class="sidebar-item navbar-palette" href="#" id="my-overview"><i class="fa fa-tachometer-alt"></i> Overview</a>
+          <a class="sidebar-item navbar-palette" href="reports.html" id="my-reports"><i class="fa fa-chart-bar"></i> Reports</a>
+          <a class="sidebar-item navbar-palette" href="studentactivitysearch.html" id="detailed-search"><i class="fa fa-chart-bar"></i> Student Activity Search</a>
+          <a class="sidebar-item navbar-palette active" href="irregularitiessearch.html" id=""><i class="fa fa-chart-bar"></i> Irregularities Search</a>
+        </div>
+        <div class="sidebar-bottom">
+          <a class="sidebar-item navbar-palette" href="settings.html"><i class="fa fa-cog"></i>  Settings</a>
+          <a class="sidebar-item navbar-palette" href="index.html"><i class="fa fa-sign-out-alt"></i>  Sign out</a>
+        </div>
+      </nav>
+
+      <!-- Top Navbar -->
+      <nav class="navbar navbar-expand-md navbar-palette">
+        <!-- Center Logo -->
+        <div class="mx-auto order-0">
+          <img class="logoicon" src="img/innexgo_transparent_icon.png" alt="" style="" />
+          <h1 class="navbar-brand navbar-palette" style="font-size: 25px; margin-left: 5px;">Innexgo</h1>
+        </div>
+      </nav>
+
+        <!-- Content -->
+      <!-- Center Screen -->
+      <div id="not-sidebar" class="container-fluid">
+         <div class="card-deck px-3 my-3">
+            <!-- Filters -->
+            <div class="card col-sm mx-3 palette-level-two">
+               <div class="card-body">
+                  <h5 class="card-title text-center" style="margin-bottom: 25px;">Filters</h5>
+                  <div class="row">
+                     <div class="col-md-4">
+                        <form>
+                           <div class="input-group mb-3">
+                              <div class="input-group-prepend">
+                                 <span class="input-group-text">Name:&nbsp;&nbsp;</span>
+                             </div>
+                              <input type="text" class="form-control" id="name" placeholder="Student Name">
+                           </div>
+                        </form>
+                      </div>
+                      <div class="col-md-4">
+                        <form>
+                           <div class="input-group mb-3">
+                              <div class="input-group-prepend">
+                                 <span class="input-group-text">ID:&nbsp;&nbsp;</span>
+                              </div>
+                              <input type="number" class="form-control" id="id" placeholder="Student ID">
+                           </div>
+                        </form>
+                      </div>
+                      <div class="col-md-4">
+                        <form>
+                           <div class="input-group mb-3">
+                              <div class="input-group-prepend">
+                                 <span class="input-group-text">Type of Irregularity:&nbsp;&nbsp;</span>
+                              </div>
+                              <select class="form-control" id="">
+                                <option>-</option>
+                                <option>Absence</option>
+                                <option>Left During Class But Never Returned</option>
+                                <option>Tardy</option>
+                              </select>
+                           </div>
+                        </form>
+                     </div>
+                   </div>
+                      <button class="col-md btn" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">More Filters</button>
+                    <div class="row collapse" id="collapseExample" style="margin-top: 25px;">
+                     <div class="col-md-4">
+                      <form>
+                         <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                               <span class="input-group-text">Teacher:&nbsp;&nbsp;</span>
+                           </div>
+                            <input type="text" class="form-control" id="teacher" placeholder="Teacher Name">
+                         </div>
+                      </form>
+                    </div>
+                    <div class="col-md-4">
+                      <form>
+                         <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                               <span class="input-group-text">Period:&nbsp;&nbsp;</span>
+                           </div>
+                           <select class="form-control" id="">
+                              <option>-</option>
+                              <option>1</option>
+                              <option>2</option>
+                              <option>3</option>
+                              <option>4</option>
+                              <option>5</option>
+                              <option>6</option>
+                              <option>7</option>
+                            </select>
+                         </div>
+                      </form>
+                    </div>
+                    <div class="col-md-4">
+                      <form>
+                         <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                               <div class="input-group-prepend"><span class="input-group-text"># Of Entries</span></div>
+                            </div>
+                            <select class="form-control" id="">
+                             <option>-</option>
+                             <option>10</option>
+                             <option>20</option>
+                             <option>30</option>
+                             <option>40</option>
+                             <option>50</option>
+                             <option>100</option>
+                           </select>
+                         </div>
+                      </form>
+                    </div>
+                    <div class="col-md-6">
+                     <form>
+                        <div class="input-group mb-3">
+                           <div class="input-group-prepend">
+                              <span class="input-group-text">Building:&nbsp;&nbsp;</span>
+                          </div>
+                           <input type="number" class="form-control" id="building" placeholder="Building #">
+                        </div>
+                     </form>
+                   </div>
+                   <div class="col-md-6">
+                    <form>
+                       <div class="input-group mb-3">
+                          <div class="input-group-prepend">
+                             <span class="input-group-text">Classroom:&nbsp;&nbsp;</span>
+                         </div>
+                          <input type="number" class="form-control" id="classroom" placeholder="Classroom #">
+                       </div>
+                    </form>
+                  </div>
+                    <div class="col-md-6">
+                      <form>
+                         <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                               <span class="input-group-text">From:</span>
+                            </div>
+                            <input type="date" id="startDate" class="form-control">
+                            <div class="input-group-append">
+                               <input type="time" id="startTime" class="form-control" value="07:15">
+                            </div>
+                         </div>
+                      </form>
+                    </div>
+                    <div class="col-md-6">
+                      <form>
+                         <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                               <span class="input-group-text">To:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                            </div>
+                            <input type="date" id="endDate" class="form-control">
+                            <div class="input-group-append">
+                               <input type="time" id="endTime" class="form-control" value="15:10">
+                            </div>
+                         </div>
+                      </form>
+                    </div>
+                  </div>
+                    <div class="row">
+                      <div class="col-md" style="margin-top: 15px;">
+                        <div><button class="btn btn-block btn-warning" onclick="recentActivity()">Submit</button></div>
+                      </div>
+                    </div>
+                </div>
+              </div>
+            </div>
+         <!-- Recent Activity -->
+         <div class="card-deck px-3 my-3">
+            <div class="card col-sm mx-3 palette-level-two">
+               <div class="card-body">
+                  <div>
+                     <h5 class="card-title text-center">Results</h5>
+                  </div>
+                  <div class="table-height-standard">
+                     <table class="table table-striped table-bordered table-hover" id="recentActivity">
+                        <thead class="thead-dark">
+                           <tr class="table-header">
+                              <td>#</td>
+                              <td>Name</td>
+                              <td>Student ID</td>
+                              <td>Teacher</td>
+                              <td>Period</td>
+                              <td>Time</td>
+                              <td>Type of Irregularity</td>
+                           </tr>
+                        </thead>
+                        <tbody class="table-height-standard" id="recentActivityContent"></tbody>
+                     </table>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>
