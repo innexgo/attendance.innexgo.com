@@ -36,7 +36,11 @@ $(document).ready(async function () {
       `)
     );
   await loadClassSessionReports(moment());
-  await loadStudentClassPeriodReports();
+  try {
+    await loadStudentClassPeriodReports();
+  } catch {
+    givePermError('Failed to load student class period reports');
+  }
 });
 
 async function loadStudentClassPeriodReports() {
