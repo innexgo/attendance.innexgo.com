@@ -7,7 +7,7 @@
   giveTempError givePermError giveTempSuccess
   */
 
-$(document).ready(function () {
+$(document).ready(async function () {
   //Bootstrap Popover - Alert Zones/Quick help for Card(s)
   $('[data-toggle="popover"]').popover({
     trigger: 'hover'
@@ -35,8 +35,59 @@ $(document).ready(function () {
         </tr>
       `)
     );
-  loadClassSessionReports(moment());
+  await loadClassSessionReports(moment());
+  await loadStudentClassPeriodReports();
 });
+
+async function loadStudentClassPeriodReports() {
+  const apiKey = Cookies.getJSON('apiKey');
+  const courses = Cookies.getJSON('courses').sort((a, b) => (a.period > b.period) ? 1 : -1);
+
+  async function calcReport(course) {
+    let schedules = await fetchJson(`${apiUrl()}/schedule/?apiKey=${apiKey.key}&courseId=${course.id
+      }&scheduleTime=${Date.now()}&offset=0&count=${INT32_MAX}`);
+
+    let table = `<table>`;
+    for(let i = 0; i < schedules.length; i++) {
+      let s = schedules[i];
+
+      if(i % 4 == 0) {
+        table += `<tr>`;
+      }
+      table += `<td class="px-3">${linkRelative(s.student.name, `/studentclassperiodreport.html?scheduleId=${s.id}`)}</td>`
+      if(i % 4 == 3) {
+        table += `</tr>`;
+      }
+    }
+    return table;
+  }
+
+  for (let cid = 0; cid < courses.length; cid++) {
+    // cid == course index
+    const course = courses[cid];
+    $('#reports-studentclassperiod-accordion').append(`
+      <div class="card">
+        <div class="card-header" id="reports-heading-${cid}">
+          <h2 class="mb-0">
+            <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#reports-acc-${cid}">
+              <table>
+                <tr>
+                  <td class="px-3">${course.period}</td>
+                  <td class="px-3">${course.subject}</td>
+                </tr>
+              </table>
+            </button>
+          </h2>
+        </div>
+        <div id="reports-acc-${cid}" class="collapse" data-parent="#reports-studentclassperiod-accordion">
+          <div class="card-body">
+            ${ await calcReport(course) }
+          </div>
+        </div>
+      </div>`);
+  }
+
+}
 
 // Populates tables with links to class session reports for that day
 async function loadClassSessionReports(date) {
