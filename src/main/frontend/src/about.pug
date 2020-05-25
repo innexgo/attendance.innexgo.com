@@ -22,41 +22,34 @@ block content
         |they would love to have the system implemented in their school, including our very own teachers here
         |at Santa Teresa. Thus, Innexgo LLC was born.
       p
-        | Innexgo LLC now strives to help schools and school districts tackle attendance inconsistencies. We are
-        | committed to collaborating with community and education leaders to optimize our attendance system
-        | to the localized needs of all clients. As we move forward, Innexgo LLC aims to bring our technology to
-        | other academic institutions across many communities in the United States.
+        |Innexgo LLC now strives to help schools and school districts tackle attendance inconsistencies. We are
+        |committed to collaborating with community and education leaders to optimize our attendance system
+        |to the localized needs of all clients. As we move forward, Innexgo LLC aims to bring our technology to
+        |other academic institutions across many communities in the United States.
   section
-    .container.text-center
+    .container
       h2 Our Team
       mixin TeamMember(img, name, role)
         .span
           .team.mx-3
             img.rounded-circle(src=img)
             h6= name
-            p= school
-      mixin Photo(name, school)
-        +TeamMember(`img/team/${name.split(' ').join('')}.webp`, name, role)
+            p= role
+      mixin Photo(name, role)
+        +TeamMember(`img/team/${name.split(' ').join('')}.jpg`, name, role)
       mixin NoPhoto(name, role)
-        +TeamMember('img/team/PersonIcon.png', name, role)
+        +TeamMember('img/team/PersonIcon.jpg', name, role)
 
-      .row
+      .row.d-flex.justify-content-center
         +Photo('Govind Pimpale', 'Chief Technology Officer')
         +Photo('Richard Le', 'Chief Financial Officer')
         +Photo('Ganesh Pimpale', 'Founding Engineer')
+      .row.d-flex.justify-content-center
         +Photo('Marek Pinto', 'Founding Engineer')
-      .row
-        +Photo('Henry Chen', 'Mission San Jose High School')
-        +Photo('', 'Mission San Jose High School')
-        +Photo('Karankumar Mageswaran', 'Mission San Jose High School')
-        +Photo('Emily Park', 'Oak Grove High School')
-      .row
-        +Photo('Ganesh Pimpale', 'Santa Teresa High School')
-        +Photo('Govind Pimpale', 'Santa Teresa High School')
-        +Photo('Jasper Nguyen', 'Santa Teresa High School')
-        +Photo('Kaitlyn Bui', 'Santa Teresa High School')
-      .row
-        +NoPhoto('Leslie Sun', 'Saratoga High School')
-        +Photo('Isaiah Chung', 'Saratoga High School')
-        +Photo('Adithya Nair', 'Saratoga High School')
-        +Photo('Christopher Park', 'University Preparatory Academy')
+        +Photo('Henry Chen', 'Software Developer')
+        +Photo('Emily Park', 'Hardware Manafacturing')
+      .row.d-flex.justify-content-center
+        +Photo('Sanjana Nandi', 'Software Developer')
+        +Photo('Joshua Sah', 'Hardware Installation')
+        +Photo('Jordan Nguyen', 'Hardware Installation')
+        +Photo('Jason Ly', 'Hardware Installation')

@@ -29,9 +29,9 @@ const config = {
     [
       'about',
       'index',
-      'check',
-      'upload',
-      'termsofservice'
+      'faq',
+      'cookiepolicy',
+      'termsofservice',
     ].map((n) => new HtmlWebpackPlugin({
       filename: `${n}.html`,
       template: `src/${n}.pug`,
