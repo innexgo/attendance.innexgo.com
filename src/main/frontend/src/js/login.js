@@ -58,26 +58,18 @@ async function loginattempt() {
   }
 }
 
-window.onload = function() {
-  let username = document.getElementById('username');
-  let password = document.getElementById('password');
-
-  username.addEventListener('keydown', function(event) {
-    if (event.keyCode === 13) {
+$(document).ready(function() {
+  $('#submit-creds').click(loginattempt);
+  $('#username').keydown(function(event) {
+    if(event.which == 13) {
       event.preventDefault();
-      if(isEmpty(password)){
+      $('#password').focus();
+    }
+  });
+  $('#password').keydown(function(event) {
+      if(event.which == 13) {
+        event.preventDefault();
         loginattempt();
       }
-      else {
-        password.focus();
-      }
-    }
   });
-
-  password.addEventListener('keydown', function(event) {
-    if (event.keyCode === 13) {
-      event.preventDefault();
-      loginattempt();
-    }
-  });
-}
+});

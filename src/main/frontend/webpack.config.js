@@ -30,6 +30,7 @@ const config = {
       'about',
       'index',
       'faq',
+      'login',
       'cookiepolicy',
       'termsofservice',
     ].map((n) => new HtmlWebpackPlugin({
