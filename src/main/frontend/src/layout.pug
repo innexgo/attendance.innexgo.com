@@ -4,7 +4,7 @@ html
   head
     meta(charset='UTF-8')
 
-    title Innexo - Contact Tracer
+    title Innexgo
 
     // CSS References
     link(rel='stylesheet' href='vendor/fonts-googleapis/exo.css')
@@ -28,20 +28,19 @@ html
     block extrascripts
 
     // Favicon
-    link(rel='icon' href='img/icon.webp' type='image/webp')
+    link(rel='icon' href='img/innexgo_gold_brandmark.png' type='image/png')
   body
     header.header
         nav.navbar.navbar-expand-lg.fixed-top.py-3
           .container
-            a.navbar-brand.font-weight-bold(href='index.html') Innexo
+            a.navbar-brand.font-weight-bold(href='index.html') Innexgo
             button.navbar-toggler.navbar-toggler-right(type='button' data-toggle='collapse' data-target='#navbarSupportedContent')
               i.fa.fa-bars
             #navbarSupportedContent.collapse.navbar-collapse
               .navbar-nav.ml-auto
-                a.nav-item.nav-link.font-weight-bold(href='check.html') Check
-                a.nav-item.nav-link.font-weight-bold(href='upload.html') Upload
                 a.nav-item.nav-link.font-weight-bold(href='about.html') About
-                a.nav-item.nav-link.font-weight-bold(href='https://github.com/pimpale/innexo.io') Source Code
+                a.nav-item.nav-link.font-weight-bold(href='faq.html') FAQ
+                a.nav-item.nav-link.font-weight-bold(href='login.html') Login
 
     // This is where the good stuff goes
     .content
@@ -49,9 +48,13 @@ html
 
     footer.footer
       .container-fluid.py-1
-          br
+          img.logoicon(src='img/innexgo_logo.png')
           p
-            a.text-light(href='about.html') About and FAQs
+            a.text-light(href='cookiepolicy.html') Cookie Policy
+          p
+            a.text-light(href='faq.html') Frequently Asked Questions
+          p
+            a.text-light(href='privacypolicy.html') Privacy Policy
           p
             a.text-light(href='termsofservice.html') Terms of Service
-          p.text-light &copy; Govind Pimpale
+          p.text-light &copy; Innexgo LLC, 2020. All Rights Reserved
