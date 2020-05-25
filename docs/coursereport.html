@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <!--Background Information -->
+    <title>Semester Course Report</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- CSS References -->
+    <link rel="stylesheet" href="/vendor/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/vendor/fontawesome-free/css/all.min.css" />
+    <link rel="stylesheet" href="/css/common.css" />
+    <link rel="stylesheet" href="/css/sidebar.css" />
+    <link rel="stylesheet" href="/vendor/chart/css/Chart.min.css" />
+
+
+    <!-- JS References -->
+    <script src="/vendor/jquery/jquery.min.js"></script>
+    <script src="/vendor/bootstrap/js/bootstrap.bundle.js"></script>
+    <script src="/vendor/scannerdetection/jquery.scannerdetection.min.js"></script>
+    <script src="/vendor/js-cookie/js.cookie.js"></script>
+    <script src="/vendor/moment/moment.min.js"></script>
+    <script src="/vendor/chart/js/Chart.min.js"></script>
+    <script src="/js/common.js"></script>
+    <script src="/js/signedin.js"></script>
+    <script src="/js/loadprefs.js"></script>
+    <script src="/js/sidebar.js"></script>
+    <script src="/js/coursereport.js"></script>
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Exo&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Ubuntu&display=swap" rel="stylesheet">
+
+    <!-- Favicon -->
+    <link rel='icon' href='img/innexgo_gold_brandmark.png' type='image/png'/ >
+
+  </head>
+    <body class="palette-level-one">
+
+      <!-- Sidebar -->
+      <nav id="sidebar" class="navbar-palette sidebar-fixed">
+        <nav class="navbar sidebar-top">
+          <div style="margin:auto;display:block">
+            <h6 id="info-time" style="font-family:'Exo', sans-serif;">Current Time</h6>
+          </div>
+        </nav>
+        <div class="sidebar-item sidebar-info-list navbar-palette">
+          <h6 id="info-name">Teacher Name</h6>
+          <h6 id="info-period">Current Period</h6>
+          <h6 id="info-location">Current Location</h6>
+        </div>
+        <div id="sidebar-navigation">
+          <a class="sidebar-item navbar-palette" href="#" id="my-overview"><i class="fa fa-tachometer-alt"></i> Overview</a>
+          <a class="sidebar-item navbar-palette active" href="reports.html" id="my-reports"><i class="fa fa-chart-bar"></i> Reports</a>
+          <a class="sidebar-item navbar-palette" href="studentactivitysearch.html" id="detailed-search"><i class="fa fa-chart-bar"></i> Student Activity Search</a>
+          <a class="sidebar-item navbar-palette" href="irregularitiessearch.html" id=""><i class="fa fa-chart-bar"></i> Irregularities Search</a>
+        </div>
+        <div class="sidebar-bottom">
+          <a class="sidebar-item navbar-palette" href="settings.html"><i class="fa fa-cog"></i>  Settings</a>
+          <a class="sidebar-item navbar-palette" href="index.html"><i class="fa fa-sign-out-alt"></i>  Sign out</a>
+        </div>
+      </nav>
+
+      <!-- Top Navbar -->
+      <nav class="navbar navbar-expand-md navbar-palette">
+        <!-- Center Logo -->
+        <div class="mx-auto order-0">
+          <img class="logoicon" src="img/innexgo_transparent_icon.png" alt="" style="" />
+          <h1 class="navbar-brand navbar-palette" style="font-size: 25px; margin-left: 5px;">Innexgo</h1>
+        </div>
+
+      </nav>
+
+      <!-- Content -->
+      <div id="not-sidebar" class="container-fluid">
+        <div class="my-3 px-3">
+          <div id="alert-zone"></div>
+          <div class="card-deck">
+
+
+            <!-- Course Stats -->
+            <div class="card col-sm-6 palette-level-two">
+              <div class="card-body">
+                <div class="input-group">
+                  <h5 id="courseprofile-name" class="card-title">Course Name</h5>
+                  <span class="input-group-btn ml-auto">
+                    <button type="button" class="btn btn-sm" data-html="true" data-toggle="popover" title="Course Report" data-placement="top"
+                                                                                                                          data-content="View basic statistics and information associated with a course.">
+                      <i class="fa fa-question"></i>
+                    </button>
+                  </span>
+                </div>
+                <table style="width:100%;">
+                  <tr>
+                    <td id="courseprofile-period">Course Period</td>
+                    <td id="courseprofile-teacher" style='text-align: left'>Course Teacher</td>
+                  </tr>
+                  <tr>
+                    <td id="courseprofile-location">Course Location</td>
+                    <td id="courseprofile-student-count" style='text-align: left'>Student Count</td>
+                  </tr>
+                </table>
+                <br>
+                <div class="table-height-standard">
+                  <table class="table striped white">
+                    <thead>
+                      <tr class="table-header">
+                        <td>Name<i class="fa fa-fw fa-sort"></i></td>
+                        <td>ID<i class="fa fa-fw fa-sort"></i></td>
+                        <td># Absenses<i class="fa fa-fw fa-sort"></i></td>
+                        <td># Tardies<i class="fa fa-fw fa-sort"></i></td>
+                      </tr>
+                    </thead>
+                    <tbody id="courseprofile-students"></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <!-- Chart/Analysis -->
+            <div class="card col-sm-6 palette-level-two">
+              <div class="card-body m-10">
+                <div class="input-group">
+                  <h5 class="card-title">Attendance Record (Alltime)</h5>
+                  <span class="input-group-btn ml-auto">
+                    <button type="button" class="btn btn-sm" data-html="true" data-toggle="popover" title="Class Attendance Reports"
+                      data-placement="top" data-content="<strong>Attendance Record (Alltime):</strong> It shows the percentage of absenses of this students for this particular course throughout the entire school year. <br><br> <strong>Total Cumulative Absences Over Time:</strong> It shows the average number of minutes missed by a student in your class.">
+                      <i class="fa fa-question"></i>
+                    </button>
+                  </span>
+                </div>
+                <tr>
+                  <td><canvas id="doughnutChart" style="margin-top: 75px;"></canvas></td>
+                </tr>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+        <div class="px-3">
+          <div id="alert-zone"></div>
+          <div class="card-deck">
+            <!-- Chart/Analysis -->
+            <div class="card palette-level-two">
+              <div class="card-body m-10">
+                <div class="input-group">
+                  <h5 class="card-title">Cumulative Absences Over Time</h5>
+                  <span class="input-group-btn ml-auto">
+                    <button type="button" class="btn btn-sm" data-html="true" data-toggle="popover" title="Class Attendance Reports"
+                      data-placement="top" data-content="<strong>Attendance Record (Alltime):</strong> It shows the percentage of absenses of this students for this particular course throughout the entire school year. <br><br> <strong>Total Cumulative Absences Over Time:</strong> It shows the average number of minutes missed by a student in your class.">
+                      <i class="fa fa-question"></i>
+                    </button>
+                  </span>
+                </div>
+                <tr>
+                  <canvas id="lineChart"style=""></canvas>
+                </tr>
+              </div>
+            </div>
+
+
+          </div>
+
+        </div>
+
+          <div class="my-3 px-3">
+            <div id="alert-zone"></div>
+            <div class="card-deck">
+              <!-- Chart/Analysis -->
+              <div class="card palette-level-two">
+                <div class="card-body m-10">
+                  <div class="input-group">
+                    <h5 class="card-title">Average Number of Absences by Month</h5>
+                    <span class="input-group-btn ml-auto">
+                      <button type="button" class="btn btn-sm" data-html="true" data-toggle="popover" title="Class Attendance Reports"
+                        data-placement="top" data-content="<strong>Attendance Record (Alltime):</strong> It shows the percentage of absenses of this students for this particular course throughout the entire school year. <br><br> <strong>Total Cumulative Absences Over Time:</strong> It shows the average number of minutes missed by a student in your class.">
+                        <i class="fa fa-question"></i>
+                      </button>
+                    </span>
+                  </div>
+                  <tr>
+                    <canvas id="lineChart2"style=""></canvas>
+                  </tr>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+      </div>
+    </body>
+</html>

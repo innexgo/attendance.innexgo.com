@@ -1,0 +1,35 @@
+#sidebar {
+  height:100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  width: 20%;
+  z-index: 1;
+  margin: 0%;
+}
+
+.sidebar-top {
+  height: 4rem;
+}
+
+.sidebar-bottom {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  left: 0;
+}
+
+.sidebar-item:not(.sidebar-info-list) {
+  padding: .5rem 1.25rem;
+}
+
+.sidebar-info-list {
+  border:none;
+  display:block;
+}
+
+#not-sidebar {
+  padding-left:20%
+}

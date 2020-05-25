@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!--Background Information -->
+    <title>Innexgo: Sign-in</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Exo&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu&display=swap">
+    <link rel="stylesheet" href="/vendor/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/vendor/fontawesome-free/css/all.min.css">
+    <link rel="stylesheet" href="/css/login.css">
+
+    <script src="/vendor/jquery/jquery.min.js"></script>
+    <script src="/vendor/js-cookie/js.cookie.js"></script>
+    <script src="/vendor/moment/moment.min.js"></script>
+    <script src="/js/common.js"></script>
+    <script src="/js/login.js"></script>
+
+    <!-- Favicon -->
+    <link rel='icon' href='img/innexgo_gold_brandmark.png' type='image/png'/ >
+
+  </head>
+  <body>
+    <div class="grad">
+      <div class="container">
+        <div class="center-screen">
+          <div class="login">
+            <h1 class=""> <img src="/img/innexgo_onyx_transparent.png"> Innexgo </h1>
+            <input id="username" type="text" placeholder="Email" name="user"><br>
+            <input id="password" type="password" placeholder="Password" name="password"><br>
+            <input id="login-submission-button" style='padding:0px;' type="button" onclick="loginattempt();" value="Login">
+            <p id="error" style="color: red; text-align: center;"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

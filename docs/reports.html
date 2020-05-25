@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <!--Background Information -->
+  <title>Innexgo</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- CSS References -->
+  <link rel="stylesheet" href="/vendor/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/vendor/fontawesome-free/css/all.min.css">
+  <link rel="stylesheet" href="/vendor/bootstrap4-toggle/css/bootstrap4-toggle.min.css">
+  <link rel="stylesheet" href="/vendor/tempus-dominus/tempusdominus-bootstrap-4.min.css">
+  <link rel="stylesheet" href="/css/common.css">
+  <link rel="stylesheet" href="/css/sidebar.css">
+
+  <!-- JS References -->
+  <script src="/vendor/jquery/jquery.min.js"></script>
+  <script src="/vendor/bootstrap/js/bootstrap.bundle.js"></script>
+  <script src="/vendor/bootstrap4-toggle/js/bootstrap4-toggle.min.js"></script>
+  <script src="/vendor/js-cookie/js.cookie.js"></script>
+  <script src="/vendor/moment/moment.min.js"></script>
+  <script src="/vendor/tempus-dominus/tempusdominus-bootstrap-4.min.js"></script>
+  <script src="/js/common.js"></script>
+  <script src="/js/signedin.js"></script>
+  <script src="/js/loadprefs.js"></script>
+  <script src="/js/sidebar.js"></script>
+  <script src="/js/reports.js"></script>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Exo&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Ubuntu&display=swap" rel="stylesheet">
+
+  <!-- Favicon -->
+  <link rel='icon' href='img/innexgo_gold_brandmark.png' type='image/png' />
+
+</head>
+
+<body class="palette-level-one">
+
+  <!-- Sidebar -->
+  <nav id="sidebar" class="navbar-palette sidebar-fixed">
+    <nav class="navbar sidebar-top">
+      <div style="margin:auto;display:block">
+        <h6 id="info-time" style="font-family:'Exo', sans-serif;">Current Time</h6>
+      </div>
+    </nav>
+    <div class="sidebar-item sidebar-info-list navbar-palette" style="">
+      <h6 id="info-name">Teacher Name</h6>
+      <h6 id="info-period">Current Period</h6>
+      <h6 id="info-location">Current Location</h6>
+    </div>
+    <div id="sidebar-navigation">
+      <a class="sidebar-item navbar-palette" href="#" id="my-overview"><i class="fa fa-tachometer-alt"></i> Overview</a>
+      <a class="sidebar-item navbar-palette active" href="reports.html" id="my-reports"><i class="fa fa-chart-bar"></i>
+        Reports</a>
+      <a class="sidebar-item navbar-palette" href="studentactivitysearch.html" id="detailed-search"><i
+          class="fa fa-chart-bar"></i> Student Activity Search</a>
+      <a class="sidebar-item navbar-palette" href="irregularitiessearch.html" id=""><i class="fa fa-chart-bar"></i>
+        Irregularities Search</a>
+    </div>
+    <div class="sidebar-bottom">
+      <a class="sidebar-item navbar-palette" href="settings.html"><i class="fa fa-cog"></i> Settings</a>
+      <a class="sidebar-item navbar-palette" href="index.html"><i class="fa fa-sign-out-alt"></i> Sign out</a>
+    </div>
+  </nav>
+
+  <!-- Top Navbar -->
+  <nav class="navbar navbar-expand-md navbar-palette">
+    <!-- Center Logo -->
+    <div class="mx-auto order-0">
+      <img class="logoicon" src="img/innexgo_transparent_icon.png" alt="" style="" />
+      <h1 class="navbar-brand navbar-palette" style="font-size: 25px; margin-left: 5px;">Innexgo</h1>
+    </div>
+  </nav>
+
+  <!-- Content -->
+
+  <!-- Center Screen -->
+  <div id="not-sidebar" class="container-fluid">
+    <div class="px-3 my-3">
+      <div id="alert-zone"></div>
+      <div class="card-deck">
+
+        <!-- Reports Courses -->
+        <div class="card col-sm-4 palette-level-two">
+          <div class="card-body">
+            <div class="input-group">
+              <h5 class="card-title">Semester Course Reports</h5>
+              <span class="input-group-btn ml-auto">
+                <button type="button" class="btn btn-sm" data-html="true" data-toggle="popover" title="Course Reports"
+                  data-placement="top"
+                  data-content="Click on the course name in the table to view a report for that course.">
+                  <i class="fa fa-question"></i>
+                </button>
+              </span>
+            </div>
+            <p class="card-text">View reports for the classes you teach.</p>
+            <div class="table-height-standard">
+              <table class="table striped white">
+                <thead>
+                  <tr class="table-header">
+                    <td>Period</td>
+                    <td>Course Name</td>
+                  </tr>
+                </thead>
+                <tbody id="reports-courses"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Reports Class Session -->
+        <div class="card col-sm-4 palette-level-two">
+          <div class="card-body">
+            <div class="input-group">
+              <h5 class="card-title text-center">One-Time Class Session Reports</h5>
+              <span class="input-group-btn ml-auto">
+                <button type="button" class="btn btn-sm" data-html="true" data-toggle="popover"
+                  title="Manual Attendance" data-placement="top"
+                  data-content="Use the calendar to choose a day to view periods for. The default is today. Click on the period number to view a report for that period on that day.">
+                  <i class="fa fa-question"></i>
+                </button>
+              </span>
+            </div>
+            <p class="card-text">View reports for class sessions at this date.</p>
+            <div class="form-group">
+              <div class="input-group date" id="reports-datetimepicker" data-target-input="nearest">
+                <input type="text" class="form-control datetimepicker-input" data-target="#reports-datetimepicker" />
+                <div class="input-group-append" data-target="#reports-datetimepicker" data-toggle="datetimepicker">
+                  <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                </div>
+              </div>
+            </div>
+            <div class="table-height-standard">
+              <table class="table striped white">
+                <thead>
+                  <tr class="table-header">
+                    <td>Period</td>
+                    <td>Course Name</td>
+                  </tr>
+                </thead>
+                <tbody id="reports-classes"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Reports Search Student -->
+        <div class="card col-sm-4 palette-level-two">
+          <div class="card-body">
+            <div class="input-group">
+              <h5 class="card-title">Student Reports</h5>
+              <span class="input-group-btn ml-auto">
+                <button type="button" class="btn btn-sm" data-html="true" data-toggle="popover"
+                  title="Search Student Reports" data-placement="top"
+                  data-content="Enter part of a student name, and click the search button to view a list of all students who match part of this name. Click on the student names to access their reports. Names must be spelled correctly.">
+                  <i class="fa fa-question"></i>
+                </button>
+              </span>
+            </div>
+            <p class="card-text">View report for any student. Search by name.</p>
+            <div class="input-group mb-3">
+              <input id='reports-student-search' style="text-transform: uppercase;" type="text" class="form-control"
+                placeholder="Search">
+              <div class="input-group-append">
+                <button id="reports-student-submit" class="btn btn-success" type="button">Go</button>
+              </div>
+            </div>
+            <div class="table-height-standard">
+              <table class="table striped white">
+                <thead>
+                  <tr class="table-header">
+                    <td>Name</td>
+                    <td>Student ID</td>
+                  </tr>
+                </thead>
+                <tbody id="reports-students"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="px-3 my-3">
+      <div class="card-deck">
+
+        <div class="card-body">
+          <div class="input-group">
+            <h5 class="card-title text-center">Student Class Period Reports</h5>
+            <span class="input-group-btn ml-auto">
+              <button type="button" class="btn btn-sm" data-html="true" data-toggle="popover" title="Manual Attendance"
+                data-placement="top"
+                data-content="Use the calendar to choose a day to view periods for. The default is today. Click on the period number to view a report for that period on that day.">
+                <i class="fa fa-question"></i>
+              </button>
+            </span>
+          </div>
+          <p class="card-text">View the attendance report for a student in one specific class period.</p>
+          <div class="accordion" id="reports-studentclassperiod-accordion"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

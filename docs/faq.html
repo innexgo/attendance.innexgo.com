@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+
+
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <title>Innexgo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Exo&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Ubuntu&display=swap" rel="stylesheet">
+
+    <!-- CSS References -->
+    <link rel="stylesheet" href="vendor/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="vendor/bootstrap/css/bootstrap-responsive.css">
+    <link rel="stylesheet" href="vendor/fontawesome-free/css/all.min.css">
+    <link rel="stylesheet" href="vendor/fontawesome-free/css/fontawesome.min.css">
+    <link rel="stylesheet" href="css/homepage.css">
+    <link rel="stylesheet" href="css/headerfix_other.css">
+    <link rel="stylesheet" href="css/footer.css">
+
+    <!--JS Files -->
+    <script src="vendor/jquery/jquery.js"></script>
+    <script src="vendor/jquery/jquery.slim.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="vendor/jquery/jquery-hover-effect.js"></script>
+    <script src="vendor/jquery/jquery.ui.totop.js"></script>
+    <script src="js/homepage.js"></script>
+
+    <!-- Favicon -->
+    <link rel='icon' href='img/innexgo_gold_brandmark.png' type='image/png'/>
+
+  </head>
+
+  <body>
+
+    <header class="header">
+      <nav class="navbar navbar-expand-lg fixed-top py-3">
+        <div class="container"><a href="index.html" class="navbar-brand font-weight-bold">Innexgo</a>
+          <button type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler navbar-toggler-right"><i class="fa fa-bars"></i></button>
+          <div id="navbarSupportedContent" class="collapse navbar-collapse">
+            <div class="navbar-nav ml-auto">
+              <a href="about.html" class="nav-item nav-link font-weight-bold">About</a>
+              <a href="faq.html" class="nav-item nav-link font-weight-bold">FAQ</a>
+              <a href="login.html" class="nav-item nav-link font-weight-bold">Sign-In</a>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <section id="intro">
+      <div class="container">
+        <div class="row center">
+            <h2><strong>FAQ</strong></h2>
+        </div>
+      </div>
+    </section>
+
+    <section id="maincontent">
+      <div class="container">
+
+        <h5>Q: Why should we entrust students with supplying such an extensive service our school?</h5>
+        <p style="margin-bottom: 50px">A: Even though we may be young, our main goal is to help improve our school. This place is our home, which means we have extensive knowledge on the community and its flaws. All we want to do is make this school the best it can be, and we’re only asking your permission to test a system that could potentially greatly benefit the school.</p>
+
+        <h5>Q: Are there any security concerns that come with letting you test your system? Like can students hack into your system and change information? How do we know your system is secure?</h5>
+        <p style="margin-bottom: 50px">A: All requests to sign in and out of our system require an API key that expires every thirty minutes, and we use SSL and password hashes to encrypt all of our data. You can be assured that our site is as secure as most others.</p>
+
+        <h5>Q: What stops kids from taking pictures of their IDs, printing them out, and then giving them to their friends to sign in for them?</h5>
+        <p style="margin-bottom: 50px">A: Since this is an issue caused by individual behavior, the only thing our system can do is flag suspicious entries, such as IDs scanning within milliseconds of each other. When we flag that, then we can determine whether the student was scanning in for someone else. But other than that, we just ask teachers to try their best to observe students scanning and catch whether students are holding up the line and scanning two IDs. There will also be a beep whenever students scan, so that can also be used to alert teachers.</p>
+
+        <h5>Q: Are you concerned that this will only increase the workload of our teachers, now that they have to take attendance at the start of class and make sure everyone signs in and out?</h5>
+        <p style="margin-bottom: 50px">A: According to teachers, taking attendance at the start of class is simple, but keeping track of who comes in and out and when they do is not. Our system is designed to help lessen the load on teachers by giving them an automatic system to track classroom interruptions such as bathroom breaks and provide an interface where they can check where their students are at any time.</p>
+
+        <h5>Q: What is the price of implementing your system?</h5>
+        <p style="margin-bottom: 50px">A: As this is a testing period, all we are asking for now is permission to test our system at school and enough money to cover maintenance costs. We are not looking to make a profit currently, we just need enough money for servers and maintenance.</p>
+
+        <h5>Q: What materials would we need to purchase in order to implement your system?</h5>
+        <p style="margin-bottom: 50px">A: For our current testing period with the math department, we have enough material and Raspberry Pis to supply them without any additional cost. We are also using the scanners that every classroom is already supplied with, but once our system is implemented school wide, we will need to purchase the necessary items cover all the extra classrooms. We will need individual Raspberry Pi’s for every class, and extension cords in classrooms which require them. We also request money to reimbursement the money spent on the materials to create our scanner case. </p>
+
+        <h5>Q: Where should the Raspberry Pi be placed at the door specifically?</h5>
+        <p style="margin-bottom: 50px">A: The Raspberry Pi would ideally be placed on the wall next to the door so students can quickly sign in and out. Ideally is it at a position where it is easy for students to scan, but also conveniently out of the way enough that it would not impact teachers and class time. We would preferably want to audit every classroom before implementation so we can determine the best position for the scanner and whether extension cords will be necessary.</p>
+
+        <h5>Q: How will the Raspberry Pi be secured and protected against wear and tear?</h5>
+        <p style="margin-bottom: 50px">A: We store the Raspberry Pi in a sturdy 3D printed case made out of PLA. The case lasts long even with frequent use.</p>
+
+        <h5>Q: Will this interfere with Infinite Campus or the attendance pink slips (both of which must remain for reporting to the California government)?</h5>
+        <p style="margin-bottom: 50px">A: Not at all, it actually will help supplement the attendance data we send to the government. Our system will be able to record when students enter and leave rooms for tutorial, and which rooms they go to. This will help provide the attendance data for tutorial the state requires from our school. However, at the current time, our system does not replace Infinite Campus and it is still necessary to record attendance there.</p>
+
+      </div>
+    </section>
+
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container">
+        <div class="footerlogo">
+          <img class="logoicon" src="img/innexgo_logo.png" alt="" />
+          <p><a href="cookiepolicy.html" style="color: inherit;">Cookie Policy</a></p>
+          <p><a href="faq.html" style="color: inherit;">Frequently Asked Questions</a></p>
+          <p><a href="privacypolicy.html" style="color: inherit;">Privacy Policy</a></p>
+          <p><a href="termsofservice.html" style="color: inherit;">Terms of Service</a></p>
+          <p style="color: inherit; margin-bottom:-50px">Copyright © Innexgo LLC, 2020. All Rights Reserved.</p>
+        </div>
+      </div>
+    </footer>
+
+
+  </body>
+</html>
