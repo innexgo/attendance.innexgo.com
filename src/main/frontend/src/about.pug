@@ -1,0 +1,65 @@
+extends layout
+block extrascripts
+  link(rel='stylesheet' href='css/headerfix-light.css')
+block content
+  section#intro
+    .container
+      .row.center
+        h2
+          strong Frequently Asked Questions &amp; About
+  section#maincontent
+    .container
+      h2 About
+      p
+        | Innexo.io serves as a platform for the public that would allow individuals affected by the virus
+        | to upload their location data and members of the community to compare their own location to verify whether
+        | they have potentially been exposed to the virus. The user who has been positively tested with COVID-19 uploads
+        | their data, inputting the range in which they were sick and had symptoms. The web application would then display
+        | this location data on a map; in order to protect the privacy of the user, the application allows them to erase
+        | areas they want to hide, such as their home address. Once the user is satisfied with their privacy, they enter
+        | the upload button. Their data then gets put into a SQLite3 database. Anonymous users can then acquire their own
+        | location history from google and load it into the website. The application will then check if they were in a
+        | nearby radius of someone who has COVID-19. After their location history is compared, any intersection between
+        | the interested member and a user infected with the virus will be shown with a marker dot, indicating how far
+        | the affected member was in the infection cycle. In order to maintain user privacy, individual metrics will not
+        | be shown. If the interested member learns that they have been exposed to the virus, they have an option to
+        | upload their data as well and can view other pages of the website which inform what next steps to take, whether
+        | it be self-isolation or testing.
+      br
+      h5 Built By
+      p Built by Govind Pimpale with help from Ganesh Pimpale and Nitya Girase 
+      h2 FAQs
+      h5 Q: What is the purpose of this website?
+      p(style='margin-bottom: 50px')
+        | A: The exponential growth of COVID-19 cases has all experts worried and has
+        | brought the world to a standstill. If the virus continues to spread at the current rate, it is projected that it
+        | can potentially result in 100 million cases just in the U.S. The best case scenario for the vaccine&rsquo;s
+        | availability is early 2021 and currently no proven medicine to treat it exists; even when this treatment is
+        | found, infected patients will be treated, but it would not stop the spread until the vaccine is available. Until
+        | this time, social distancing serves as the only method of limiting the spread of the highly contagious virus.
+        | Therefore, it is not only critical to isolate those who are affected but also those who have potentially come in
+        | contact with the affected people. Currently, for the general public there is no source for the whereabouts to
+        | easily find if they have come in contact with an affected person.
+      h5
+        | Q: Are there any security concerns that come with letting you test your system? Can people enter false data?
+      p(style='margin-bottom: 50px')
+        | A: The data we store is anonymized and does not make a reference to user names. In addition, it is STRONGLY reccomended
+        | that users erase any and all personal information such as place of residence before uploading data. As for entering false
+        | data, it is theoretically possible to do so, but obviously false data will be flagged and possibly erased.
+      h5
+        | Q: If a user finds out they have come in contact with someone positively tested with COVID-19 what should they
+        | do?
+      p(style='margin-bottom:50px')
+        | A: It's important to note that this tool is not omniscient, and it cannot possibly locate all possible exposures of
+        | coronavirus, nor confim that a given point on the map is actually infected. However, it would be prudent to try to
+        | generally reduce contact if you're not sure you have the virus in order to prevent spreading it to others. If severely ill,
+        | you should contact a doctor in addition.
+      h5 Q: Where do I find my location history?
+      p(style='margin-bottom:50px')
+        | A: There are several ways in which you can access your location history. One way is
+        | to download your location history from Google. Since all your Google data is toggled on by default, first select
+        | &quot;Select None&quot; on the page, and then scroll down the page to select Location History from the list. You can also
+        | access your location history if you use Google Map. Launch Google Maps, tap the more button (the button with
+        | three lines) in the left corner, and lastly tap the timeline to view your location history. Additionally, if you
+        | have a Snapchat, you can access your location history ranging from the current day to 40
+        | days before.

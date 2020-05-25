@@ -1,0 +1,110 @@
+extends layout
+block extrascripts
+    link(rel='stylesheet' href='css/headerfix.css')
+    link(rel='stylesheet' href='css/index.css')
+
+block content
+  section.hero#hero-section
+    .hero-inner
+      h2(style='color:inherit;') A tool to monitor the transmission of Covid-19 near you
+      a.btn(href='check.html') Check Exposure
+      h4(style='color:inherit') If you would like to check your exposure chances, use the tool above
+      a.btn(href='upload.html') Upload Data
+      h4(style='color:inherit;')
+        | If you have contracted or believe you have Covid-19, you can donate your data with the tool above
+  section#maincontent
+    .container
+      .row
+        .span
+          .features
+            .icon
+              i.fas.fa-chart-line.icon-bg-dark.icon-circled.icon-5x
+            .features_content
+              h2 Detailed Reporting
+              p
+                | We are able to deliver a near-instant report of contact locations and dates when you check your data.
+                | We do this by constructing a 3-dimensional spatial index utilizing your latitude, longitude and timestamp.
+                | This tool then uses a collision detection algorithm adapted from video games to detect collisions with known
+                | exposure locations.
+                h5 Example Result Image:
+                .row
+                  img(src='img/example-result.png')
+                  .card.mx-3.col-sm-5
+                    .card-body
+                      h5.card-title Key
+                      p.card-text
+                        | The blue marker represents your location. The purple markers represent locations
+                        | submitted to us by other users who self reported that they may have had the coronavirus.
+                        | Each of these purple dots can be clicked on to reveal the time prior to then that they visited this 
+                        | location.
+        .span
+          .features
+            .icon
+              i.fas.fa-shield-alt.icon-bg-dark.icon-circled.icon-5x
+            .features_content
+              h2 User Privacy
+              p
+                | It's always risky to upload your personal information to any untrusted remote server. To mitigate this
+                | risk, we have taken several measures. First, we provide tools to sanitize personal information from the
+                | data you send us, before it ever touches our servers. Second, we delete your data after immediately after
+                | processing, if you are just checking for corona. If you decide to upload, your data will be stored anonymously
+                | until the end of the outbreak. And third, we provide this website's
+                |
+                a(href="https://github.com/pimpale/innexo.io") source code
+                |
+                | so you can verify for yourself that we're not doing anything fishy.
+                h5 Example Image:
+                .row
+                  img(src='img/example-filter.png')
+                  .card.mx-3.col-sm-5
+                    .card-body
+                      h5.card-title Key
+                      p.card-text
+                        | Before you upload data to our servers, you have the opportunity to exclude areas from being sent to the server
+                        | by using highlighting areas using the box tool in the upper right hand corner.
+        .span
+          .features
+            .icon
+              i.fas.fa-thumbs-up.icon-bg-dark.icon-circled.icon-5x
+            .features_content
+              h2 Easy to Use
+              p
+                | This website does not require installing any app, and utilizes already collected data. Thus, unlike other
+                | contact tracers, it works retroactively, so you can see potential exposure locations in the past. This website
+                | can also aggregate data from multiple sources: Snapchat Location History and Google Maps Timeline
+      .row
+        .span12
+          .solid_line
+      .row
+        h2(style='margin-bottom: 50px;') Our Strategy
+        .card-deck
+          .card
+            .card-body
+              h5.card-title Data Collection
+              p.card-text
+                | First, you download location history data from
+                |
+                a(href='https://takeout.google.com/settings/takeout') Google Takeout
+                | . Assuming you haven&apos;t disabled this feature, this file will contain your entire location history 
+                | since you started your account. As such, it can be rather large. Unzip the file and upload
+                |
+                code Location History.json
+                | .
+          .card
+            .card-body
+              h5.card-title Data Processing
+              p.card-text
+                | If data is uploaded to our server, we anonymize it to preserve user privacy, and then
+                | store it in a MySQL database. We use an Octree with latitude, longitude, and time as the three
+                | dimensions in order to detect collisions.
+          .card
+            .card-body
+              h5.card-title Data Analysis
+              p.card-text
+                | Most data analysis is done client side. Your location history is compared with the
+                | location history of people who may have coronavirus, and you will be able to explore locations where you
+                | may have been exposed. We use
+                |
+                a(href='https://www.openstreetmap.org') OpenStreetMap
+                |
+                | to graphically visualize results.

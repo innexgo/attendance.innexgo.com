@@ -32,3 +32,4 @@
 /.vscode/
 
 /redirectSecureServer/node_modules/
+src/main/frontend/node_modules/

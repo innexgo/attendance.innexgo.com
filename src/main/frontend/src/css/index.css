@@ -1,0 +1,30 @@
+.image-section {
+  align-items: center;
+  background-attachment: fixed;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  color: #fff;
+  display: flex;
+  height: 50vh;
+  width: 100vw;
+}
+
+
+.btn {
+  background-color: rgba(147, 112, 219, 0.8);
+  border: 0px solid white;
+  border-radius: 20px;
+  color: #fff;
+  display: block;
+  font-size: 1.5em;
+  margin-top: 50px;
+  padding: 1em;
+  text-decoration: none;
+  width: 200px;
+}
+
+#hero-section {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.5),rgba(0, 0, 0, 0.3)), url("../img/homepage-bg.webp");
+}
+

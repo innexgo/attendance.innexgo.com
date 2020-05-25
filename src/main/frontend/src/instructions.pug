@@ -1,0 +1,47 @@
+.card.col-sm-4
+  .card-body
+    h5.card-title Instructions
+    .card-text
+      ul#instruction1-instructions.nav.nav-tabs(role='tablist')
+        li.nav-item
+          a#google-tab.nav-link.active(data-toggle='tab' href='#google' role='tab') Google Takeout
+        li.nav-item
+          a#snapchat-tab.nav-link(data-toggle='tab' href='#snapchat' role='tab') Snapchat
+      #instruction1-instructions-content.tab-content
+        #google.tab-pane.fade.show.active(role='tabpanel')
+          p.my-2
+            | Visit
+            |
+            a(href='https://takeout.google.com/settings/takeout') Google Takeout
+            |  to download your location history. You can speed up your download by clicking the &quot;Deselect All&quot;
+            |  button, and then reselecting &quot;Location History&quot;. Make sure to click on the &quot;Multiple Formats&quot;
+            |  button to ensure your data will be in JSON format. Google will email you a zip file containing your
+            |  data. Once you recieve the email, unzip the attached file and pick
+            |
+            code Location History.json
+            | .
+
+          ul#instruction1-instructions-google.nav.nav-tabs(role='tablist')
+            li.nav-item
+              a#google-img-1-tab.nav-link.active(data-toggle='tab' href='#google-img-1' role='tab') Image 1
+            li.nav-item
+              a#google-img-2-tab.nav-link(data-toggle='tab' href='#google-img-2' role='tab') Image 2
+          #instruction1-instructions-google-content.tab-content
+            #google-img-1.tab-pane.fade.show.active(role='tabpanel')
+              img(src='img/google-takeout-example-1.png').border.border-primary
+            #google-img-2.tab-pane.fade(role='tabpanel')
+              img(src='img/google-takeout-example-2.png').border.border-primary
+
+        #snapchat.tab-pane.fade(role='tabpanel')
+          p.my-2
+            | Visit your
+            |
+            a(href='https://accounts.snapchat.com/accounts/welcome') Snapchat Account
+            |
+            | to download your location history. Click on the "My Data" button, and follow the instructions
+            | there to download a zip file containing your information. It will be emailed to you in a zip file.
+            | Once you recieve the email, unzip the attached file and pick
+            |
+            code location_history.json
+            | .
+          img(src='img/snapchat-example.png').border.border-primary
