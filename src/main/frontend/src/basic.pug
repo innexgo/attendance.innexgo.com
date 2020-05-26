@@ -1,0 +1,27 @@
+// basic.pug
+doctype html
+html
+  head
+    meta(charset='UTF-8')
+    title Innexgo
+    // CSS References
+    link(rel='stylesheet' href='vendor/fonts-googleapis/exo.css')
+    link(rel='stylesheet' href='vendor/fonts-googleapis/ubuntu.css')
+    link(rel='stylesheet' href='vendor/bootstrap/css/bootstrap.min.css')
+    link(rel='stylesheet' href='vendor/fontawesome-free/css/all.min.css')
+    link(rel='stylesheet' href='vendor/fontawesome-free/css/fontawesome.min.css')
+    link(rel='stylesheet' href='css/homepage.css')
+    // JS Files
+    script(src='main.bundle.js')
+    script(src='vendor/jquery/jquery.min.js')
+    script(src='vendor/bootstrap/js/bootstrap.js')
+    script(src='vendor/bootstrap/js/bootstrap.bundle.min.js')
+    script(src='vendor/jquery/jquery-hover-effect.js')
+    script(src='vendor/jquery/jquery.ui.totop.js')
+    script(src='js/homepage.js')
+    // Extra scripts + stuff
+    block extrascripts
+    // Favicon
+    link(rel='icon' href='img/innexgo_gold_brandmark.png' type='image/png')
+  body
+    block body
