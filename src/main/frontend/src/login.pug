@@ -1,4 +1,4 @@
-extends basic
+extends basic_layout
 block extrascripts
   link(rel='stylesheet' href='css/headerfix-light.css')
   script(src='vendor/jquery/jquery.min.js')
@@ -8,7 +8,7 @@ block extrascripts
   script(src='js/common.js')
   script(src='js/login.js')
 block body
-  div(style='background-image: linear-gradient(to right, red , yellow);')
+  div(style='background-image: linear-gradient(to bottom, white , gray);')
     include include/header
     .content.d-flex.align-items-center.justify-content-center.vh-100
       .card

@@ -30,9 +30,10 @@ const config = {
       'about',
       'index',
       'faq',
-      'login',
       'cookiepolicy',
       'termsofservice',
+      'login',
+      'overview',
     ].map((n) => new HtmlWebpackPlugin({
       filename: `${n}.html`,
       template: `src/${n}.pug`,
