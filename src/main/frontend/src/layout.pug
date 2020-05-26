@@ -1,58 +1,9 @@
-//- layout.pug
-doctype html
-html
-  head
-    meta(charset='UTF-8')
+extends basic
+block body
+  include include/header
 
-    title Innexgo
+  // This is where the good stuff goes
+  .content
+    block content
 
-    // CSS References
-    link(rel='stylesheet' href='vendor/fonts-googleapis/exo.css')
-    link(rel='stylesheet' href='vendor/fonts-googleapis/ubuntu.css')
-    link(rel='stylesheet' href='vendor/bootstrap/css/bootstrap.min.css')
-    link(rel='stylesheet' href='vendor/fontawesome-free/css/all.min.css')
-    link(rel='stylesheet' href='vendor/fontawesome-free/css/fontawesome.min.css')
-    link(rel='stylesheet' href='css/homepage.css')
-
-    // JS Files
-    script(src='main.bundle.js')
-
-    script(src='vendor/jquery/jquery.min.js')
-    script(src='vendor/bootstrap/js/bootstrap.js')
-    script(src='vendor/bootstrap/js/bootstrap.bundle.min.js')
-    script(src='vendor/jquery/jquery-hover-effect.js')
-    script(src='vendor/jquery/jquery.ui.totop.js')
-    script(src='js/homepage.js')
-
-    // Extra scripts + stuff
-    block extrascripts
-
-    // Favicon
-    link(rel='icon' href='img/innexgo_gold_brandmark.png' type='image/png')
-  body
-    header.header
-        nav.navbar.navbar-expand-lg.fixed-top.py-3
-          .container
-            a.navbar-brand.font-weight-bold(href='index.html') Innexgo
-            button.navbar-toggler.navbar-toggler-right(type='button' data-toggle='collapse' data-target='#navbarSupportedContent')
-              i.fa.fa-bars
-            #navbarSupportedContent.collapse.navbar-collapse
-              .navbar-nav.ml-auto
-                a.nav-item.nav-link.font-weight-bold(href='about.html') About
-                a.nav-item.nav-link.font-weight-bold(href='faq.html') FAQ
-                a.nav-item.nav-link.font-weight-bold(href='login.html') Login
-
-    // This is where the good stuff goes
-    .content
-      block content
-
-    footer.footer
-      .container-fluid.py-1
-          img.logoicon(src='img/innexgo_logo.png')
-          p
-            a.text-light(href='cookiepolicy.html') Cookie Policy
-          p
-            a.text-light(href='faq.html') Frequently Asked Questions
-          p
-            a.text-light(href='termsofservice.html') Terms of Service
-          p.text-light &copy; Innexgo LLC, 2020. All Rights Reserved
+  include include/footer

@@ -1,4 +1,4 @@
-extends layout
+extends basic
 block extrascripts
   link(rel='stylesheet' href='css/headerfix-light.css')
   script(src='vendor/jquery/jquery.min.js')
@@ -7,23 +7,22 @@ block extrascripts
 
   script(src='js/common.js')
   script(src='js/login.js')
-block content
-  #content-wrapper.container-fluid.not-sidebar(style='background-image: linear-gradient(to right, red , yellow);')
-    .px-3.my-5.py-5
-      #alert-zone
-      .row(style='height:80vh;')
-        .card.col-sm-3.mx-auto.my-auto
-          .card-body
-            .input-group
-              h5.card-title.text-center
-                img(src='/img/innexgo_onyx_transparent.png')
-                |  Innexgo
-            p.card-text Login to Dashboard
-            form
-              // Upload Data
-              .form-group
-                input#username.form-control(type='email' placeholder='Email')
-                br
-                input#password.form-control(type='password' placeholder='Password')
-                p#error.form-text.text-danger
-            button#submit-creds.btn.my-1.btn-primary Login
+block body
+  div(style='background-image: linear-gradient(to right, red , yellow);')
+    include include/header
+    .content.d-flex.align-items-center.justify-content-center.vh-100
+      .card
+        .card-body
+          .input-group
+            h5.card-title.text-center
+              img(src='img/innexgo_onyx_transparent.png')
+              |  Innexgo
+          p.card-text Login to Dashboard
+          form
+            // Upload Data
+            .form-group
+              input#username.form-control(type='email' placeholder='Email')
+              br
+              input#password.form-control(type='password' placeholder='Password')
+              p#error.form-text.text-danger
+          button#submit-creds.btn.my-1.btn-primary Login
