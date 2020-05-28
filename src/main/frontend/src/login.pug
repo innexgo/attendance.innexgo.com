@@ -1,6 +1,7 @@
 extends basic_layout
 block extrascripts
   link(rel='stylesheet' href='css/headerfix-light.css')
+  link(rel='stylesheet' href='css/login.css')
   script(src='vendor/jquery/jquery.min.js')
   script(src='vendor/js-cookie/js.cookie.js')
   script(src='vendor/moment/moment.min.js')
@@ -8,15 +9,15 @@ block extrascripts
   script(src='js/common.js')
   script(src='js/login.js')
 block body
-  div(style='background-image: linear-gradient(to bottom, white , gray);')
-    include include/header
+  div.hero-section
     .content.d-flex.align-items-center.justify-content-center.vh-100
       .card
         .card-body
           .input-group
-            h5.card-title.text-center
-              img(src='img/innexgo_onyx_transparent.png')
-              |  Innexgo
+            a(href='index.html', style='text-decoration:none;')
+              h5.card-title.text-center
+                img(src='img/innexgo_onyx_transparent.png')
+                |  Innexgo
           p.card-text Login to Dashboard
           form
             // Upload Data
@@ -25,4 +26,9 @@ block body
               br
               input#password.form-control(type='password' placeholder='Password')
               p#error.form-text.text-danger
-          button#submit-creds.btn.my-1.btn-primary Login
+          button#submit-creds.btn.my-1.btn-primary.btn-block Login
+          br
+          a(href='cookiepolicy.html', style='text-decoration:none;')
+            p.terms.d-inline.ml-4.pl-3 Cookie Policy
+          a(href='termsofservice.html', style='text-decoration:none;')
+            p.terms.d-inline.ml-4 Terms of Service
