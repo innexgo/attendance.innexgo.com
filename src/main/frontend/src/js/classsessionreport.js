@@ -1,7 +1,7 @@
 "use strict"
 
 /*
- global Cookies moment
+ global window.Cookies moment
  apiUrl fetchJson linkRelative INT32_MAX ordinal_suffix_of
  giveTempSuccess givePermError
  */
@@ -11,7 +11,7 @@ let period = null;
 
 
 async function loadClassProfile() {
-  let apiKey = Cookies.getJSON('apiKey');
+  let apiKey = window.Cookies.getJSON('apiKey');
 
   if(apiKey == null) {
     console.log('not signed in');
@@ -72,14 +72,14 @@ async function loadClassProfile() {
 }
 
 async function initialize() {
-  let apiKey = Cookies.getJSON('apiKey');
+  let apiKey = window.Cookies.getJSON('apiKey');
 
   if(apiKey == null) {
     console.log('not signed in');
     return;
   }
 
-  let semester = Cookies.getJSON('semester');
+  let semester = window.Cookies.getJSON('semester');
   if(semester == null) {
     console.log('No semester');
     return;

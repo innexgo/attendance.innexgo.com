@@ -31,5 +31,6 @@
 /.syntastic_javac_config
 /.vscode/
 
-/redirectSecureServer/node_modules/
-/src/main/frontend/node_modules/
+# Do not include node_modules
+node_modules/
+

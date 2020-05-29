@@ -1,7 +1,7 @@
 "use strict"
 
 /* global
-  Cookies moment
+  window.Cookies moment
   isEmpty fetchJson staticUrl apiUrl
 */
 
@@ -38,20 +38,14 @@ async function loginattempt() {
   try {
 
     let apiKey = await fetchJson(`${apiUrl()}/apiKey/new/?userEmail=${userName}&userPassword=${password}&expirationTime=${apiKeyExpirationTime}`);
-    Cookies.set('apiKey', apiKey);
+    window.Cookies.set('apiKey', apiKey);
 
-    if (Cookies.getJSON('prefs') == null) {
+    if (window.Cookies.getJSON('prefs') == null) {
       console.log('resetTheme login');
-      Cookies.set('prefs', {colourTheme: 'default', sidebarStyle: 'fixed'});
+      window.Cookies.set('prefs', {colourTheme: 'default', sidebarStyle: 'fixed'});
     }
-
-    // now jump to next page
-    if(apiKey.user.ring == 0) {
-      window.location.assign(staticUrl() + '/adminoverview.html');
-    } else if(apiKey.user.ring == 1) {
-      //TODO split ensuresignedin into a userinfo and use this to prefetch the data before jumping
-      window.location.assign(staticUrl() + '/overview.html');
-    }
+    //TODO split ensuresignedin into a userinfo and use this to prefetch the data before jumping
+    window.location.assign(staticUrl() + '/dashboard.html');
   } catch(err) {
     console.log(err);
     giveError('Your email or password doesn\'t match our records.');

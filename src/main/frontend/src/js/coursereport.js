@@ -1,10 +1,10 @@
 "use strict"
 
-/* global Cookies fetchJson apiUrl linkRelative givePermError INT32_MAX */
+/* global window.Cookies fetchJson apiUrl linkRelative givePermError INT32_MAX */
 
 async function loadCourseProfile(courseId) {
   try {
-    let apiKey = Cookies.getJSON('apiKey');
+    let apiKey = window.Cookies.getJSON('apiKey');
     let course = (await fetchJson(`${apiUrl()}/course/?apiKey=${apiKey.key}&courseId=${courseId}&offset=0&count=1`))[0];
     if(course == null) {
       givePermError('Course query specifies invalid course id.');
@@ -42,7 +42,7 @@ $(document).ready(function(){
 });
 
 $(document).ready(function() {
-  let apiKey = Cookies.getJSON('apiKey');
+  let apiKey = window.Cookies.getJSON('apiKey');
 
   if (apiKey == null) {
     givePermError('You are not signed in.', );

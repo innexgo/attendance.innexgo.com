@@ -1,20 +1,20 @@
 "use strict"
 
 /* global 
- moment Cookies
+ moment window.Cookies
  linkRelative
  */
 
 function displayInfo() {
-  let apiKey = Cookies.getJSON('apiKey');
-  let period = Cookies.getJSON('period');
-  let courses = Cookies.getJSON('courses');
+  let apiKey = window.Cookies.getJSON('apiKey');
+  let period = window.Cookies.getJSON('period');
+  let courses = window.Cookies.getJSON('courses');
 
   if(apiKey == null) {
     return;
   }
 
-  document.getElementById('#info-name').innerHTML = linkRelative(apiKey.user.name, `/userprofile.html?userId=${apiKey.user.id}`);
+  $('#info-name')[0].innerHTML = linkRelative(apiKey.user.name, `/userprofile.html?userId=${apiKey.user.id}`);
 
   $('#info-time')[0].innerHTML = moment().format('dddd (MM/DD/YYYY)');
 

@@ -1,7 +1,7 @@
 "use strict"
 
 /*
- global Cookies moment
+ global window.Cookies moment
  readableTimestamp apiUrl fetchJson linkRelative isEmpty sleep INT32_MAX
  giveTempError giveTempInfo giveTempSuccess givePermError
  */
@@ -24,12 +24,12 @@ async function manualEncounter(studentId) {
   console.log('submitting encounter ' + studentId)
   console.log(studentId);
   document.getElementById('manual-studentid').value = '';
-  let apiKey = Cookies.getJSON('apiKey');
-  let period = Cookies.getJSON('period');
-  let course = Cookies.getJSON('courses').filter(c => c.period == period.number)[0];
+  let apiKey = window.Cookies.getJSON('apiKey');
+  let period = window.Cookies.getJSON('period');
+  let course = window.Cookies.getJSON('courses').filter(c => c.period == period.number)[0];
 
   // Let's try to determine the location
-  let locationId = Cookies.getJSON('default-locationid');
+  let locationId = window.Cookies.getJSON('default-locationid');
   if (course != null) {
     locationId = course.location.id;
   }
@@ -84,7 +84,7 @@ function manualEntryFunction(event) {
 
 // Forever runs and updates locationOptions
 async function locationOptions() {
-  let apiKey = Cookies.getJSON('apiKey');
+  let apiKey = window.Cookies.getJSON('apiKey');
   for(;;) {
     try {
       let locations = await fetchJson(`${apiUrl()}/location/?offset=0&count=${INT32_MAX}&apiKey=${apiKey.key}`);
@@ -95,7 +95,7 @@ async function locationOptions() {
       locations.forEach(l => locationSelect.append(`<option value="${l.id}">${l.name}</option>`));
 
       // Set preselected option
-      let defaultLocation = Cookies.get('default-locationid');
+      let defaultLocation = window.Cookies.get('default-locationid');
       if (defaultLocation == null) {
         // Preselect Disabled option
         locationSelect.prepend(
@@ -110,7 +110,7 @@ async function locationOptions() {
       locationSelect.change(async function () {
         let selectedValue = $('#overview-locationid').val();
         if (selectedValue != null) {
-          Cookies.set('default-locationid', selectedValue);
+          window.Cookies.set('default-locationid', selectedValue);
         } else {
           console.log('Can\'t set the locationId');
         }
@@ -120,17 +120,17 @@ async function locationOptions() {
       console.log(err);
       givePermError('Failed to load locations.');
     }
-    let nextPeriod = Cookies.getJSON('nextPeriod');
+    let nextPeriod = window.Cookies.getJSON('nextPeriod');
     await sleep(nextPeriod.startTime - moment().valueOf());
   }
 }
 
 // Loads data in reverse chronological order into the page
 async function recentActivityLoadPage() {
-  let apiKey = Cookies.getJSON('apiKey');
-  let period = Cookies.getJSON('period');
-  let course = Cookies.getJSON('courses').filter(c => c.period == period.number)[0];
-  let locationId = course != null ? course.location.id : Cookies.getJSON('default-locationid');
+  let apiKey = window.Cookies.getJSON('apiKey');
+  let period = window.Cookies.getJSON('period');
+  let course = window.Cookies.getJSON('courses').filter(c => c.period == period.number)[0];
+  let locationId = course != null ? course.location.id : window.Cookies.getJSON('default-locationid');
 
   if (location == null) {
     $('#recentactivity-events')[0].innerHTML = '<b>No Default Location Loaded</b>';
@@ -202,11 +202,11 @@ async function currentStatus() {
         </td>
       </tr>`;
 
-  let apiKey = Cookies.getJSON('apiKey');
+  let apiKey = window.Cookies.getJSON('apiKey');
   let table = $('#current-status-table');
   for (;;) {
-    let period = Cookies.getJSON('period');
-    let courses = Cookies.getJSON('courses').sort((a, b) => (a.period > b.period ? -1 : 1));
+    let period = window.Cookies.getJSON('period');
+    let courses = window.Cookies.getJSON('courses').sort((a, b) => (a.period > b.period ? -1 : 1));
     let course = period == null ? null : courses.filter(c => c.period == period.number)[0];
 
     let time = moment().valueOf();
@@ -278,7 +278,7 @@ async function currentStatus() {
     } else {
       // Clear attendance
       document.getElementById('current-status-percent-attendance').innerHTML = 'N/A';
-      let locationId = Cookies.getJSON('default-locationid');
+      let locationId = window.Cookies.getJSON('default-locationid');
       if (locationId != null) {
         try {
           let students = await fetchJson(`${apiUrl()}/misc/present/?locationId=${locationId}&time=${time}&apiKey=${apiKey.key}`);
@@ -302,7 +302,6 @@ async function currentStatus() {
 }
 
 $(document).ready(async function () {
-
   let manualStudentId = document.getElementById('manual-studentid');
 
   // Initialize scanner selector

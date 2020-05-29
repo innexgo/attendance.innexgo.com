@@ -1,7 +1,7 @@
 "use strict"
 
 /* global
- Cookies
+ window.Cookies
  fetchJson apiUrl linkAbsolute linkRelative INT32_MAX
  givePermError
 */
@@ -12,8 +12,8 @@ const position = {
 }
 
 async function loadData() {
-  let apiKey = Cookies.getJSON('apiKey');
-  let semester = Cookies.getJSON('semester');
+  let apiKey = window.Cookies.getJSON('apiKey');
+  let semester = window.Cookies.getJSON('semester');
 
   if(apiKey == null || semester == null) {
     console.log('Missing cookies');

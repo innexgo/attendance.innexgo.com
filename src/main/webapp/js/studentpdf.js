@@ -20,7 +20,7 @@ let initialSemesterTime = null;
 let apiKey = null;
 
 async function getStudentInfo() {
-  apiKey = Cookies.getJSON('apiKey');
+  apiKey = window.Cookies.getJSON('apiKey');
   console.log(apiKey.key);
   if (apiKey == null) {
     console.log('not signed in');
@@ -39,7 +39,7 @@ async function getStudentInfo() {
     student1 = (await fetchJson(`${apiUrl()}/student/?studentId=${studentId}&offset=0&count=1&apiKey=${apiKey.key}`))[0];
     try {
       grades = await fetchJson(`${apiUrl()}/grade/?studentId=${studentId}&offset=0&count=${INT32_MAX}&apiKey=${apiKey.key}`);
-      let semester = Cookies.getJSON('semester');
+      let semester = window.Cookies.getJSON('semester');
       currentGrade = grades.filter(g => g.semester.startTime == semester.startTime)[0];
     } catch (err) {
       console.log(err);

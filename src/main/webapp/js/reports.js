@@ -1,7 +1,7 @@
 "use strict"
 
 /* global
-  Cookies moment
+  window.Cookies moment
   apiUrl isEmpty standardizeString
   fetchJson linkRelative INT32_MAX
   giveTempError givePermError giveTempSuccess
@@ -26,7 +26,7 @@ $(document).ready(async function () {
   });
 
   // Get courses from cookie, sort them by period in order, and then append to end of table
-  Cookies.getJSON('courses')
+  window.Cookies.getJSON('courses')
     .sort((a, b) => (a.period > b.period) ? 1 : -1)
     .forEach(course => $('#reports-courses').append(`
         <tr>
@@ -44,8 +44,8 @@ $(document).ready(async function () {
 });
 
 async function loadStudentClassPeriodReports() {
-  const apiKey = Cookies.getJSON('apiKey');
-  const courses = Cookies.getJSON('courses').sort((a, b) => (a.period > b.period) ? 1 : -1);
+  const apiKey = window.Cookies.getJSON('apiKey');
+  const courses = window.Cookies.getJSON('courses').sort((a, b) => (a.period > b.period) ? 1 : -1);
 
   async function calcReport(course) {
     let schedules = await fetchJson(`${apiUrl()}/schedule/?apiKey=${apiKey.key}&courseId=${course.id
@@ -100,7 +100,7 @@ async function loadClassSessionReports(date) {
   // Then get courses for that year and teacher
   // For each period on that day, if there is a course with that period, add it to the table
 
-  let apiKey = Cookies.getJSON('apiKey');
+  let apiKey = window.Cookies.getJSON('apiKey');
   let dayBegin = moment(date).startOf('day');
   let dayEnd = moment(date).endOf('day');
 
@@ -169,7 +169,7 @@ $(document).ready(function () {
 });
 
 async function searchStudent(name) {
-  let apiKey = Cookies.getJSON('apiKey');
+  let apiKey = window.Cookies.getJSON('apiKey');
   let validatedName = standardizeString(name);
   if (isEmpty(validatedName)) {
     giveTempError('Invalid Name');

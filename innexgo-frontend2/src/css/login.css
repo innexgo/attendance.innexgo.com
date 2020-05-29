@@ -1,0 +1,11 @@
+.hero-section {
+  background-image: linear-gradient(rgba(255, 255, 255, 0.75),rgba(0, 0, 0, 0.25)), url("../img/blurred_background_login.jpg");
+  height: 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.terms {
+  color: #121212;
+}

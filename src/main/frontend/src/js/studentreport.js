@@ -1,13 +1,13 @@
 "use strict"
 
 /* global
-  moment Cookies
+  moment window.Cookies
   fetchJson apiUrl linkRelative INT32_MAX
   giveTempError givePermError
 */
 
 async function loadCourses(studentId, initialSemesterTime) {
-  let apiKey = Cookies.getJSON('apiKey');
+  let apiKey = window.Cookies.getJSON('apiKey');
   let courseTable = $('#studentprofile-courses')
   // Clear table
   courseTable.empty();
@@ -25,7 +25,7 @@ async function loadCourses(studentId, initialSemesterTime) {
 }
 
 async function loadIrregularityPage(studentId, minTime, maxTime) {
-  let apiKey = Cookies.getJSON('apiKey');
+  let apiKey = window.Cookies.getJSON('apiKey');
   let irregularityTable = $('#studentprofile-irregularities');
   (await fetchJson(`${apiUrl()}/irregularity/?studentId=${studentId}&irregularityMinTime=${minTime}&irregularityMaxTime=${maxTime}&offset=0&count=${INT32_MAX}&apiKey=${apiKey.key}`))
     .sort((a,b) => (a.time > b.time) ? -1 : 1) // sort by time descending
@@ -40,7 +40,7 @@ async function loadIrregularityPage(studentId, minTime, maxTime) {
 }
 
 async function loadCurrentLocation(studentId) {
-  let apiKey = Cookies.getJSON('apiKey');
+  let apiKey = window.Cookies.getJSON('apiKey');
   let mostRecentSession = (await fetchJson(`${apiUrl()}/session/?studentId=${studentId}&apiKey=${apiKey.key}&offset=0&count=1`))[0];
   if(mostRecentSession != null) {
     $('#studentprofile-currentlocation-signedin')[0].innerHTML = mostRecentSession.complete ? "No, not still here" : "Yes";
@@ -53,14 +53,14 @@ async function loadCurrentLocation(studentId) {
 }
 
 async function initialize() {
-  let apiKey = Cookies.getJSON('apiKey');
+  let apiKey = window.Cookies.getJSON('apiKey');
   if (apiKey == null) {
     console.log('not signed in');
     return;
   }
 
 
-  let semester = Cookies.getJSON('semester');
+  let semester = window.Cookies.getJSON('semester');
   if(semester == null) {
     console.log('No semester');
     return;

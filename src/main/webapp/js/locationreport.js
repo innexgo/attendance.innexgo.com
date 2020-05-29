@@ -1,6 +1,6 @@
 "use strict"
 
-/* globals moment Cookies fetchJson linkRelative apiUrl giveTempError givePermError sleep INT32_MAX */
+/* globals moment window.Cookies fetchJson linkRelative apiUrl giveTempError givePermError sleep INT32_MAX */
 
 // Forever runs and updates currentStatus
 async function currentStatus(locationId) {
@@ -13,10 +13,10 @@ async function currentStatus(locationId) {
         </td>
       </tr>`;
 
-  let apiKey = Cookies.getJSON('apiKey');
+  let apiKey = window.Cookies.getJSON('apiKey');
   let table = $('#current-status-table');
   for (; ;) {
-    let period = Cookies.getJSON('period');
+    let period = window.Cookies.getJSON('period');
 
     let time = moment().valueOf();
 
@@ -56,13 +56,13 @@ async function currentStatus(locationId) {
 
 
 async function loadData() {
-  let apiKey = Cookies.getJSON('apiKey');
+  let apiKey = window.Cookies.getJSON('apiKey');
   if (apiKey == null) {
     console.log('Not signed in');
     return;
   }
 
-  let semester = Cookies.getJSON('semester');
+  let semester = window.Cookies.getJSON('semester');
   if (semester == null) {
     console.log('No semester, bailing');
     return;

@@ -1,1 +1,85 @@
-<!DOCTYPE html><head><!-- Background Information--><title>Innexgo Dashboard</title><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><!-- CSS References--><link rel="stylesheet" href="vendor/bootstrap/css/bootstrap.min.css"><link rel="stylesheet" href="vendor/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="vendor/bootstrap4-toggle/css/bootstrap4-toggle.min.css"><link rel="stylesheet" href="vendor/tempus-dominus/tempusdominus-bootstrap-4.min.css"><link rel="stylesheet" href="css/common.css"><link rel="stylesheet" href="css/headerfix_dark.css"><link rel="stylesheet" href="css/sidebar.css"><!-- JS References--><script src="vendor/jquery/jquery.min.js"></script><script src="vendor/bootstrap/js/bootstrap.bundle.js"></script><script src="vendor/bootstrap4-toggle/js/bootstrap4-toggle.min.js"></script><script src="vendor/js-cookie/js.cookie.js"></script><script src="vendor/moment/moment.min.js"></script><script src="vendor/tempus-dominus/tempusdominus-bootstrap-4.min.js"></script><script src="js/common.js"></script><script src="js/signedin.js"></script><script src="js/loadprefs.js"></script><script src="js/sidebar.js"></script><!-- Fonts--><link href="https://fonts.googleapis.com/css?family=Exo&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css?family=Ubuntu&amp;display=swap" rel="stylesheet"><!-- Favicon--><link rel="icon" href="img/innexgo_gold_brandmark.png" type="image/png"><!-- JS References--><script src="vendor/bootstrap4-toggle/js/bootstrap4-toggle.min.js"></script><script src="vendor/scannerdetection/jquery.scannerdetection.min.js"></script><script src="js/overview.js"></script></head><body><!-- Top Navbar--><nav class="navbar navbar-expand-md navbar-palette"><!-- Center Logo--><div class="mx-auto order-0"><img class="logoicon" src="img/innexgo_transparent_icon.png" alt=""><h1 class="navbar-brand navbar-palette" style="font-size: 25px; margin-left: 5px;">Innexgo</h1></div></nav><!-- Sidebar--><nav class="sidebar-fixed" id="sidebar"><nav class="navbar sidebar-top"><div style="margin:auto;display:block"><h6 id="info-time">Current Time</h6></div></nav><div class="sidebar-item sidebar-info-list text-light bg-dark"><h6 id="info-name">Teacher Name</h6><h6 id="info-period">Current Period</h6><h6 id="info-location">Current Location</h6></div><div id="sidebar-navigation"><a class="sidebar-item navbar-palette active" id="my-overview" href="overview.html"><i class="fa fa-tachometer-alt"></i> Overview</a><a class="sidebar-item navbar-palette" id="my-reports" href="reports.html"><i class="fa fa-chart-bar"></i> Reports</a><a class="sidebar-item navbar-palette" id="detailed-search" href="studentactivitysearch.html"><i class="fa fa-chart-bar"></i> Student Activity Search</a><a class="sidebar-item navbar-palette" href="irregularitiessearch.html" id=""><i class="fa fa-chart-bar"></i> Irregularities Search</a></div><div class="sidebar-bottom"><a class="sidebar-item navbar-palette" href="settings.html"><i class="fa fa-cog"></i> Settings</a><a class="sidebar-item navbar-palette" href="index.html"><i class="fa fa-sign-out-alt"></i> Sign out</a></div></nav><!-- Content--><!-- Center Screen--><div class="container-fluid" id="not-sidebar"><div class="px-3 my-3"><div id="alert-zone"></div></div></div></body>
+Html Webpack Plugin:
+<pre>
+  Error: Child compilation failed:
+  Entry module not found: Error: Can't resolve '/home/fidgetsinner/workspace/innexgo/src/main/frontend/src/overview.pug' in '/home/fidget  sinner/workspace/innexgo/src/main/frontend':
+  Error: Can't resolve '/home/fidgetsinner/workspace/innexgo/src/main/frontend/src/overview.pug' in '/home/fidgetsinner/workspace/innexgo  /src/main/frontend'
+  
+  - child-compiler.js:122 
+    [frontend]/[html-webpack-plugin]/lib/child-compiler.js:122:18
+  
+  - Compiler.js:343 
+    [frontend]/[webpack]/lib/Compiler.js:343:11
+  
+  - Compiler.js:681 
+    [frontend]/[webpack]/lib/Compiler.js:681:15
+  
+  
+  - Hook.js:154 AsyncSeriesHook.lazyCompileHook
+    [frontend]/[tapable]/lib/Hook.js:154:20
+  
+  - Compiler.js:678 
+    [frontend]/[webpack]/lib/Compiler.js:678:31
+  
+  
+  - Hook.js:154 AsyncSeriesHook.lazyCompileHook
+    [frontend]/[tapable]/lib/Hook.js:154:20
+  
+  - Compilation.js:1423 
+    [frontend]/[webpack]/lib/Compilation.js:1423:35
+  
+  
+  - Hook.js:154 AsyncSeriesHook.lazyCompileHook
+    [frontend]/[tapable]/lib/Hook.js:154:20
+  
+  - Compilation.js:1414 
+    [frontend]/[webpack]/lib/Compilation.js:1414:32
+  
+  
+  - Hook.js:154 AsyncSeriesHook.lazyCompileHook
+    [frontend]/[tapable]/lib/Hook.js:154:20
+  
+  - Compilation.js:1409 
+    [frontend]/[webpack]/lib/Compilation.js:1409:36
+  
+  
+  - Hook.js:154 AsyncSeriesHook.lazyCompileHook
+    [frontend]/[tapable]/lib/Hook.js:154:20
+  
+  - Compilation.js:1405 
+    [frontend]/[webpack]/lib/Compilation.js:1405:32
+  
+  
+  - Hook.js:154 AsyncSeriesHook.lazyCompileHook
+    [frontend]/[tapable]/lib/Hook.js:154:20
+  
+  - Compilation.js:1342 Compilation.seal
+    [frontend]/[webpack]/lib/Compilation.js:1342:27
+  
+  - Compiler.js:675 
+    [frontend]/[webpack]/lib/Compiler.js:675:18
+  
+  - Compilation.js:1261 
+    [frontend]/[webpack]/lib/Compilation.js:1261:4
+  
+  
+  - Hook.js:154 AsyncSeriesHook.lazyCompileHook
+    [frontend]/[tapable]/lib/Hook.js:154:20
+  
+  - Compilation.js:1253 Compilation.finish
+    [frontend]/[webpack]/lib/Compilation.js:1253:28
+  
+  - Compiler.js:672 
+    [frontend]/[webpack]/lib/Compiler.js:672:17
+  
+  
+  
+  - Compilation.js:1185 
+    [frontend]/[webpack]/lib/Compilation.js:1185:12
+  
+  - Compilation.js:1097 
+    [frontend]/[webpack]/lib/Compilation.js:1097:9
+  
+  - task_queues.js:79 processTicksAndRejections
+    internal/process/task_queues.js:79:11
+  
+</pre>
