@@ -1,18 +1,17 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 
-import innexgo_logo from 'img/innexgo_logo.png';
+import innexgo_logo from '../img/innexgo_logo.png';
 
 function Footer() {
   return (
     <footer className="footer">
-      <div className="container-fluid py-1"><img className="m-2 logoicon" src={innexgo_logo} />
+      <div className="container-fluid py-1"><img className="m-2 logoicon" alt="Innexgo Logo" src={innexgo_logo} />
         <p className="text-light d-inline float-right mr-3 mt-3">&copy; Innexgo LLC, 2020</p>
         <p className="d-inline float-right mr-3 mt-3 text-light">
-          <Link to="/terms_of_service">Terms of Service</Link>
+          <a href="/terms_of_service">Terms of Service</a>
         </p>
         <p className="d-inline float-right mr-3 mt-3 text-light">
-          <Link to="/cookie_policy">Cookie Policy</Link>
+          <a href="/cookie_policy">Cookie Policy</a>
         </p>
       </div>
     </footer>
