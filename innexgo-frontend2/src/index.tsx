@@ -2,11 +2,11 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
-import Home from './components/Home';
-import About from './components/About';
-import TermsOfService from './components/TermsOfService';
-import CookiePolicy from './components/CookiePolicy';
-import Error from './components/Error';
+import Home from './pages/Home';
+import About from './pages/About';
+import TermsOfService from './pages/TermsOfService';
+import CookiePolicy from './pages/CookiePolicy';
+import Error from './pages/Error';
 
 ReactDOM.render(
   <React.StrictMode>

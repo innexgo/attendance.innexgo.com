@@ -1,5 +1,7 @@
 import React from 'react';
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faBars } from '@fortawesome/free-solid-svg-icons'
 
 
 function Header() {
@@ -9,7 +11,7 @@ function Header() {
         <div className="container">
           <a className="navbar-brand font-weight-bold" href="/">Innexgo</a>
           <button className="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent">
-            <i className="fa fa-bars"></i>
+            <FontAwesomeIcon icon={faBars} />
           </button>
           <div className="collapse navbar-collapse"
             id="navbarSupportedContent">
