@@ -3,8 +3,6 @@ import {Container, Row, Card, CardDeck} from 'react-bootstrap' ;
 
 import ExternalLayout from "../components/ExternalLayout";
 
-import "../css/headerfix.css";
-
 import heroBg from "../img/homepage-bg.png"
 
 const heroStyle = {

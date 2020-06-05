@@ -1,29 +1,24 @@
 import React from 'react';
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faBars } from '@fortawesome/free-solid-svg-icons'
-
+import { Navbar, Nav } from 'react-bootstrap';
 
 function Header() {
   return (
-    <header className="header">
-      <nav className="navbar navbar-expand-lg fixed-top py-3">
-        <div className="container">
-          <a className="navbar-brand font-weight-bold" href="/">Innexgo</a>
-          <button className="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent">
-            <FontAwesomeIcon icon={faBars} />
-          </button>
-          <div className="collapse navbar-collapse"
-            id="navbarSupportedContent">
-            <div className="navbar-nav ml-auto">
-              <a className="nav-item nav-link font-weight-bold" href="/about">About</a>
-              <a className="nav-item nav-link font-weight-bold" href="/faq">FAQ</a>
-              <a className="nav-item nav-link font-weight-bold" href="/login">Login</a>
-            </div>
-          </div>
-        </div>
-      </nav>
-    </header>
+    <Navbar collapseOnSelect expand="lg" bg="light" variant="light" sticky="top">
+      <Navbar.Brand href="#home">Innexgo</Navbar.Brand>
+      <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+      <Navbar.Collapse id="responsive-navbar-nav">
+        <Nav className="mr-auto">
+          <Nav.Link href="#features">Features</Nav.Link>
+          <Nav.Link href="#pricing">Pricing</Nav.Link>
+        </Nav>
+        <Nav>
+          <Nav.Link href="/about">About</Nav.Link>
+          <Nav.Link href="/faq">FAQs</Nav.Link>
+          <Nav.Link href="/login">Login</Nav.Link>
+        </Nav>
+      </Navbar.Collapse>
+    </Navbar>
   )
 }
 
