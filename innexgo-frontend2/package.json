@@ -16,6 +16,7 @@
     "@types/react-bootstrap": "^1.0.1",
     "@types/react-dom": "^16.9.0",
     "@types/react-router-dom": "^5.1.5",
+    "@types/webpack-env": "^1.15.2",
     "bootstrap": "^4.5.0",
     "jquery": "^3.5.1",
     "popper.js": "^1.16.1",

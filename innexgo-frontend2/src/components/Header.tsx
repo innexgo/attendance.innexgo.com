@@ -5,7 +5,7 @@ import { Navbar, Nav } from 'react-bootstrap';
 function Header() {
   return (
     <Navbar collapseOnSelect expand="lg" bg="light" variant="light" sticky="top">
-      <Navbar.Brand href="#home">Innexgo</Navbar.Brand>
+      <Navbar.Brand href="/">Innexgo</Navbar.Brand>
       <Navbar.Toggle aria-controls="responsive-navbar-nav" />
       <Navbar.Collapse id="responsive-navbar-nav">
         <Nav className="mr-auto">
@@ -14,8 +14,7 @@ function Header() {
         </Nav>
         <Nav>
           <Nav.Link href="/about">About</Nav.Link>
-          <Nav.Link href="/faq">FAQs</Nav.Link>
-          <Nav.Link href="/login">Login</Nav.Link>
+          <Nav.Link href="/login"><h5>Login</h5></Nav.Link>
         </Nav>
       </Navbar.Collapse>
     </Navbar>
