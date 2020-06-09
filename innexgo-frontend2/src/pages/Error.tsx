@@ -2,7 +2,7 @@ import React from 'react';
 
 function Error() {
   return (
-    <p> Hi Error </p>
+    <p> 404 Error: Page does not exist </p>
   )
 }
 

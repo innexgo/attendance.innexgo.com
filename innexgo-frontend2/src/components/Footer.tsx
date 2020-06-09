@@ -20,7 +20,7 @@ function Footer() {
       <Nav className="mr-auto">
         <Nav.Link>&copy; Innexgo LLC, 2020</Nav.Link>
         <Nav.Link href="/terms_of_service">Terms of Service</Nav.Link>
-        <Nav.Link href="/cookie_policy">Cookie Policy</Nav.Link>
+        <Nav.Link href="/terms_of_service#cookie_policy">Cookie Policy</Nav.Link>
       </Nav>
     </Navbar>
   );

@@ -4,15 +4,12 @@ import { Container } from 'react-bootstrap';
 import ExternalLayout from '../components/ExternalLayout';
 
 function TermsOfService() {
-  const pStyle = {
-    marginBottom: '50px'
-  };
   return (
     <ExternalLayout>
       <section>
         <Container>
-          <h5>Our Terms of Service</h5>
-          <p style={pStyle}>
+          <h2>Our Terms of Service</h2>
+          <p>
             Please read the following terms of service agreement carefully. By accessing or using our sites and our services, you
             hereby agree to be bound by the terms and all terms incorporated herein by reference. It is the responsibility of you, the user,
             customer, or prospective customer to read the terms and conditions before proceeding to use this site. If you do not i
@@ -20,7 +17,7 @@ function TermsOfService() {
             service agreement is effective as of January 10, 2020.
           </p>
           <h5>Acceptance of Terms</h5>
-          <p style={pStyle}>
+          <p>
             The following Terms of Service Agreement (the &quot;TOS&quot;) is a legally binding agreement that shall govern the relationship
             with our users and others which may interact or interface with Innexgo LLC , also known as Innexgo, in association with
             the use of the website, www.innexgo.com and its Services, which shall be defined below.
@@ -32,7 +29,7 @@ function TermsOfService() {
             this TOS.
           </p>
           <br />
-          <p style={pStyle}>
+          <p>
             The user acknowledges and agrees that the Services provided and made available through our website and applications, which may include some mobile applications and that those applications may be made available on various social media networking sites
             and numerous other platforms and downloadable programs, are the sole property of Innexgo. At its discretion, Innexgo may offer additional website Services and/or products, or update, modify or revise any current content and Services, and this
             Agreement shall apply to any and all additional Services and/or products and any and all updated, modified or revised Services unless otherwise stipulated. Innexgo does hereby reserve the right to cancel and cease offering any of the aforementioned
@@ -80,20 +77,20 @@ function TermsOfService() {
         </li>
           </ol>
           <h5>Indemnity</h5>
-          <p style={pStyle}>All users herein agree to insure and hold Innexgo, our subsidiaries, affiliates, agents, employees, officers, partners and/or licensors blameless or not liable for any claim or demand, which may include, but is not limited to, reasonable attorney
+          <p>All users herein agree to insure and hold Innexgo, our subsidiaries, affiliates, agents, employees, officers, partners and/or licensors blameless or not liable for any claim or demand, which may include, but is not limited to, reasonable attorney
               fees made by any third party which may arise from any content a user of our site may submit, post, modify, transmit or otherwise make available through our Services, the use of Innexgo Services or your connection with these Services, your violations
         of the Terms of Service and/or your violation of any such rights of another person.</p>
           <h5>Commercial Reuse of Services</h5>
-          <p style={pStyle}>The user herein agrees not to replicate, duplicate, copy, trade, sell, resell or exploit for any commercial reason any part, use of, or access to Innexgo&apos;s sites.</p>
+          <p>The user herein agrees not to replicate, duplicate, copy, trade, sell, resell or exploit for any commercial reason any part, use of, or access to Innexgo&apos;s sites.</p>
           <h5>Modifications</h5>
           <p>Innexgo shall reserve the right at any time it may deem fit, to modify, alter and or discontinue, whether temporarily or permanently, our service, or any part thereof, with or without prior notice. In addition, we shall not be held liable to you or
         to any third party for any such alteration, modification, suspension and/or discontinuance of our Services, or any part thereof.</p>
           <h5>Advertisers</h5>
-          <p style={pStyle}>Any correspondence or business dealings with, or participation in any promotions of, advertisers located on or through our Services, which may include the payment and/or delivery of such related goods and/or Services, and any such other term, condition,
+          <p>Any correspondence or business dealings with, or participation in any promotions of, advertisers located on or through our Services, which may include the payment and/or delivery of such related goods and/or Services, and any such other term, condition,
               warranty and/or representation associated with such dealings, are and shall be solely between you and any such advertiser. Moreover, you herein agree that Innexgo shall not be held responsible or liable for any loss or damage of any nature or
         manner incurred as a direct result of any such dealings or as a result of the presence of such advertisers on our website.</p>
           <h5>Links</h5>
-          <p style={pStyle}>Either Innexgo or any third parties may provide links to other websites and/or resources. Thus, you acknowledge and agree that we are not responsible for the availability of any such external sites or resources, and as such, we do not endorse nor
+          <p>Either Innexgo or any third parties may provide links to other websites and/or resources. Thus, you acknowledge and agree that we are not responsible for the availability of any such external sites or resources, and as such, we do not endorse nor
               are we responsible or liable for any content, products, advertising or any other materials on or available from such third party sites or resources. Furthermore, you acknowledge and agree that Innexgo shall not be responsible or liable, directly
         or indirectly, for any such damage or loss which may be a result of, caused or alleged to be caused by or in connection with the use of or reliance on any such content, goods or Services made available on or through any such site or resource.</p>
           <h5>Proprietary Rights</h5>
@@ -101,7 +98,7 @@ function TermsOfService() {
               intellectual property rights and other laws. Furthermore, you herein acknowledge and agree that any Content which may be contained in any advertisements or information presented by and through our Services or by advertisers is protected by copyrights,
               trademarks, patents or other proprietary rights and laws. Therefore, except for that which is expressly permitted by applicable law or as authorized by Innexgo or such applicable licensor, you agree not to alter, modify, lease, rent, loan, sell,
         distribute, transmit, broadcast, publicly perform and/or created any plagiaristic works which are based on Innexgo Services (e.g. Content or Software), in whole or part.</p><br />
-          <p style={pStyle}>Innexgo herein has granted you personal, non-transferable and non- exclusive rights and/or license to make use of the object code or our Software on a single computer, as long as you do not, and shall not allow any third party to duplicate, alter,
+          <p>Innexgo herein has granted you personal, non-transferable and non- exclusive rights and/or license to make use of the object code or our Software on a single computer, as long as you do not, and shall not allow any third party to duplicate, alter,
               modify, create or plagiarize work, reverse engineer, reverse assemble or otherwise make an attempt to locate or discern any source code, sell, assign, sublicense, grant a security interest in and/or otherwise transfer any such rights in the Software.
               Furthermore, you do herein agree not to alter or change the Software in any manner, nature or form, and as such, not to use any modified versions of the Software, including without limitation, for the purpose of obtaining unauthorized access to
         our Services. Lastly, you also agree not to access or attempt to access our Services through any means other than through the interface, which is provided by Innexgo for use in accessing our Services.</p>
@@ -121,9 +118,12 @@ function TermsOfService() {
             ANY OF THE FOLLOWING SYMPTOMS WHILE USING OUR SERVICES: DIZZINESS, ALTERED VISION, EYE OR MUSCLE TWITCHES, LOSS OF AWARENESS, DISORIENTATION, ANY INVOLUNTARY MOVEMENT, OR CONVULSIONS.</li>
           </ol>
           <h5>Limitations of Liability</h5>
-          <p>YOU EXPLICITLY ACKNOWLEDGE, UNDERSTAND AND AGREE THAT INNEXGO AND OUR SUBSIDIARIES, AFFILIATES, OFFICERS, EMPLOYEES, AGENTS, PARTNERS AND LICENSORS SHALL NOT BE LIABLE TO YOU FOR ANY PUNITIVE, INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL OR EXEMPLARY
-              DAMAGES, INCLUDING, BUT NOT LIMITED TO, DAMAGES WHICH MAY BE RELATED TO THE LOSS OF ANY PROFITS, GOODWILL, USE, DATA AND/OR OTHER INTANGIBLE LOSSES, EVEN THOUGH WE MAY HAVE BEEN ADVISED OF SUCH POSSIBILITY THAT SAID DAMAGES MAY OCCUR, AND RESULT
-        FROM:</p>
+          <p>
+            YOU EXPLICITLY ACKNOWLEDGE, UNDERSTAND AND AGREE THAT INNEXGO AND OUR SUBSIDIARIES, AFFILIATES, OFFICERS, EMPLOYEES, AGENTS,
+            PARTNERS AND LICENSORS SHALL NOT BE LIABLE TO YOU FOR ANY PUNITIVE, INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL OR EXEMPLARY
+            DAMAGES, INCLUDING, BUT NOT LIMITED TO, DAMAGES WHICH MAY BE RELATED TO THE LOSS OF ANY PROFITS, GOODWILL, USE, DATA AND/OR
+            OTHER INTANGIBLE LOSSES, EVEN THOUGH WE MAY HAVE BEEN ADVISED OF SUCH POSSIBILITY THAT SAID DAMAGES MAY OCCUR, AND RESULT FROM:
+          </p>
           <ol type="a">
             <li>THE USE OR INABILITY TO USE OUR SERVICE;</li>
             <li>THE COST OF PROCURING SUBSTITUTE GOODS AND SERVICES;</li>
@@ -132,24 +132,32 @@ function TermsOfService() {
             <li>AND ANY OTHER MATTER WHICH MAY BE RELATED TO OUR SERVICE.</li>
           </ol>
           <h5>Release</h5>
-          <p style={pStyle}>In the event you have a dispute, you agree to release Innexgo (and its officers, directors, employees, agents, parent subsidiaries, affiliates, co-branders, partners and any other third parties) from claims, demands and damages (actual and consequential)
+          <p>In the event you have a dispute, you agree to release Innexgo (and its officers, directors, employees, agents, parent subsidiaries, affiliates, co-branders, partners and any other third parties) from claims, demands and damages (actual and consequential)
         of every kind and nature, known and unknown, suspected or unsuspected, disclosed and undisclosed, arising out of or in any way connected to such dispute.</p>
           <h5>Special Admonition Related to Financial Matters</h5>
-          <p style={pStyle}>Should you intend to create or to join any service, receive or request any such news, messages, alerts or other information from our Services concerning companies, stock quotes, investments or securities, please review the above Sections Warranty
-              Disclaimers and Limitations of Liability again. In addition, for this particular type of information, the phrase &quot;Let the investor beware&quot; is appropriate. Innexgo&apos;s content is provided primarily for informational purposes, and no
-              content that shall be provided or included in our Services is intended for trading or investing purposes. Innexgo and our licensors shall not be responsible or liable for the accuracy, usefulness or availability of any information transmitted
-        and/or made available by way of our Services, and shall not be responsible or liable for any trading and/or investment decisions based on any such information.</p>
+          <p>
+            Should you intend to create or to join any service, receive or request any such news, messages, alerts or other information from our
+            Services concerning companies, stock quotes, investments or securities, please review the above Sections Warranty Disclaimers and
+            Limitations of Liability again. In addition, for this particular type of information, the phrase &quot;Let the investor beware&quot;
+            is appropriate. Innexgo&apos;s content is provided primarily for informational purposes, and no content that shall be provided or
+            included in our Services is intended for trading or investing purposes. Innexgo and our licensors shall not be responsible or liable
+            for the accuracy, usefulness or availability of any information transmitted and/or made available by way of our Services, and
+            shall not be responsible or liable for any trading and/or investment decisions based on any such information.
+          </p>
           <h5>Exclusion and Limitatons</h5>
-          <p style={pStyle}>THERE ARE SOME JURISDICTIONS WHICH DO NOT ALLOW THE EXCLUSION OF CERTAIN WARRANTIES OR THE LIMITATION OF EXCLUSION OF LIABILITY FOR INCIDENTAL OR CONSEQUENTIAL DAMAGES. THEREFORE, SOME OF THE ABOVE LIMITATIONS OF SECTIONS WARRANTY DISCLAIMERS AND
-        LIMITATION OF LIABILITY MAY NOT APPLY TO YOU.</p>
+          <p>
+            THERE ARE SOME JURISDICTIONS WHICH DO NOT ALLOW THE EXCLUSION OF CERTAIN WARRANTIES OR THE LIMITATION OF EXCLUSION OF LIABILITY
+            FOR INCIDENTAL OR CONSEQUENTIAL DAMAGES. THEREFORE, SOME OF THE ABOVE LIMITATIONS OF SECTIONS WARRANTY DISCLAIMERS AND LIMITATION
+            OF LIABILITY MAY NOT APPLY TO YOU.
+          </p>
           <h5>Third Party Beneficiaries</h5>
-          <p style={pStyle}>You herein acknowledge, understand and agree, unless otherwise expressly provided in this TOS, that there shall be no third-party beneficiaries to this agreement.</p>
+          <p>You herein acknowledge, understand and agree, unless otherwise expressly provided in this TOS, that there shall be no third-party beneficiaries to this agreement.</p>
           <h5>Notice</h5>
-          <p style={pStyle}>Innexgo may furnish you with notices, including those with regards to any changes to the TOS, including but not limited to email, regular mail, MMS or SMS, text messaging, postings on our website Services, or other reasonable means currently known
+          <p>Innexgo may furnish you with notices, including those with regards to any changes to the TOS, including but not limited to email, regular mail, MMS or SMS, text messaging, postings on our website Services, or other reasonable means currently known
               or any which may be hereinafter developed. Any such notices may not be received if you violate any aspects of the TOS by accessing our Services in an unauthorized manner. Your acceptance of this TOS constitutes your agreement that you are deemed
         to have received any and all notices that would have been delivered had you accessed our Services in an authorized manner.</p>
           <h5>Trademark Information</h5>
-          <p style={pStyle}>You herein acknowledge, understand and agree that all of the Innexgo trademarks, copyright, trade name, service marks, and other Innexgo logos and any brand features, and/or product and service names are trademarks and as such, are and shall remain
+          <p>You herein acknowledge, understand and agree that all of the Innexgo trademarks, copyright, trade name, service marks, and other Innexgo logos and any brand features, and/or product and service names are trademarks and as such, are and shall remain
         the property of Innexgo. You herein agree not to display and/or use in any manner the Innexgo logo or marks without obtaining Innexgo&apos;s prior written consent.</p>
           <h5>Copyright or Intellectual Property Infringement Claims Notice &amp; Procedures</h5>
           <p>Innexgo will always respect the intellectual property of others, and we ask that all of our users do the same. With regards to appropriate circumstances and at its sole discretion, Innexgo may disable and/or terminate the accounts of any user who
@@ -166,24 +174,57 @@ function TermsOfService() {
             the copyright or intellectual property owner&apos;s behalf.</li>
           </ol>
           <h5>Closed Captioning</h5>
-          <p style={pStyle}>Innexgo complies with all applicable Federal Communications Commission rules and regulations regarding the closed captioning of video content.</p>
+          <p>Innexgo complies with all applicable Federal Communications Commission rules and regulations regarding the closed captioning of video content.</p>
           <h5>General Information</h5>
           <h4><i>Entire Agreement</i></h4>
-          <p style={pStyle}>This TOS constitutes the entire agreement between you and Innexgo and shall govern the use of our Services, superseding any prior version of this TOS between you and us with respect to Innexgo Services. You may also be subject to additional terms
+          <p>This TOS constitutes the entire agreement between you and Innexgo and shall govern the use of our Services, superseding any prior version of this TOS between you and us with respect to Innexgo Services. You may also be subject to additional terms
         and conditions that may apply when you use or purchase certain other Services, affiliate Services, third-party content or third-party software.</p><br />
           <h4><i>Choice of Law and Forum</i></h4>
-          <p style={pStyle}>It is at the mutual agreement of both you and with regard to the TOS that the relationship between the parties shall be governed by the laws of the state of California without regard to its conflict of law provisions and that any and all claims, causes
+          <p>It is at the mutual agreement of both you and with regard to the TOS that the relationship between the parties shall be governed by the laws of the state of California without regard to its conflict of law provisions and that any and all claims, causes
               of action and/or disputes, arising out of or relating to the TOS, or the relationship between you and Innexgo, shall be filed within the courts having jurisdiction within the County of Santa Clara, California or the U.S. District Court located
         in said state. You and Innexgo agree to submit to the jurisdiction of the courts as previously mentioned, and agree to waive any and all objections to the exercise of jurisdiction over the parties by such courts and to venue in such courts.</p><br />
           <h4><i>Waiver and Severability of Terms</i></h4>
-          <p style={pStyle}>At any time, should Innexgo fail to exercise or enforce any right or provision of the TOS, such failure shall not constitute a waiver of such right or provision. If any provision of this TOS is found by a court of competent jurisdiction to be invalid,
+          <p>At any time, should Innexgo fail to exercise or enforce any right or provision of the TOS, such failure shall not constitute a waiver of such right or provision. If any provision of this TOS is found by a court of competent jurisdiction to be invalid,
         the parties nevertheless agree that the court should endeavor to give effect to the parties&apos; intentions as reflected in the provision, and the other provisions of the TOS remain in full force and effect.</p><br />
           <h4><i>Statue of Limitations</i></h4>
-          <p style={pStyle}>You acknowledge, understand and agree that regardless of any statute or law to the contrary, any claim or action arising out of or related to the use of our Services or the TOS must be filed within 1 year(s) after said claim or cause of action arose
+          <p>You acknowledge, understand and agree that regardless of any statute or law to the contrary, any claim or action arising out of or related to the use of our Services or the TOS must be filed within 1 year(s) after said claim or cause of action arose
         or shall be forever barred.</p><br />
           <h4><i>Violations</i></h4>
           <p>Please report any and all violations of this TOS to Innexgo LLC as follows:</p>
-          <p style={pStyle}>Email: innexgo@gmail.com</p>
+          <p>Email: innexgo@gmail.com</p>
+        </Container>
+      </section>
+      <section id="cookie_policy">
+        <Container>
+          <h2>Our Cookie Policy</h2>
+          <p>
+            Innexgo LLC uses cookies on www.innexgo.com. By using the Service, you consent to the use of cookies.
+            This cookies policy explains what cookies are, how we use cookies, how third-parties we may
+            partner with may use cookies on the Service, your choices regarding cookies and further information about cookies.
+          </p>
+          <h5>What are cookies?</h5>
+          <p>
+            Cookies are small pieces of text sent by your web browser by a website you visit. A cookie file is stored in your
+            web browser and allows the Service or a third-party to recognize you and make your next visit easier and the Service more useful
+            to you. Cookies can be &quot;persistent&quot; or &quot;session&quot; cookies.
+          </p>
+          <h5>How Innexgo LLC uses cookies</h5>
+          <p>
+            When you use and access the Service, we may place a number of cookies files in your web browser.
+            We use cookies for the following purposes: to enable certain functions of the Service and to
+            store your preferences. We use essential cookies to authenticate
+            users and prevent fraudulent use of user accounts.
+          </p>
+          <h5>Third-party cookies</h5>
+          <p>
+            The Service uses no third party cookies.
+          </p>
+          <h5>What are your choices regarding cookies?</h5>
+          <p>
+            If you&apos;d like to delete cookies or instruct your web browser to delete or refuse cookies, please visit the help pages of
+            your web browser. Please note, however, that if you delete cookies or refuse to accept them, you might not be able to use
+            all of the features we offer, you may not be able to store your preferences, and some of our pages might not display properly.
+          </p>
         </Container>
       </section>
     </ExternalLayout>)
