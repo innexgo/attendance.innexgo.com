@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 
 // Fonts
 import "typeface-ubuntu";
@@ -13,7 +13,7 @@ import Footer from './Footer';
 import Header from './Header';
 
 
-class ExternalLayout extends Component {
+class ExternalLayout extends React.Component {
   render() {
     return (
       <div>
