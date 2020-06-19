@@ -1,3 +1,5 @@
+declare module '*.png'
+
 enum UserRing {
   Administrator = 0,
   Teacher = 1,
