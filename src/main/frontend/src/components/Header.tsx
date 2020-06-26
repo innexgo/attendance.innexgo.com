@@ -13,12 +13,10 @@ function Header() {
           <Nav.Link href="#pricing">Pricing</Nav.Link>
         </Nav>
         <Nav>
-          <Nav>
-            <Link to="/about"> About</Link>
-          </Nav>
-          <Nav>
-            <Link to="/login">Login</Link>
-          </Nav>
+          <Link to="/about">About</Link>
+        </Nav>
+        <Nav>
+          <Link to="/dashboard">Dashboard</Link>
         </Nav>
       </Navbar.Collapse>
     </Navbar>
