@@ -1,7 +1,6 @@
 import React from 'react';
 import { Media, Jumbotron, Container, Row, Card, CardDeck } from 'react-bootstrap';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faThumbsUp, faShieldAlt, faChartLine } from '@fortawesome/free-solid-svg-icons'
+import { Shield, BarChart, HandThumbsUp } from 'react-bootstrap-icons'
 
 import ExternalLayout from "../components/ExternalLayout";
 
@@ -22,16 +21,13 @@ function Home() {
   };
 
   const iconStyle = {
-    textAlign: "center" as const,
-    fontSize: "65px",
     width: "120px",
     height: "120px",
-    lineHeight: "120px",
     display: "inline-block",
-    borderRadius: "1000px",
+    borderRadius: "40px",
     color: "#fefefe",
     background: "#990000ff",
-    padding: "10px",
+    padding: "20px",
     margin: "10px"
   };
 
@@ -59,7 +55,7 @@ function Home() {
 
 
   return (
-    <ExternalLayout>
+    <ExternalLayout fixed={true} transparentTop={true}>
       <Jumbotron fluid style={jumboStyle}>
         <Container>
           <h1> Academics, Achievement, Attendance first. </h1>
@@ -69,21 +65,21 @@ function Home() {
         <Container>
           <Row>
             <Media>
-              <FontAwesomeIcon style={iconStyle} icon={faThumbsUp} />
+              <HandThumbsUp style={iconStyle} />
               <Media.Body>
                 <h5>Easy to Use</h5>
                 <p> Increases teaching time by automating attendance in every classroom and decreasing teacher responsibilities. </p>
               </Media.Body>
             </Media>
             <Media>
-              <FontAwesomeIcon style={iconStyle} icon={faShieldAlt} />
+              <Shield style={iconStyle} />
               <Media.Body>
                 <h5>Secure Campus</h5>
                 <p> Ensures schoolwide safety by recording student entrances and exits and preventing chronic absenteeism in integrated classrooms. </p>
               </Media.Body>
             </Media>
             <Media>
-              <FontAwesomeIcon style={iconStyle} icon={faChartLine} />
+              <BarChart style={iconStyle} />
               <Media.Body>
                 <h5>Detailed Reporting</h5>
                 <p> Analyzes attendance data to provide extensive administrator reports on in-session campus safety and attendance. </p>

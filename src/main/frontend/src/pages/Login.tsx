@@ -56,7 +56,7 @@ function Login(props: LoginProps) {
   }
 
   return (
-    <ExternalLayout>
+    <ExternalLayout fixed={false} transparentTop={false}>
       <div style={bgStyle}>
         <Card>
           <Card.Body>

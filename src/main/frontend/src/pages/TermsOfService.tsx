@@ -5,7 +5,7 @@ import ExternalLayout from '../components/ExternalLayout';
 
 function TermsOfService() {
   return (
-    <ExternalLayout>
+    <ExternalLayout fixed={false} transparentTop={false}>
       <section>
         <Container>
           <h2>Our Terms of Service</h2>

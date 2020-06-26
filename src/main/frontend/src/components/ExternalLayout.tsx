@@ -1,23 +1,23 @@
 import React from 'react';
 
-// Fonts
-import "typeface-ubuntu";
-import "typeface-exo";
-
 // Bootstrap CSS & JS
-import 'bootstrap/dist/css/bootstrap.min.css'
+import '../style/external.scss'
 import 'jquery/dist/jquery.min.js'
-import 'bootstrap/dist/js/bootstrap.min.js'
+import 'bootstrap/dist/js/bootstrap.js'
 
 import Footer from './Footer';
 import Header from './Header';
 
+interface ExternalLayoutProps {
+    fixed: boolean;
+    transparentTop: boolean;
+}
 
-class ExternalLayout extends React.Component {
+class ExternalLayout extends React.Component<ExternalLayoutProps> {
   render() {
     return (
       <div>
-        <Header />
+        <Header fixed={this.props.fixed} transparentTop={this.props.transparentTop} />
         <div className="content">
           {this.props.children}
         </div>

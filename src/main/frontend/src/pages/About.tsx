@@ -29,10 +29,10 @@ function TeamMember(props: TeamMemberProps) {
 
 function About() {
   return (
-    <ExternalLayout>
+    <ExternalLayout fixed={false} transparentTop={false}>
       <section>
         <Container>
-          <div>
+          <div className="py-5">
             <h2>About</h2>
             <p>
               Innexgo started as a project in October 2018. Four students entered MESA&rsquo;s National Engineering

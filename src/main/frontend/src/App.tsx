@@ -35,7 +35,7 @@ function App() {
             <Route path="/about" component={About}/>
             <Route path="/terms_of_service" component={TermsOfService}/>
             <Route path="/login" component = {Login} />
-            <PrivateRoute path="/dashboard" component={Dashboard}/>
+            <Route path="/dashboard" component={Dashboard}/>
             <Route path="/" component={Error}/>
           </Switch>
         </div>
