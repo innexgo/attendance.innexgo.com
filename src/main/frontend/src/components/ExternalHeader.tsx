@@ -2,18 +2,18 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { ThreeDotsVertical } from 'react-bootstrap-icons'
 
-interface HeaderProps {
+interface ExternalHeaderProps {
     fixed: boolean;
     transparentTop: boolean;
 }
 
-interface HeaderState {
+interface ExternalHeaderState {
   scroll: number;
 }
 
-class Header extends React.Component<HeaderProps, HeaderState> {
+class ExternalHeader extends React.Component<ExternalHeaderProps, ExternalHeaderState> {
 
-  constructor(props: HeaderProps) {
+  constructor(props: ExternalHeaderProps) {
     super(props);
     this.state = {
       scroll: 0,
@@ -80,4 +80,4 @@ class Header extends React.Component<HeaderProps, HeaderState> {
   }
 }
 
-export default Header;
+export default ExternalHeader;

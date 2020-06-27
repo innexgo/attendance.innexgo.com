@@ -15,7 +15,7 @@
     "@types/react-dom": "^16.9.0",
     "@types/react-router-dom": "^5.1.5",
     "@types/webpack-env": "^1.15.2",
-    "bootstrap": "^4.5.0",
+    "bootstrap": "^5.0.0-alpha1",
     "jquery": "^3.5.1",
     "moment": "^2.27.0",
     "node-sass": "^4.14.1",

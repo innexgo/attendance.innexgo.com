@@ -2,11 +2,11 @@ import React from 'react';
 
 // Bootstrap CSS & JS
 import '../style/external.scss'
-import 'jquery/dist/jquery.min.js'
 import 'bootstrap/dist/js/bootstrap.js'
+import 'popper.js/dist/popper.js'
 
 import Footer from './Footer';
-import Header from './Header';
+import ExternalHeader from './ExternalHeader';
 
 interface ExternalLayoutProps {
     fixed: boolean;
@@ -16,13 +16,11 @@ interface ExternalLayoutProps {
 class ExternalLayout extends React.Component<ExternalLayoutProps> {
   render() {
     return (
-      <div>
-        <Header fixed={this.props.fixed} transparentTop={this.props.transparentTop} />
-        <div className="content">
-          {this.props.children}
-        </div>
+      <>
+        <ExternalHeader fixed={this.props.fixed} transparentTop={this.props.transparentTop} />
+        {this.props.children}
         <Footer />
-      </div>
+      </>
     )
   }
 }
