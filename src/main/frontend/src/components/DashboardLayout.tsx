@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { House, LayoutSidebar } from 'react-bootstrap-icons';
+import { Icon, Gear, House, BoxArrowRight, BarChart, Search, People, LayoutSidebar } from 'react-bootstrap-icons';
 
 // Bootstrap CSS & Js
 import '../style/dashboard.scss';
@@ -10,22 +10,36 @@ import 'popper.js/dist/popper.js'
 import Footer from './Footer';
 
 interface SidebarEntryProps {
-  name: string,
+  label: string,
+  icon: Icon,
   href: string,
   collapsed: boolean,
 }
 function SidebarEntry(props: React.PropsWithChildren<SidebarEntryProps>) {
   const style = {
-    padding: ".5rem 1.25rem"
-    color:
+    padding: ".5rem 1.25rem",
+    color: "#fff"
   }
+
+  const iconStyle = {
+    width: "2vw",
+    height: "2vw",
+    display: "inline-block",
+    borderRadius: "0.5vw",
+    color: "#fefefe",
+    background: "#990000ff",
+    padding: "0.2vw",
+    margin: "0.1vw"
+  };
+
+	const Icon = props.icon;
   if (props.collapsed) {
-    return <Link style={style} className="nav-item nav-link font-weight-bold" to={props.href}>
-      {props.children} {props.name}
+    return <Link style={style} className="nav-item nav-link" to={props.href}>
+			<Icon style={iconStyle} />
     </Link>
   } else {
-    return <Link style={style} className="nav-item nav-link font-weight-bold" to={props.href}>
-      {props.children} {props.name}
+    return <Link style={style} className="nav-item nav-link" to={props.href}>
+			<Icon style={iconStyle} /> {props.label}
     </Link>
   }
 }
@@ -50,21 +64,15 @@ class DashboardHeader extends React.Component<DashboardHeaderProps, DashboardHea
 
 
   render() {
-    const collapsedSidebarStyle = {
-      height: "100%",
-      width: "100px",
-      zIndex: 1,
-      position: "fixed",
-      top: 0,
-      left: 0,
-      overflowX: "hidden",
-      overflowY: "hidden",
-      margin: "0%"
-    };
 
-    const expandedSidebarStyle = {
+
+    const collapsed = this.state.sidebarCollapsed;
+
+    const width = collapsed ? "10px" : "20vw";
+
+    const sidebarStyle = {
       height: "100%",
-      width: "10vw",
+      width: width,
       zIndex: 1,
       position: "fixed" as const,
       top: 0,
@@ -74,29 +82,29 @@ class DashboardHeader extends React.Component<DashboardHeaderProps, DashboardHea
       margin: "0%"
     };
 
-    const collapsed = this.state.sidebarCollapsed;
+    const sidebarBottom = {
+ position: 'absolute' as const,
+  bottom: 0,
+  right: 0,
+  left: 0,
+    };
 
     return (
-      <nav className="bg-dark text-light" style={expandedSidebarStyle}>
-        <SidebarEntry name="Dashboard" href="/dashboard" collapsed={collapsed}> <House /> </SidebarEntry>
-        <SidebarEntry name="Reports" href="/dashboard" collapsed={collapsed}> <House /> </SidebarEntry>
-        <SidebarEntry name="Find Student" href="/dashboard" collapsed={collapsed}> <House /> </SidebarEntry>
-        <SidebarEntry name="Attendance Irregularities" href="/dashboard" collapsed={collapsed}> <House /> </SidebarEntry>
-        <SidebarEntry name="Statistics" href="/dashboard" collapsed={collapsed}> <House /> </SidebarEntry>
-        <div className="sidebar-bottom">
-          <a className="sidebar-item text-light bg-dark" href="settings.html">
-            <i className="fa fa-cog"></i> Settings
-          	</a>
-          <a className="sidebar-item text-light bg-dark" href="index.html">
-            <i className="fa fa-sign-out-alt"></i> Sign out
-          	</a>
+      <nav className="bg-dark text-light" style={sidebarStyle}>
+        <SidebarEntry label="Dashboard" href="/dashboard" collapsed={collapsed} icon={House} />
+        <SidebarEntry label="Find Student" href="/dashboard" collapsed={collapsed} icon={Search} />
+        <SidebarEntry label="My Classes" href="/classes" collapsed={collapsed} icon={People} />
+        <SidebarEntry label="Reports" href="/reports" collapsed={collapsed} icon={BarChart} />
+        <div style={sidebarBottom}>
+        	<SidebarEntry label="Settings" href="/settings" collapsed={collapsed} icon={Gear} /> 
+        	<SidebarEntry label="Log Out" href="/logout" collapsed={collapsed} icon={BoxArrowRight} /> 
         </div>
       </nav>
     )
   }
 }
-interface DashboardLayoutProps {
 
+interface DashboardLayoutProps {
 
 }
 
