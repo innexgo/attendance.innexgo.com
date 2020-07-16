@@ -1,8 +1,81 @@
 import React from 'react';
+import DashboardLayout from '../components/DashboardLayout';
 
 function Dashboard() {
   return (
-    <p>Dashboard Time</p>
+    <DashboardLayout>
+      <p> Dashboard Time </p>
+      <p> Dashboard Time </p>
+      <p> Dashboard Time </p>
+      <p> Dashboard Time </p>
+      <p> Dashboard Time </p>
+      <p> Dashboard Time </p>
+      <p> Dashboard Time </p>
+      <p> Dashboard Time </p>
+      <p> Dashboard Time </p>
+      <p> Dashboard Time </p>
+      <p> Dashboard Time </p>
+      <p> Dashboard Time </p>
+      <p> Dashboard Time </p>
+      <p> Dashboard Time </p>
+      <p> Dashboard Time </p>
+      <p> Dashboard Time </p>
+      <p> Dashboard Time </p>
+      <p> Dashboard Time </p>
+      <p> Dashboard Time </p>
+      <p> Dashboard Time </p>
+      <p> Dashboard Time </p>
+      <p> Dashboard Time </p>
+      <p> Dashboard Time </p>
+      <p> Dashboard Time </p>
+      <p> Dashboard Time </p>
+      <p> Dashboard Time </p>
+      <p> Dashboard Time </p>
+      <p> Dashboard Time </p>
+      <p> Dashboard Time </p>
+      <p> Dashboard Time </p>
+      <p> Dashboard Time </p>
+      <p> Dashboard Time </p>
+      <p> Dashboard Time </p>
+      <p> Dashboard Time </p>
+      <p> Dashboard Time </p>
+      <p> Dashboard Time </p>
+      <p> Dashboard Time </p>
+      <p> Dashboard Time </p>
+      <p> Dashboard Time </p>
+      <p> Dashboard Time </p>
+      <p> Dashboard Time </p>
+      <p> Dashboard Time </p>
+      <p> Dashboard Time </p>
+      <p> Dashboard Time </p>
+      <p> Dashboard Time </p>
+      <p> Dashboard Time </p>
+      <p> Dashboard Time </p>
+      <p> Dashboard Time </p>
+      <p> Dashboard Time </p>
+      <p> Dashboard Time </p>
+      <p> Dashboard Time </p>
+      <p> Dashboard Time </p>
+      <p> Dashboard Time </p>
+      <p> Dashboard Time </p>
+      <p> Dashboard Time </p>
+      <p> Dashboard Time </p>
+      <p> Dashboard Time </p>
+      <p> Dashboard Time </p>
+      <p> Dashboard Time </p>
+      <p> Dashboard Time </p>
+      <p> Dashboard Time </p>
+      <p> Dashboard Time </p>
+      <p> Dashboard Time </p>
+      <p> Dashboard Time </p>
+      <p> Dashboard Time </p>
+      <p> Dashboard Time </p>
+      <p> Dashboard Time </p>
+      <p> Dashboard Time </p>
+      <p> Dashboard Time </p>
+      <p> Dashboard Time </p>
+      <p> Dashboard Time </p>
+    </DashboardLayout>
   )
 }
 
