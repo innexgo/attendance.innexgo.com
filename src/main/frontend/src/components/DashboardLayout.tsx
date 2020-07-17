@@ -7,8 +7,6 @@ import '../style/dashboard.scss';
 import 'bootstrap/dist/js/bootstrap.js'
 import 'popper.js/dist/popper.js'
 
-import Footer from './Footer';
-
 interface SidebarEntryProps {
   label: string,
   icon: Icon,
@@ -17,58 +15,57 @@ interface SidebarEntryProps {
 }
 function SidebarEntry(props: React.PropsWithChildren<SidebarEntryProps>) {
   const style = {
-    padding: ".5rem 1.25rem",
     color: "#fff"
   }
 
   const iconStyle = {
-    width: "2vw",
-    height: "2vw",
+    width: "3rem",
+    height: "3rem",
     display: "inline-block",
-    borderRadius: "0.5vw",
-    color: "#fefefe",
-    background: "#990000ff",
-    padding: "0.2vw",
-    margin: "0.1vw"
+    borderRadius: "0.5rem",
+    padding: "0.2rem",
+    margin: "0.1rem"
   };
 
-	const Icon = props.icon;
+  const Icon = props.icon;
   if (props.collapsed) {
     return <Link style={style} className="nav-item nav-link" to={props.href}>
-			<Icon style={iconStyle} />
+      <Icon style={iconStyle} />
     </Link>
   } else {
     return <Link style={style} className="nav-item nav-link" to={props.href}>
-			<Icon style={iconStyle} /> {props.label}
+      <Icon style={iconStyle} /> {props.label}
     </Link>
   }
 }
 
 
 interface DashboardHeaderProps {
-  sidebarCollapsed: boolean;
 }
 
 interface DashboardHeaderState {
   sidebarCollapsed: boolean;
 }
 
-class DashboardHeader extends React.Component<DashboardHeaderProps, DashboardHeaderState> {
+class DashboardLayout extends React.Component<DashboardHeaderProps, DashboardHeaderState> {
 
   constructor(props: DashboardHeaderProps) {
     super(props);
     this.state = {
-      sidebarCollapsed: props.sidebarCollapsed
+      sidebarCollapsed: true
     };
   }
 
+  toggleSidebar = (_: React.MouseEvent) => {
+    this.setState({ sidebarCollapsed: !this.state.sidebarCollapsed });
+  }
 
   render() {
 
 
     const collapsed = this.state.sidebarCollapsed;
 
-    const width = collapsed ? "10px" : "20vw";
+    const width = collapsed ? "5rem" : "20rem";
 
     const sidebarStyle = {
       height: "100%",
@@ -83,40 +80,36 @@ class DashboardHeader extends React.Component<DashboardHeaderProps, DashboardHea
     };
 
     const sidebarBottom = {
- position: 'absolute' as const,
-  bottom: 0,
-  right: 0,
-  left: 0,
+      position: 'absolute' as const,
+      bottom: 0,
+      right: 0,
+      left: 0,
     };
 
+    const nonSidebarStyle = {
+      marginLeft: width
+    }
+
     return (
-      <nav className="bg-dark text-light" style={sidebarStyle}>
-        <SidebarEntry label="Dashboard" href="/dashboard" collapsed={collapsed} icon={House} />
-        <SidebarEntry label="Find Student" href="/dashboard" collapsed={collapsed} icon={Search} />
-        <SidebarEntry label="My Classes" href="/classes" collapsed={collapsed} icon={People} />
-        <SidebarEntry label="Reports" href="/reports" collapsed={collapsed} icon={BarChart} />
-        <div style={sidebarBottom}>
-        	<SidebarEntry label="Settings" href="/settings" collapsed={collapsed} icon={Gear} /> 
-        	<SidebarEntry label="Log Out" href="/logout" collapsed={collapsed} icon={BoxArrowRight} /> 
+      <div>
+        <nav className="bg-dark text-light" style={sidebarStyle}>
+          <button type="button" className="btn btn-light" onClick={this.toggleSidebar}>
+            Button
+		      </button>
+          <SidebarEntry label="Dashboard" href="/dashboard" collapsed={collapsed} icon={House} />
+          <SidebarEntry label="Find Student" href="/dashboard" collapsed={collapsed} icon={Search} />
+          <SidebarEntry label="My Classes" href="/classes" collapsed={collapsed} icon={People} />
+          <SidebarEntry label="Reports" href="/reports" collapsed={collapsed} icon={BarChart} />
+          <div style={sidebarBottom}>
+            <SidebarEntry label="Settings" href="/settings" collapsed={collapsed} icon={Gear} />
+            <SidebarEntry label="Log Out" href="/logout" collapsed={collapsed} icon={BoxArrowRight} />
+          </div>
+        </nav>
+        <div style={nonSidebarStyle}>
+          {this.props.children}
         </div>
-      </nav>
+      </div>
     )
-  }
-}
-
-interface DashboardLayoutProps {
-
-}
-
-class DashboardLayout extends React.Component<DashboardLayoutProps> {
-  render() {
-    return (
-      <>
-        <DashboardHeader sidebarCollapsed={false} />
-        {this.props.children}
-        <Footer />
-      </>
-    );
   }
 }
 
