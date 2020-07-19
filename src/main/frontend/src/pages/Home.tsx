@@ -1,6 +1,6 @@
 import React from 'react';
 import { Media, Jumbotron, Container, Row, Card, CardDeck } from 'react-bootstrap';
-import { Shield, BarChart, HandThumbsUp } from 'react-bootstrap-icons'
+import { VerifiedUser, BarChart, ThumbUp} from '@material-ui/icons'
 
 import ExternalLayout from "../components/ExternalLayout";
 
@@ -65,14 +65,14 @@ function Home() {
         <Container>
           <Row>
             <Media>
-              <HandThumbsUp style={iconStyle} />
+              <ThumbUp style={iconStyle} />
               <Media.Body>
                 <h5>Easy to Use</h5>
                 <p> Increases teaching time by automating attendance in every classroom and decreasing teacher responsibilities. </p>
               </Media.Body>
             </Media>
             <Media>
-              <Shield style={iconStyle} />
+              <VerifiedUser style={iconStyle} />
               <Media.Body>
                 <h5>Secure Campus</h5>
                 <p> Ensures schoolwide safety by recording student entrances and exits and preventing chronic absenteeism in integrated classrooms. </p>

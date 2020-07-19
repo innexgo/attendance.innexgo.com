@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Icon, Gear, House, BoxArrowRight, BarChart, Search, People, LayoutSidebar } from 'react-bootstrap-icons';
+import { SvgIconComponent, Settings, Home, ExitToApp, BarChart, Search, People, Menu} from '@material-ui/icons';
 
 // Bootstrap CSS & Js
 import '../style/dashboard.scss';
@@ -9,7 +9,7 @@ import 'popper.js/dist/popper.js'
 
 interface SidebarEntryProps {
   label: string,
-  icon: Icon,
+  icon: SvgIconComponent,
   href: string,
   collapsed: boolean,
 }
@@ -19,8 +19,8 @@ function SidebarEntry(props: React.PropsWithChildren<SidebarEntryProps>) {
   }
 
   const iconStyle = {
-    width: "3rem",
-    height: "3rem",
+    width: "2rem",
+    height: "2rem",
     display: "inline-block",
     borderRadius: "0.5rem",
     padding: "0.2rem",
@@ -96,13 +96,13 @@ class DashboardLayout extends React.Component<DashboardHeaderProps, DashboardHea
           <button type="button" className="btn btn-light" onClick={this.toggleSidebar}>
             Button
 		      </button>
-          <SidebarEntry label="Dashboard" href="/dashboard" collapsed={collapsed} icon={House} />
+          <SidebarEntry label="Dashboard" href="/dashboard" collapsed={collapsed} icon={Home} />
           <SidebarEntry label="Find Student" href="/dashboard" collapsed={collapsed} icon={Search} />
           <SidebarEntry label="My Classes" href="/classes" collapsed={collapsed} icon={People} />
           <SidebarEntry label="Reports" href="/reports" collapsed={collapsed} icon={BarChart} />
           <div style={sidebarBottom}>
-            <SidebarEntry label="Settings" href="/settings" collapsed={collapsed} icon={Gear} />
-            <SidebarEntry label="Log Out" href="/logout" collapsed={collapsed} icon={BoxArrowRight} />
+            <SidebarEntry label="Settings" href="/settings" collapsed={collapsed} icon={Settings} />
+            <SidebarEntry label="Log Out" href="/logout" collapsed={collapsed} icon={ExitToApp} />
           </div>
         </nav>
         <div style={nonSidebarStyle}>
