@@ -64,7 +64,7 @@ class ExternalHeader extends React.Component<ExternalHeaderProps, ExternalHeader
           <div className="container">
             <Link style={linkStyle} className="navbar-brand font-weight-bold" to="/">Innexgo</Link>
             <button className="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent">
-              <Menu />
+              <Menu style={linkStyle}/>
             </button>
             <div className="collapse navbar-collapse"
               id="navbarSupportedContent">
