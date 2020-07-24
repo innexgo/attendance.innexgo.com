@@ -29,7 +29,7 @@
     "react-scripts": "3.4.1",
     "typeface-exo": "^0.0.61",
     "typeface-ubuntu": "^0.0.65",
-    "typescript": "~3.7.2"
+    "typescript": "^3.7.2"
   },
   "scripts": {
     "start": "react-scripts start",
