@@ -16,7 +16,9 @@ function Utility(props: React.PropsWithChildren<UtilityProps>) {
           overlay={props.overlay}
           placement="auto"
         >
-          <button type="button" className="btn btn-sm"><Help /></button>
+          <button type="button" className="btn btn-sm">
+            <Help />
+          </button>
         </OverlayTrigger>
       </div>
       {props.children}

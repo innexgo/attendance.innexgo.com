@@ -1,5 +1,14 @@
 declare module '*.png'
 
+type Location = {
+	id: number,
+	name: string
+}
+
+type UserPreferences = {
+
+}
+
 enum UserRing {
   Administrator = 0,
   Teacher = 1,
@@ -18,4 +27,9 @@ type ApiKey = {
   expirationTime:number,
   key:string,
   user:User,
+}
+
+interface AuthenticatedComponentProps {
+	apiKey: ApiKey
+  setApiKey: (data:ApiKey|null)=>void
 }

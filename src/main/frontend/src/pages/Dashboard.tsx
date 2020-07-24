@@ -3,8 +3,7 @@ import DashboardLayout from '../components/DashboardLayout';
 import Utility from '../components/Utility';
 import { Container, Popover, CardDeck } from 'react-bootstrap';
 
-
-function Dashboard() {
+function Dashboard(props:AuthenticatedComponentProps) {
 
   const informationTooltip = (<Popover id="information-tooltip"> When you're not teaching a class, your current classroom is unknown.
   	This means that the system doesn't know which classroom to display data for.
@@ -14,11 +13,11 @@ function Dashboard() {
   </Popover>);
 
   return (
-    <DashboardLayout>
-      <Container className="my-3 mx-3">
+    <DashboardLayout {...props} >
+      <Container fluid className="py-3 px-3">
         <CardDeck>
-        	<Utility title="Information" overlay={informationTooltip}>
-        		<p>hi</p>
+        	<Utility title={`Welcome, ${props.apiKey.user.name}`} overlay={informationTooltip}>
+
         	</Utility>
         </CardDeck>
       </Container>

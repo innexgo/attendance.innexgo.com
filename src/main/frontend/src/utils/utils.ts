@@ -24,4 +24,3 @@ export function staticUrl() {
 export function apiUrl() {
   return staticUrl() + '/api';
 }
-

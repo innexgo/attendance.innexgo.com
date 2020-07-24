@@ -7,10 +7,10 @@ import '../style/dashboard.scss';
 import 'bootstrap/dist/js/bootstrap.js'
 import 'popper.js/dist/popper.js'
 
-  const iconStyle = {
-    width: "2rem",
-    height: "2rem",
-  };
+const iconStyle = {
+  width: "2rem",
+  height: "2rem",
+};
 
 interface SidebarEntryProps {
   label: string,
@@ -19,11 +19,10 @@ interface SidebarEntryProps {
   collapsed: boolean,
 }
 
-function SidebarEntry(props: React.PropsWithChildren<SidebarEntryProps>) {
+function SidebarEntry(props: SidebarEntryProps) {
   const style = {
     color: "#fff"
   }
-
 
   const Icon = props.icon;
   if (props.collapsed) {
@@ -37,16 +36,13 @@ function SidebarEntry(props: React.PropsWithChildren<SidebarEntryProps>) {
   }
 }
 
-interface DashboardHeaderProps {
-}
-
 interface DashboardHeaderState {
   sidebarCollapsed: boolean;
 }
 
-class DashboardLayout extends React.Component<DashboardHeaderProps, DashboardHeaderState> {
+class DashboardLayout extends React.Component<AuthenticatedComponentProps, DashboardHeaderState> {
 
-  constructor(props: DashboardHeaderProps) {
+  constructor(props: AuthenticatedComponentProps) {
     super(props);
     this.state = {
       sidebarCollapsed: true
@@ -58,7 +54,6 @@ class DashboardLayout extends React.Component<DashboardHeaderProps, DashboardHea
   }
 
   render() {
-
 
     const collapsed = this.state.sidebarCollapsed;
 
@@ -89,19 +84,32 @@ class DashboardLayout extends React.Component<DashboardHeaderProps, DashboardHea
     return (
       <div>
         <nav className="bg-dark text-light" style={sidebarStyle}>
-					<div>
+          <div>
             <button type="button" className="btn btn-lg text-light float-right" onClick={this.toggleSidebar}>
-              <Menu style={iconStyle}/>
+              <Menu style={iconStyle} />
             </button>
           </div>
-
+          {
+            collapsed
+              ? ""
+              : <div className="nav-item nav-link mx-auto my-3">
+                	<h6>{this.props.apiKey.user.name}</h6>
+              	</div>
+          }
           <SidebarEntry label="Dashboard" href="/dashboard" collapsed={collapsed} icon={Home} />
           <SidebarEntry label="Find Student" href="/findstudent" collapsed={collapsed} icon={Search} />
           <SidebarEntry label="My Classes" href="/classes" collapsed={collapsed} icon={People} />
           <SidebarEntry label="Reports" href="/reports" collapsed={collapsed} icon={BarChart} />
           <div style={sidebarBottom}>
             <SidebarEntry label="Settings" href="/settings" collapsed={collapsed} icon={Settings} />
-            <SidebarEntry label="Log Out" href="/logout" collapsed={collapsed} icon={ExitToApp} />
+            <button
+              style={{ color: "#fff" }}
+              type="button"
+              className="btn nav-item nav-link"
+              onClick={() => this.props.setApiKey(null)}
+            >
+              <ExitToApp style={iconStyle} /> {collapsed ? "" : "Log Out"}
+            </button>
           </div>
         </nav>
         <div style={nonSidebarStyle}>
