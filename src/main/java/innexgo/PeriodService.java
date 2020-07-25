@@ -32,14 +32,14 @@ public class PeriodService {
   @Autowired private JdbcTemplate jdbcTemplate;
 
   public Period getByStartTime(long startTime) {
-    String sql = "SELECT start_time, number, type, temp FROM period WHERE start_time=?";
+    String sql = "SELECT start_time, numbering, kind, temp FROM period WHERE start_time=?";
     RowMapper<Period> rowMapper = new PeriodRowMapper();
     Period period = jdbcTemplate.queryForObject(sql, rowMapper, startTime);
     return period;
   }
 
   public List<Period> getAll() {
-    String sql = "SELECT start_time, number, type, temp FROM period";
+    String sql = "SELECT start_time, numbering, kind, temp FROM period";
     RowMapper<Period> rowMapper = new PeriodRowMapper();
     return this.jdbcTemplate.query(sql, rowMapper);
   }
@@ -47,19 +47,19 @@ public class PeriodService {
   public void add(Period period) {
     // Add period
     String sql =
-        "INSERT INTO period (start_time, number, type, temp) values (?, ?, ?, ?)";
+        "INSERT INTO period (start_time, numbering, kind, temp) values (?, ?, ?, ?)";
     jdbcTemplate.update(
-        sql, period.startTime, period.number, period.type.name(), period.temp);
+        sql, period.startTime, period.numbering, period.kind.name(), period.temp);
   }
 
   public void update(Period period) {
     String sql =
-        "UPDATE period SET start_time=?, number=?, type=?, temp=? WHERE start_time=?";
+        "UPDATE period SET start_time=?, numbering=?, kind=?, temp=? WHERE start_time=?";
     jdbcTemplate.update(
         sql,
         period.startTime,
-        period.number,
-        period.type.name(),
+        period.numbering,
+        period.kind.name(),
         period.temp);
   }
 
@@ -90,8 +90,8 @@ public class PeriodService {
   public Period getByTime(long time) {
     List<Period> currentPeriods = query(
       null,          // Long startTime
-      null,          // Long number
-      null,          // String type
+      null,          // Long numbering
+      null,          // String kind
       null,          // Long minStartTime
       time,          // Long maxStartTime
       null,          // Boolean temp
@@ -104,8 +104,8 @@ public class PeriodService {
   public Period getNextByTime(long time) {
     List<Period> currentPeriods = query(
       null, // Long startTime
-      null, // Long number
-      null, // String type
+      null, // Long numbering
+      null, // String kind
       time, // Long minStartTime
       null, // Long maxStartTime
       null, // Boolean temp
@@ -118,19 +118,19 @@ public class PeriodService {
 
   public List<Period> query(
       Long startTime,
-      Long number,
-      PeriodType type,
+      Long numbering,
+      PeriodKind kind,
       Long minStartTime,
       Long maxStartTime,
       Boolean temp,
       long offset,
       long count
     ) {
-    String sql = "SELECT prd.start_time, prd.number, prd.type, prd.temp FROM period prd"
+    String sql = "SELECT prd.start_time, prd.numbering, prd.kind, prd.temp FROM period prd"
             + " WHERE 1=1"
             + (startTime == null ? "" : " AND prd.start_time = " + startTime)
-            + (number == null ? "" : " AND prd.number = " + number)
-            + (type == null ? "" : " AND prd.type = " + Utils.toSQLString(type))
+            + (numbering == null ? "" : " AND prd.numbering = " + numbering)
+            + (kind == null ? "" : " AND prd.kind = " + Utils.toSQLString(kind))
             + (minStartTime == null ? "" : " AND prd.start_time >= " + minStartTime)
             + (maxStartTime == null ? "" : " AND prd.start_time <= " + maxStartTime)
             + (temp == null ? "" : " AND prd.temp = " + temp)

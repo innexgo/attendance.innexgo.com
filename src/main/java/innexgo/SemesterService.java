@@ -32,14 +32,14 @@ public class SemesterService {
   @Autowired private JdbcTemplate jdbcTemplate;
 
   public Semester getByStartTime(long startTime) {
-    String sql = "SELECT start_time, year, type FROM semester WHERE start_time=?";
+    String sql = "SELECT start_time, year, kind FROM semester WHERE start_time=?";
     RowMapper<Semester> rowMapper = new SemesterRowMapper();
     Semester semester = jdbcTemplate.queryForObject(sql, rowMapper, startTime);
     return semester;
   }
 
   public List<Semester> getAll() {
-    String sql = "SELECT start_time, year, type FROM semester";
+    String sql = "SELECT start_time, year, kind FROM semester";
     RowMapper<Semester> rowMapper = new SemesterRowMapper();
     return this.jdbcTemplate.query(sql, rowMapper);
   }
@@ -47,19 +47,19 @@ public class SemesterService {
   public void add(Semester semester) {
     // Add semester
     String sql =
-        "INSERT INTO semester (start_time, year, type) values (?, ?, ?)";
+        "INSERT INTO semester (start_time, year, kind) values (?, ?, ?)";
     jdbcTemplate.update(
-        sql, semester.startTime, semester.year, semester.type.name());
+        sql, semester.startTime, semester.year, semester.kind.name());
   }
 
   public void update(Semester semester) {
     String sql =
-        "UPDATE semester SET start_time=?, year=?, type=? WHERE start_time=?";
+        "UPDATE semester SET start_time=?, year=?, kind=? WHERE start_time=?";
     jdbcTemplate.update(
         sql,
         semester.startTime,
         semester.year,
-        semester.type.name(),
+        semester.kind.name(),
         semester.startTime);
   }
 
@@ -90,7 +90,7 @@ public class SemesterService {
     List<Semester> currentSemesters =  query(
       null,          // Long startTime
       null,          // Long year
-      null,          // Long type
+      null,          // Long kind
       null,          // Long minStartTime
       time,          // Long maxStartTime
       0,             // long offset
@@ -105,18 +105,18 @@ public class SemesterService {
   public List<Semester> query(
       Long startTime,
       Long year,
-      SemesterType type,
+      SemesterKind kind,
       Long minStartTime,
       Long maxStartTime,
       long offset,
       long count
       ) {
 
-    String sql = "SELECT se.start_time, se.year, se.type FROM semester se"
+    String sql = "SELECT se.start_time, se.year, se.kind FROM semester se"
             + " WHERE 1=1 "
             + (startTime == null ? "" : " AND se.start_time = " + startTime)
             + (year == null ? "" : " AND se.year = " + year)
-            + (type == null ? "" : " AND se.type = " + Utils.toSQLString(type))
+            + (kind == null ? "" : " AND se.kind = " + Utils.toSQLString(kind))
             + (minStartTime == null ? "" : " AND se.start_time >= " + minStartTime)
             + (maxStartTime == null ? "" : " AND se.start_time <= " + maxStartTime)
             + (" ORDER BY se.start_time")

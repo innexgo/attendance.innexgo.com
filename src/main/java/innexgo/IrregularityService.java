@@ -33,7 +33,7 @@ public class IrregularityService {
 
   public Irregularity getById(long id) {
     String sql =
-        "SELECT id, student_id, course_id, period_start_time, type, time, time_missing FROM irregularity WHERE id=?";
+        "SELECT id, student_id, course_id, period_start_time, kind, time, time_missing FROM irregularity WHERE id=?";
     RowMapper<Irregularity> rowMapper = new IrregularityRowMapper();
     Irregularity irregularity = jdbcTemplate.queryForObject(sql, rowMapper, id);
     return irregularity;
@@ -41,7 +41,7 @@ public class IrregularityService {
 
   public List<Irregularity> getAll() {
     String sql =
-        "SELECT id, student_id, course_id, period_start_time, type, time, time_missing FROM irregularity";
+        "SELECT id, student_id, course_id, period_start_time, kind, time, time_missing FROM irregularity";
     RowMapper<Irregularity> rowMapper = new IrregularityRowMapper();
     return this.jdbcTemplate.query(sql, rowMapper);
   }
@@ -50,20 +50,20 @@ public class IrregularityService {
 
     // Add irregularity
     String sql =
-        "INSERT INTO irregularity (id, student_id, course_id, period_start_time, type, time, time_missing) values (?, ?, ?, ?, ?, ?, ?)";
+        "INSERT INTO irregularity (id, student_id, course_id, period_start_time, kind, time, time_missing) values (?, ?, ?, ?, ?, ?, ?)";
     jdbcTemplate.update(
         sql,
         irregularity.id,
         irregularity.studentId,
         irregularity.courseId,
         irregularity.periodStartTime,
-        irregularity.type.name(),
+        irregularity.kind.name(),
         irregularity.time,
         irregularity.timeMissing);
 
     // Fetch irregularity id
     sql =
-        "SELECT id FROM irregularity WHERE student_id=? AND course_id=? AND period_start_time=? AND type=? AND time=? AND time_missing=?";
+        "SELECT id FROM irregularity WHERE student_id=? AND course_id=? AND period_start_time=? AND kind=? AND time=? AND time_missing=?";
     long id =
         jdbcTemplate.queryForObject(
             sql,
@@ -71,7 +71,7 @@ public class IrregularityService {
             irregularity.studentId,
             irregularity.courseId,
             irregularity.periodStartTime,
-            irregularity.type.name(),
+            irregularity.kind.name(),
             irregularity.time,
             irregularity.timeMissing);
 
@@ -81,14 +81,14 @@ public class IrregularityService {
 
   public void update(Irregularity irregularity) {
     String sql =
-        "UPDATE irregularity SET id=?, student_id=?, course_id=?, period_start_time=?, type=?, time=?, time_missing=? WHERE id=?";
+        "UPDATE irregularity SET id=?, student_id=?, course_id=?, period_start_time=?, kind=?, time=?, time_missing=? WHERE id=?";
     jdbcTemplate.update(
         sql,
         irregularity.id,
         irregularity.studentId,
         irregularity.courseId,
         irregularity.periodStartTime,
-        irregularity.type.name(),
+        irregularity.kind.name(),
         irregularity.time,
         irregularity.timeMissing,
         irregularity.id);
@@ -113,14 +113,14 @@ public class IrregularityService {
       Long courseId,
       Long periodStartTime,
       Long teacherId,
-      IrregularityType type,
+      IrregularityKind kind,
       Long time,
       Long minTime,
       Long maxTime,
       long offset,
       long count) {
     String sql =
-        "SELECT irr.id, irr.student_id, irr.course_id, irr.period_start_time, irr.type, irr.time, irr.time_missing"
+        "SELECT irr.id, irr.student_id, irr.course_id, irr.period_start_time, irr.kind, irr.time, irr.time_missing"
             + " FROM irregularity irr"
             + (teacherId == null ? "" : " JOIN course crs ON crs.id = irr.course_id")
             + " WHERE 1=1 "
@@ -129,7 +129,7 @@ public class IrregularityService {
             + (courseId == null ? "" : " AND irr.course_id = " + courseId)
             + (periodStartTime == null ? "" : " AND irr.period_start_time = " + periodStartTime)
             + (teacherId == null ? "" : " AND crs.teacher_id = " + teacherId)
-            + (type == null ? "" : " AND irr.type = " + Utils.toSQLString(type))
+            + (kind == null ? "" : " AND irr.kind = " + Utils.toSQLString(kind))
             + (time == null ? "" : " AND irr.time = " + time)
             + (minTime == null ? "" : " AND irr.time >= " + minTime)
             + (maxTime == null ? "" : " AND irr.time <= " + maxTime)

@@ -173,9 +173,9 @@ public class ApiController {
     encounter.locationId = locationId;
     encounter.studentId = studentId;
     encounter.time = System.currentTimeMillis();
-    encounter.type = manual
-      ? EncounterType.MANUAL
-      : EncounterType.DEFAULT;
+    encounter.kind = manual
+      ? EncounterKind.MANUAL
+      : EncounterKind.DEFAULT;
     encounterService.add(encounter);
     return new ResponseEntity<>(innexgoService.fillEncounter(encounter), HttpStatus.OK);
   }
@@ -264,19 +264,19 @@ public class ApiController {
   @RequestMapping("/period/new/")
   public ResponseEntity<?> newPeriod(
       @RequestParam("periodStartTime") Long startTime,
-      @RequestParam("periodNumber") Long number,
-      @RequestParam("periodType") String type,
+      @RequestParam("periodNumbering") Long numbering,
+      @RequestParam("periodKind") String kind,
       @RequestParam("apiKey") String apiKey) {
     if (!innexgoService.isAdministrator(apiKey)) {
       return Errors.MUST_BE_ADMIN.getResponse();
     }
-    if(!PeriodType.contains(type)) {
-      return Errors.INVALID_PERIOD_TYPE.getResponse();
+    if(!PeriodKind.contains(kind)) {
+      return Errors.INVALID_PERIOD_KIND.getResponse();
     }
     Period pr = new Period();
     pr.startTime = startTime;
-    pr.number = number;
-    pr.type = PeriodType.valueOf(type);
+    pr.numbering = numbering;
+    pr.kind = PeriodKind.valueOf(kind);
     periodService.add(pr);
     innexgoService.restartInsertAbsences();
     return new ResponseEntity<>(innexgoService.fillPeriod(pr), HttpStatus.OK);
@@ -510,13 +510,13 @@ public class ApiController {
       return Errors.MUST_BE_USER.getResponse();
     }
 
-    EncounterType type = null;
-    if(allRequestParam.containsKey("encounterType")) {
-      String encounterTypeStr = allRequestParam.get("encounterType");
-      if(EncounterType.contains(encounterTypeStr)) {
-        type = EncounterType.valueOf(encounterTypeStr);
+    EncounterKind kind = null;
+    if(allRequestParam.containsKey("encounterKind")) {
+      String encounterKindStr = allRequestParam.get("encounterKind");
+      if(EncounterKind.contains(encounterKindStr)) {
+        kind = EncounterKind.valueOf(encounterKindStr);
       } else {
-        return Errors.INVALID_ENCOUNTER_TYPE.getResponse();
+        return Errors.INVALID_ENCOUNTER_KIND.getResponse();
       }
     }
 
@@ -527,7 +527,7 @@ public class ApiController {
           Utils.parseLong(allRequestParam.get("locationId")),
           Utils.parseLong(allRequestParam.get("encounterMinTime")),
           Utils.parseLong(allRequestParam.get("encounterMaxTime")),
-          type,
+          kind,
           offset,
           count
         )
@@ -573,13 +573,13 @@ public class ApiController {
       return Errors.MUST_BE_USER.getResponse();
     }
 
-    IrregularityType type = null;
-    if(allRequestParam.containsKey("irregularityType")) {
-      String irregularityTypeStr = allRequestParam.get("irregularityType");
-      if(IrregularityType.contains(irregularityTypeStr)) {
-        type = IrregularityType.valueOf(irregularityTypeStr);
+    IrregularityKind kind = null;
+    if(allRequestParam.containsKey("irregularityKind")) {
+      String irregularityKindStr = allRequestParam.get("irregularityKind");
+      if(IrregularityKind.contains(irregularityKindStr)) {
+        kind = IrregularityKind.valueOf(irregularityKindStr);
       } else {
-        return Errors.INVALID_IRREGULARITY_TYPE.getResponse();
+        return Errors.INVALID_IRREGULARITY_KIND.getResponse();
       }
     }
     List<Irregularity> els =
@@ -590,7 +590,7 @@ public class ApiController {
           Utils.parseLong(allRequestParam.get("courseId")),
           Utils.parseLong(allRequestParam.get("periodStartTime")),
           Utils.parseLong(allRequestParam.get("userId")),
-          type,
+          kind,
           Utils.parseLong(allRequestParam.get("irregularityTime")),
           Utils.parseLong(allRequestParam.get("irregularityMinTime")),
           Utils.parseLong(allRequestParam.get("irregularityMaxTime")),
@@ -660,13 +660,13 @@ public class ApiController {
     if (!innexgoService.isTrusted(apiKey)) {
       return Errors.MUST_BE_USER.getResponse();
     }
-    PeriodType type = null;
-    if(allRequestParam.containsKey("periodType")) {
-      String periodTypeStr = allRequestParam.get("periodType");
-      if(PeriodType.contains(periodTypeStr)) {
-        type = PeriodType.valueOf(periodTypeStr);
+    PeriodKind kind = null;
+    if(allRequestParam.containsKey("periodKind")) {
+      String periodKindStr = allRequestParam.get("periodKind");
+      if(PeriodKind.contains(periodKindStr)) {
+        kind = PeriodKind.valueOf(periodKindStr);
       } else {
-        return Errors.INVALID_PERIOD_TYPE.getResponse();
+        return Errors.INVALID_PERIOD_KIND.getResponse();
       }
     }
     List<Period> els =
@@ -674,7 +674,7 @@ public class ApiController {
       .query(
           Utils.parseLong(allRequestParam.get("periodStartTime")),
           Utils.parseLong(allRequestParam.get("periodNumber")),
-          type,
+          kind,
           Utils.parseLong(allRequestParam.get("minPeriodStartTime")),
           Utils.parseLong(allRequestParam.get("maxPeriodStartTime")),
           Utils.parseBoolean(allRequestParam.get("periodTemp")),
@@ -727,13 +727,13 @@ public class ApiController {
       return Errors.MUST_BE_USER.getResponse();
     }
 
-    SemesterType type = null;
-    if(allRequestParam.containsKey("semesterType")) {
-      String semesterTypeStr = allRequestParam.get("semesterType");
-      if(SemesterType.contains(semesterTypeStr)) {
-        type = SemesterType.valueOf(semesterTypeStr);
+    SemesterKind kind = null;
+    if(allRequestParam.containsKey("semesterKind")) {
+      String semesterKindStr = allRequestParam.get("semesterKind");
+      if(SemesterKind.contains(semesterKindStr)) {
+        kind = SemesterKind.valueOf(semesterKindStr);
       } else {
-        return Errors.INVALID_SEMESTER_TYPE.getResponse();
+        return Errors.INVALID_SEMESTER_KIND.getResponse();
       }
     }
 
@@ -742,7 +742,7 @@ public class ApiController {
       .query(
           Utils.parseLong(allRequestParam.get("semesterStartTime")),
           Utils.parseLong(allRequestParam.get("semesterYear")),
-          type,
+          kind,
           Utils.parseLong(allRequestParam.get("minSemesterStartTime")),
           Utils.parseLong(allRequestParam.get("maxSemesterStartTime")),
           offset,

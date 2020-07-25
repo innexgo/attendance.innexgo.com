@@ -5,8 +5,31 @@ type Location = {
 	name: string
 }
 
-type UserPreferences = {
+type Course = {
+  id:number,
+	teacher:User
+	location:Location,
+	period:number,
+	subject:string
+}
 
+enum PeriodKind {
+  PASSING,
+  CLASS,
+  BREAK,
+  LUNCH,
+  TUTORIAL,
+  NONE,
+}
+
+type Period = {
+	startTime:number,
+	numbering:number
+	kind:PeriodKind
+}
+
+type UserPreferences = {
+	defaultLocation:Location
 }
 
 enum UserRing {

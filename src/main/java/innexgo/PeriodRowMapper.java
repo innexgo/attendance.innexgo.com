@@ -28,8 +28,8 @@ public class PeriodRowMapper implements RowMapper<Period> {
   public Period mapRow(ResultSet row, int rowNum) throws SQLException {
     Period period = new Period();
     period.startTime = row.getLong("start_time");
-    period.number = row.getLong("number");
-    period.type = PeriodType.valueOf(row.getString("type"));
+    period.numbering = row.getLong("numbering");
+    period.kind = PeriodKind.valueOf(row.getString("kind"));
     period.temp = row.getBoolean("temp");
     return period;
   }

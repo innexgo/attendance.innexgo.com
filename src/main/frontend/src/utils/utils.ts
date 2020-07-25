@@ -24,3 +24,7 @@ export function staticUrl() {
 export function apiUrl() {
   return staticUrl() + '/api';
 }
+
+export async function fetchApi(url:string, params={}) {
+	return await fetchJson(`${apiUrl()}/${url}`, params);
+}

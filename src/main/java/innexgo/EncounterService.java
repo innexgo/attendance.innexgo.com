@@ -32,23 +32,23 @@ public class EncounterService {
   @Autowired private JdbcTemplate jdbcTemplate;
 
   public Encounter getById(long id) {
-    String sql = "SELECT id, time, location_id, student_id, type FROM encounter WHERE id=?";
+    String sql = "SELECT id, time, location_id, student_id, kind FROM encounter WHERE id=?";
     RowMapper<Encounter> rowMapper = new EncounterRowMapper();
     Encounter encounter = jdbcTemplate.queryForObject(sql, rowMapper, id);
     return encounter;
   }
 
   public List<Encounter> getAll() {
-    String sql = "SELECT id, time, location_id, student_id, type FROM encounter";
+    String sql = "SELECT id, time, location_id, student_id, kind FROM encounter";
     RowMapper<Encounter> rowMapper = new EncounterRowMapper();
     return this.jdbcTemplate.query(sql, rowMapper);
   }
 
   public void add(Encounter encounter) {
     // Add encounter
-    String sql = "INSERT INTO encounter(id, time, location_id, student_id, type) values (?, ?, ?, ?, ?)";
+    String sql = "INSERT INTO encounter(id, time, location_id, student_id, kind) values (?, ?, ?, ?, ?)";
     jdbcTemplate.update(
-        sql, encounter.id, encounter.time, encounter.locationId, encounter.studentId, encounter.type.name());
+        sql, encounter.id, encounter.time, encounter.locationId, encounter.studentId, encounter.kind.name());
 
     // Fetch encounter id
     sql = "SELECT id FROM encounter WHERE time=? AND location_id=? AND student_id=?";
@@ -59,9 +59,9 @@ public class EncounterService {
   }
 
   public void update(Encounter encounter) {
-    String sql = "UPDATE encounter SET id=?, time=?, location_id=?, student_id=?, type=? WHERE id=?";
+    String sql = "UPDATE encounter SET id=?, time=?, location_id=?, student_id=?, kind=? WHERE id=?";
     jdbcTemplate.update(
-        sql, encounter.id, encounter.time, encounter.locationId, encounter.studentId, encounter.type.name(), encounter.id);
+        sql, encounter.id, encounter.time, encounter.locationId, encounter.studentId, encounter.kind.name(), encounter.id);
   }
 
   public Encounter delete(long id) {
@@ -83,7 +83,7 @@ public class EncounterService {
       Long locationId,
       Long minTime,
       Long maxTime,
-      EncounterType type,
+      EncounterKind kind,
       long offset,
       long count
       ) {
@@ -94,7 +94,7 @@ public class EncounterService {
             + (encounterId == null ? "" : " AND e.id=" + encounterId)
             + (studentId == null ? "" : " AND e.student_id=" + studentId)
             + (locationId == null ? "" : " AND e.location_id=" + locationId)
-            + (type == null ? "" : " AND e.type=" + Utils.toSQLString(type))
+            + (kind == null ? "" : " AND e.kind=" + Utils.toSQLString(kind))
             + (minTime == null ? "" : " AND e.time >= " + minTime)
             + (maxTime == null ? "" : " AND e.time <= " + maxTime)
             + (" ORDER BY e.id")

@@ -29,7 +29,7 @@ public class SemesterRowMapper implements RowMapper<Semester> {
     Semester semester = new Semester();
     semester.startTime = row.getLong("start_time");
     semester.year = row.getLong("year");
-    semester.type = SemesterType.valueOf(row.getString("type"));
+    semester.kind = SemesterKind.valueOf(row.getString("kind"));
     return semester;
   }
 }

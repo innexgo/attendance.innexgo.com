@@ -30,7 +30,7 @@ public class EncounterRowMapper implements RowMapper<Encounter> {
     encounter.time = row.getLong("time");
     encounter.locationId = row.getLong("location_id");
     encounter.studentId = row.getLong("student_id");
-    encounter.type = EncounterType.valueOf(row.getString("type"));
+    encounter.kind = EncounterKind.valueOf(row.getString("kind"));
     return encounter;
   }
 }

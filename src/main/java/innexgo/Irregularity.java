@@ -23,7 +23,7 @@ public class Irregularity {
   long studentId;
   long courseId;
   long periodStartTime;
-  public IrregularityType type;
+  public IrregularityKind kind;
   public long time;
   public long timeMissing;
 
@@ -33,7 +33,7 @@ public class Irregularity {
   public Period period;
 }
 
-enum IrregularityType {
+enum IrregularityKind {
   ABSENT,
   TARDY,
   LEAVE_NORETURN,
@@ -41,8 +41,8 @@ enum IrregularityType {
   FORGOT_SIGN_OUT;
 
   public static boolean contains(String str) {
-    for(IrregularityType irregularityType : IrregularityType.values()) {
-      if(irregularityType.name().equals(str)) {
+    for(IrregularityKind irregularityKind : IrregularityKind.values()) {
+      if(irregularityKind.name().equals(str)) {
         return true;
       }
     }

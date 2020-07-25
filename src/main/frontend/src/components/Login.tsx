@@ -3,7 +3,7 @@ import { Button, Card, Form } from 'react-bootstrap'
 import moment from 'moment';
 
 import ExternalLayout from '../components/ExternalLayout';
-import { apiUrl, fetchJson } from '../utils/utils';
+import { fetchApi } from '../utils/utils';
 
 import innexgo_logo from '../img/innexgo_logo_dark.png';
 
@@ -13,7 +13,7 @@ interface LoginProps {
   setApiKey: (data: ApiKey | null) => void
 }
 
-function Login({setApiKey}:LoginProps) {
+function Login({ setApiKey }: LoginProps) {
   const bgStyle = {
     backgroundImage: `radial-gradient(rgba(0, 0, 0, 0.9),rgba(0, 0, 0, 0.1)), url(${blurred_bg})`,
     height: "100vh",
@@ -36,7 +36,11 @@ function Login({setApiKey}:LoginProps) {
   async function postLogin() {
     const apiKeyExpirationTime = moment().add(30, 'hours').valueOf();
     try {
-      const apiKey = await fetchJson(`${apiUrl()}/apiKey/new/?userEmail=${userName}&userPassword=${password}&expirationTime=${apiKeyExpirationTime}`) as ApiKey;
+      const apiKey = await fetchApi(`apiKey/new/?` + new URLSearchParams([
+        ['userEmail', userName],
+        ['userPassword', password],
+        ['expirationTime', `${apiKeyExpirationTime}`],
+      ])) as ApiKey;
       setApiKey(apiKey);
     } catch (e) {
       console.log(e);

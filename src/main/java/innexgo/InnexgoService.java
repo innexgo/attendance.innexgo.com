@@ -3,7 +3,6 @@ package innexgo;
 import java.time.Duration;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -288,7 +287,7 @@ public class InnexgoService {
       outEncounter.locationId = inEncounter.locationId;
       outEncounter.studentId = inEncounter.studentId;
       outEncounter.time = currentTime;
-      outEncounter.type = EncounterType.VIRTUAL;
+      outEncounter.kind = EncounterKind.VIRTUAL;
       encounterService.add(outEncounter);
 
       // now close session
@@ -302,8 +301,8 @@ public class InnexgoService {
       List<Period> intersectedPeriods =
         periodService.query(
             null,                                                // Long startTime
-            null,                                                // Long number
-            PeriodType.CLASS,                                    // String type
+            null,                                                // Long numbering
+            PeriodKind.CLASS,                                    // String kind
             periodService.getByTime(inEncounter.time).startTime, // Long minStartTime
             outEncounter.time,                                   // Long maxStartTime
             null,                                                // Boolean temp
@@ -318,7 +317,7 @@ public class InnexgoService {
             null,                                   // Long teacherId,
             inEncounter.locationId,                 // Long locationId,
             null,                                   // Long studentId,
-            irregPeriod.number,                     // Long periodNumber,
+            irregPeriod.numbering,                     // Long periodNumber,
             null,                                   // String subject,
             semesterService.getCurrent().startTime, // Long semesterStartTime,
             0,                                      // long offset,
@@ -330,7 +329,7 @@ public class InnexgoService {
           forgotToSignOut.studentId = inEncounter.studentId;
           forgotToSignOut.courseId = irregCourse.id;
           forgotToSignOut.periodStartTime = irregPeriod.startTime;
-          forgotToSignOut.type = IrregularityType.FORGOT_SIGN_OUT;
+          forgotToSignOut.kind = IrregularityKind.FORGOT_SIGN_OUT;
           forgotToSignOut.time = currentTime;
           forgotToSignOut.timeMissing = 0;
           irregularityService.add(forgotToSignOut);
@@ -361,8 +360,8 @@ public class InnexgoService {
     List<Period> periodList =
       periodService.query(
           null,                       // Long startTime,
-          null,                       // Long number,
-          null,                       // String type,
+          null,                       // Long numbering,
+          null,                       // String kind,
           System.currentTimeMillis(), // Long minStartTime,
           null,                        // Long maxStartTime,
           null,                        // Boolean temp
@@ -411,7 +410,7 @@ public class InnexgoService {
             course.id,                //  Long courseId
             periodStartTime,          //  Long periodStartTime
             null,                     //  Long teacherId
-            IrregularityType.ABSENT, //  String type
+            IrregularityKind.ABSENT, //  String kind
             null,                     //  Long time
             null,                     //  Long minTime
             null,                     //  Long maxTime
@@ -424,7 +423,7 @@ public class InnexgoService {
           irregularity.studentId = student.id;
           irregularity.courseId = course.id;
           irregularity.periodStartTime = periodStartTime;
-          irregularity.type = IrregularityType.ABSENT;
+          irregularity.kind = IrregularityKind.ABSENT;
           irregularity.time = periodStartTime;
           irregularity.timeMissing = periodService
             .getNextByTime(periodStartTime+1)
@@ -449,9 +448,9 @@ public class InnexgoService {
     encounter.locationId = locationId;
     encounter.studentId = student.id;
     encounter.time = System.currentTimeMillis();
-    encounter.type = manual
-      ? EncounterType.MANUAL
-      : EncounterType.DEFAULT;
+    encounter.kind = manual
+      ? EncounterKind.MANUAL
+      : EncounterKind.DEFAULT;
     encounterService.add(encounter);
 
     // if school is currently going on, represents the current period
@@ -464,7 +463,7 @@ public class InnexgoService {
         null, // Long teacherId
         locationId, // Long locationId
         studentId, // Long studentId
-        currentPeriod.number, // Long period
+        currentPeriod.numbering, // Long period
         null, // String subject
         currentSemester.startTime, // Long semesterStartTime
         0, // long offset
@@ -516,7 +515,7 @@ public class InnexgoService {
           irregularity.courseId = currentCourse.id;
           irregularity.periodStartTime = currentPeriod.startTime;
           // if before the period has actually started, make absent instead of left early
-          irregularity.type = IrregularityType.LEAVE_NORETURN;
+          irregularity.kind = IrregularityKind.LEAVE_NORETURN;
           irregularity.time = encounter.time;
           irregularity.timeMissing = periodService
             .getNextByTime(encounter.time)
@@ -533,7 +532,7 @@ public class InnexgoService {
         outEncounter.locationId = inEncounter.locationId;
         outEncounter.studentId = inEncounter.studentId;
         outEncounter.time = encounter.time;
-        outEncounter.type = EncounterType.VIRTUAL;
+        outEncounter.kind = EncounterKind.VIRTUAL;
         encounterService.add(outEncounter);
 
         // now close session
@@ -548,8 +547,8 @@ public class InnexgoService {
         List<Period> intersectedPeriods =
           periodService.query(
               null,                                                // Long startTime
-              null,                                                // Long number
-              PeriodType.CLASS,                                    // String type
+              null,                                                // Long numbering
+              PeriodKind.CLASS,                                    // String kind
               periodService.getByTime(encounter.time).startTime,   // Long minStartTime
               outEncounter.time,                                   // Long maxStartTime
               null,                                                // Boolean temp
@@ -574,7 +573,7 @@ public class InnexgoService {
           forgotToSignOut.studentId = inEncounter.studentId;
           forgotToSignOut.courseId = irregCourse.id;
           forgotToSignOut.periodStartTime = irregPeriod.startTime;
-          forgotToSignOut.type = IrregularityType.FORGOT_SIGN_OUT;
+          forgotToSignOut.kind = IrregularityKind.FORGOT_SIGN_OUT;
           forgotToSignOut.time = irregPeriod.startTime;
           forgotToSignOut.timeMissing = 0;
           irregularityService.add(forgotToSignOut);
@@ -603,7 +602,7 @@ public class InnexgoService {
               currentCourse.id,        //  Long courseId
               currentPeriod.startTime, //  Long periodStartTime
               null,                    //  Long teacherId
-              null,                    //  String type
+              null,                    //  String kind
               null,                    //  Long time
               null,                    //  Long minTime
               null,                    //  Long maxTime
@@ -612,10 +611,10 @@ public class InnexgoService {
               );
 
         for (Irregularity irregularity : irregularities) {
-          if (irregularity.type.equals(IrregularityType.ABSENT)) {
+          if (irregularity.kind.equals(IrregularityKind.ABSENT)) {
             // if there is absence, convert it to a tardy or delete it
             if (System.currentTimeMillis() > currentPeriod.startTime) {
-              irregularity.type = IrregularityType.TARDY;
+              irregularity.kind = IrregularityKind.TARDY;
               irregularity.timeMissing = encounter.time - currentPeriod.startTime;
               irregularity.time = encounter.time;
               irregularityService.update(irregularity);
@@ -623,9 +622,9 @@ public class InnexgoService {
               // if they're present before the startTime
               irregularityService.deleteById(irregularity.id);
             }
-          } else if (irregularity.type.equals(IrregularityType.LEAVE_NORETURN)) {
+          } else if (irregularity.kind.equals(IrregularityKind.LEAVE_NORETURN)) {
             // if there is a leftEarly, convert it to a leftTemporarily
-            irregularity.type = IrregularityType.LEAVE_RETURN;
+            irregularity.kind = IrregularityKind.LEAVE_RETURN;
             irregularity.timeMissing = encounter.time - irregularity.time;
             irregularityService.update(irregularity);
           }

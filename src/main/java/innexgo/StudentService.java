@@ -122,7 +122,7 @@ public class StudentService {
     Period period = periodService.getByTime(time);
 
     // Do some sanity checks to ensure that the time's period is the same period as the course
-    if(period.number != course.period) {
+    if(period.numbering != course.period) {
       // empty list return
       return new ArrayList<Student>();
     }

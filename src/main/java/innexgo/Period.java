@@ -22,13 +22,13 @@ public class Period {
 
   // Primary Index is startTime
   public long startTime;
-  public long number;
-  public PeriodType type; // Must be from PeriodType
+  public long numbering;
+  public PeriodKind kind; // Must be from PeriodKind
   // If it's a test. (For testing purposes)
   boolean temp;
 }
 
-enum PeriodType {
+enum PeriodKind {
   PASSING,
   CLASS,
   BREAK,
@@ -37,8 +37,8 @@ enum PeriodType {
   NONE;
 
   public static boolean contains(String str) {
-    for(PeriodType periodType : PeriodType.values()) {
-      if(periodType.name().equals(str)) {
+    for(PeriodKind periodKind : PeriodKind.values()) {
+      if(periodKind.name().equals(str)) {
         return true;
       }
     }

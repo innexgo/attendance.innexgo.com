@@ -21,17 +21,17 @@ package innexgo;
 public class Semester {
   public long startTime;
   public long year;
-  public SemesterType type;
+  public SemesterKind kind;
 }
 
-enum SemesterType {
+enum SemesterKind {
   SUMMER,
   FALL,
   SPRING;
 
   public static boolean contains(String str) {
-    for(SemesterType semesterType : SemesterType.values()) {
-      if(semesterType.name().equals(str)) {
+    for(SemesterKind semesterKind : SemesterKind.values()) {
+      if(semesterKind.name().equals(str)) {
         return true;
       }
     }
