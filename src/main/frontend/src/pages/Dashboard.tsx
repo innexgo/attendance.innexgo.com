@@ -2,13 +2,11 @@ import React from 'react';
 import DashboardLayout from '../components/DashboardLayout';
 import Utility from '../components/Utility';
 import { Container, Popover, CardDeck } from 'react-bootstrap';
-import { Async } from 'react-async'
-import { fetchApi } from '../utils/utils.ts';
+import { Async } from 'react-async';
+import { fetchApi } from '../utils/utils';
 import moment from 'moment';
 
 interface UpcomingClassesProps {
-  // the api key used to validate
-  apiKey: ApiKey,
   // list of courses that will be shown upcoming
   courses: Course[]
   // relevant periods
@@ -94,25 +92,43 @@ function Dashboard(props: AuthenticatedComponentProps) {
     Note that the default location is overriden when there is a course in session.
   </Popover>;
 
-  const foo = async (apiKey:ApiKey) => {
+  const loadData = async (apiKey: ApiKey):Promise<UpcomingClassesProps> => {
+    const semester = await fetchApi("misc/getSemesterByTime/?" + new URLSearchParams([
+      ["time", `${Date.now()}`],
+      ["apiKey", apiKey.key]
+    ])) as Semester;
+
+    const periods = await fetchApi("misc/getPeriodIntersectingTime/?" + new URLSearchParams([
+      ["minStartTime", `${moment().startOf('day').valueOf()}`],
+      ["maxStartTime", `${moment().endOf('day').valueOf()}`],
+      ["apiKey", apiKey.key]
+    ])) as Period[];
+
+    const courses = await fetchApi("course/?" + new URLSearchParams([
+      ["semesterStartTime", `${semester.startTime}`],
+      ["userId", `${apiKey.user.id}`],
+      ["offset", "0"],
+      ["count", "1000"]
+    ])) as Course[];
+
     return {
-        await fetchApi("cour
+      periods,
+      courses,
     }
-  }
+  };
 
   return (
     <DashboardLayout {...props} >
       <Container fluid className="py-3 px-3">
         <CardDeck>
           <Utility title="Welcome" overlay={informationTooltip}>
-            <Async promiseFn={foo} apiKey={props.apiKey}>
+            <Async promise={loadData(props.apiKey)}>
               <Async.Pending>Loading...</Async.Pending>
               <Async.Fulfilled>
-                {data => <UpcomingClasses courses={data.courses} periods={data.periods} />}
+                {data => <UpcomingClasses {...(data as UpcomingClassesProps)} />}
               </Async.Fulfilled>
               <Async.Rejected>{error => `Something went wrong: ${error.message}`}</Async.Rejected>
             </Async>
-            </div>
           </Utility>
         </CardDeck>
       </Container>

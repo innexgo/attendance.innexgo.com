@@ -30,7 +30,7 @@ public class GradeRowMapper implements RowMapper<Grade> {
     grade.id = row.getLong("id");
     grade.studentId = row.getLong("student_id");
     grade.semesterStartTime = row.getLong("semester_start_time");
-    grade.number = row.getLong("number");
+    grade.numbering = row.getLong("numbering");
     return grade;
   }
 }

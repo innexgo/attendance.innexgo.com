@@ -23,7 +23,7 @@ public class Grade {
   long semesterStartTime;
   long studentId;
 
-  public long number;
+  public long numbering;
 
   // for jackson
   public Semester semester;

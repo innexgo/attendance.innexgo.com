@@ -115,6 +115,25 @@ public class PeriodService {
     return (currentPeriods.size() != 0 ? currentPeriods.get(0) : null);
   }
 
+  public List<Period> getIntersectingTime(long minSearchTime, long maxSearchTime) {
+    List<Period> pds = query(
+      null,              // Long startTime,
+      null,              // Long numbering,
+      null,              // PeriodKind kind,
+      minSearchTime,     // Long minStartTime,
+      maxSearchTime,     // Long maxStartTime,
+      null,              // Boolean temp,
+      0,                 // long offset,
+      Integer.MAX_VALUE  // long count
+      );
+
+    Period previous = getByTime(minSearchTime-1);
+    if(pds != null) {
+      pds.add(previous);
+    }
+
+    return pds;
+  }
 
   public List<Period> query(
       Long startTime,

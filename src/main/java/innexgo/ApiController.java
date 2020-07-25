@@ -184,7 +184,7 @@ public class ApiController {
   public ResponseEntity<?> newGrade(
       @RequestParam("studentId") Long studentId,
       @RequestParam("semesterStartTime") Long semesterStartTime,
-      @RequestParam("gradeNumber") Long number,
+      @RequestParam("gradeNumbering") Long number,
       @RequestParam("apiKey") String apiKey) {
     if(!innexgoService.isAdministrator(apiKey)) {
       return Errors.MUST_BE_ADMIN.getResponse();
@@ -199,7 +199,7 @@ public class ApiController {
     Grade grade = new Grade();
     grade.studentId = studentId;
     grade.semesterStartTime = semesterStartTime;
-    grade.number = number;
+    grade.numbering = number;
     gradeService.add(grade);
     return new ResponseEntity<>(innexgoService.fillGrade(grade), HttpStatus.OK);
   }
@@ -888,13 +888,25 @@ public class ApiController {
     return new ResponseEntity<>(periodService.getByTime(time), HttpStatus.OK);
   }
 
-  @RequestMapping("/misc/nextPeriod/")
+  @RequestMapping("/misc/getNextPeriod/")
   public ResponseEntity<?> nextPeriod(@RequestParam("apiKey") String apiKey) {
     if(!innexgoService.isTrusted(apiKey)) {
       return Errors.MUST_BE_USER.getResponse();
     }
     return new ResponseEntity<>(periodService.getNextByTime(System.currentTimeMillis()), HttpStatus.OK);
   }
+
+  @RequestMapping("/misc/getPeriodIntersectingTime/")
+  public ResponseEntity<?> intersectingPeriod(
+      @RequestParam("minStartTime") Long minTime,
+      @RequestParam("maxStartTime") Long maxTime,
+      @RequestParam("apiKey") String apiKey) {
+    if(!innexgoService.isTrusted(apiKey)) {
+      return Errors.MUST_BE_USER.getResponse();
+    }
+    return new ResponseEntity<>(periodService.getIntersectingTime(minTime, maxTime), HttpStatus.OK);
+  }
+
 
   @RequestMapping("/misc/registeredForCourse/")
   public ResponseEntity<?> registeredForCourse(

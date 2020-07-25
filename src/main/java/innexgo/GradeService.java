@@ -32,7 +32,7 @@ public class GradeService {
   @Autowired private JdbcTemplate jdbcTemplate;
 
   public Grade getById(long id) {
-    String sql = "SELECT id, student_id, semester_start_time, number FROM grade WHERE id=?";
+    String sql = "SELECT id, student_id, semester_start_time, numbering FROM grade WHERE id=?";
     RowMapper<Grade> rowMapper = new GradeRowMapper();
     List<Grade> grades = jdbcTemplate.query(sql, rowMapper, id);
     return grades.size() == 0 ? null : grades.get(0);
@@ -40,7 +40,7 @@ public class GradeService {
 
   public Grade getGradeByStudentIdSemesterStartTime(long studentId, long semesterStartTime) {
     String sql =
-        "SELECT id, student_id, semester_start_time, number FROM grade WHERE student_id=? AND semester_start_time=?";
+        "SELECT id, student_id, semester_start_time, numbering FROM grade WHERE student_id=? AND semester_start_time=?";
     RowMapper<Grade> rowMapper = new GradeRowMapper();
     List<Grade> grades = jdbcTemplate.query(sql, rowMapper, studentId, semesterStartTime);
     return grades.size() == 0 ? null : grades.get(0);
@@ -59,7 +59,7 @@ public class GradeService {
   }
 
   public List<Grade> getAll() {
-    String sql = "SELECT id, student_id, semester_start_time, number FROM grade";
+    String sql = "SELECT id, student_id, semester_start_time, numbering FROM grade";
     RowMapper<Grade> rowMapper = new GradeRowMapper();
     return this.jdbcTemplate.query(sql, rowMapper);
   }
@@ -68,12 +68,12 @@ public class GradeService {
     // check if it doesnt exist yet
     if (!existsByStudentIdSemesterStartTime(grade.studentId, grade.semesterStartTime)) {
       // Add grade
-      String sql = "INSERT INTO grade (id, student_id, semester_start_time, number) values (?, ?, ?, ?)";
-      jdbcTemplate.update(sql, grade.id, grade.studentId, grade.semesterStartTime, grade.number);
+      String sql = "INSERT INTO grade (id, student_id, semester_start_time, numbering) values (?, ?, ?, ?)";
+      jdbcTemplate.update(sql, grade.id, grade.studentId, grade.semesterStartTime, grade.numbering);
 
       // Fetch grade id
-      sql = "SELECT id FROM grade WHERE student_id=? AND semester_start_time=? AND number=?";
-      long id = jdbcTemplate.queryForObject(sql, Long.class, grade.studentId, grade.semesterStartTime, grade.number);
+      sql = "SELECT id FROM grade WHERE student_id=? AND semester_start_time=? AND numbering=?";
+      long id = jdbcTemplate.queryForObject(sql, Long.class, grade.studentId, grade.semesterStartTime, grade.numbering);
       grade.id = id;
       return grade;
     } else {
@@ -82,12 +82,12 @@ public class GradeService {
   }
 
   public void update(Grade grade) {
-    String sql = "UPDATE grade SET id=?, student_id=?, semester_start_time=?, number=? WHERE id=?";
-    jdbcTemplate.update(sql, grade.id, grade.studentId, grade.semesterStartTime, grade.number, grade.id);
+    String sql = "UPDATE grade SET id=?, student_id=?, semester_start_time=?, numbering=? WHERE id=?";
+    jdbcTemplate.update(sql, grade.id, grade.studentId, grade.semesterStartTime, grade.numbering, grade.id);
 
     // Fetch grade id
-    sql = "SELECT id FROM grade WHERE student_id=? AND semester_start_time=? AND number=?";
-    long id = jdbcTemplate.queryForObject(sql, Long.class, grade.studentId, grade.semesterStartTime, grade.number);
+    sql = "SELECT id FROM grade WHERE student_id=? AND semester_start_time=? AND numbering=?";
+    long id = jdbcTemplate.queryForObject(sql, Long.class, grade.studentId, grade.semesterStartTime, grade.numbering);
     grade.id = id;
   }
 
@@ -102,16 +102,16 @@ public class GradeService {
       Long gradeId,
       Long studentId,
       Long semesterStartTime,
-      Long number,
+      Long numbering,
       long offset,
       long count) {
     String sql =
-      "SELECT grd.id, grd.student_id, grd.semester_start_time, grd.number FROM grade grd"
+      "SELECT grd.id, grd.student_id, grd.semester_start_time, grd.numbering FROM grade grd"
       + " WHERE 1=1 "
       + (gradeId == null ? "" : " AND grd.id = " + gradeId)
       + (studentId == null ? "" : " AND grd.student_id = " + studentId)
       + (semesterStartTime == null ? "" : " AND grd.semester_start_time = " + semesterStartTime)
-      + (number == null ? "" : " AND grd.number = " + number)
+      + (numbering == null ? "" : " AND grd.numbering = " + numbering)
       + " ORDER BY grd.id"
       + " LIMIT " +offset +", "  + count
       + ";";

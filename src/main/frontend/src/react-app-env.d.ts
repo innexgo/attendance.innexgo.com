@@ -1,5 +1,17 @@
 declare module '*.png'
 
+enum SemesterKind {
+	SUMMER,
+	SPRING,
+	FALL,
+}
+
+type Semester = {
+	startTime:number,
+	year:number,
+	kind:SemesterKind
+}
+
 type Location = {
 	id: number,
 	name: string
