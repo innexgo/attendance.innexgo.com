@@ -1,6 +1,7 @@
 import React from 'react';
 import DashboardLayout from '../components/DashboardLayout';
 import Utility from '../components/Utility';
+import Loader from '../components/Loader';
 import { Container, Popover, CardDeck } from 'react-bootstrap';
 import { Async } from 'react-async';
 import { fetchApi } from '../utils/utils';
@@ -82,6 +83,8 @@ function UpcomingClasses(props: UpcomingClassesProps) {
 }
 
 
+
+
 function Dashboard(props: AuthenticatedComponentProps) {
 
   const informationTooltip = <Popover id="information-tooltip">
@@ -108,7 +111,8 @@ function Dashboard(props: AuthenticatedComponentProps) {
       ["semesterStartTime", `${semester.startTime}`],
       ["userId", `${apiKey.user.id}`],
       ["offset", "0"],
-      ["count", "1000"]
+      ["count", "1000"],
+      ["apiKey", apiKey.key]
     ])) as Course[];
 
     return {
@@ -122,8 +126,8 @@ function Dashboard(props: AuthenticatedComponentProps) {
       <Container fluid className="py-3 px-3">
         <CardDeck>
           <Utility title="Welcome" overlay={informationTooltip}>
-            <Async promise={loadData(props.apiKey)}>
-              <Async.Pending>Loading...</Async.Pending>
+          <Async promise={loadData(props.apiKey)}>
+              <Async.Pending><Loader /></Async.Pending>
               <Async.Fulfilled>
                 {data => <UpcomingClasses {...(data as UpcomingClassesProps)} />}
               </Async.Fulfilled>
