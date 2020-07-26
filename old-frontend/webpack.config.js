@@ -27,7 +27,7 @@ const config = {
     dashboard: './src/js/dashboard.js',
   },
   output: {
-    path: path.resolve(__dirname, '../webapp'),
+    path: path.resolve(__dirname, './build'),
     filename: '[name].bundle.js'
   },
   module: {
