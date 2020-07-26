@@ -28,6 +28,7 @@
 .sidebar-info-list {
   border:none;
   display:block;
+  padding-left: 1.25rem;
 }
 
 #not-sidebar {

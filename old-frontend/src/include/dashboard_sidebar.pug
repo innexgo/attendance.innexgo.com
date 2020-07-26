@@ -1,5 +1,5 @@
 // Sidebar
-nav#sidebar.sidebar-fixed
+nav#sidebar.sidebar-fixed.bg-dark.text-light
   nav.navbar.sidebar-top
     div(style='margin:auto;display:block')
       h6#info-time Current Time
@@ -8,22 +8,22 @@ nav#sidebar.sidebar-fixed
     h6#info-period Current Period
     h6#info-location Current Location
   #sidebar-navigation
-    a#my-overview.sidebar-item.text-light.bg-dark.active(href='overview.html')
+    a#my-overview.nav-item.nav-link.sidebar-item.text-light.bg-dark.active(href='overview.html')
       i.fa.fa-tachometer-alt
       |  Overview
-    a#my-reports.sidebar-item.text-light.bg-dark(href='reports.html')
+    a#my-reports.nav-item.nav-link.sidebar-item.text-light.bg-dark(href='reports.html')
       i.fa.fa-chart-bar
       |  Reports
-    a#detailed-search.sidebar-item.text-light.bg-dark(href='studentactivitysearch.html')
+    a#detailed-search.nav-item.nav-link.sidebar-item.text-light.bg-dark(href='studentactivitysearch.html')
       i.fa.fa-chart-bar
       |  Student Activity Search
-    a.sidebar-item.text-light.bg-dark(href='irregularitiessearch.html' id='')
+    a.sidebar-item.nav-item.nav-link.text-light.bg-dark(href='irregularitiessearch.html' id='')
       i.fa.fa-chart-bar
       |  Irregularities Search
   .sidebar-bottom
-    a.sidebar-item.text-light.bg-dark(href='settings.html')
+    a.sidebar-item.nav-item.nav-link.text-light.bg-dark(href='settings.html')
       i.fa.fa-cog
       |  Settings
-    a.sidebar-item.text-light.bg-dark(href='index.html')
+    a.sidebar-item.nav-item.nav-link.text-light.bg-dark(href='index.html')
       i.fa.fa-sign-out-alt
       |  Sign out
