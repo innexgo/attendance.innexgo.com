@@ -1,0 +1,31 @@
+.palette-level-one {
+  background-color: #575757;
+}
+
+.palette-level-two {
+  background-color: #CECECE;
+}
+
+.form-control {
+  background-color: #EDEDED;
+}
+
+/* #343a40 #f8f9fa */
+tr.table-header {
+  background-color: #474D53;
+  color: #E5E6E7;
+}
+
+.input-button {
+  background-color: #E9E9E9;
+}
+
+.palette-header {
+  background-color: #5f6569;
+  color: #ffffff;
+}
+
+.palette-border:not(.active) {
+  border: 1px solid #eaeef1;
+}
+

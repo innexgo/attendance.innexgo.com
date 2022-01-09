@@ -1,0 +1,40 @@
+body {
+  font-family: 'Ubuntu', sans-serif !important;
+  font-style: normal !important;
+}
+
+h1, h2, h3 {
+  font-family: 'Exo', sans-serif !important;
+}
+
+a:not(.bluelink) {
+  color: inherit;
+}
+
+.table-height-standard {
+  height: 22rem;
+  overflow: scroll;
+}
+
+div.card-title {
+  margin-bottom: 1em;
+}
+
+.card-noborder {
+  padding-left: 0px;
+  padding-right: 0px;
+  border-right-width: 0px;
+  border-top-width: 0px;
+  border-left-width: 0px;
+  border-bottom-width: 0px;
+}
+
+input::-webkit-outer-spin-button.ignore-spinner,
+input::-webkit-inner-spin-button.ignore-spinner {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type=number].ignore-spinner {
+    -moz-appearance:textfield; /* Firefox */
+}

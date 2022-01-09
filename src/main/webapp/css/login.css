@@ -1,0 +1,71 @@
+body {
+  font-family: 'Ubuntu', sans-serif;
+}
+
+h1 {
+  font-family: 'Exo', sans-serif;
+  color: #353839;
+  font-size: 50px;
+}
+
+.grad {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+  width: auto;
+  height: auto;
+  z-index: 1;
+  opacity: 0.9;
+  background-color: #F0F0F0;
+}
+
+.login input[type=text]{
+  width: 25rem;
+  height: 2rem;
+  background: transparent;
+  border: 2px solid rgba(53,56,57,0.6);
+  border-radius: 2px;
+  color: #000;
+  font-size: 1rem;
+  padding: 0.25rem;
+}
+
+.login input[type=password]{
+  width: 25rem;
+  height: 2rem;
+  background: transparent;
+  border: 2px solid rgba(53,56,57,0.6);
+  border-radius: 2px;
+  color: #000;
+  font-size: 1rem;
+  padding: 4px;
+  margin-top: 0.25rem;
+}
+
+.login input[type=button]{
+  width: 25rem;
+  height: 2rem;
+  background-color: #daa520ff;
+  border: 0;
+  cursor: pointer;
+  border-radius: 2px;
+  color: #fff;
+  font-size: 1rem;
+  padding: 6px;
+  margin-top: 10px;
+}
+
+.login input[type=button]:hover{
+  opacity: 0.6;
+}
+
+.center-screen {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  min-height: 100vh;
+}
