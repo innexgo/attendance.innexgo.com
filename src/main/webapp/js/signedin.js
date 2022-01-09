@@ -47,27 +47,20 @@ async function userInfo() {
     return;
   }
 
+  let period = await fetchJson(`${apiUrl()}/misc/getPeriodByTime/?time=${moment().valueOf()}&apiKey=${apiKey.key}`);
+  setLocalJson('period', period);
 
-  try {
-    let period = await fetchJson(`${apiUrl()}/misc/getPeriodByTime/?time=${moment().valueOf()}&apiKey=${apiKey.key}`);
-    setLocalJson('period', period);
+  let nextPeriod = await fetchJson(`${apiUrl()}/misc/getNextPeriod/?apiKey=${apiKey.key}`);
+  setLocalJson('nextPeriod', nextPeriod);
 
-    let nextPeriod = await fetchJson(`${apiUrl()}/misc/getNextPeriod/?apiKey=${apiKey.key}`);
-    setLocalJson('nextPeriod', nextPeriod);
+  let semester = await fetchJson(`${apiUrl()}/misc/getSemesterByTime/?time=${moment().valueOf()}&apiKey=${apiKey.key}`);
+  setLocalJson('semester', semester);
 
-    let semester = await fetchJson(`${apiUrl()}/misc/getSemesterByTime/?time=${moment().valueOf()}&apiKey=${apiKey.key}`);
-    setLocalJson('semester', semester);
-
-    let courses = [];
-    if (semester != null) {
-      courses = await fetchJson(`${apiUrl()}/course/?semesterStartTime=${semester.startTime}&userId=${apiKey.user.id}&offset=0&count=${INT32_MAX}&apiKey=${apiKey.key}`);
-    }
-    setLocalJson('courses', courses);
+  let courses = [];
+  if (semester != null) {
+    courses = await fetchJson(`${apiUrl()}/course/?semesterStartTime=${semester.startTime}&userId=${apiKey.user.id}&offset=0&count=${INT32_MAX}&apiKey=${apiKey.key}`);
   }
-  catch (err) {
-    console.log(err);
-    givePermError('Failed to fetch data, refresh.');
-  }
+  setLocalJson('courses', courses);
 }
 
 async function pollUserInfo() {

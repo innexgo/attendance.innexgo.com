@@ -25,7 +25,13 @@ async function manualEncounter(studentId) {
   console.log(studentId);
   document.getElementById('manual-studentid').value = '';
   let apiKey = getLocalJson('apiKey');
+  if(apiKey == null) {
+      return;
+  }
   let period = getLocalJson('period');
+  if(period == null) {
+      return;
+  }
   let course = getLocalJson('courses').filter(c => c.period == period.numbering)[0];
 
   // Let's try to determine the location
@@ -131,7 +137,14 @@ async function locationOptions() {
 // Loads data in reverse chronological order into the page
 async function recentActivityLoadPage() {
   let apiKey = getLocalJson('apiKey');
+  if(apiKey == null) {
+      return;
+  }
   let period = getLocalJson('period');
+  if(period == null) {
+    $('#recentactivity-events')[0].innerHTML = '<b>No Current Period</b>';
+      return;
+  }
   let course = getLocalJson('courses').filter(c => c.period == period.numbering)[0];
   let locationId = course != null ? course.location.id : getLocalJson('default-locationid');
 
@@ -248,7 +261,7 @@ async function currentStatus() {
             .sort((a, b) => (a.name > b.name) ? 1 : -1)
             .forEach(student => {
               let irregularity = irregularities.filter(irr => irr.student.id == student.id).pop();
-              if (irregularity != null) {
+              if (irregularity != null && irregularity != undefined) {
                 console.log(irregularity.type);
                 switch (irregularity.type) {
                   case 'Absent': {

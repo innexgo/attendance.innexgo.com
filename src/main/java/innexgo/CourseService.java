@@ -129,7 +129,7 @@ public class CourseService {
 
     String sql = "SELECT DISTINCT cs.id, cs.teacher_id, cs.location_id, cs.period, cs.subject FROM course cs"
       + " INNER JOIN offering ofr ON ofr.course_id = cs.id"
-      + " INNER JOIN period pr ON pr.number = cs.period"
+      + " INNER JOIN period pr ON pr.numbering = cs.period"
       + " WHERE 1 = 1"
       + " AND ofr.semester_start_time = " + semester.startTime
       + " AND pr.start_time = " + period.startTime

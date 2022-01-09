@@ -21,10 +21,10 @@ function displayInfo() {
     return;
   }
 
-  if(period.type == 'Class Period') {
+  if(period.kind == 'CLASS') {
     document.getElementById('info-period').innerHTML = 'Period ' + period.numbering;
   } else {
-    document.getElementById('info-period').innerHTML = period.type;
+    document.getElementById('info-period').innerHTML = period.kind;
   }
 
   let course = courses.filter(c => c.period == period.numbering)[0];

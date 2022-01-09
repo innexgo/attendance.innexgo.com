@@ -879,7 +879,12 @@ public class ApiController {
     if (!innexgoService.isTrusted(apiKey)) {
       return Errors.MUST_BE_USER.getResponse();
     }
-    return new ResponseEntity<>(periodService.getByTime(time), HttpStatus.OK);
+    Period p = periodService.getByTime(time);
+    if (p != null) {
+      return new ResponseEntity<>(innexgoService.fillPeriod(p), HttpStatus.OK);
+    } else {
+      return new ResponseEntity<>("null", HttpStatus.OK);
+    }
   }
 
   @RequestMapping("/misc/getNextPeriod/")
