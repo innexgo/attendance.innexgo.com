@@ -290,7 +290,7 @@ public class DevelopmentController {
       return Errors.MUST_BE_ROOT.getResponse();
     }
     semesterService.deleteAll();
-    for (int year = 2018; year < 2023; year++) {
+    for (int year = 2018; year < 2028; year++) {
       addSemester(SemesterKind.SPRING, LocalDate.of(year, 1, 1));
       addSemester(SemesterKind.SUMMER, LocalDate.of(year, 6, 1));
       addSemester(SemesterKind.FALL, LocalDate.of(year, 8, 1));

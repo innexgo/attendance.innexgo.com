@@ -41,8 +41,8 @@ def getJSON(url, parameters):
 def getApiKey(hostname):
     apiKey = getJSON(f'{hostname}/api/apiKey/new/',
                  {
-                     'userEmail': prompt(f'Enter email for {hostname}:'),
-                     'userPassword': prompt(f'Enter password for {hostname}:'),
+                     'userEmail': prompt(f'Enter an user email to log onto {hostname}:'),
+                     'userPassword': prompt(f'Enter password to log onto {hostname}:'),
                      'expirationTime':currentMillis()+60*60*1000 # One hour
                  })
     return apiKey['key']
@@ -50,7 +50,7 @@ def getApiKey(hostname):
 
 # Bail if not correct
 if len(sys.argv) != 3:
-    print('===> Error: Need 2 arguments: file as xlsx and hostname')
+    print('===> Error: Need 2 arguments: file as xlsx and the url of the server')
     sys.exit(1)
 
 
@@ -191,7 +191,7 @@ def loadOffering(row):
     courseName = row.courseJson['subject']
     subject = row.CrsName
     semesterStartTime = current_semester['startTime']
-    semesterName = f'{current_semester["year"]} {current_semester["type"]}'
+    semesterName = f'{current_semester["year"]} {current_semester["kind"]}'
 
 
     existing = getJSON(f'{hostname}/api/offering/',
@@ -243,7 +243,7 @@ def loadGrade(row):
     number = int(row.GR)
     studentName = row.studentJson['name']
     semesterStartTime = current_semester['startTime']
-    semesterName = f'{current_semester["year"]} {current_semester["type"]}'
+    semesterName = f'{current_semester["year"]} {current_semester["kind"]}'
 
     existing = getJSON(f'{hostname}/api/grade/',
                 {
@@ -264,7 +264,7 @@ def loadGrade(row):
                    {
                        'studentId':studentId,
                        'semesterStartTime':semesterStartTime,
-                       'gradeNumber':number,
+                       'gradeNumbering':number,
                        'apiKey':apiKey
                    })
 
@@ -337,3 +337,5 @@ schedules = df[['StuID', 'Per', 'CrsName', 'Teacher', 'Room']] \
         .merge(students, left_on=['StuID'], right_on=['StuID'])
 print('===> Loading Schedules to Database...')
 schedules['scheduleJson'] = schedules.apply(loadSchedule, axis=1)
+# finished
+print('===> Finished successfully!');
