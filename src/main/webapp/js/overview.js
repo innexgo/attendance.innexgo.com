@@ -25,12 +25,12 @@ async function manualEncounter(studentId) {
   console.log(studentId);
   document.getElementById('manual-studentid').value = '';
   let apiKey = getLocalJson('apiKey');
-  if(apiKey == null) {
-      return;
+  if (apiKey == null) {
+    return;
   }
   let period = getLocalJson('period');
-  if(period == null) {
-      return;
+  if (period == null) {
+    return;
   }
   let course = getLocalJson('courses').filter(c => c.period == period.numbering)[0];
 
@@ -137,13 +137,13 @@ async function locationOptions() {
 // Loads data in reverse chronological order into the page
 async function recentActivityLoadPage() {
   let apiKey = getLocalJson('apiKey');
-  if(apiKey == null) {
-      return;
+  if (apiKey == null) {
+    return;
   }
   let period = getLocalJson('period');
-  if(period == null) {
+  if (period == null) {
     $('#recentactivity-events')[0].innerHTML = '<b>No Current Period</b>';
-      return;
+    return;
   }
   let course = getLocalJson('courses').filter(c => c.period == period.numbering)[0];
   let locationId = course != null ? course.location.id : getLocalJson('default-locationid');
@@ -236,7 +236,7 @@ async function currentStatus() {
     if (course != null) {
       try {
         let irregularities = (await fetchJson(`${apiUrl()}/irregularity/?courseId=${course.id}&periodStartTime=${period.startTime}&offset=0&count=${INT32_MAX}&apiKey=${apiKey.key}`))
-          .filter(i => i.type != 'Forgot to Sign Out');
+          .filter(i => i.kind != 'FORGOT_SIGN_OUT');
 
         let presentStudents = await fetchJson(`${apiUrl()}/misc/present/?locationId=${course.location.id}&time=${time}&apiKey=${apiKey.key}`);
         let registeredStudents = await fetchJson(`${apiUrl()}/misc/registeredForCourse/?courseId=${course.id}&time=${time}&apiKey=${apiKey.key}`);
@@ -261,28 +261,27 @@ async function currentStatus() {
             .sort((a, b) => (a.name > b.name) ? 1 : -1)
             .forEach(student => {
               let irregularity = irregularities.filter(irr => irr.student.id == student.id).pop();
-              if (irregularity != null && irregularity != undefined) {
-                console.log(irregularity.type);
-                switch (irregularity.type) {
-                  case 'Absent': {
-                    table.append(makeEntry(student, '#ffcccc', '#ff0000', 'fa-times', 'Student was supposed to attend, but hasn\'t signed in yet.'));
-                    break;
-                  }
-                  case 'Tardy': {
-                    table.append(makeEntry(student, '#ffffcc', '#cccc00', 'fa-check', 'Student was supposed to attend and signed in late.'));
-                    break;
-                  }
-                  case 'Left Early': {
-                    table.append(makeEntry(student, '#ccffff', '#00cccc', 'fa-times', 'This student was supposed to attend, but has signed out of your classroom early.'));
-                    break;
-                  }
-                  case 'Left Temporarily': {
-                    table.append(makeEntry(student, '#ccffff', '#00cccc', 'fa-check', 'This student left in the middle of class, but has now signed back in.'));
-                    break;
-                  }
+              switch (irregularity?.kind) {
+                case 'ABSENT': {
+                  table.append(makeEntry(student, '#ffcccc', '#ff0000', 'fa-times', 'Student was supposed to attend, but hasn\'t signed in yet.'));
+                  break;
                 }
-              } else {
-                table.append(makeEntry(student, '#ccffcc', '#00ff00', 'fa-check', 'Student is present.'));
+                case 'TARDY': {
+                  table.append(makeEntry(student, '#ffffcc', '#cccc00', 'fa-check', 'Student was supposed to attend and signed in late.'));
+                  break;
+                }
+                case 'LEAVE_NORETURN': {
+                  table.append(makeEntry(student, '#ccffff', '#00cccc', 'fa-times', 'This student was supposed to attend, but has signed out of your classroom early.'));
+                  break;
+                }
+                case 'LEAVE_RETURN': {
+                  table.append(makeEntry(student, '#ccffff', '#00cccc', 'fa-check', 'This student left in the middle of class, but has now signed back in.'));
+                  break;
+                }
+                default: {
+                  table.append(makeEntry(student, '#ccffcc', '#00ff00', 'fa-check', 'Student is present.'));
+                  break;
+                }
               }
             });
         }

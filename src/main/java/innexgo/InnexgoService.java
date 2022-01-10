@@ -16,20 +16,33 @@ import org.springframework.stereotype.Service;
 @Service
 public class InnexgoService {
 
-  @Autowired ApiKeyService apiKeyService;
-  @Autowired CourseService courseService;
-  @Autowired EncounterService encounterService;
-  @Autowired GradeService gradeService;
-  @Autowired IrregularityService irregularityService;
-  @Autowired LocationService locationService;
-  @Autowired PeriodService periodService;
-  @Autowired ScheduleService scheduleService;
-  @Autowired SemesterService semesterService;
-  @Autowired SessionService sessionService;
-  @Autowired StudentService studentService;
-  @Autowired UserService userService;
+  @Autowired
+  ApiKeyService apiKeyService;
+  @Autowired
+  CourseService courseService;
+  @Autowired
+  EncounterService encounterService;
+  @Autowired
+  GradeService gradeService;
+  @Autowired
+  IrregularityService irregularityService;
+  @Autowired
+  LocationService locationService;
+  @Autowired
+  PeriodService periodService;
+  @Autowired
+  ScheduleService scheduleService;
+  @Autowired
+  SemesterService semesterService;
+  @Autowired
+  SessionService sessionService;
+  @Autowired
+  StudentService studentService;
+  @Autowired
+  UserService userService;
 
-  @Autowired SchedulerService schedulerService;
+  @Autowired
+  SchedulerService schedulerService;
 
   Logger logger = LoggerFactory.getLogger(InnexgoService.class);
 
@@ -43,7 +56,6 @@ public class InnexgoService {
     apiKey.user = fillUser(userService.getById(apiKey.userId));
     return apiKey;
   }
-
 
   /**
    * Fills in jackson objects(Teacher and Location) in Course
@@ -148,9 +160,9 @@ public class InnexgoService {
     return semester;
   }
 
-
   /**
-   * Fills in jackson objects (Student, Course, inEncounter, and outEncounter) for Session
+   * Fills in jackson objects (Student, Course, inEncounter, and outEncounter) for
+   * Session
    *
    *
    * @param session - Session object
@@ -232,7 +244,8 @@ public class InnexgoService {
   }
 
   /**
-   * Each day at midnight, log everyone out and give a "forgot to sign out" irregularity if they had
+   * Each day at midnight, log everyone out and give a "forgot to sign out"
+   * irregularity if they had
    * a session open
    */
   @Scheduled(fixedDelay = 5000)
@@ -246,7 +259,8 @@ public class InnexgoService {
         logger.info("Next mass sign out at: " + millisTillMidnight / 1000);
         Thread.sleep(millisTillMidnight);
       } catch (Exception e) {
-        // We will bail pretty regularly whenever someone updates the course and decides to kill
+        // We will bail pretty regularly whenever someone updates the course and decides
+        // to kill
         return;
       }
       signEveryoneOut();
@@ -258,26 +272,26 @@ public class InnexgoService {
 
     logger.info("Signing everyone out");
     // get list of open sessions
-    List<Session> openSessionList =
-      sessionService.query(
-          null,           //  Long id
-          null,           //  Long inEncounterId
-          null,           //  Long outEncounterId
-          null,           //  Long anyEncounterId
-          false,          //  Boolean complete
-          null,           //  Long studentId
-          null,           //  Long locationId
-          null,           //  Long time
-          null,           //  Long inTimeBegin
-          null,           //  Long inTimeEnd
-          null,           //  Long outTimeBegin
-          null,           //  Long outTimeEnd
-          0,              //  long offset
-          Long.MAX_VALUE  //  long count
-          );
+    List<Session> openSessionList = sessionService.query(
+        null, // Long id
+        null, // Long inEncounterId
+        null, // Long outEncounterId
+        null, // Long anyEncounterId
+        false, // Boolean complete
+        null, // Long studentId
+        null, // Long locationId
+        null, // Long time
+        null, // Long inTimeBegin
+        null, // Long inTimeEnd
+        null, // Long outTimeBegin
+        null, // Long outTimeEnd
+        0, // long offset
+        Long.MAX_VALUE // long count
+    );
 
     for (Session openSession : openSessionList) {
-      // Virtually close session by generating a fake (virtual) encounter and insert it in.
+      // Virtually close session by generating a fake (virtual) encounter and insert
+      // it in.
       // We know they must have somehow left from here
 
       // grab old encounter
@@ -295,36 +309,38 @@ public class InnexgoService {
       openSession.complete = true;
       sessionService.update(openSession);
 
-      // After the person signed out the first time, they might have been logged in at a bunch of classes afterwards
-      // We give them the forgot to sign out irregularity at the course which they signed in to
-      // period and course are that of the first period with a course that the session intersected
-      List<Period> intersectedPeriods =
-        periodService.query(
-            null,                                                // Long startTime
-            null,                                                // Long numbering
-            PeriodKind.CLASS,                                    // String kind
-            periodService.getByTime(inEncounter.time).startTime, // Long minStartTime
-            outEncounter.time,                                   // Long maxStartTime
-            null,                                                // Boolean temp
-            0,                                                   // long offset
-            Long.MAX_VALUE                                       // long count
-            );
+      // After the person signed out the first time, they might have been logged in at
+      // a bunch of classes afterwards
+      // We give them the forgot to sign out irregularity at the course which they
+      // signed in to
+      // period and course are that of the first period with a course that the session
+      // intersected
+      List<Period> intersectedPeriods = periodService.query(
+          null, // Long startTime
+          null, // Long numbering
+          PeriodKind.CLASS, // String kind
+          periodService.getByTime(inEncounter.time).startTime, // Long minStartTime
+          outEncounter.time, // Long maxStartTime
+          null, // Boolean temp
+          0, // long offset
+          Long.MAX_VALUE // long count
+      );
 
       // Find first period with a course at this location
       for (Period irregPeriod : intersectedPeriods) {
         List<Course> courses = courseService.query(
-            null,                                   // Long id,
-            null,                                   // Long teacherId,
-            inEncounter.locationId,                 // Long locationId,
-            null,                                   // Long studentId,
-            irregPeriod.numbering,                     // Long periodNumber,
-            null,                                   // String subject,
+            null, // Long id,
+            null, // Long teacherId,
+            inEncounter.locationId, // Long locationId,
+            null, // Long studentId,
+            irregPeriod.numbering, // Long periodNumber,
+            null, // String subject,
             semesterService.getCurrent().startTime, // Long semesterStartTime,
-            0,                                      // long offset,
-            Long.MAX_VALUE                          // long count
-            );
+            0, // long offset,
+            Long.MAX_VALUE // long count
+        );
         // Give forgot to sign out error to each course at this period at this location
-        for(Course irregCourse : courses) {
+        for (Course irregCourse : courses) {
           Irregularity forgotToSignOut = new Irregularity();
           forgotToSignOut.studentId = inEncounter.studentId;
           forgotToSignOut.courseId = irregCourse.id;
@@ -335,9 +351,10 @@ public class InnexgoService {
           irregularityService.add(forgotToSignOut);
           break;
         }
-        // We only want to issue this forgot to sign out error to the FIRST courses that would have intersected
+        // We only want to issue this forgot to sign out error to the FIRST courses that
+        // would have intersected
         // Thus, we break if a course was found
-        if(courses.size() > 0) {
+        if (courses.size() > 0) {
           break;
         }
       }
@@ -350,30 +367,29 @@ public class InnexgoService {
   }
 
   /**
-   * For all the courses at the current time, create irregularities { If the student has not signed
+   * For all the courses at the current time, create irregularities { If the
+   * student has not signed
    * in yet before or during the period { generate an absent irregularity } }
    */
   @Scheduled(fixedDelay = 5000)
   public void insertAbsences() {
     logger.info("INNEXGO: Starting insert absences process");
     // the list of periods that havent started yet
-    List<Period> periodList =
-      periodService.query(
-          null,                       // Long startTime,
-          null,                       // Long numbering,
-          null,                       // String kind,
-          System.currentTimeMillis(), // Long minStartTime,
-          null,                        // Long maxStartTime,
-          null,                        // Boolean temp
-          0,
-          Long.MAX_VALUE
-          );
+    List<Period> periodList = periodService.query(
+        null, // Long startTime,
+        null, // Long numbering,
+        null, // String kind,
+        System.currentTimeMillis(), // Long minStartTime,
+        null, // Long maxStartTime,
+        null, // Boolean temp
+        0,
+        Long.MAX_VALUE);
     for (int i = 0; i < periodList.size(); i++) {
       Period period = periodList.get(i);
       // wait till we are at the right time
       try {
         long timeToSleep = Math.max(0, period.startTime - System.currentTimeMillis());
-        logger.info("Inserting absences in: " +  timeToSleep / 1000 + " seconds");
+        logger.info("Inserting absences in: " + timeToSleep / 1000 + " seconds");
         Thread.sleep(timeToSleep);
       } catch (InterruptedException e) {
         logger.info("insertAbsences thread INTERRUPTED, bailing");
@@ -392,31 +408,31 @@ public class InnexgoService {
     for (Course course : courseList) {
       // subtract present students from all students taking the course
       Set<Long> presentStudentIds = studentService.present(course.locationId, periodStartTime)
-                                                  .stream()
-                                                  .map(s -> s.id)
-                                                  .collect(Collectors.toSet());
+          .stream()
+          .map(s -> s.id)
+          .collect(Collectors.toSet());
 
       List<Student> absentees = studentService.registeredForCourse(course.id, periodStartTime)
-                                              .stream()
-                                              .filter(s -> !presentStudentIds.contains(s.id))
-                                              .collect(Collectors.toList());
+          .stream()
+          .filter(s -> !presentStudentIds.contains(s.id))
+          .collect(Collectors.toList());
 
       // mark all students not there as absent
       for (Student student : absentees) {
         // Check if already absent. if not, don't add
         boolean alreadyAbsent = irregularityService.query(
-            null,                     //  Long id
-            student.id,               //  Long studentId
-            course.id,                //  Long courseId
-            periodStartTime,          //  Long periodStartTime
-            null,                     //  Long teacherId
-            IrregularityKind.ABSENT, //  String kind
-            null,                     //  Long time
-            null,                     //  Long minTime
-            null,                     //  Long maxTime
-            0,                        //  long count
-            Long.MAX_VALUE            //  long count
-            ).size() > 0;
+            null, // Long id
+            student.id, // Long studentId
+            course.id, // Long courseId
+            periodStartTime, // Long periodStartTime
+            null, // Long teacherId
+            IrregularityKind.ABSENT, // String kind
+            null, // Long time
+            null, // Long minTime
+            null, // Long maxTime
+            0, // long count
+            Long.MAX_VALUE // long count
+        ).size() > 0;
         // if not already absent
         if (!alreadyAbsent) {
           Irregularity irregularity = new Irregularity();
@@ -426,18 +442,15 @@ public class InnexgoService {
           irregularity.kind = IrregularityKind.ABSENT;
           irregularity.time = periodStartTime;
           irregularity.timeMissing = periodService
-            .getNextByTime(periodStartTime+1)
-            .startTime - periodStartTime;
+              .getNextByTime(periodStartTime + 1).startTime - periodStartTime;
           irregularityService.add(irregularity);
         }
       }
     }
 
-
   }
 
-  public Session attends(long studentId, long locationId, boolean manual) 
-  {
+  public Session attends(long studentId, long locationId, boolean manual) {
     Session returnableSession = null;
 
     // Get this student
@@ -449,8 +462,8 @@ public class InnexgoService {
     encounter.studentId = student.id;
     encounter.time = System.currentTimeMillis();
     encounter.kind = manual
-      ? EncounterKind.MANUAL
-      : EncounterKind.DEFAULT;
+        ? EncounterKind.MANUAL
+        : EncounterKind.DEFAULT;
     encounterService.add(encounter);
 
     // if school is currently going on, represents the current period
@@ -467,31 +480,31 @@ public class InnexgoService {
         null, // String subject
         currentSemester.startTime, // Long semesterStartTime
         0, // long offset
-        1  // long count
-        );
+        1 // long count
+    );
 
     Course currentCourse = currentCourses.isEmpty() ? null : currentCourses.get(0);
 
     // Get incomplete sessions
-    List<Session> openSessionList =
-      sessionService.query(
-          null,           //  Long id
-          null,           //  Long inEncounterId
-          null,           //  Long outEncounterId
-          null,           //  Long anyEncounterId
-          false,          //  Boolean complete
-          student.id,     //  Long studentId
-          null,           //  Long locationId
-          null,           //  Long time
-          null,           //  Long inTimeBegin
-          null,           //  Long inTimeEnd
-          null,           //  Long outTimeBegin
-          null,           //  Long outTimeEnd
-          0,              //  long count
-          Long.MAX_VALUE  //  long count
-          );
+    List<Session> openSessionList = sessionService.query(
+        null, // Long id
+        null, // Long inEncounterId
+        null, // Long outEncounterId
+        null, // Long anyEncounterId
+        false, // Boolean complete
+        student.id, // Long studentId
+        null, // Long locationId
+        null, // Long time
+        null, // Long inTimeBegin
+        null, // Long inTimeEnd
+        null, // Long outTimeBegin
+        null, // Long outTimeEnd
+        0, // long count
+        Long.MAX_VALUE // long count
+    );
 
-    // If the encounter will be used to start a new session since there are no open ones
+    // If the encounter will be used to start a new session since there are no open
+    // ones
     boolean usedToClose = false;
 
     for (Session openSession : openSessionList) {
@@ -517,14 +530,18 @@ public class InnexgoService {
           // if before the period has actually started, make absent instead of left early
           irregularity.kind = IrregularityKind.LEAVE_NORETURN;
           irregularity.time = encounter.time;
-          irregularity.timeMissing = periodService
-            .getNextByTime(encounter.time)
-            .startTime - encounter.time;
+          Period next = periodService.getNextByTime(encounter.time);
+          if (next != null) {
+            irregularity.timeMissing = next.startTime - encounter.time;
+          } else {
+            irregularity.timeMissing = 0;
+          }
           irregularityService.add(irregularity);
         }
       } else {
         // its not at the same location as the beginning
-        // Virtually close session by generating a fake (virtual) encounter and insert it in.
+        // Virtually close session by generating a fake (virtual) encounter and insert
+        // it in.
         // We know they must have somehow left from here
 
         // make a virtual out encounter
@@ -540,21 +557,21 @@ public class InnexgoService {
         openSession.complete = true;
         sessionService.update(openSession);
 
-
-        // After the person signed out the first time, they might have been logged in at a bunch of classes afterwards
-        // We give them the forgot to sign out irregularity at the course which they signed in to
-        // period and course are that of the first period with a course that the session intersected
-        List<Period> intersectedPeriods =
-          periodService.query(
-              null,                                                // Long startTime
-              null,                                                // Long numbering
-              PeriodKind.CLASS,                                    // String kind
-              periodService.getByTime(encounter.time).startTime,   // Long minStartTime
-              outEncounter.time,                                   // Long maxStartTime
-              null,                                                // Boolean temp
-              0,
-              Long.MAX_VALUE
-              );
+        // After the person signed out the first time, they might have been logged in at
+        // a bunch of classes afterwards
+        // We give them the forgot to sign out irregularity at the course which they
+        // signed in to
+        // period and course are that of the first period with a course that the session
+        // intersected
+        List<Period> intersectedPeriods = periodService.query(
+            null, // Long startTime
+            null, // Long numbering
+            PeriodKind.CLASS, // String kind
+            periodService.getByTime(encounter.time).startTime, // Long minStartTime
+            outEncounter.time, // Long maxStartTime
+            null, // Boolean temp
+            0,
+            Long.MAX_VALUE);
 
         // Find first period with a course at this location
         Period irregPeriod = null;
@@ -595,20 +612,19 @@ public class InnexgoService {
 
       if (currentCourse != null) {
         // now we check if they arent there, and fix it
-        List<Irregularity> irregularities =
-          irregularityService.query(
-              null,                    //  Long id
-              studentId,               //  Long studentId
-              currentCourse.id,        //  Long courseId
-              currentPeriod.startTime, //  Long periodStartTime
-              null,                    //  Long teacherId
-              null,                    //  String kind
-              null,                    //  Long time
-              null,                    //  Long minTime
-              null,                    //  Long maxTime
-              0,                       //  long offset
-              Long.MAX_VALUE           //  long count
-              );
+        List<Irregularity> irregularities = irregularityService.query(
+            null, // Long id
+            studentId, // Long studentId
+            currentCourse.id, // Long courseId
+            currentPeriod.startTime, // Long periodStartTime
+            null, // Long teacherId
+            null, // String kind
+            null, // Long time
+            null, // Long minTime
+            null, // Long maxTime
+            0, // long offset
+            Long.MAX_VALUE // long count
+        );
 
         for (Irregularity irregularity : irregularities) {
           if (irregularity.kind.equals(IrregularityKind.ABSENT)) {
@@ -634,4 +650,3 @@ public class InnexgoService {
     return returnableSession;
   }
 }
-

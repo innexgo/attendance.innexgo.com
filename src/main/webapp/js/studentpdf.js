@@ -105,7 +105,7 @@ async function createPDF() {
             .concat(
               (await fetchJson(`${apiUrl()}/irregularity/?studentId=${studentId}&irregularityMinTime=${0}&irregularityMaxTime=${moment().valueOf()}&offset=0&count=${INT32_MAX}&apiKey=${apiKey.key}`))
                 .sort((a, b) => (a.time > b.time) ? -1 : 1) // sort by time descending
-                .map(i => [moment(i.time).format('MMM Do, YYYY'), moment(i.time).format('h:mm A'), i.course.subject, i.type])
+                .map(i => [moment(i.time).format('MMM Do, YYYY'), moment(i.time).format('h:mm A'), i.course.subject, i.kind])
             ),
         },
       },

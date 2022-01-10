@@ -34,7 +34,7 @@ async function loadIrregularityPage(studentId, minTime, maxTime) {
               <td>${moment(irregularity.time).format('MMM Do, YYYY')}</td>
               <td>${moment(irregularity.time).format('h:mm A')}</td>
               <td>${linkRelative(irregularity.course.subject,'/courseprofile.html?courseId='+irregularity.course.id)}</td>
-              <td>${irregularity.type}</td>
+              <td>${irregularity.kind}</td>
             </tr>
           `)); // Append row
 }
@@ -96,7 +96,7 @@ async function initialize() {
         .sort((a,b) => (a.semester.startTime < b.semester.startTime) ? -1 : 1)
         .forEach(g => gradeSelect.append(
           `<option value="${g.semester.startTime}">
-            ${moment(g.semester.startTime).year()} - ${g.semester.type}
+            ${moment(g.semester.startTime).year()} - ${g.semester.kind}
            </option>`
         ));
       // On change, reload thing
