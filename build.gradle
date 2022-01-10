@@ -1,5 +1,5 @@
 plugins {
-  id 'org.springframework.boot' version '2.2.3.BUILD-SNAPSHOT'
+  id 'org.springframework.boot' version '2.6.2'
   id 'java'
 }
 
@@ -8,7 +8,7 @@ apply plugin: 'eclipse'
 
 group = 'innexgo'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '8'
+sourceCompatibility = '17'
 
 repositories {
   mavenCentral()
