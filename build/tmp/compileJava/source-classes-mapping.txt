@@ -1,0 +1,98 @@
+innexgo/SchedulerService.java
+ innexgo.SchedulerService
+innexgo/ApiController.java
+ innexgo.ApiController
+innexgo/ApiKey.java
+ innexgo.ApiKey
+innexgo/CourseRowMapper.java
+ innexgo.CourseRowMapper
+innexgo/OfferingRowMapper.java
+ innexgo.OfferingRowMapper
+innexgo/ScheduleService.java
+ innexgo.ScheduleService
+innexgo/Errors.java
+ innexgo.Errors
+innexgo/SessionRowMapper.java
+ innexgo.SessionRowMapper
+innexgo/Grade.java
+ innexgo.Grade
+innexgo/UserRowMapper.java
+ innexgo.UserRowMapper
+innexgo/LocationRowMapper.java
+ innexgo.LocationRowMapper
+innexgo/GradeRowMapper.java
+ innexgo.GradeRowMapper
+innexgo/OfferingService.java
+ innexgo.OfferingService
+innexgo/Utils.java
+ innexgo.Utils
+innexgo/Period.java
+ innexgo.Period
+ innexgo.PeriodKind
+innexgo/Semester.java
+ innexgo.Semester
+ innexgo.SemesterKind
+innexgo/Session.java
+ innexgo.Session
+innexgo/ApiKeyRowMapper.java
+ innexgo.ApiKeyRowMapper
+innexgo/LocationService.java
+ innexgo.LocationService
+innexgo/IrregularityService.java
+ innexgo.IrregularityService
+innexgo/Location.java
+ innexgo.Location
+innexgo/User.java
+ innexgo.User
+innexgo/InnexgoApplication.java
+ innexgo.InnexgoApplication
+innexgo/Offering.java
+ innexgo.Offering
+innexgo/StudentRowMapper.java
+ innexgo.StudentRowMapper
+innexgo/PeriodRowMapper.java
+ innexgo.PeriodRowMapper
+innexgo/GradeService.java
+ innexgo.GradeService
+innexgo/Student.java
+ innexgo.Student
+innexgo/CourseService.java
+ innexgo.CourseService
+innexgo/SemesterRowMapper.java
+ innexgo.SemesterRowMapper
+innexgo/InnexgoService.java
+ innexgo.InnexgoService
+innexgo/IrregularityRowMapper.java
+ innexgo.IrregularityRowMapper
+innexgo/ScheduleRowMapper.java
+ innexgo.ScheduleRowMapper
+innexgo/PeriodService.java
+ innexgo.PeriodService
+innexgo/EncounterService.java
+ innexgo.EncounterService
+innexgo/Encounter.java
+ innexgo.Encounter
+ innexgo.EncounterKind
+innexgo/Schedule.java
+ innexgo.Schedule
+innexgo/UserService.java
+ innexgo.UserService
+innexgo/ApiKeyService.java
+ innexgo.ApiKeyService
+innexgo/SemesterService.java
+ innexgo.SemesterService
+innexgo/ApiError.java
+ innexgo.ApiError
+innexgo/Course.java
+ innexgo.Course
+innexgo/EncounterRowMapper.java
+ innexgo.EncounterRowMapper
+innexgo/StudentService.java
+ innexgo.StudentService
+innexgo/SessionService.java
+ innexgo.SessionService
+innexgo/DevelopmentController.java
+ innexgo.DevelopmentController
+innexgo/Irregularity.java
+ innexgo.Irregularity
+ innexgo.IrregularityKind
