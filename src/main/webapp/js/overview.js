@@ -21,15 +21,15 @@ $(document).ready(enableHover);
 
 
 async function manualEncounter(studentId) {
-  console.log('submitting encounter ' + studentId)
-  console.log(studentId);
-  document.getElementById('manual-studentid').value = '';
+  console.log('submitting encounter for studentId: ' + studentId)
   let apiKey = getLocalJson('apiKey');
   if (apiKey == null) {
+    giveTempError("Couldn't get API Key. Try waiting a few seconds or reloading the page.");
     return;
   }
   let period = getLocalJson('period');
   if (period == null) {
+    giveTempError("Couldn't get current period. Try waiting a few seconds.");
     return;
   }
   let course = getLocalJson('courses').filter(c => c.period == period.numbering)[0];
@@ -63,9 +63,13 @@ async function manualEncounter(studentId) {
       giveTempSuccess(`Sucessfully logged ${session.inEncounter.student.name} in to ${session.inEncounter.location.name}`);
       beepup.play();
     }
+
+    // erase the value
+    document.getElementById('manual-studentid').value = '';
+
   } catch (err) {
     console.log(err);
-    giveTempError('Something went wrong while trying to sign you in.');
+    giveTempError("Couldn't sign in this student. Are you sure the ID is typed correctly?");
     error.play();
   }
 }

@@ -30,9 +30,9 @@ async function currentStatus(locationId) {
         table.innerHTML = `<b>No Students Currently at Location</b>`;
       } else {
         students.forEach(student => $('#current-status-table').append(
-          `<td>${linkRelative(student.name, '/studentprofile.html?studentId=' + student.id)}</td>
+          `<tr><td>${linkRelative(student.name, '/studentprofile.html?studentId=' + student.id)}</td>
                    <td>${student.id}</td>
-                   <td style="background-color:${bgcolor};color:${fgcolor}">${text}</td>`)
+                   <td style="background-color:${bgcolor};color:${fgcolor}">${text}</td></tr>`)
         );
       }
     } catch (err) {

@@ -31,12 +31,8 @@ def getJSON(url, parameters):
     except requests.exceptions.HTTPError as e:
         print('===============ERROR=================')
         print(e)
-        response = prompt('===> Error occurred. Quit? (y/n)')
-        if response == 'y':
-            print('Quitting...')
-            sys.exit(1)
-        else:
-            return None
+        print('Quitting...')
+        sys.exit(1)
 
 def getApiKey(hostname):
     apiKey = getJSON(f'{hostname}/api/apiKey/new/',
