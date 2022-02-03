@@ -120,6 +120,14 @@ public class DevelopmentController {
       period.temp = true;
       periodService.add(period);
     }
+
+    Period period = new Period();
+    period.startTime = initialTime + minute * 8 * 3 + minute;
+    period.numbering = 0;
+    period.kind = PeriodKind.NONE;
+    period.temp = true;
+    periodService.add(period);
+
     // We need to restart this so that it works properly
     innexgoService.restartInsertAbsences();
     return Errors.OK.getResponse();
