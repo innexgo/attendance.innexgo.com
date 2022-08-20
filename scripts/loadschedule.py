@@ -121,9 +121,21 @@ def loadLocation(row):
     if str(roomName).isdigit():
         locationId = int(roomName)
         name = f'{locationId}'
+    elif roomName == "ATTEND"
+        locationId = 2000
+    elif roomName == "COUNS"
+        locationId = 3000
+    elif roomName == "GYM":
+        locationId = 4000
     elif roomName[0] == 'P': # A portable
-        locationId = 10000 + int(roomName[1:])
+        locationId = 5000 + int(roomName[1:])
         name = roomName
+    elif roomName == "SVCTE"
+        locationId = 6000
+    elif roomName == "THTR"
+        locationId = 7000
+    elif roomName == "WORK"
+        locationId = 8000
     else:
         locationId = int(prompt(f'===> Enter id for location {roomName} (could not autogenerate)'))
         name = roomName

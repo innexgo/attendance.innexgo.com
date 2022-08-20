@@ -202,6 +202,18 @@ public class ApiController {
     return new ResponseEntity<>(innexgoService.fillEncounter(encounter), HttpStatus.OK);
   }
 
+  /**
+   * Creates a new grade (which is per student per semester)
+   *
+   * @param studentId  - student id number
+   * @param semesterStartTime - 
+   * @param courseId   - course id
+   * @param apiKey     - apiKey of the user creating the encounter
+   * @return ResponseEntity with Encounter and HttpStatus.OK
+   * @throws ResponseEntity with HttpStatus.BAD_REQUEST if process is unsuccessful
+   * @throws ResponseEntity with HttpStatus.UNAUTHORIZED if the User is not
+   *                        trusted
+   */
   @RequestMapping("/grade/new/")
   public ResponseEntity<?> newGrade(
       @RequestParam("studentId") Long studentId,
