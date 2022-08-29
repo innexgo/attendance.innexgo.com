@@ -1,298 +1,252 @@
--- MySQL dump 10.16  Distrib 10.1.44-MariaDB, for debian-linux-gnu (x86_64)
 --
--- Host: localhost    Database: innexgo
--- ------------------------------------------------------
--- Server version	10.1.44-MariaDB-0ubuntu0.18.04.1
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
-/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
-/*!40103 SET TIME_ZONE='+00:00' */;
-/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
-/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
-
---
--- Table structure for table `api_key`
+-- table structure for table api_key
 --
 
-DROP TABLE IF EXISTS `api_key`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `api_key` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `user_id` bigint(20) NOT NULL,
-  `creation_time` bigint(20) NOT NULL,
-  `expiration_time` bigint(20) NOT NULL,
-  `key_hash` char(64) COLLATE utf8mb4_unicode_ci NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `unique_index` (`key_hash`)
-) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+drop table if exists api_key;
+/*!40101 set @saved_cs_client     = @@character_set_client */;
+/*!40101 set character_set_client = utf8 */;
+create table api_key (
+  id bigserial primary key,
+  user_id bigint not null,
+  creation_time bigint not null,
+  expiration_time bigint not null,
+  key_hash text not null unique,
+);
+/*!40101 set character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `api_key`
+-- dumping data for table api_key
 --
 
 --
--- Table structure for table `course`
+-- table structure for table course
 --
 
-DROP TABLE IF EXISTS `course`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `course` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `teacher_id` bigint(20) NOT NULL,
-  `location_id` bigint(20) NOT NULL,
-  `period` bigint(20) NOT NULL,
-  `subject` varchar(31) COLLATE utf8mb4_unicode_ci NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `unique_index` (`teacher_id`,`location_id`,`period`,`subject`)
-) ENGINE=InnoDB AUTO_INCREMENT=604 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+drop table if exists course;
+/*!40101 set @saved_cs_client     = @@character_set_client */;
+/*!40101 set character_set_client = utf8 */;
+create table course (
+  id bigserial primary key,
+  teacher_id bigint not null,
+  location_id bigint not null,
+  period bigint not null,
+  subject text not null,
+  unique key unique_index (teacher_id,location_id,period,subject)
+);
+/*!40101 set character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `course`
---
-
---
--- Table structure for table `encounter`
---
-
-DROP TABLE IF EXISTS `encounter`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `encounter` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `time` bigint(20) NOT NULL,
-  `kind` enum('VIRTUAL','MANUAL','DEFAULT') COLLATE utf8mb4_unicode_ci NOT NULL,
-  `location_id` bigint(20) NOT NULL,
-  `student_id` bigint(20) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1419 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `encounter`
+-- dumping data for table course
 --
 
 --
--- Table structure for table `grade`
+-- table structure for table encounter
 --
 
-DROP TABLE IF EXISTS `grade`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `grade` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `semester_start_time` bigint(20) NOT NULL,
-  `student_id` bigint(20) NOT NULL,
-  `numbering` bigint(20) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `unique_index` (`semester_start_time`,`student_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4391 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+drop table if exists encounter;
+/*!40101 set @saved_cs_client     = @@character_set_client */;
+/*!40101 set character_set_client = utf8 */;
+create table encounter (
+  id bigserial primary key,
+  time bigint not null,
+  kind enum('virtual','manual','default') not null,
+  location_id bigint not null,
+  student_id bigint not null,
+);
+/*!40101 set character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `grade`
---
-
---
--- Table structure for table `irregularity`
---
-
-DROP TABLE IF EXISTS `irregularity`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `irregularity` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `student_id` bigint(20) NOT NULL,
-  `course_id` bigint(20) NOT NULL,
-  `period_start_time` bigint(20) NOT NULL,
-  `kind` enum('ABSENT','TARDY','LEAVE_NORETURN','LEAVE_RETURN','FORGOT_SIGN_OUT') NOT NULL,
-  `time` bigint(20) NOT NULL,
-  `time_missing` bigint(20) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=79092 DEFAULT CHARSET=utf8mb4;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `irregularity`
+-- dumping data for table encounter
 --
 
 --
--- Table structure for table `location`
+-- table structure for table grade
 --
 
-DROP TABLE IF EXISTS `location`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `location` (
-  `id` bigint(20) NOT NULL,
-  `name` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `unique_index` (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+drop table if exists grade;
+/*!40101 set @saved_cs_client     = @@character_set_client */;
+/*!40101 set character_set_client = utf8 */;
+create table grade (
+  id bigserial primary key,
+  semester_start_time bigint not null,
+  student_id bigint not null,
+  numbering bigint not null,
+  unique key unique_index (semester_start_time,student_id)
+);
+/*!40101 set character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `location`
---
-
---
--- Table structure for table `offering`
---
-
-DROP TABLE IF EXISTS `offering`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `offering` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `course_id` bigint(20) NOT NULL,
-  `semester_start_time` bigint(20) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `unique_index` (`course_id`,`semester_start_time`)
-) ENGINE=InnoDB AUTO_INCREMENT=1127 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `offering`
+-- dumping data for table grade
 --
 
 --
--- Table structure for table `period`
+-- table structure for table irregularity
 --
 
-DROP TABLE IF EXISTS `period`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `period` (
-  `start_time` bigint(20) NOT NULL,
-  `numbering` bigint(20) NOT NULL,
-  `kind` enum('PASSING','CLASS','BREAK','LUNCH','TUTORIAL','NONE') COLLATE utf8mb4_unicode_ci NOT NULL,
-  `temp` tinyint(1) NOT NULL,
-  PRIMARY KEY (`start_time`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+drop table if exists irregularity;
+/*!40101 set @saved_cs_client     = @@character_set_client */;
+/*!40101 set character_set_client = utf8 */;
+create table irregularity (
+  id bigserial primary key,
+  student_id bigint not null,
+  course_id bigint not null,
+  period_start_time bigint not null,
+  kind enum('absent','tardy','leave_noreturn','leave_return','forgot_sign_out') not null,
+  time bigint not null,
+  time_missing bigint not null,
+);
+/*!40101 set character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `period`
---
-
---
--- Table structure for table `schedule`
---
-
-DROP TABLE IF EXISTS `schedule`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `schedule` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `student_id` bigint(20) NOT NULL,
-  `course_id` bigint(20) NOT NULL,
-  `has_start` tinyint(1) NOT NULL,
-  `start_time` bigint(20) NOT NULL,
-  `has_end` tinyint(1) NOT NULL,
-  `end_time` bigint(20) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `unique_index` (`student_id`,`course_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=14322 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `schedule`
+-- dumping data for table irregularity
 --
 
 --
--- Table structure for table `semester`
+-- table structure for table location
 --
 
-DROP TABLE IF EXISTS `semester`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `semester` (
-  `start_time` bigint(20) NOT NULL,
-  `year` bigint(20) NOT NULL,
-  `kind` enum('SUMMER','FALL','SPRING') COLLATE utf8mb4_unicode_ci NOT NULL,
-  PRIMARY KEY (`start_time`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+drop table if exists location;
+/*!40101 set @saved_cs_client     = @@character_set_client */;
+/*!40101 set character_set_client = utf8 */;
+create table location (
+  id bigint not null primary key,
+  name text not null,
+);
+/*!40101 set character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `semester`
+-- dumping data for table location
 --
 
 --
--- Table structure for table `session`
+-- table structure for table offering
 --
 
-DROP TABLE IF EXISTS `session`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `session` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `in_encounter_id` bigint(20) NOT NULL,
-  `out_encounter_id` bigint(20) NOT NULL,
-  `complete` tinyint(1) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `unique_index` (`in_encounter_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=710 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+drop table if exists offering;
+/*!40101 set @saved_cs_client     = @@character_set_client */;
+/*!40101 set character_set_client = utf8 */;
+create table offering (
+  id bigserial primary key,
+  course_id bigint not null,
+  semester_start_time bigint not null,
+  unique key unique_index (course_id,semester_start_time)
+);
+/*!40101 set character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `session`
+-- dumping data for table offering
 --
 
 --
--- Table structure for table `student`
+-- table structure for table period
 --
 
-DROP TABLE IF EXISTS `student`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `student` (
-  `id` bigint(20) NOT NULL,
-  `name` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+drop table if exists period;
+/*!40101 set @saved_cs_client     = @@character_set_client */;
+/*!40101 set character_set_client = utf8 */;
+create table period (
+  start_time bigint not null primary key,
+  numbering bigint not null,
+  kind enum('passing','class','break','lunch','tutorial','none') not null,
+  temp bool not null,
+  primary key (start_time)
+);
+/*!40101 set character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `student`
+-- dumping data for table period
 --
 
 --
--- Table structure for table `user`
+-- table structure for table schedule
 --
 
-DROP TABLE IF EXISTS `user`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `user` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `name` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `email` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `password_hash` char(60) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `ring` bigint(2) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `email` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=113 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+drop table if exists schedule;
+/*!40101 set @saved_cs_client     = @@character_set_client */;
+/*!40101 set character_set_client = utf8 */;
+create table schedule (
+  id bigserial primary key,
+  student_id bigint not null,
+  course_id bigint not null,
+  has_start bool not null,
+  start_time bigint not null,
+  has_end bool not null,
+  end_time bigint not null,
+  unique key unique_index (student_id,course_id)
+);
+/*!40101 set character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `user`
+-- dumping data for table schedule
 --
 
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+--
+-- table structure for table semester
+--
 
--- Dump completed on 2020-02-24  4:54:35
+drop table if exists semester;
+/*!40101 set @saved_cs_client     = @@character_set_client */;
+/*!40101 set character_set_client = utf8 */;
+create table semester (
+  start_time bigint not null,
+  year bigint not null,
+  kind enum('summer','fall','spring') not null,
+  primary key (start_time)
+);
+/*!40101 set character_set_client = @saved_cs_client */;
+
+--
+-- dumping data for table semester
+--
+
+--
+-- table structure for table session
+--
+
+drop table if exists session;
+/*!40101 set @saved_cs_client     = @@character_set_client */;
+/*!40101 set character_set_client = utf8 */;
+create table session (
+  id bigserial primary key,
+  in_encounter_id bigint not null,
+  out_encounter_id bigint not null,
+  complete bool not null,
+  primary key (id),
+  unique key unique_index (in_encounter_id)
+);
+/*!40101 set character_set_client = @saved_cs_client */;
+
+--
+-- dumping data for table session
+--
+
+--
+-- table structure for table student
+--
+
+drop table if exists student;
+/*!40101 set @saved_cs_client     = @@character_set_client */;
+/*!40101 set character_set_client = utf8 */;
+create table student (
+  id bigint not null primary key,
+  name text not null,
+);
+/*!40101 set character_set_client = @saved_cs_client */;
+
+--
+-- table structure for table user
+--
+
+drop table if exists user;
+/*!40101 set @saved_cs_client     = @@character_set_client */;
+/*!40101 set character_set_client = utf8 */;
+create table user (
+  id bigserial primary key,
+  name text not null,
+  email text not null,
+  password_hash text not null,
+  ring bigint not null,
+  unique key email (email)
+);
+/*!40101 set character_set_client = @saved_cs_client */;
+
