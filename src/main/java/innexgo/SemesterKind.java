@@ -18,8 +18,18 @@
 
 package innexgo;
 
-public class Semester {
-  public long startTime;
-  public long year;
-  public SemesterKind kind;
+
+public enum SemesterKind {
+  SUMMER,
+  FALL,
+  SPRING;
+
+  public static boolean contains(String str) {
+    for(SemesterKind semesterKind : SemesterKind.values()) {
+      if(semesterKind.name().equals(str)) {
+        return true;
+      }
+    }
+    return false;
+  }
 }

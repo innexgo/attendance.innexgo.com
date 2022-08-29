@@ -27,21 +27,3 @@ public class Period {
   // If it's a test. (For testing purposes)
   boolean temp;
 }
-
-enum PeriodKind {
-  PASSING,
-  CLASS,
-  BREAK,
-  LUNCH,
-  TUTORIAL,
-  NONE;
-
-  public static boolean contains(String str) {
-    for(PeriodKind periodKind : PeriodKind.values()) {
-      if(periodKind.name().equals(str)) {
-        return true;
-      }
-    }
-    return false;
-  }
-}
