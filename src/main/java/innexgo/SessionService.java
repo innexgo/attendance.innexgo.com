@@ -132,7 +132,7 @@ public class SessionService {
             + (outTimeBegin == null ? "" : " AND outen.time >= " + outTimeBegin)
             + (outTimeEnd == null ? "" : " AND outen.time <= " + outTimeEnd)
             + (" ORDER BY inen.time DESC")
-            + (" LIMIT " + offset + ", " + count)
+            + (" LIMIT " + offset + " OFFSET " + count)
             + ";";
     RowMapper<Session> rowMapper = new SessionRowMapper();
     return this.jdbcTemplate.query(sql, rowMapper);

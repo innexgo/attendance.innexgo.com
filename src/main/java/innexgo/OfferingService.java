@@ -106,7 +106,7 @@ public class OfferingService {
             + (semesterStartTime == null ? "" : " AND o.semester_start_time = " + semesterStartTime)
             + (courseId == null ? "" : " AND o.course_id = " + courseId)
             + (" ORDER BY o.id")
-            + (" LIMIT " + offset + ", "  + count)
+            + (" LIMIT " + offset + " OFFSET "  + count)
             + ";";
 
     RowMapper<Offering> rowMapper = new OfferingRowMapper();

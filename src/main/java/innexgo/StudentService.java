@@ -87,7 +87,7 @@ public class StudentService {
             + (name == null ? "" : " AND st.name = " + Utils.escape(name))
             + (partialName == null ? "" : " AND st.name LIKE " + Utils.escape("%"+partialName+"%"))
             + (" ORDER BY st.id")
-            + (" LIMIT " + offset + ", "  + count)
+            + (" LIMIT " + offset + " OFFSET "  + count)
             + ";";
 
     RowMapper<Student> rowMapper = new StudentRowMapper();

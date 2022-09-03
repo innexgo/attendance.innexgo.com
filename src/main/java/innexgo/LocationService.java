@@ -75,7 +75,7 @@ public class LocationService {
             + (id == null ? "" : " AND l.id = " + id)
             + (name == null ? "" : " AND l.name = " + Utils.escape(name))
             + (" ORDER BY l.id")
-            + (" LIMIT " + offset + ", "  + count)
+            + (" LIMIT " + offset + " OFFSET "  + count)
             + ";";
 
     RowMapper<Location> rowMapper = new LocationRowMapper();

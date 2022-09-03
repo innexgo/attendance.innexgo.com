@@ -31,28 +31,28 @@ public class UserService {
   @Autowired private JdbcTemplate jdbcTemplate;
 
   public User getById(long id) {
-    String sql = "SELECT id, name, email, password_hash, ring FROM user WHERE id=?";
+    String sql = "SELECT id, name, email, password_hash, ring FROM appuser WHERE id=?";
     RowMapper<User> rowMapper = new UserRowMapper();
     User user = jdbcTemplate.queryForObject(sql, rowMapper, id);
     return user;
   }
 
   public List<User> getByName(String name) {
-    String sql = "SELECT id, name, email, password_hash, ring FROM user WHERE name=?";
+    String sql = "SELECT id, name, email, password_hash, ring FROM appuser WHERE name=?";
     RowMapper<User> rowMapper = new UserRowMapper();
     List<User> users = jdbcTemplate.query(sql, rowMapper, name);
     return users;
   }
 
   public User getByEmail(String email) {
-    String sql = "SELECT id, name, email, password_hash, ring FROM user WHERE email=?";
+    String sql = "SELECT id, name, email, password_hash, ring FROM appuser WHERE email=?";
     RowMapper<User> rowMapper = new UserRowMapper();
     User user = jdbcTemplate.queryForObject(sql, rowMapper, email);
     return user;
   }
 
   public List<User> getAll() {
-    String sql = "SELECT  id, name, email, password_hash, ring FROM user";
+    String sql = "SELECT  id, name, email, password_hash, ring FROM appuser";
     RowMapper<User> rowMapper = new UserRowMapper();
     return this.jdbcTemplate.query(sql, rowMapper);
   }
@@ -66,7 +66,7 @@ public class UserService {
 
     // Fetch user id
     sql =
-        "SELECT id FROM user WHERE name=? AND email=? AND password_hash=? AND ring=?";
+        "SELECT id FROM appuser WHERE name=? AND email=? AND password_hash=? AND ring=?";
     long id =
         jdbcTemplate.queryForObject(
             sql, Long.class, user.name, user.email, user.passwordHash, user.ring);
@@ -90,33 +90,33 @@ public class UserService {
 
   public User deleteById(long id) {
     User user = getById(id);
-    String sql = "DELETE FROM user WHERE id=?";
+    String sql = "DELETE FROM appuser WHERE id=?";
     jdbcTemplate.update(sql, id);
     return user;
   }
 
   public boolean existsById(long id) {
-    String sql = "SELECT count(*) FROM user WHERE id=?";
+    String sql = "SELECT count(*) FROM appuser WHERE id=?";
     int count = jdbcTemplate.queryForObject(sql, Integer.class, id);
     return count != 0;
   }
 
   public boolean existsByEmail(String email) {
-    String sql = "SELECT count(*) FROM user WHERE email=?";
+    String sql = "SELECT count(*) FROM appuser WHERE email=?";
     int count = jdbcTemplate.queryForObject(sql, Integer.class, email);
     return count != 0;
   }
 
   public List<User> query(Long id, String name, String email, Integer ring, long offset, long count) {
     String sql =
-        "SELECT u.id, u.name, u.password_hash, u.email, u.ring FROM user u"
+        "SELECT u.id, u.name, u.password_hash, u.email, u.ring FROM appuser u"
             + " WHERE 1=1 "
             + (id == null ? "" : " AND u.id = " + id)
             + (name == null ? "" : " AND u.name = " + Utils.escape(name))
             + (email == null ? "" : " AND u.email = " + Utils.escape(email))
             + (ring == null ? "" : " AND u.ring = " + ring)
             + (" ORDER BY u.id")
-            + (" LIMIT " + offset + ", "  + count)
+            + (" LIMIT " + offset + " OFFSET "  + count)
             + ";";
 
     RowMapper<User> rowMapper = new UserRowMapper();

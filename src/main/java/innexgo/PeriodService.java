@@ -154,7 +154,7 @@ public class PeriodService {
             + (maxStartTime == null ? "" : " AND prd.start_time <= " + maxStartTime)
             + (temp == null ? "" : " AND prd.temp = " + temp)
             + (" ORDER BY prd.start_time")
-            + (" LIMIT " + offset + ", "  + count)
+            + (" LIMIT " + offset + " OFFSET "  + count)
             + ";";
 
     RowMapper<Period> rowMapper = new PeriodRowMapper();

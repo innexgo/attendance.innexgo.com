@@ -134,7 +134,7 @@ public class IrregularityService {
             + (minTime == null ? "" : " AND irr.time >= " + minTime)
             + (maxTime == null ? "" : " AND irr.time <= " + maxTime)
             + (" ORDER BY irr.id")
-            + (" LIMIT " + offset + ", "  + count)
+            + (" LIMIT " + offset + " OFFSET "  + count)
             + ";";
 
     RowMapper<Irregularity> rowMapper = new IrregularityRowMapper();

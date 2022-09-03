@@ -124,7 +124,7 @@ public class ScheduleService {
             + (locationId == null ? "" : " AND c.location_id = " + locationId)
             + (period == null ? "" : " AND c.period = " + period)
             + (" ORDER BY sch.id")
-            + (" LIMIT " + offset + ", "  + count)
+            + (" LIMIT " + offset + " OFFSET "  + count)
             + ";";
 
     RowMapper<Schedule> rowMapper = new ScheduleRowMapper();

@@ -120,7 +120,7 @@ public class SemesterService {
             + (minStartTime == null ? "" : " AND se.start_time >= " + minStartTime)
             + (maxStartTime == null ? "" : " AND se.start_time <= " + maxStartTime)
             + (" ORDER BY se.start_time")
-            + (" LIMIT " + offset + ", "  + count)
+            + (" LIMIT " + offset + " OFFSET "  + count)
             + ";";
 
     RowMapper<Semester> rowMapper = new SemesterRowMapper();

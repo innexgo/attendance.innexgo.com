@@ -116,7 +116,7 @@ public class ApiKeyService {
             + (maxCreationTime == null ? "" : " AND a.creation_time <= " + maxCreationTime)
             + (keyHash == null ? "" : " AND a.key_hash = " + Utils.escape(keyHash))
             + (" ORDER BY a.id")
-            + (" LIMIT " + offset + ", "  + count)
+            + (" LIMIT " + offset + " OFFSET "  + count)
             + ";";
     RowMapper<ApiKey> rowMapper = new ApiKeyRowMapper();
     return this.jdbcTemplate.query(sql, rowMapper);

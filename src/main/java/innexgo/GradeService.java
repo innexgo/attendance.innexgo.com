@@ -113,7 +113,7 @@ public class GradeService {
       + (semesterStartTime == null ? "" : " AND grd.semester_start_time = " + semesterStartTime)
       + (numbering == null ? "" : " AND grd.numbering = " + numbering)
       + " ORDER BY grd.id"
-      + " LIMIT " +offset +", "  + count
+      + " LIMIT " +offset +" OFFSET "  + count
       + ";";
 
     RowMapper<Grade> rowMapper = new GradeRowMapper();

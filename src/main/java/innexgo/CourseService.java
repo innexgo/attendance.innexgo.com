@@ -114,7 +114,7 @@ public class CourseService {
             + (studentId == null ? "" : " AND sc.student_id = " + studentId)
             + (subject == null ? "" : " AND cs.subject = " + Utils.escape(subject))
             + " ORDER BY cs.id"
-            + " LIMIT " + offset + ", " + count
+            + " LIMIT " + offset + " OFFSET " + count
             + ";";
 
     RowMapper<Course> rowMapper = new CourseRowMapper();

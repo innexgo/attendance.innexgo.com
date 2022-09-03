@@ -98,7 +98,7 @@ public class EncounterService {
             + (minTime == null ? "" : " AND e.time >= " + minTime)
             + (maxTime == null ? "" : " AND e.time <= " + maxTime)
             + (" ORDER BY e.id")
-            + (" LIMIT " + offset + ", "  + count)
+            + (" LIMIT " + offset + " OFFSET "  + count)
             + ";";
     RowMapper<Encounter> rowMapper = new EncounterRowMapper();
     return this.jdbcTemplate.query(sql, rowMapper);
