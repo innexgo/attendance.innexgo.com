@@ -32,8 +32,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import innexgo.PeriodKind;
-
 @CrossOrigin
 @RestController
 @RequestMapping(value = { "/api" })
@@ -663,7 +661,6 @@ public class ApiController {
     }
     List<Offering> els = offeringService
         .query(
-            Utils.parseLong(allRequestParam.get("offeringId")),
             Utils.parseLong(allRequestParam.get("semesterStartTime")),
             Utils.parseLong(allRequestParam.get("courseId")),
             offset,
@@ -883,7 +880,7 @@ public class ApiController {
     if (!innexgoService.isTrusted(apiKey)) {
       return Errors.MUST_BE_USER.getResponse();
     }
-    return new ResponseEntity<>(semesterService.getByTime(time), HttpStatus.OK);
+    return new ResponseEntity<>(innexgoService.fillSemester(semesterService.getByTime(time)), HttpStatus.OK);
   }
 
   @RequestMapping("/misc/getPeriodByTime/")

@@ -60,9 +60,9 @@ public class UserService {
   public void add(User user) {
     // Add user
     String sql =
-        "INSERT INTO user (id, name, email, password_hash, ring) values (?, ?, ?, ?, ?)";
+        "INSERT INTO appuser (name, email, password_hash, ring) values (?, ?, ?, ?)";
     jdbcTemplate.update(
-        sql, user.id, user.name, user.email, user.passwordHash, user.ring);
+        sql, user.name, user.email, user.passwordHash, user.ring);
 
     // Fetch user id
     sql =
@@ -77,10 +77,9 @@ public class UserService {
 
   public void update(User user) {
     String sql =
-        "UPDATE user SET id=?, name=?, email=?, password_hash=?, ring=? WHERE id=?";
+        "UPDATE appuser SET name=?, email=?, password_hash=?, ring=? WHERE id=?";
     jdbcTemplate.update(
         sql,
-        user.id,
         user.name,
         user.email,
         user.passwordHash,

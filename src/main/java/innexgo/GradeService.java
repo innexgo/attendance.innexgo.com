@@ -68,8 +68,8 @@ public class GradeService {
     // check if it doesnt exist yet
     if (!existsByStudentIdSemesterStartTime(grade.studentId, grade.semesterStartTime)) {
       // Add grade
-      String sql = "INSERT INTO grade (id, student_id, semester_start_time, numbering) values (?, ?, ?, ?)";
-      jdbcTemplate.update(sql, grade.id, grade.studentId, grade.semesterStartTime, grade.numbering);
+      String sql = "INSERT INTO grade (student_id, semester_start_time, numbering) values (?, ?, ?, ?)";
+      jdbcTemplate.update(sql, grade.studentId, grade.semesterStartTime, grade.numbering);
 
       // Fetch grade id
       sql = "SELECT id FROM grade WHERE student_id=? AND semester_start_time=? AND numbering=?";
@@ -82,13 +82,8 @@ public class GradeService {
   }
 
   public void update(Grade grade) {
-    String sql = "UPDATE grade SET id=?, student_id=?, semester_start_time=?, numbering=? WHERE id=?";
-    jdbcTemplate.update(sql, grade.id, grade.studentId, grade.semesterStartTime, grade.numbering, grade.id);
-
-    // Fetch grade id
-    sql = "SELECT id FROM grade WHERE student_id=? AND semester_start_time=? AND numbering=?";
-    long id = jdbcTemplate.queryForObject(sql, Long.class, grade.studentId, grade.semesterStartTime, grade.numbering);
-    grade.id = id;
+    String sql = "UPDATE grade SET student_id=?, semester_start_time=?, numbering=? WHERE id=?";
+    jdbcTemplate.update(sql, grade.studentId, grade.semesterStartTime, grade.numbering, grade.id);
   }
 
   public Grade deleteById(long id) {

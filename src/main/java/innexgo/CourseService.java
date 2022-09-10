@@ -49,9 +49,9 @@ public class CourseService {
   public void add(Course course) {
     // Add course
     String sql =
-        "INSERT INTO course (id, teacher_id, location_id, period, subject) values (?, ?, ?, ?, ?)";
+        "INSERT INTO course (teacher_id, location_id, period, subject) values (?, ?, ?, ?)";
     jdbcTemplate.update(
-        sql, course.id, course.teacherId, course.locationId, course.period, course.subject);
+        sql, course.teacherId, course.locationId, course.period, course.subject);
 
     // Fetch course id
     sql =
@@ -66,10 +66,9 @@ public class CourseService {
 
   public void update(Course course) {
     String sql =
-        "UPDATE course SET id=?, teacher_id=?, location_id=? period=?, subject=? WHERE id=?";
+        "UPDATE course SET teacher_id=?, location_id=? period=?, subject=? WHERE id=?";
     jdbcTemplate.update(
         sql,
-        course.id,
         course.teacherId,
         course.locationId,
         course.period,

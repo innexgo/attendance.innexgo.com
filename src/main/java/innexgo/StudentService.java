@@ -54,9 +54,8 @@ public class StudentService {
   }
 
   public void update(Student student) {
-    String sql = "UPDATE student SET id=?, name=? WHERE id=?";
-    jdbcTemplate.update(
-        sql, student.id, student.name, student.id);
+    String sql = "UPDATE student SET name=? WHERE id=?";
+    jdbcTemplate.update(sql, student.name, student.id);
   }
 
   public Student deleteById(long id) {

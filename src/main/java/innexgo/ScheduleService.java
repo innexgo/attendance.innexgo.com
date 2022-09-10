@@ -68,8 +68,8 @@ public class ScheduleService {
     // check if it doesnt exist yet
     if (!existsByStudentIdCourseId(schedule.studentId, schedule.courseId)) {
       // Add schedule
-      String sql = "INSERT INTO schedule (id, student_id, course_id, has_start, start_time, has_end, end_time) values (?, ?, ?, ?, ?, ?, ?)";
-      jdbcTemplate.update(sql, schedule.id, schedule.studentId, schedule.courseId, schedule.hasStart, schedule.startTime, schedule.hasEnd, schedule.endTime);
+      String sql = "INSERT INTO schedule (student_id, course_id, has_start, start_time, has_end, end_time) values (?, ?, ?, ?, ?, ?, ?)";
+      jdbcTemplate.update(sql, schedule.studentId, schedule.courseId, schedule.hasStart, schedule.startTime, schedule.hasEnd, schedule.endTime);
 
       // Fetch schedule id
       sql = "SELECT id FROM schedule WHERE student_id=? AND course_id=? AND has_start=? AND start_time=? AND has_end=? AND end_time=?";
@@ -82,13 +82,8 @@ public class ScheduleService {
   }
 
   public void update(Schedule schedule) {
-    String sql = "UPDATE schedule SET id=?, student_id=?, course_id=?, has_start=?, start_time=?, has_end=?, end_time=? WHERE id=?";
-    jdbcTemplate.update(sql, schedule.id, schedule.studentId, schedule.courseId, schedule.startTime, schedule.endTime, schedule.id);
-
-    // Fetch schedule id
-    sql = "SELECT id FROM schedule WHERE student_id=? AND course_id=? AND has_start=? AND start_time=? AND has_end=? AND end_time=?";
-    long id = jdbcTemplate.queryForObject(sql, Long.class, schedule.studentId, schedule.courseId, schedule.hasStart, schedule.startTime, schedule.hasEnd, schedule.endTime);
-    schedule.id = id;
+    String sql = "UPDATE schedule student_id=?, course_id=?, has_start=?, start_time=?, has_end=?, end_time=? WHERE id=?";
+    jdbcTemplate.update(sql, schedule.studentId, schedule.courseId, schedule.startTime, schedule.endTime, schedule.id);
   }
 
   public Schedule deleteById(long id) {

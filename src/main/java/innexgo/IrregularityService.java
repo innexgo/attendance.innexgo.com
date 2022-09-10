@@ -50,10 +50,9 @@ public class IrregularityService {
 
     // Add irregularity
     String sql =
-        "INSERT INTO irregularity (id, student_id, course_id, period_start_time, kind, time, time_missing) values (?, ?, ?, ?, ?, ?, ?)";
+        "INSERT INTO irregularity (student_id, course_id, period_start_time, kind, time, time_missing) values (?, ?, ?, ?, ?, ?)";
     jdbcTemplate.update(
         sql,
-        irregularity.id,
         irregularity.studentId,
         irregularity.courseId,
         irregularity.periodStartTime,
@@ -81,10 +80,9 @@ public class IrregularityService {
 
   public void update(Irregularity irregularity) {
     String sql =
-        "UPDATE irregularity SET id=?, student_id=?, course_id=?, period_start_time=?, kind=?, time=?, time_missing=? WHERE id=?";
+        "UPDATE irregularity SET student_id=?, course_id=?, period_start_time=?, kind=?, time=?, time_missing=? WHERE id=?";
     jdbcTemplate.update(
         sql,
-        irregularity.id,
         irregularity.studentId,
         irregularity.courseId,
         irregularity.periodStartTime,

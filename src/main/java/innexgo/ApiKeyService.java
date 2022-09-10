@@ -56,9 +56,9 @@ public class ApiKeyService {
   public void add(ApiKey apiKey) {
     // Add API key
     String sql =
-        "INSERT INTO api_key (id, user_id, creation_time, expiration_time, key_hash) values (?, ?, ?, ?, ?)";
+        "INSERT INTO api_key (user_id, creation_time, expiration_time, key_hash) values (?, ?, ?, ?)";
     jdbcTemplate.update(
-        sql, apiKey.id, apiKey.userId, apiKey.creationTime, apiKey.expirationTime, apiKey.keyHash);
+        sql, apiKey.userId, apiKey.creationTime, apiKey.expirationTime, apiKey.keyHash);
 
     // Fetch apiKey id
     sql =
@@ -78,9 +78,9 @@ public class ApiKeyService {
 
   public void update(ApiKey apiKey) {
     String sql =
-        "UPDATE api_key SET id=?, user_id=?, creation_time=?, expiration_time=?, key=? WHERE id=?";
+        "UPDATE api_key user_id=?, creation_time=?, expiration_time=?, key=? WHERE id=?";
     jdbcTemplate.update(
-        sql, apiKey.id, apiKey.userId, apiKey.creationTime, apiKey.expirationTime, apiKey.keyHash);
+        sql, apiKey.userId, apiKey.creationTime, apiKey.expirationTime, apiKey.keyHash);
   }
 
   public ApiKey deleteById(long id) {

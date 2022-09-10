@@ -19,7 +19,6 @@
 package innexgo;
 
 public class Offering {
-  public long id;
   long courseId;
   long semesterStartTime;
 

@@ -49,10 +49,9 @@ public class SessionService {
   public void add(Session session) {
     // Add session
     String sql =
-        "INSERT INTO session (id, in_encounter_id, out_encounter_id, complete) values (?, ?, ?, ?)";
+        "INSERT INTO session (in_encounter_id, out_encounter_id, complete) values (?, ?, ?)";
     jdbcTemplate.update(
         sql,
-        session.id,
         session.inEncounterId,
         session.outEncounterId,
         session.complete);
@@ -73,10 +72,9 @@ public class SessionService {
 
   public void update(Session session) {
     String sql =
-        "UPDATE session SET id=?, in_encounter_id=?, out_encounter_id=?, complete=? WHERE id=?";
+        "UPDATE session SET in_encounter_id=?, out_encounter_id=?, complete=? WHERE id=?";
     jdbcTemplate.update(
         sql,
-        session.id,
         session.inEncounterId,
         session.outEncounterId,
         session.complete,

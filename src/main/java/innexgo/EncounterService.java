@@ -46,7 +46,7 @@ public class EncounterService {
 
   public void add(Encounter encounter) {
     // Add encounter
-    String sql = "INSERT INTO encounter(id, time, location_id, student_id, kind) values (?, ?, ?, ?, ?)";
+    String sql = "INSERT INTO encounter(time, location_id, student_id, kind) values (?, ?, ?, ?)";
     jdbcTemplate.update(
         sql, encounter.id, encounter.time, encounter.locationId, encounter.studentId, encounter.kind.name());
 
@@ -59,9 +59,9 @@ public class EncounterService {
   }
 
   public void update(Encounter encounter) {
-    String sql = "UPDATE encounter SET id=?, time=?, location_id=?, student_id=?, kind=? WHERE id=?";
+    String sql = "UPDATE encounter SET time=?, location_id=?, student_id=?, kind=? WHERE id=?";
     jdbcTemplate.update(
-        sql, encounter.id, encounter.time, encounter.locationId, encounter.studentId, encounter.kind.name(), encounter.id);
+        sql, encounter.time, encounter.locationId, encounter.studentId, encounter.kind.name(), encounter.id);
   }
 
   public Encounter delete(long id) {
