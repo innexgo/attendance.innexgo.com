@@ -13,8 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import innexgo.*;
-
 @Service
 public class InnexgoService {
 
@@ -172,7 +170,7 @@ public class InnexgoService {
    */
   Session fillSession(Session session) {
     session.inEncounter = fillEncounter(encounterService.getById(session.inEncounterId));
-    if (session.complete) {
+    if (session.outEncounterId != null) {
       session.outEncounter = fillEncounter(encounterService.getById(session.outEncounterId));
     }
     return session;
@@ -308,7 +306,6 @@ public class InnexgoService {
 
       // now close session
       openSession.outEncounterId = outEncounter.id;
-      openSession.complete = true;
       sessionService.update(openSession);
 
       // After the person signed out the first time, they might have been logged in at
@@ -515,7 +512,6 @@ public class InnexgoService {
       if (locationId == inEncounter.locationId) {
         // Then close this session naturally
         openSession.outEncounterId = encounter.id;
-        openSession.complete = true;
         sessionService.update(openSession);
 
         // Will result in the last open session being the one returned
@@ -556,7 +552,6 @@ public class InnexgoService {
 
         // now close session
         openSession.outEncounterId = outEncounter.id;
-        openSession.complete = true;
         sessionService.update(openSession);
 
         // After the person signed out the first time, they might have been logged in at
@@ -604,9 +599,8 @@ public class InnexgoService {
     if (!usedToClose) {
       // make new open session
       Session session = new Session();
-      session.complete = false;
       session.inEncounterId = encounter.id;
-      session.outEncounterId = 0;
+      session.outEncounterId = null;
       sessionService.add(session);
 
       // This is the session we give back

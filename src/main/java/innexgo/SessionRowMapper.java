@@ -28,8 +28,7 @@ public class SessionRowMapper implements RowMapper<Session> {
     Session session = new Session();
     session.id = row.getLong("id");
     session.inEncounterId = row.getLong("in_encounter_id");
-    session.outEncounterId = row.getLong("out_encounter_id");
-    session.complete = row.getBoolean("complete");
+    session.outEncounterId = row.getObject("out_encounter_id", Long.class);
     return session;
   }
 }
