@@ -9,15 +9,15 @@ import pandas as pd
 
 INT32_MAX = 0x7FFFFFFF
 
-def currentMillis():
+def currentMillis() -> int:
     return round(1000 * time.time())
 
-def prompt(text):
+def prompt(text:str) -> str:
     print(text)
     return input()
 
-def alpha(str):
-    return ''.join([i for i in str if i.isalpha()])
+def alpha(text:str) -> str:
+    return ''.join([i for i in text if i.isalpha()])
 
 def printJson(d):
     json.dumps(d, sort_keys=True, indent=4)
@@ -87,9 +87,9 @@ domain_suffix = prompt(f'===> Please enter domain suffix for teacher emails...')
 
 # Load the teachers into the db
 def loadTeacher(row):
-    lastName, firstName= tuple([x.strip() for x in row.Teacher.split(',')])
     # Generate necessary fields
-    userName = f'{firstName} {lastName}'
+    userName = row.Teacher
+    firstName, _, lastName = row.Teacher.partition(' ')
     # Create email
     email = f'{alpha(lastName)}{alpha(firstName[0] if len(lastName) > 2 else firstName[0:2])}@{domain_suffix}'.lower()
     password = '1234'

@@ -29,11 +29,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 public class OfferingService {
 
-  @Autowired private JdbcTemplate jdbcTemplate;
+  @Autowired
+  private JdbcTemplate jdbcTemplate;
 
   public Offering getOfferingBySemesterStartTimeCourseId(long semesterStartTime, long courseId) {
-    String sql =
-        "SELECT id, semester_start_time, course_id FROM offering WHERE semester_start_time=? AND course_id=?";
+    String sql = "SELECT id, semester_start_time, course_id FROM offering WHERE semester_start_time=? AND course_id=?";
     RowMapper<Offering> rowMapper = new OfferingRowMapper();
     List<Offering> offerings = jdbcTemplate.query(sql, rowMapper, semesterStartTime, courseId);
     return offerings.size() == 0 ? null : offerings.get(0);
@@ -75,14 +75,13 @@ public class OfferingService {
       Long courseId,
       long offset,
       long count) {
-    String sql =
-        "SELECT o.semester_start_time, o.course_id FROM offering o"
-            + " WHERE 1=1 "
-            + (semesterStartTime == null ? "" : " AND o.semester_start_time = " + semesterStartTime)
-            + (courseId == null ? "" : " AND o.course_id = " + courseId)
-            + (" ORDER BY o.semester_start_time, o.course_id")
-            + (" LIMIT " + offset + " OFFSET "  + count)
-            + ";";
+    String sql = "SELECT o.semester_start_time, o.course_id FROM offering o"
+        + " WHERE 1=1 "
+        + (semesterStartTime == null ? "" : " AND o.semester_start_time = " + semesterStartTime)
+        + (courseId == null ? "" : " AND o.course_id = " + courseId)
+        + (" ORDER BY o.semester_start_time, o.course_id")
+        + (" LIMIT " + count + " OFFSET " + offset)
+        + ";";
 
     RowMapper<Offering> rowMapper = new OfferingRowMapper();
     return this.jdbcTemplate.query(sql, rowMapper);

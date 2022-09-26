@@ -29,7 +29,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 public class ScheduleService {
 
-  @Autowired private JdbcTemplate jdbcTemplate;
+  @Autowired
+  private JdbcTemplate jdbcTemplate;
 
   public Schedule getById(long id) {
     String sql = "SELECT id, student_id, course_id, has_start, start_time, has_end, end_time FROM schedule WHERE id=?";
@@ -39,8 +40,7 @@ public class ScheduleService {
   }
 
   public Schedule getScheduleByStudentIdCourseId(long studentId, long courseId) {
-    String sql =
-        "SELECT id, student_id, course_id, has_start, start_time, has_end, end_time FROM schedule WHERE student_id=? AND course_id=?";
+    String sql = "SELECT id, student_id, course_id, has_start, start_time, has_end, end_time FROM schedule WHERE student_id=? AND course_id=?";
     RowMapper<Schedule> rowMapper = new ScheduleRowMapper();
     List<Schedule> schedules = jdbcTemplate.query(sql, rowMapper, studentId, courseId);
     return schedules.size() == 0 ? null : schedules.get(0);
@@ -69,11 +69,13 @@ public class ScheduleService {
     if (!existsByStudentIdCourseId(schedule.studentId, schedule.courseId)) {
       // Add schedule
       String sql = "INSERT INTO schedule (student_id, course_id, has_start, start_time, has_end, end_time) values (?, ?, ?, ?, ?, ?, ?)";
-      jdbcTemplate.update(sql, schedule.studentId, schedule.courseId, schedule.hasStart, schedule.startTime, schedule.hasEnd, schedule.endTime);
+      jdbcTemplate.update(sql, schedule.studentId, schedule.courseId, schedule.hasStart, schedule.startTime,
+          schedule.hasEnd, schedule.endTime);
 
       // Fetch schedule id
       sql = "SELECT id FROM schedule WHERE student_id=? AND course_id=? AND has_start=? AND start_time=? AND has_end=? AND end_time=?";
-      long id = jdbcTemplate.queryForObject(sql, Long.class, schedule.studentId, schedule.courseId, schedule.hasStart, schedule.startTime, schedule.hasEnd, schedule.endTime);
+      long id = jdbcTemplate.queryForObject(sql, Long.class, schedule.studentId, schedule.courseId, schedule.hasStart,
+          schedule.startTime, schedule.hasEnd, schedule.endTime);
       schedule.id = id;
       return schedule;
     } else {
@@ -105,27 +107,27 @@ public class ScheduleService {
       Long period,
       long offset,
       long count) {
-    String sql =
-        "SELECT sch.id, sch.student_id, sch.course_id, sch.has_start, sch.start_time, sch.has_end, sch.end_time FROM schedule sch"
-            + " JOIN course c ON sch.course_id = c.id"
-            + " WHERE 1=1 "
-            + (scheduleId == null ? "" : " AND sch.id = " + scheduleId)
-            + (studentId == null ? "" : " AND sch.student_id = " + studentId)
-            + (courseId == null ? "" : " AND sch.course_id = " + courseId)
-            + (hasStart == null ? "" : " AND sch.has_start = " + hasStart)
-            + (hasEnd == null ? "" : " AND sch.has_end = " + hasEnd)
-            + (time == null ? "" : " AND (!sch.has_start OR sch.start_time <= "+time+") AND (!sch.has_end OR sch.end_time > "+time+")")
-            + (teacherId == null ? "" : " AND c.teacher_id = " + teacherId)
-            + (locationId == null ? "" : " AND c.location_id = " + locationId)
-            + (period == null ? "" : " AND c.period = " + period)
-            + (" ORDER BY sch.id")
-            + (" LIMIT " + offset + " OFFSET "  + count)
-            + ";";
+    String sql = "SELECT sch.id, sch.student_id, sch.course_id, sch.has_start, sch.start_time, sch.has_end, sch.end_time FROM schedule sch"
+        + " JOIN course c ON sch.course_id = c.id"
+        + " WHERE 1=1 "
+        + (scheduleId == null ? "" : " AND sch.id = " + scheduleId)
+        + (studentId == null ? "" : " AND sch.student_id = " + studentId)
+        + (courseId == null ? "" : " AND sch.course_id = " + courseId)
+        + (hasStart == null ? "" : " AND sch.has_start = " + hasStart)
+        + (hasEnd == null ? "" : " AND sch.has_end = " + hasEnd)
+        + (time == null ? ""
+            : " AND (!sch.has_start OR sch.start_time <= " + time + ") AND (!sch.has_end OR sch.end_time > " + time
+                + ")")
+        + (teacherId == null ? "" : " AND c.teacher_id = " + teacherId)
+        + (locationId == null ? "" : " AND c.location_id = " + locationId)
+        + (period == null ? "" : " AND c.period = " + period)
+        + (" ORDER BY sch.id")
+        + (" LIMIT " + count + " OFFSET " + offset)
+        + ";";
 
     RowMapper<Schedule> rowMapper = new ScheduleRowMapper();
     return this.jdbcTemplate.query(sql, rowMapper);
   }
-
 
   public List<Schedule> getByCourseId() {
     return null;

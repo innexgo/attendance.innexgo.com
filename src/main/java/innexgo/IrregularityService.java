@@ -29,19 +29,18 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @Repository
 public class IrregularityService {
-  @Autowired private JdbcTemplate jdbcTemplate;
+  @Autowired
+  private JdbcTemplate jdbcTemplate;
 
   public Irregularity getById(long id) {
-    String sql =
-        "SELECT id, student_id, course_id, period_start_time, kind, time, time_missing FROM irregularity WHERE id=?";
+    String sql = "SELECT id, student_id, course_id, period_start_time, kind, time, time_missing FROM irregularity WHERE id=?";
     RowMapper<Irregularity> rowMapper = new IrregularityRowMapper();
     Irregularity irregularity = jdbcTemplate.queryForObject(sql, rowMapper, id);
     return irregularity;
   }
 
   public List<Irregularity> getAll() {
-    String sql =
-        "SELECT id, student_id, course_id, period_start_time, kind, time, time_missing FROM irregularity";
+    String sql = "SELECT id, student_id, course_id, period_start_time, kind, time, time_missing FROM irregularity";
     RowMapper<Irregularity> rowMapper = new IrregularityRowMapper();
     return this.jdbcTemplate.query(sql, rowMapper);
   }
@@ -49,8 +48,7 @@ public class IrregularityService {
   public void add(Irregularity irregularity) {
 
     // Add irregularity
-    String sql =
-        "INSERT INTO irregularity (student_id, course_id, period_start_time, kind, time, time_missing) values (?, ?, ?, ?, ?, ?)";
+    String sql = "INSERT INTO irregularity (student_id, course_id, period_start_time, kind, time, time_missing) values (?, ?, ?, ?, ?, ?)";
     jdbcTemplate.update(
         sql,
         irregularity.studentId,
@@ -61,26 +59,23 @@ public class IrregularityService {
         irregularity.timeMissing);
 
     // Fetch irregularity id
-    sql =
-        "SELECT id FROM irregularity WHERE student_id=? AND course_id=? AND period_start_time=? AND kind=? AND time=? AND time_missing=?";
-    long id =
-        jdbcTemplate.queryForObject(
-            sql,
-            Long.class,
-            irregularity.studentId,
-            irregularity.courseId,
-            irregularity.periodStartTime,
-            irregularity.kind.name(),
-            irregularity.time,
-            irregularity.timeMissing);
+    sql = "SELECT id FROM irregularity WHERE student_id=? AND course_id=? AND period_start_time=? AND kind=? AND time=? AND time_missing=?";
+    long id = jdbcTemplate.queryForObject(
+        sql,
+        Long.class,
+        irregularity.studentId,
+        irregularity.courseId,
+        irregularity.periodStartTime,
+        irregularity.kind.name(),
+        irregularity.time,
+        irregularity.timeMissing);
 
     // Set irregularity id
     irregularity.id = id;
   }
 
   public void update(Irregularity irregularity) {
-    String sql =
-        "UPDATE irregularity SET student_id=?, course_id=?, period_start_time=?, kind=?, time=?, time_missing=? WHERE id=?";
+    String sql = "UPDATE irregularity SET student_id=?, course_id=?, period_start_time=?, kind=?, time=?, time_missing=? WHERE id=?";
     jdbcTemplate.update(
         sql,
         irregularity.studentId,
@@ -117,23 +112,22 @@ public class IrregularityService {
       Long maxTime,
       long offset,
       long count) {
-    String sql =
-        "SELECT irr.id, irr.student_id, irr.course_id, irr.period_start_time, irr.kind, irr.time, irr.time_missing"
-            + " FROM irregularity irr"
-            + (teacherId == null ? "" : " JOIN course crs ON crs.id = irr.course_id")
-            + " WHERE 1=1 "
-            + (id == null ? "" : " AND irr.id = " + id)
-            + (studentId == null ? "" : " AND irr.student_id = " + studentId)
-            + (courseId == null ? "" : " AND irr.course_id = " + courseId)
-            + (periodStartTime == null ? "" : " AND irr.period_start_time = " + periodStartTime)
-            + (teacherId == null ? "" : " AND crs.teacher_id = " + teacherId)
-            + (kind == null ? "" : " AND irr.kind = " + Utils.toSQLString(kind))
-            + (time == null ? "" : " AND irr.time = " + time)
-            + (minTime == null ? "" : " AND irr.time >= " + minTime)
-            + (maxTime == null ? "" : " AND irr.time <= " + maxTime)
-            + (" ORDER BY irr.id")
-            + (" LIMIT " + offset + " OFFSET "  + count)
-            + ";";
+    String sql = "SELECT irr.id, irr.student_id, irr.course_id, irr.period_start_time, irr.kind, irr.time, irr.time_missing"
+        + " FROM irregularity irr"
+        + (teacherId == null ? "" : " JOIN course crs ON crs.id = irr.course_id")
+        + " WHERE 1=1 "
+        + (id == null ? "" : " AND irr.id = " + id)
+        + (studentId == null ? "" : " AND irr.student_id = " + studentId)
+        + (courseId == null ? "" : " AND irr.course_id = " + courseId)
+        + (periodStartTime == null ? "" : " AND irr.period_start_time = " + periodStartTime)
+        + (teacherId == null ? "" : " AND crs.teacher_id = " + teacherId)
+        + (kind == null ? "" : " AND irr.kind = " + kind.name())
+        + (time == null ? "" : " AND irr.time = " + time)
+        + (minTime == null ? "" : " AND irr.time >= " + minTime)
+        + (maxTime == null ? "" : " AND irr.time <= " + maxTime)
+        + (" ORDER BY irr.id")
+        + (" LIMIT " + count + " OFFSET " + offset)
+        + ";";
 
     RowMapper<Irregularity> rowMapper = new IrregularityRowMapper();
     return this.jdbcTemplate.query(sql, rowMapper);

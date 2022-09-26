@@ -30,9 +30,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 public class StudentService {
 
-  @Autowired private PeriodService periodService;
-  @Autowired private CourseService courseService;
-  @Autowired private JdbcTemplate jdbcTemplate;
+  @Autowired
+  private PeriodService periodService;
+  @Autowired
+  private CourseService courseService;
+  @Autowired
+  private JdbcTemplate jdbcTemplate;
 
   public Student getById(long id) {
     String sql = "SELECT id, name FROM student WHERE id=?";
@@ -77,17 +80,15 @@ public class StudentService {
       String name, // Exact match to name
       String partialName, // Partial match to name
       long offset,
-      long count
-      ) {
-    String sql =
-        "SELECT st.id, st.name FROM student st"
-            + " WHERE 1=1 "
-            + (id == null ? "" : " AND st.id = " + id)
-            + (name == null ? "" : " AND st.name = " + Utils.escape(name))
-            + (partialName == null ? "" : " AND st.name LIKE " + Utils.escape("%"+partialName+"%"))
-            + (" ORDER BY st.id")
-            + (" LIMIT " + offset + " OFFSET "  + count)
-            + ";";
+      long count) {
+    String sql = "SELECT st.id, st.name FROM student st"
+        + " WHERE 1=1 "
+        + (id == null ? "" : " AND st.id = " + id)
+        + (name == null ? "" : " AND st.name = " + Utils.escape(name))
+        + (partialName == null ? "" : " AND st.name LIKE " + Utils.escape("%" + partialName + "%"))
+        + (" ORDER BY st.id")
+        + (" LIMIT " + count + " OFFSET " + offset)
+        + ";";
 
     RowMapper<Student> rowMapper = new StudentRowMapper();
     return this.jdbcTemplate.query(sql, rowMapper);
@@ -95,21 +96,20 @@ public class StudentService {
 
   // find students who are present at this location
   public List<Student> present(long locationId, long time) {
-    // Find the sessions that have a start date before the  time
+    // Find the sessions that have a start date before the time
     // If they have an end date it must be after the time
     // find students who are in this list
 
-    String sql =
-              " SELECT DISTINCT st.id, st.name"
-            + " FROM student st"
-            + " INNER JOIN encounter inen ON st.id = inen.student_id"
-            + " INNER JOIN session ses ON ses.in_encounter_id = inen.id"
-            + " LEFT JOIN encounter outen ON ses.complete AND ses.out_encounter_id = outen.id"
-            + " WHERE 1 = 1 "
-            + (" AND inen.location_id = " + locationId)
-            + (" AND inen.time < " + time)
-            + (" AND outen.time IS NULL OR outen.time > " + time)
-            + " ;";
+    String sql = " SELECT DISTINCT st.id, st.name"
+        + " FROM student st"
+        + " INNER JOIN encounter inen ON st.id = inen.student_id"
+        + " INNER JOIN session ses ON ses.in_encounter_id = inen.id"
+        + " LEFT JOIN encounter outen ON ses.complete AND ses.out_encounter_id = outen.id"
+        + " WHERE 1 = 1 "
+        + (" AND inen.location_id = " + locationId)
+        + (" AND inen.time < " + time)
+        + (" AND outen.time IS NULL OR outen.time > " + time)
+        + " ;";
 
     RowMapper<Student> rowMapper = new StudentRowMapper();
     return this.jdbcTemplate.query(sql, rowMapper);
@@ -120,25 +120,26 @@ public class StudentService {
     Course course = courseService.getById(courseId);
     Period period = periodService.getByTime(time);
 
-    // Do some sanity checks to ensure that the time's period is the same period as the course
-    if(period == null || period.numbering != course.period) {
+    // Do some sanity checks to ensure that the time's period is the same period as
+    // the course
+    if (period == null || period.numbering != course.period) {
       // empty list return
       return new ArrayList<Student>();
     }
 
     // Find schedules which have the specified courseId
     // From these select schedules where the beginning of this period is before time
-    // From these select schedules where the beginning of the next period is after time
+    // From these select schedules where the beginning of the next period is after
+    // time
     // Return the students of these schedules
-    String sql =
-        " SELECT DISTINCT st.id, st.name"
-      + " FROM student st"
-      + " INNER JOIN schedule sc ON st.id = sc.student_id"
-      + " INNER JOIN course cs ON cs.id = sc.course_id "
-      + " WHERE 1 = 1"
-      + " AND cs.id = " + course.id
-      + " AND (!sc.has_start OR sc.start_time <= "+time+ ") AND (!sc.has_end OR sc.end_time > "+time + ")"
-      + " ;";
+    String sql = " SELECT DISTINCT st.id, st.name"
+        + " FROM student st"
+        + " INNER JOIN schedule sc ON st.id = sc.student_id"
+        + " INNER JOIN course cs ON cs.id = sc.course_id "
+        + " WHERE 1 = 1"
+        + " AND cs.id = " + course.id
+        + " AND (!sc.has_start OR sc.start_time <= " + time + ") AND (!sc.has_end OR sc.end_time > " + time + ")"
+        + " ;";
     RowMapper<Student> rowMapper = new StudentRowMapper();
     return this.jdbcTemplate.query(sql, rowMapper);
   }

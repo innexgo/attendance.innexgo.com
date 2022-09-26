@@ -29,7 +29,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 public class GradeService {
 
-  @Autowired private JdbcTemplate jdbcTemplate;
+  @Autowired
+  private JdbcTemplate jdbcTemplate;
 
   public Grade getById(long id) {
     String sql = "SELECT id, student_id, semester_start_time, numbering FROM grade WHERE id=?";
@@ -39,8 +40,7 @@ public class GradeService {
   }
 
   public Grade getGradeByStudentIdSemesterStartTime(long studentId, long semesterStartTime) {
-    String sql =
-        "SELECT id, student_id, semester_start_time, numbering FROM grade WHERE student_id=? AND semester_start_time=?";
+    String sql = "SELECT id, student_id, semester_start_time, numbering FROM grade WHERE student_id=? AND semester_start_time=?";
     RowMapper<Grade> rowMapper = new GradeRowMapper();
     List<Grade> grades = jdbcTemplate.query(sql, rowMapper, studentId, semesterStartTime);
     return grades.size() == 0 ? null : grades.get(0);
@@ -100,16 +100,15 @@ public class GradeService {
       Long numbering,
       long offset,
       long count) {
-    String sql =
-      "SELECT grd.id, grd.student_id, grd.semester_start_time, grd.numbering FROM grade grd"
-      + " WHERE 1=1 "
-      + (gradeId == null ? "" : " AND grd.id = " + gradeId)
-      + (studentId == null ? "" : " AND grd.student_id = " + studentId)
-      + (semesterStartTime == null ? "" : " AND grd.semester_start_time = " + semesterStartTime)
-      + (numbering == null ? "" : " AND grd.numbering = " + numbering)
-      + " ORDER BY grd.id"
-      + " LIMIT " +offset +" OFFSET "  + count
-      + ";";
+    String sql = "SELECT grd.id, grd.student_id, grd.semester_start_time, grd.numbering FROM grade grd"
+        + " WHERE 1=1 "
+        + (gradeId == null ? "" : " AND grd.id = " + gradeId)
+        + (studentId == null ? "" : " AND grd.student_id = " + studentId)
+        + (semesterStartTime == null ? "" : " AND grd.semester_start_time = " + semesterStartTime)
+        + (numbering == null ? "" : " AND grd.numbering = " + numbering)
+        + " ORDER BY grd.id"
+        + (" LIMIT " + count + " OFFSET " + offset)
+        + ";";
 
     RowMapper<Grade> rowMapper = new GradeRowMapper();
     return this.jdbcTemplate.query(sql, rowMapper);

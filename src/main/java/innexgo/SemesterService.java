@@ -29,7 +29,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 public class SemesterService {
 
-  @Autowired private JdbcTemplate jdbcTemplate;
+  @Autowired
+  private JdbcTemplate jdbcTemplate;
 
   public Semester getByStartTime(long startTime) {
     String sql = "SELECT start_time, year, kind FROM semester WHERE start_time=?";
@@ -46,15 +47,13 @@ public class SemesterService {
 
   public void add(Semester semester) {
     // Add semester
-    String sql =
-        "INSERT INTO semester (start_time, year, kind) values (?, ?, ?)";
+    String sql = "INSERT INTO semester (start_time, year, kind) values (?, ?, ?)";
     jdbcTemplate.update(
         sql, semester.startTime, semester.year, semester.kind.name());
   }
 
   public void update(Semester semester) {
-    String sql =
-        "UPDATE semester SET start_time=?, year=?, kind=? WHERE start_time=?";
+    String sql = "UPDATE semester SET start_time=?, year=?, kind=? WHERE start_time=?";
     jdbcTemplate.update(
         sql,
         semester.startTime,
@@ -87,15 +86,16 @@ public class SemesterService {
   }
 
   public Semester getByTime(Long time) {
-    List<Semester> currentSemesters =  query(
-      null,          // Long startTime
-      null,          // Long year
-      null,          // Long kind
-      null,          // Long minStartTime
-      time,          // Long maxStartTime
-      0,             // long offset
-      Long.MAX_VALUE // long count
+    List<Semester> currentSemesters = query(
+        null, // Long startTime
+        null, // Long year
+        null, // Long kind
+        null, // Long minStartTime
+        time, // Long maxStartTime
+        0, // long offset
+        Long.MAX_VALUE // long count
     );
+    System.out.println(currentSemesters);
     // Get the most recent of the ones that start before now
     return (currentSemesters.size() != 0
         ? currentSemesters.get(currentSemesters.size() - 1)
@@ -110,18 +110,18 @@ public class SemesterService {
       Long maxStartTime,
       long offset,
       long count
-      ) {
+  ) {
 
     String sql = "SELECT se.start_time, se.year, se.kind FROM semester se"
-            + " WHERE 1=1 "
-            + (startTime == null ? "" : " AND se.start_time = " + startTime)
-            + (year == null ? "" : " AND se.year = " + year)
-            + (kind == null ? "" : " AND se.kind = " + Utils.toSQLString(kind))
-            + (minStartTime == null ? "" : " AND se.start_time >= " + minStartTime)
-            + (maxStartTime == null ? "" : " AND se.start_time <= " + maxStartTime)
-            + (" ORDER BY se.start_time")
-            + (" LIMIT " + offset + " OFFSET "  + count)
-            + ";";
+        + " WHERE 1=1 "
+        + (startTime == null ? "" : " AND se.start_time = " + startTime)
+        + (year == null ? "" : " AND se.year = " + year)
+        + (kind == null ? "" : " AND se.kind = " + kind.name())
+        + (minStartTime == null ? "" : " AND se.start_time >= " + minStartTime)
+        + (maxStartTime == null ? "" : " AND se.start_time <= " + maxStartTime)
+        + (" ORDER BY se.start_time")
+        + (" LIMIT " + count + " OFFSET " + offset)
+        + ";";
 
     RowMapper<Semester> rowMapper = new SemesterRowMapper();
     return this.jdbcTemplate.query(sql, rowMapper);

@@ -29,7 +29,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 public class LocationService {
 
-  @Autowired private JdbcTemplate jdbcTemplate;
+  @Autowired
+  private JdbcTemplate jdbcTemplate;
 
   public Location getById(long id) {
     String sql = "SELECT id, name FROM location WHERE id=?";
@@ -69,14 +70,13 @@ public class LocationService {
   }
 
   public List<Location> query(Long id, String name, long offset, long count) {
-    String sql =
-        "SELECT l.id, l.name FROM location l"
-            + " WHERE 1=1 "
-            + (id == null ? "" : " AND l.id = " + id)
-            + (name == null ? "" : " AND l.name = " + Utils.escape(name))
-            + (" ORDER BY l.id")
-            + (" LIMIT " + offset + " OFFSET "  + count)
-            + ";";
+    String sql = "SELECT l.id, l.name FROM location l"
+        + " WHERE 1=1 "
+        + (id == null ? "" : " AND l.id = " + id)
+        + (name == null ? "" : " AND l.name = " + Utils.escape(name))
+        + (" ORDER BY l.id")
+        + (" LIMIT " + count + " OFFSET " + offset)
+        + ";";
 
     RowMapper<Location> rowMapper = new LocationRowMapper();
     return this.jdbcTemplate.query(sql, rowMapper);

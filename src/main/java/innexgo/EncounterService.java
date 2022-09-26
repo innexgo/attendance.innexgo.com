@@ -29,7 +29,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 public class EncounterService {
 
-  @Autowired private JdbcTemplate jdbcTemplate;
+  @Autowired
+  private JdbcTemplate jdbcTemplate;
 
   public Encounter getById(long id) {
     String sql = "SELECT id, time, location_id, student_id, kind FROM encounter WHERE id=?";
@@ -52,9 +53,8 @@ public class EncounterService {
 
     // Fetch encounter id
     sql = "SELECT id FROM encounter WHERE time=? AND location_id=? AND student_id=?";
-    long id =
-        jdbcTemplate.queryForObject(
-            sql, Long.class, encounter.time, encounter.locationId, encounter.studentId);
+    long id = jdbcTemplate.queryForObject(
+        sql, Long.class, encounter.time, encounter.locationId, encounter.studentId);
     encounter.id = id;
   }
 
@@ -85,21 +85,19 @@ public class EncounterService {
       Long maxTime,
       EncounterKind kind,
       long offset,
-      long count
-      ) {
-    String sql =
-        "SELECT e.id, e.time, e.virtual, e.location_id, e.student_id "
-            + " FROM encounter e"
-            + " WHERE 1=1 "
-            + (encounterId == null ? "" : " AND e.id=" + encounterId)
-            + (studentId == null ? "" : " AND e.student_id=" + studentId)
-            + (locationId == null ? "" : " AND e.location_id=" + locationId)
-            + (kind == null ? "" : " AND e.kind=" + Utils.toSQLString(kind))
-            + (minTime == null ? "" : " AND e.time >= " + minTime)
-            + (maxTime == null ? "" : " AND e.time <= " + maxTime)
-            + (" ORDER BY e.id")
-            + (" LIMIT " + offset + " OFFSET "  + count)
-            + ";";
+      long count) {
+    String sql = "SELECT e.id, e.time, e.virtual, e.location_id, e.student_id "
+        + " FROM encounter e"
+        + " WHERE 1=1 "
+        + (encounterId == null ? "" : " AND e.id=" + encounterId)
+        + (studentId == null ? "" : " AND e.student_id=" + studentId)
+        + (locationId == null ? "" : " AND e.location_id=" + locationId)
+        + (kind == null ? "" : " AND e.kind=" + kind.name())
+        + (minTime == null ? "" : " AND e.time >= " + minTime)
+        + (maxTime == null ? "" : " AND e.time <= " + maxTime)
+        + (" ORDER BY e.id")
+        + (" LIMIT " + count + " OFFSET " + offset)
+        + ";";
     RowMapper<Encounter> rowMapper = new EncounterRowMapper();
     return this.jdbcTemplate.query(sql, rowMapper);
   }

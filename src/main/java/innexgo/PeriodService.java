@@ -29,7 +29,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 public class PeriodService {
 
-  @Autowired private JdbcTemplate jdbcTemplate;
+  @Autowired
+  private JdbcTemplate jdbcTemplate;
 
   public Period getByStartTime(long startTime) {
     String sql = "SELECT start_time, numbering, kind, temp FROM period WHERE start_time=?";
@@ -46,15 +47,13 @@ public class PeriodService {
 
   public void add(Period period) {
     // Add period
-    String sql =
-        "INSERT INTO period (start_time, numbering, kind, temp) values (?, ?, ?, ?)";
+    String sql = "INSERT INTO period (start_time, numbering, kind, temp) values (?, ?, ?, ?)";
     jdbcTemplate.update(
         sql, period.startTime, period.numbering, period.kind.name(), period.temp);
   }
 
   public void update(Period period) {
-    String sql =
-        "UPDATE period SET start_time=?, numbering=?, kind=?, temp=? WHERE start_time=?";
+    String sql = "UPDATE period SET start_time=?, numbering=?, kind=?, temp=? WHERE start_time=?";
     jdbcTemplate.update(
         sql,
         period.startTime,
@@ -86,49 +85,48 @@ public class PeriodService {
     return getByTime(System.currentTimeMillis());
   }
 
-
   public Period getByTime(long time) {
     List<Period> currentPeriods = query(
-      null,          // Long startTime
-      null,          // Long numbering
-      null,          // String kind
-      null,          // Long minStartTime
-      time,          // Long maxStartTime
-      null,          // Boolean temp
-      0,             // offset
-      Long.MAX_VALUE // count
+        null, // Long startTime
+        null, // Long numbering
+        null, // String kind
+        null, // Long minStartTime
+        time, // Long maxStartTime
+        null, // Boolean temp
+        0, // offset
+        Long.MAX_VALUE // count
     );
-    return (currentPeriods.size() != 0 ? currentPeriods.get(currentPeriods.size()-1) : null);
+    return (currentPeriods.size() != 0 ? currentPeriods.get(currentPeriods.size() - 1) : null);
   }
 
   public Period getNextByTime(long time) {
     List<Period> currentPeriods = query(
-      null, // Long startTime
-      null, // Long numbering
-      null, // String kind
-      time, // Long minStartTime
-      null, // Long maxStartTime
-      null, // Boolean temp
-      0,    // offset
-      1     // count
+        null, // Long startTime
+        null, // Long numbering
+        null, // String kind
+        time, // Long minStartTime
+        null, // Long maxStartTime
+        null, // Boolean temp
+        0, // offset
+        1 // count
     );
     return (currentPeriods.size() != 0 ? currentPeriods.get(0) : null);
   }
 
   public List<Period> getIntersectingTime(long minSearchTime, long maxSearchTime) {
     List<Period> pds = query(
-      null,              // Long startTime,
-      null,              // Long numbering,
-      null,              // PeriodKind kind,
-      minSearchTime,     // Long minStartTime,
-      maxSearchTime,     // Long maxStartTime,
-      null,              // Boolean temp,
-      0,                 // long offset,
-      Integer.MAX_VALUE  // long count
-      );
+        null, // Long startTime,
+        null, // Long numbering,
+        null, // PeriodKind kind,
+        minSearchTime, // Long minStartTime,
+        maxSearchTime, // Long maxStartTime,
+        null, // Boolean temp,
+        0, // long offset,
+        Integer.MAX_VALUE // long count
+    );
 
-    Period previous = getByTime(minSearchTime-1);
-    if(pds != null) {
+    Period previous = getByTime(minSearchTime - 1);
+    if (pds != null) {
       pds.add(previous);
     }
 
@@ -143,19 +141,18 @@ public class PeriodService {
       Long maxStartTime,
       Boolean temp,
       long offset,
-      long count
-    ) {
+      long count) {
     String sql = "SELECT prd.start_time, prd.numbering, prd.kind, prd.temp FROM period prd"
-            + " WHERE 1=1"
-            + (startTime == null ? "" : " AND prd.start_time = " + startTime)
-            + (numbering == null ? "" : " AND prd.numbering = " + numbering)
-            + (kind == null ? "" : " AND prd.kind = " + Utils.toSQLString(kind))
-            + (minStartTime == null ? "" : " AND prd.start_time >= " + minStartTime)
-            + (maxStartTime == null ? "" : " AND prd.start_time <= " + maxStartTime)
-            + (temp == null ? "" : " AND prd.temp = " + temp)
-            + (" ORDER BY prd.start_time")
-            + (" LIMIT " + offset + " OFFSET "  + count)
-            + ";";
+        + " WHERE 1=1"
+        + (startTime == null ? "" : " AND prd.start_time = " + startTime)
+        + (numbering == null ? "" : " AND prd.numbering = " + numbering)
+        + (kind == null ? "" : " AND prd.kind = " + kind.name())
+        + (minStartTime == null ? "" : " AND prd.start_time >= " + minStartTime)
+        + (maxStartTime == null ? "" : " AND prd.start_time <= " + maxStartTime)
+        + (temp == null ? "" : " AND prd.temp = " + temp)
+        + (" ORDER BY prd.start_time")
+        + (" LIMIT " + count + " OFFSET " + offset)
+        + ";";
 
     RowMapper<Period> rowMapper = new PeriodRowMapper();
     return this.jdbcTemplate.query(sql, rowMapper);

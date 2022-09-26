@@ -39,7 +39,8 @@ create table course (
 --
 
 drop type if exists encounter_kind cascade;
-create type encounter_kind as enum('virtual','manual','default');
+create type encounter_kind as enum('VIRTUAL','MANUAL','DEFAULT');
+create cast (varchar as encounter_kind) with inout as implicit;
 
 drop table if exists encounter cascade;
 create table encounter (
@@ -75,7 +76,8 @@ create table grade (
 --
 
 drop type if exists irregularity_kind cascade;
-create type irregularity_kind as enum('absent','tardy','leave_noreturn','leave_return','forgot_sign_out');
+create type irregularity_kind as enum('ABSENT','TARDY','LEAVE_NORETURN','LEAVE_RETURN','FORGOT_SIGN_OUT');
+create cast (varchar as irregularity_kind) with inout as implicit;
 
 drop table if exists irregularity cascade;
 create table irregularity (
@@ -126,7 +128,8 @@ create table offering (
 --
 
 drop type if exists period_kind cascade;
-create type period_kind as enum('passing','class','break','lunch','tutorial','none');
+create type period_kind as enum('PASSING','CLASS','BREAK','LUNCH','TUTORIAL','NONE');
+create cast (varchar as period_kind) with inout as implicit;
 
 drop table if exists period cascade;
 create table period (
@@ -164,7 +167,8 @@ create table schedule (
 --
 
 drop type if exists semester_kind cascade;
-create type semester_kind as enum('summer','fall','spring');
+create type semester_kind as enum('SUMMER','FALL','SPRING');
+create cast (varchar as semester_kind) with inout as implicit;
 
 drop table if exists semester cascade;
 create table semester (

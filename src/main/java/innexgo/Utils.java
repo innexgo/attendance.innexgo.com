@@ -125,10 +125,6 @@ public class Utils {
     return str == null || str == "";
   }
 
-  public static String toSQLString(Enum<?> e) {
-    return escape(e.name());
-  }
-
   public static String escape(String str) {
     return "\'" + escapeSQLString(str) + "\'";
   }

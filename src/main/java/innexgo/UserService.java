@@ -28,7 +28,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @Repository
 public class UserService {
-  @Autowired private JdbcTemplate jdbcTemplate;
+  @Autowired
+  private JdbcTemplate jdbcTemplate;
 
   public User getById(long id) {
     String sql = "SELECT id, name, email, password_hash, ring FROM appuser WHERE id=?";
@@ -59,25 +60,21 @@ public class UserService {
 
   public void add(User user) {
     // Add user
-    String sql =
-        "INSERT INTO appuser (name, email, password_hash, ring) values (?, ?, ?, ?)";
+    String sql = "INSERT INTO appuser (name, email, password_hash, ring) values (?, ?, ?, ?)";
     jdbcTemplate.update(
         sql, user.name, user.email, user.passwordHash, user.ring);
 
     // Fetch user id
-    sql =
-        "SELECT id FROM appuser WHERE name=? AND email=? AND password_hash=? AND ring=?";
-    long id =
-        jdbcTemplate.queryForObject(
-            sql, Long.class, user.name, user.email, user.passwordHash, user.ring);
+    sql = "SELECT id FROM appuser WHERE name=? AND email=? AND password_hash=? AND ring=?";
+    long id = jdbcTemplate.queryForObject(
+        sql, Long.class, user.name, user.email, user.passwordHash, user.ring);
 
     // Set user id
     user.id = id;
   }
 
   public void update(User user) {
-    String sql =
-        "UPDATE appuser SET name=?, email=?, password_hash=?, ring=? WHERE id=?";
+    String sql = "UPDATE appuser SET name=?, email=?, password_hash=?, ring=? WHERE id=?";
     jdbcTemplate.update(
         sql,
         user.name,
@@ -107,16 +104,15 @@ public class UserService {
   }
 
   public List<User> query(Long id, String name, String email, Integer ring, long offset, long count) {
-    String sql =
-        "SELECT u.id, u.name, u.password_hash, u.email, u.ring FROM appuser u"
-            + " WHERE 1=1 "
-            + (id == null ? "" : " AND u.id = " + id)
-            + (name == null ? "" : " AND u.name = " + Utils.escape(name))
-            + (email == null ? "" : " AND u.email = " + Utils.escape(email))
-            + (ring == null ? "" : " AND u.ring = " + ring)
-            + (" ORDER BY u.id")
-            + (" LIMIT " + offset + " OFFSET "  + count)
-            + ";";
+    String sql = "SELECT u.id, u.name, u.password_hash, u.email, u.ring FROM appuser u"
+        + " WHERE 1=1 "
+        + (id == null ? "" : " AND u.id = " + id)
+        + (name == null ? "" : " AND u.name = " + Utils.escape(name))
+        + (email == null ? "" : " AND u.email = " + Utils.escape(email))
+        + (ring == null ? "" : " AND u.ring = " + ring)
+        + (" ORDER BY u.id")
+        + (" LIMIT " + count + " OFFSET " + offset)
+        + ";";
 
     RowMapper<User> rowMapper = new UserRowMapper();
     return this.jdbcTemplate.query(sql, rowMapper);

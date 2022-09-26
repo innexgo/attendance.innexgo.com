@@ -28,11 +28,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @Repository
 public class ApiKeyService {
-  @Autowired private JdbcTemplate jdbcTemplate;
+  @Autowired
+  private JdbcTemplate jdbcTemplate;
 
   public ApiKey getById(long id) {
-    String sql =
-        "SELECT id, user_id, creation_time, expiration_time, key_hash FROM api_key WHERE id=?";
+    String sql = "SELECT id, user_id, creation_time, expiration_time, key_hash FROM api_key WHERE id=?";
     RowMapper<ApiKey> rowMapper = new ApiKeyRowMapper();
     ApiKey apiKey = jdbcTemplate.queryForObject(sql, rowMapper, id);
     return apiKey;
@@ -40,8 +40,7 @@ public class ApiKeyService {
 
   // Gets the last created key with the keyhash
   public ApiKey getByKeyHash(String keyHash) {
-    String sql =
-        "SELECT id, user_id, creation_time, expiration_time, key_hash FROM api_key WHERE key_hash=? ORDER BY creation_time DESC";
+    String sql = "SELECT id, user_id, creation_time, expiration_time, key_hash FROM api_key WHERE key_hash=? ORDER BY creation_time DESC";
     RowMapper<ApiKey> rowMapper = new ApiKeyRowMapper();
     List<ApiKey> apiKeys = jdbcTemplate.query(sql, rowMapper, keyHash);
     return apiKeys.size() > 0 ? apiKeys.get(0) : null;
@@ -55,30 +54,26 @@ public class ApiKeyService {
 
   public void add(ApiKey apiKey) {
     // Add API key
-    String sql =
-        "INSERT INTO api_key (user_id, creation_time, expiration_time, key_hash) values (?, ?, ?, ?)";
+    String sql = "INSERT INTO api_key (user_id, creation_time, expiration_time, key_hash) values (?, ?, ?, ?)";
     jdbcTemplate.update(
         sql, apiKey.userId, apiKey.creationTime, apiKey.expirationTime, apiKey.keyHash);
 
     // Fetch apiKey id
-    sql =
-        "SELECT id FROM api_key WHERE user_id=? AND creation_time=? AND expiration_time=? AND key_hash=?";
-    long id =
-        jdbcTemplate.queryForObject(
-            sql,
-            Long.class,
-            apiKey.userId,
-            apiKey.creationTime,
-            apiKey.expirationTime,
-            apiKey.keyHash);
+    sql = "SELECT id FROM api_key WHERE user_id=? AND creation_time=? AND expiration_time=? AND key_hash=?";
+    long id = jdbcTemplate.queryForObject(
+        sql,
+        Long.class,
+        apiKey.userId,
+        apiKey.creationTime,
+        apiKey.expirationTime,
+        apiKey.keyHash);
 
     // Set apiKey id
     apiKey.id = id;
   }
 
   public void update(ApiKey apiKey) {
-    String sql =
-        "UPDATE api_key user_id=?, creation_time=?, expiration_time=?, key=? WHERE id=?";
+    String sql = "UPDATE api_key user_id=?, creation_time=?, expiration_time=?, key=? WHERE id=?";
     jdbcTemplate.update(
         sql, apiKey.userId, apiKey.creationTime, apiKey.expirationTime, apiKey.keyHash);
   }
@@ -108,16 +103,15 @@ public class ApiKeyService {
 
   public List<ApiKey> query(
       Long id, Long userId, Long minCreationTime, Long maxCreationTime, String keyHash, long offset, long count) {
-    String sql =
-        "SELECT a.id, a.user_id, a.creation_time, a.expiration_time, a.key_hash FROM api_key a WHERE 1=1"
-            + (id == null ? "" : " AND a.id=" + id)
-            + (userId == null ? "" : " AND a.user_id =" + userId)
-            + (minCreationTime == null ? "" : " AND a.creation_time >= " + minCreationTime)
-            + (maxCreationTime == null ? "" : " AND a.creation_time <= " + maxCreationTime)
-            + (keyHash == null ? "" : " AND a.key_hash = " + Utils.escape(keyHash))
-            + (" ORDER BY a.id")
-            + (" LIMIT " + offset + " OFFSET "  + count)
-            + ";";
+    String sql = "SELECT a.id, a.user_id, a.creation_time, a.expiration_time, a.key_hash FROM api_key a WHERE 1=1"
+        + (id == null ? "" : " AND a.id=" + id)
+        + (userId == null ? "" : " AND a.user_id =" + userId)
+        + (minCreationTime == null ? "" : " AND a.creation_time >= " + minCreationTime)
+        + (maxCreationTime == null ? "" : " AND a.creation_time <= " + maxCreationTime)
+        + (keyHash == null ? "" : " AND a.key_hash = " + Utils.escape(keyHash))
+        + (" ORDER BY a.id")
+        + (" LIMIT " + count + " OFFSET " + offset)
+        + ";";
     RowMapper<ApiKey> rowMapper = new ApiKeyRowMapper();
     return this.jdbcTemplate.query(sql, rowMapper);
   }
