@@ -60,10 +60,10 @@ create table encounter (
 --
 
 drop table if exists grade cascade;
-create table grade (
+create table grade(
   id bigserial primary key,
   semester_start_time bigint not null,
-  student_id bigint not null references student_id on delete cascade,
+  student_id bigint not null references student(id) on delete cascade,
   numbering bigint not null
 );
 
@@ -114,9 +114,9 @@ create table location (
 
 drop table if exists offering cascade;
 create table offering (
-  course_id bigint not null,
   semester_start_time bigint not null,
-  primary key (course_id, semester_start_time)
+  course_id bigint not null,
+  primary key (semester_start_time, course_id)
 );
 
 --

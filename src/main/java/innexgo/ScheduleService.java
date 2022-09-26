@@ -68,7 +68,7 @@ public class ScheduleService {
     // check if it doesnt exist yet
     if (!existsByStudentIdCourseId(schedule.studentId, schedule.courseId)) {
       // Add schedule
-      String sql = "INSERT INTO schedule (student_id, course_id, has_start, start_time, has_end, end_time) values (?, ?, ?, ?, ?, ?, ?)";
+      String sql = "INSERT INTO schedule (student_id, course_id, has_start, start_time, has_end, end_time) values (?, ?, ?, ?, ?, ?)";
       jdbcTemplate.update(sql, schedule.studentId, schedule.courseId, schedule.hasStart, schedule.startTime,
           schedule.hasEnd, schedule.endTime);
 

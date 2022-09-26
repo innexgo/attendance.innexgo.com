@@ -68,7 +68,7 @@ public class GradeService {
     // check if it doesnt exist yet
     if (!existsByStudentIdSemesterStartTime(grade.studentId, grade.semesterStartTime)) {
       // Add grade
-      String sql = "INSERT INTO grade (student_id, semester_start_time, numbering) values (?, ?, ?, ?)";
+      String sql = "INSERT INTO grade (student_id, semester_start_time, numbering) values (?, ?, ?)";
       jdbcTemplate.update(sql, grade.studentId, grade.semesterStartTime, grade.numbering);
 
       // Fetch grade id

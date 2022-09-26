@@ -33,7 +33,7 @@ public class OfferingService {
   private JdbcTemplate jdbcTemplate;
 
   public Offering getOfferingBySemesterStartTimeCourseId(long semesterStartTime, long courseId) {
-    String sql = "SELECT id, semester_start_time, course_id FROM offering WHERE semester_start_time=? AND course_id=?";
+    String sql = "SELECT semester_start_time, course_id FROM offering WHERE semester_start_time=? AND course_id=?";
     RowMapper<Offering> rowMapper = new OfferingRowMapper();
     List<Offering> offerings = jdbcTemplate.query(sql, rowMapper, semesterStartTime, courseId);
     return offerings.size() == 0 ? null : offerings.get(0);

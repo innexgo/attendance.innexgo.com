@@ -84,26 +84,39 @@ domain_suffix = prompt(f'===> Please enter domain suffix for teacher emails...')
 
 
 
-
 # Load the teachers into the db
 def loadTeacher(row):
     # Generate necessary fields
     userName = row.Teacher
     firstName, _, lastName = row.Teacher.partition(' ')
     # Create email
-    email = f'{alpha(lastName)}{alpha(firstName[0] if len(lastName) > 2 else firstName[0:2])}@{domain_suffix}'.lower()
+    emailLastName = alpha(lastName)
+    emailFirstInitial = alpha(firstName[0] if len(emailLastName) > 2 else firstName[0:2])
+    email = f'{emailLastName}{emailFirstInitial}@{domain_suffix}'.lower()
     password = '1234'
     ring = 1 # Regular User
-    existing = getJSON(f'{hostname}/api/user/',
+    usersWithSameUsername = getJSON(f'{hostname}/api/user/',
                 {
                     'userName': userName,
                     'offset':0,
                     'count':1,
                     'apiKey':apiKey
                 })
-    if len(existing) > 0:
+    if len(usersWithSameUsername ) > 0:
         print(f'> A user with the name {userName} already exists. Skipping.')
         return existing[0]
+
+    usersWithSameEmail = getJSON(f'{hostname}/api/user/',
+                {
+                    'userEmail': email,
+                    'offset':0,
+                    'count':1,
+                    'apiKey':apiKey
+                })
+    if len(usersWithSameEmail) > 0:
+        # TODO: what is esuhsd's policy on multiple emails for similar teachers?
+        print(f'> A user with the email {email} already exists. Using whole name in email.')
+        email = f'{emailLastName}{alpha(firstName)}@{domain_suffix}'.lower()
 
     print(f'> Adding teacher {userName} with email {email}...')
     return getJSON(f'{hostname}/api/user/new/',
@@ -120,7 +133,6 @@ def loadLocation(row):
     roomName = row.Room
     if str(roomName).isdigit():
         locationId = int(roomName)
-        name = f'{locationId}'
     elif roomName == "ATTEND":
         locationId = 2000
     elif roomName == "COUNS":
@@ -129,7 +141,6 @@ def loadLocation(row):
         locationId = 4000
     elif roomName[0] == 'P': # A portable
         locationId = 5000 + int(roomName[1:])
-        name = roomName
     elif roomName == "SVCTE":
         locationId = 6000
     elif roomName == "THTR":
@@ -137,29 +148,29 @@ def loadLocation(row):
     elif roomName == "WORK":
         locationId = 8000
     elif len(roomName) >= 4 and roomName[:4] == "OPEN":
-        locationId = 9000
+        locationId = None
     else:
         locationId = int(prompt(f'===> Enter id for location {roomName} (could not autogenerate)'))
-        name = roomName
 
-    existingLocations = getJSON(f'{hostname}/api/location/',
-                {
-                    'locationId': locationId,
-                    'offset':0,
-                    'count':1,
-                    'apiKey':apiKey
-                })
-    if len(existingLocations) > 0:
-        print(f'> A location with id {locationId} already exists. Skipping.')
-        return existingLocations[0]
+    if locationId is not None:
+        existingLocations = getJSON(f'{hostname}/api/location/',
+                    {
+                        'locationId': locationId,
+                        'offset':0,
+                        'count':1,
+                        'apiKey':apiKey
+                    })
+        if len(existingLocations) > 0:
+            print(f'> A location with id {locationId} already exists. Skipping.')
+            return existingLocations[0]
 
-    print(f'> Adding location {roomName} with id {locationId}...')
-    return getJSON(f'{hostname}/api/location/new/',
-                   {
-                       'locationId':locationId,
-                       'locationName':name,
-                       'apiKey':apiKey
-                   })
+        print(f'> Adding location {roomName} with id {locationId}...')
+        return getJSON(f'{hostname}/api/location/new/',
+                       {
+                           'locationId':locationId,
+                           'locationName':roomName,
+                           'apiKey':apiKey
+                       })
 
 # Load the courses into the db
 def loadCourse(row):
@@ -224,7 +235,6 @@ def loadOffering(row):
                    'semesterStartTime':semesterStartTime,
                    'apiKey':apiKey
                })
-
 
 def loadStudent(row):
     studentId = int(row.StuID)
