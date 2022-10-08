@@ -100,7 +100,7 @@ public class StudentService {
     // If they have an end date it must be after the time
     // find students who are in this list
 
-    String sql = " SELECT DISTINCT st.id, st.name"
+    String sql = " SELECT st.id, st.name"
         + " FROM student st"
         + " INNER JOIN encounter inen ON st.id = inen.student_id"
         + " INNER JOIN session ses ON ses.in_encounter_id = inen.id"
@@ -132,7 +132,7 @@ public class StudentService {
     // From these select schedules where the beginning of the next period is after
     // time
     // Return the students of these schedules
-    String sql = " SELECT DISTINCT st.id, st.name"
+    String sql = " SELECT st.id, st.name"
         + " FROM student st"
         + " INNER JOIN schedule sc ON st.id = sc.student_id"
         + " INNER JOIN course cs ON cs.id = sc.course_id "
