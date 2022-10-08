@@ -104,7 +104,7 @@ public class StudentService {
         + " FROM student st"
         + " INNER JOIN encounter inen ON st.id = inen.student_id"
         + " INNER JOIN session ses ON ses.in_encounter_id = inen.id"
-        + " LEFT JOIN encounter outen ON ses.complete AND ses.out_encounter_id = outen.id"
+        + " LEFT JOIN encounter outen ON ses.out_encounter_id = outen.id"
         + " WHERE 1 = 1 "
         + (" AND inen.location_id = " + locationId)
         + (" AND inen.time < " + time)

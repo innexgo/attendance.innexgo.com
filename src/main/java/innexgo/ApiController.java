@@ -881,7 +881,6 @@ public class ApiController {
       return Errors.MUST_BE_USER.getResponse();
     }
     Semester k = semesterService.getByTime(time);
-    System.out.println(k);
     return new ResponseEntity<>(innexgoService.fillSemester(semesterService.getByTime(time)), HttpStatus.OK);
   }
 

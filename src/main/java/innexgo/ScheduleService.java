@@ -116,7 +116,7 @@ public class ScheduleService {
         + (hasStart == null ? "" : " AND sch.has_start = " + hasStart)
         + (hasEnd == null ? "" : " AND sch.has_end = " + hasEnd)
         + (time == null ? ""
-            : " AND (!sch.has_start OR sch.start_time <= " + time + ") AND (!sch.has_end OR sch.end_time > " + time
+            : " AND (NOT sch.has_start OR sch.start_time <= " + time + ") AND (NOT sch.has_end OR sch.end_time > " + time
                 + ")")
         + (teacherId == null ? "" : " AND c.teacher_id = " + teacherId)
         + (locationId == null ? "" : " AND c.location_id = " + locationId)
