@@ -50,7 +50,7 @@ public class DevelopmentController {
 
   static final String rootEmail = "root@example.com";
 
-  @RequestMapping("/signEveryoneOut/")
+  @RequestMapping("/signEveryoneOut")
   public ResponseEntity<?> signEveryoneOut(
       @RequestParam("apiKey") String apiKey) {
     if(!innexgoService.isAdministrator(apiKey)) {
@@ -60,7 +60,7 @@ public class DevelopmentController {
     return Errors.OK.getResponse();
   }
 
-  @RequestMapping("/issueAbsences/")
+  @RequestMapping("/issueAbsences")
   public ResponseEntity<?> issueAbsences(
       @RequestParam("periodStartTime") Long periodStartTime,
       @RequestParam("apiKey") String apiKey) {
@@ -71,7 +71,7 @@ public class DevelopmentController {
     return Errors.OK.getResponse();
   }
 
-  @RequestMapping("/initializeRoot/")
+  @RequestMapping("/initializeRoot")
   public ResponseEntity<?> populateUsers() {
     if (userService.getAll().size() != 0) {
       return Errors.DATABASE_INITIALIZED.getResponse();
@@ -96,7 +96,7 @@ public class DevelopmentController {
 
 
   /* TESTING */
-  @RequestMapping("/populateTestingPeriods/")
+  @RequestMapping("/populateTestingPeriods")
   public ResponseEntity<?> populateTestingPeriods(
       @RequestParam("apiKey") String apiKey) {
     if(!innexgoService.isAdministrator(apiKey)) {
@@ -134,7 +134,7 @@ public class DevelopmentController {
   }
 
   // deletes periods with a length of less than 4 min
-  @RequestMapping("/deleteTestingPeriods/")
+  @RequestMapping("/deleteTestingPeriods")
   public ResponseEntity<?> deleteTestingPeriods(
       @RequestParam("apiKey") String apiKey) {
     if(!innexgoService.isAdministrator(apiKey)) {
@@ -178,7 +178,7 @@ public class DevelopmentController {
     return Errors.OK.getResponse();
   }
 
-  @RequestMapping("/populatePeriods/")
+  @RequestMapping("/populatePeriods")
   public ResponseEntity<?> populatePeriods(
       @RequestParam("apiKey") String apiKey) {
     if(!innexgoService.isAdministrator(apiKey)) {
