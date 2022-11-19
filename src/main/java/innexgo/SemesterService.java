@@ -70,7 +70,7 @@ public class SemesterService {
   }
 
   public void deleteAll() {
-    String sql = "TRUNCATE semester";
+    String sql = "DELETE FROM semester";
     jdbcTemplate.update(sql);
     return;
   }
@@ -95,7 +95,6 @@ public class SemesterService {
         0, // long offset
         Long.MAX_VALUE // long count
     );
-    System.out.println(currentSemesters);
     // Get the most recent of the ones that start before now
     return (currentSemesters.size() != 0
         ? currentSemesters.get(currentSemesters.size() - 1)

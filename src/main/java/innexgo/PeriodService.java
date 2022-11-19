@@ -70,7 +70,7 @@ public class PeriodService {
   }
 
   public void deleteAll() {
-    String sql = "TRUNCATE period";
+    String sql = "DELETE FROM period";
     jdbcTemplate.update(sql);
     return;
   }

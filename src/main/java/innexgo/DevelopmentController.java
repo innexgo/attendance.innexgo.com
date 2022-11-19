@@ -199,82 +199,81 @@ public class DevelopmentController {
       // collab
       LocalDate thisMonday = monday.plusWeeks(week);
 
-      addPeriod(thisMonday, 101, PeriodKind.PASSING, "7:10");
-      addPeriod(thisMonday, 1, PeriodKind.CLASS, "7:15");
-      addPeriod(thisMonday, 102, PeriodKind.PASSING, "7:55");
-      addPeriod(thisMonday, 2, PeriodKind.CLASS, "8:00");
-      addPeriod(thisMonday, 103, PeriodKind.PASSING, "8:40");
-      addPeriod(thisMonday, 3, PeriodKind.CLASS, "8:45");
-      addPeriod(thisMonday, 204, PeriodKind.BREAK, "9:25");
-      addPeriod(thisMonday, 104, PeriodKind.PASSING, "9:40");
-      addPeriod(thisMonday, 4, PeriodKind.CLASS, "9:45");
-      addPeriod(thisMonday, 300, PeriodKind.TUTORIAL, "10:25");
-      addPeriod(thisMonday, 105, PeriodKind.PASSING, "10:55");
-      addPeriod(thisMonday, 5, PeriodKind.CLASS, "11:00");
-      addPeriod(thisMonday, 106, PeriodKind.LUNCH, "11:40");
-      addPeriod(thisMonday, 106, PeriodKind.PASSING, "12:10");
-      addPeriod(thisMonday, 6, PeriodKind.CLASS, "12:15");
-      addPeriod(thisMonday, 107, PeriodKind.PASSING, "12:55");
-      addPeriod(thisMonday, 7, PeriodKind.CLASS, "13:00");
-      addPeriod(thisMonday, 0, PeriodKind.NONE, "13:40");
+      addPeriod(thisMonday, 101, PeriodKind.PASSING, "8:25");
+      addPeriod(thisMonday, 1, PeriodKind.CLASS, "8:30");
+      addPeriod(thisMonday, 102, PeriodKind.PASSING, "9:20");
+      addPeriod(thisMonday, 2, PeriodKind.CLASS, "9:25");
+      addPeriod(thisMonday, 204, PeriodKind.BREAK, "10:20");
+      addPeriod(thisMonday, 103, PeriodKind.PASSING, "10:35");
+      addPeriod(thisMonday, 3, PeriodKind.CLASS, "10:40");
+      addPeriod(thisMonday, 104, PeriodKind.PASSING, "11:30");
+      addPeriod(thisMonday, 4, PeriodKind.CLASS, "11:35");
+      addPeriod(thisMonday, 106, PeriodKind.LUNCH, "12:25");
+      addPeriod(thisMonday, 105, PeriodKind.PASSING, "12:55");
+      addPeriod(thisMonday, 5, PeriodKind.CLASS, "13:00");
+      addPeriod(thisMonday, 106, PeriodKind.PASSING, "13:50");
+      addPeriod(thisMonday, 6, PeriodKind.CLASS, "13:55");
+      addPeriod(thisMonday, 107, PeriodKind.PASSING, "14:45");
+      addPeriod(thisMonday, 7, PeriodKind.CLASS, "14:50");
+      addPeriod(thisMonday, 0, PeriodKind.NONE, "15:40");
 
       // S Day
       LocalDate thisTuesday = tuesday.plusWeeks(week);
 
-      addPeriod(thisTuesday, 101, PeriodKind.PASSING, "7:10");
-      addPeriod(thisTuesday, 1, PeriodKind.CLASS, "7:15");
-      addPeriod(thisTuesday, 203, PeriodKind.BREAK, "8:55");
-      addPeriod(thisTuesday, 103, PeriodKind.PASSING, "9:10");
-      addPeriod(thisTuesday, 3, PeriodKind.CLASS, "9:15");
-      addPeriod(thisTuesday, 205, PeriodKind.BREAK, "10:55");
-      addPeriod(thisTuesday, 105, PeriodKind.PASSING, "11:10");
-      addPeriod(thisTuesday, 5, PeriodKind.CLASS, "11:15");
-      addPeriod(thisTuesday, 207, PeriodKind.LUNCH, "12:55");
-      addPeriod(thisTuesday, 107, PeriodKind.PASSING, "13:25");
-      addPeriod(thisTuesday, 7, PeriodKind.CLASS, "13:30");
-      addPeriod(thisTuesday, 0, PeriodKind.NONE, "15:10");
+      addPeriod(thisTuesday, 101, PeriodKind.PASSING, "8:25");
+      addPeriod(thisTuesday, 1, PeriodKind.CLASS, "8:30");
+      addPeriod(thisTuesday, 203, PeriodKind.BREAK, "10:05");
+      addPeriod(thisTuesday, 103, PeriodKind.PASSING, "10:20");
+      addPeriod(thisTuesday, 3, PeriodKind.CLASS, "10:25");
+      addPeriod(thisTuesday, 205, PeriodKind.LUNCH, "12:00");
+      addPeriod(thisTuesday, 105, PeriodKind.PASSING, "12:30");
+      addPeriod(thisTuesday, 5, PeriodKind.CLASS, "12:35");
+      addPeriod(thisTuesday, 207, PeriodKind.BREAK, "14:10");
+      addPeriod(thisTuesday, 107, PeriodKind.PASSING, "14:25");
+      addPeriod(thisTuesday, 7, PeriodKind.CLASS, "14:30");
+      addPeriod(thisTuesday, 0, PeriodKind.NONE, "16:05");
 
       LocalDate thisThursday = thursday.plusWeeks(week);
 
-      addPeriod(thisThursday, 101, PeriodKind.PASSING, "7:10");
-      addPeriod(thisThursday, 1, PeriodKind.CLASS, "7:15");
-      addPeriod(thisThursday, 203, PeriodKind.BREAK, "8:55");
-      addPeriod(thisThursday, 103, PeriodKind.PASSING, "9:10");
-      addPeriod(thisThursday, 3, PeriodKind.CLASS, "9:15");
-      addPeriod(thisThursday, 205, PeriodKind.BREAK, "10:55");
-      addPeriod(thisThursday, 105, PeriodKind.PASSING, "11:10");
-      addPeriod(thisThursday, 5, PeriodKind.CLASS, "11:15");
-      addPeriod(thisThursday, 207, PeriodKind.LUNCH, "12:55");
-      addPeriod(thisThursday, 107, PeriodKind.PASSING, "13:25");
-      addPeriod(thisThursday, 7, PeriodKind.CLASS, "13:30");
-      addPeriod(thisThursday, 0, PeriodKind.NONE, "15:10");
+      addPeriod(thisThursday, 101, PeriodKind.PASSING, "8:25");
+      addPeriod(thisThursday, 1, PeriodKind.CLASS, "8:30");
+      addPeriod(thisThursday, 203, PeriodKind.BREAK, "10:05");
+      addPeriod(thisThursday, 103, PeriodKind.PASSING, "10:20");
+      addPeriod(thisThursday, 3, PeriodKind.CLASS, "10:25");
+      addPeriod(thisThursday, 205, PeriodKind.LUNCH, "12:00");
+      addPeriod(thisThursday, 105, PeriodKind.PASSING, "12:30");
+      addPeriod(thisThursday, 5, PeriodKind.CLASS, "12:35");
+      addPeriod(thisThursday, 207, PeriodKind.BREAK, "14:10");
+      addPeriod(thisThursday, 107, PeriodKind.PASSING, "14:25");
+      addPeriod(thisThursday, 7, PeriodKind.CLASS, "14:30");
+      addPeriod(thisThursday, 0, PeriodKind.NONE, "16:05");
 
       // T Day
       LocalDate thisWednesday = wednesday.plusWeeks(week);
 
-      addPeriod(thisWednesday, 102, PeriodKind.PASSING, "7:55");
-      addPeriod(thisWednesday, 2, PeriodKind.CLASS, "8:00");
-      addPeriod(thisWednesday, 204, PeriodKind.BREAK, "9:40");
-      addPeriod(thisWednesday, 104, PeriodKind.PASSING, "9:55");
-      addPeriod(thisWednesday, 4, PeriodKind.CLASS, "10:00");
-      addPeriod(thisWednesday, 300, PeriodKind.TUTORIAL, "11:40");
-      addPeriod(thisWednesday, 206, PeriodKind.LUNCH, "12:30");
-      addPeriod(thisWednesday, 106, PeriodKind.PASSING, "13:00");
-      addPeriod(thisWednesday, 6, PeriodKind.CLASS, "13:05");
-      addPeriod(thisWednesday, 0, PeriodKind.NONE, "14:45");
+      addPeriod(thisWednesday, 102, PeriodKind.PASSING, "8:25");
+      addPeriod(thisWednesday, 2, PeriodKind.CLASS, "8:30");
+      addPeriod(thisWednesday, 204, PeriodKind.BREAK, "10:05");
+      addPeriod(thisWednesday, 104, PeriodKind.PASSING, "10:20");
+      addPeriod(thisWednesday, 4, PeriodKind.CLASS, "10:25");
+      addPeriod(thisWednesday, 300, PeriodKind.TUTORIAL, "12:00");
+      addPeriod(thisWednesday, 206, PeriodKind.LUNCH, "12:50");
+      addPeriod(thisWednesday, 106, PeriodKind.PASSING, "13:20");
+      addPeriod(thisWednesday, 6, PeriodKind.CLASS, "13:25");
+      addPeriod(thisWednesday, 0, PeriodKind.NONE, "15:00");
 
       LocalDate thisFriday = friday.plusWeeks(week);
 
-      addPeriod(thisFriday, 102, PeriodKind.PASSING, "7:55");
-      addPeriod(thisFriday, 2, PeriodKind.CLASS, "8:00");
-      addPeriod(thisFriday, 204, PeriodKind.BREAK, "9:40");
-      addPeriod(thisFriday, 104, PeriodKind.PASSING, "9:55");
-      addPeriod(thisFriday, 4, PeriodKind.CLASS, "10:00");
-      addPeriod(thisFriday, 300, PeriodKind.TUTORIAL, "11:40");
-      addPeriod(thisFriday, 206, PeriodKind.LUNCH, "12:30");
-      addPeriod(thisFriday, 106, PeriodKind.PASSING, "13:00");
-      addPeriod(thisFriday, 6, PeriodKind.CLASS, "13:05");
-      addPeriod(thisFriday, 0, PeriodKind.NONE, "14:45");
+      addPeriod(thisFriday, 102, PeriodKind.PASSING, "8:25");
+      addPeriod(thisFriday, 2, PeriodKind.CLASS, "8:30");
+      addPeriod(thisFriday, 204, PeriodKind.BREAK, "10:05");
+      addPeriod(thisFriday, 104, PeriodKind.PASSING, "10:20");
+      addPeriod(thisFriday, 4, PeriodKind.CLASS, "10:25");
+      addPeriod(thisFriday, 300, PeriodKind.TUTORIAL, "12:00");
+      addPeriod(thisFriday, 206, PeriodKind.LUNCH, "12:50");
+      addPeriod(thisFriday, 106, PeriodKind.PASSING, "13:20");
+      addPeriod(thisFriday, 6, PeriodKind.CLASS, "13:25");
+      addPeriod(thisFriday, 0, PeriodKind.NONE, "15:00");
     }
     // We need to restart this so that it works properly
     innexgoService.restartInsertAbsences();

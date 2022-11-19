@@ -1,5 +1,32 @@
 create database innexgo_attendance;
 \c innexgo_attendance;
+
+--
+-- table structure for table student
+--
+
+drop table if exists student cascade;
+create table student (
+  id bigint not null primary key,
+  name text not null
+);
+
+--
+-- table structure for table appuser
+--
+
+drop table if exists appuser cascade;
+create table appuser (
+  id bigserial primary key,
+  name text not null,
+  email text not null,
+  password_hash text not null,
+  ring bigint not null
+);
+
+
+
+
 --
 -- table structure for table api_key
 --
@@ -7,32 +34,34 @@ create database innexgo_attendance;
 drop table if exists api_key cascade;
 create table api_key (
   id bigserial primary key,
-  user_id bigint not null,
+  user_id bigint not null references appuser(id) on delete cascade,
   creation_time bigint not null,
   expiration_time bigint not null,
   key_hash text not null
 );
 
 --
--- dumping data for table api_key
+-- table structure for table location
 --
+
+drop table if exists location cascade;
+create table location (
+  id bigint not null primary key,
+  name text not null
+);
 
 --
 -- table structure for table course
 --
 
 drop table if exists course cascade;
-create table course (
+create table course(
   id bigserial primary key,
   teacher_id bigint not null references appuser(id) on delete cascade,
   location_id bigint not null references location(id) on delete cascade,
   period bigint not null,
   subject text not null
 );
-
---
--- dumping data for table course
---
 
 --
 -- table structure for table encounter
@@ -52,10 +81,6 @@ create table encounter (
 );
 
 --
--- dumping data for table encounter
---
-
---
 -- table structure for table grade
 --
 
@@ -68,8 +93,20 @@ create table grade(
 );
 
 --
--- dumping data for table grade
+-- table structure for table period
 --
+
+drop type if exists period_kind cascade;
+create type period_kind as enum('PASSING','CLASS','BREAK','LUNCH','TUTORIAL','NONE');
+create cast (varchar as period_kind) with inout as implicit;
+
+drop table if exists period cascade;
+create table period (
+  start_time bigint not null primary key,
+  numbering bigint not null,
+  kind period_kind not null,
+  temp bool not null
+);
 
 --
 -- table structure for table irregularity
@@ -91,24 +128,6 @@ create table irregularity (
 );
 
 --
--- dumping data for table irregularity
---
-
---
--- table structure for table location
---
-
-drop table if exists location cascade;
-create table location (
-  id bigint not null primary key,
-  name text not null
-);
-
---
--- dumping data for table location
---
-
---
 -- table structure for table offering
 --
 
@@ -118,30 +137,6 @@ create table offering (
   course_id bigint not null,
   primary key (semester_start_time, course_id)
 );
-
---
--- dumping data for table offering
---
-
---
--- table structure for table period
---
-
-drop type if exists period_kind cascade;
-create type period_kind as enum('PASSING','CLASS','BREAK','LUNCH','TUTORIAL','NONE');
-create cast (varchar as period_kind) with inout as implicit;
-
-drop table if exists period cascade;
-create table period (
-  start_time bigint not null primary key,
-  numbering bigint not null,
-  kind period_kind not null,
-  temp bool not null
-);
-
---
--- dumping data for table period
---
 
 --
 -- table structure for table schedule
@@ -195,27 +190,4 @@ create table session (
 --
 -- dumping data for table session
 --
-
---
--- table structure for table student
---
-
-drop table if exists student cascade;
-create table student (
-  id bigint not null primary key,
-  name text not null
-);
-
---
--- table structure for table appuser
---
-
-drop table if exists appuser cascade;
-create table appuser (
-  id bigserial primary key,
-  name text not null,
-  email text not null,
-  password_hash text not null,
-  ring bigint not null
-);
 
