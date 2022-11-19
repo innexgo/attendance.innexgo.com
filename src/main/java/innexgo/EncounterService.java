@@ -49,7 +49,7 @@ public class EncounterService {
     // Add encounter
     String sql = "INSERT INTO encounter(time, location_id, student_id, kind) values (?, ?, ?, ?)";
     jdbcTemplate.update(
-        sql, encounter.id, encounter.time, encounter.locationId, encounter.studentId, encounter.kind.name());
+        sql, encounter.time, encounter.locationId, encounter.studentId, encounter.kind.name());
 
     // Fetch encounter id
     sql = "SELECT id FROM encounter WHERE time=? AND location_id=? AND student_id=?";

@@ -56,7 +56,7 @@ async function manualEncounter(studentId) {
     let session = await fetchJson(
       `${apiUrl()}/misc/attends/?studentId=${studentId}&locationId=${locationId}&manual=true&apiKey=${apiKey.key}`);
 
-    if (session.complete) {
+    if (session.outEncounter) {
       giveTempInfo(`Sucessfully logged ${session.inEncounter.student.name} out of ${session.inEncounter.location.name}`);
       beepdown.play();
     } else {
@@ -165,7 +165,7 @@ async function recentActivityLoadPage() {
   $('#recentactivity-events').empty();
   sessions.map(s => {
     // Convert the session into encounters, but keep the info about whether it was an in or out
-    if (s.complete) {
+    if (s.outEncounter) {
       return [{ encounter: s.inEncounter, in: true },
       { encounter: s.outEncounter, in: false }];
     } else {
