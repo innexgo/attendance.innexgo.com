@@ -47,7 +47,7 @@ public class EncounterService {
 
   public void add(Encounter encounter) {
     // Add encounter
-    String sql = "INSERT INTO encounter(time, location_id, student_id, kind) values (?, ?, ?, ?)";
+    String sql = "INSERT INTO encounter(time, location_id, student_id, kind) values (?, ?, ?, ?::encounter_kind)";
     jdbcTemplate.update(
         sql, encounter.time, encounter.locationId, encounter.studentId, encounter.kind.name());
 
@@ -92,7 +92,7 @@ public class EncounterService {
         + (encounterId == null ? "" : " AND e.id=" + encounterId)
         + (studentId == null ? "" : " AND e.student_id=" + studentId)
         + (locationId == null ? "" : " AND e.location_id=" + locationId)
-        + (kind == null ? "" : " AND e.kind=" + kind.name())
+        + (kind == null ? "" : " AND e.kind = " + Utils.escape(kind.name()))
         + (minTime == null ? "" : " AND e.time >= " + minTime)
         + (maxTime == null ? "" : " AND e.time <= " + maxTime)
         + (" ORDER BY e.id")

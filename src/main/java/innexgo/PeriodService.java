@@ -47,7 +47,7 @@ public class PeriodService {
 
   public void add(Period period) {
     // Add period
-    String sql = "INSERT INTO period (start_time, numbering, kind, temp) values (?, ?, ?, ?)";
+    String sql = "INSERT INTO period (start_time, numbering, kind, temp) values (?, ?, ?::period_kind, ?)";
     jdbcTemplate.update(
         sql, period.startTime, period.numbering, period.kind.name(), period.temp);
   }
@@ -146,7 +146,7 @@ public class PeriodService {
         + " WHERE 1=1"
         + (startTime == null ? "" : " AND prd.start_time = " + startTime)
         + (numbering == null ? "" : " AND prd.numbering = " + numbering)
-        + (kind == null ? "" : " AND prd.kind = " + kind.name())
+        + (kind == null ? "" : " AND prd.kind = " + Utils.escape(kind.name()))
         + (minStartTime == null ? "" : " AND prd.start_time >= " + minStartTime)
         + (maxStartTime == null ? "" : " AND prd.start_time <= " + maxStartTime)
         + (temp == null ? "" : " AND prd.temp = " + temp)

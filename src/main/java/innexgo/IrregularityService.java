@@ -48,7 +48,7 @@ public class IrregularityService {
   public void add(Irregularity irregularity) {
 
     // Add irregularity
-    String sql = "INSERT INTO irregularity (student_id, course_id, period_start_time, kind, time, time_missing) values (?, ?, ?, ?, ?, ?)";
+    String sql = "INSERT INTO irregularity (student_id, course_id, period_start_time, kind, time, time_missing) values (?, ?, ?, ?::irregularity_kind, ?, ?)";
     jdbcTemplate.update(
         sql,
         irregularity.studentId,
@@ -59,7 +59,7 @@ public class IrregularityService {
         irregularity.timeMissing);
 
     // Fetch irregularity id
-    sql = "SELECT id FROM irregularity WHERE student_id=? AND course_id=? AND period_start_time=? AND kind=? AND time=? AND time_missing=?";
+    sql = "SELECT id FROM irregularity WHERE student_id=? AND course_id=? AND period_start_time=? AND kind=?::irregularity_kind AND time=? AND time_missing=?";
     long id = jdbcTemplate.queryForObject(
         sql,
         Long.class,
@@ -121,7 +121,7 @@ public class IrregularityService {
         + (courseId == null ? "" : " AND irr.course_id = " + courseId)
         + (periodStartTime == null ? "" : " AND irr.period_start_time = " + periodStartTime)
         + (teacherId == null ? "" : " AND crs.teacher_id = " + teacherId)
-        + (kind == null ? "" : " AND irr.kind = " + kind.name())
+        + (kind == null ? "" : " AND irr.kind = " + Utils.escape(kind.name()))
         + (time == null ? "" : " AND irr.time = " + time)
         + (minTime == null ? "" : " AND irr.time >= " + minTime)
         + (maxTime == null ? "" : " AND irr.time <= " + maxTime)
