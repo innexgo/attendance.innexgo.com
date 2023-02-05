@@ -314,8 +314,8 @@ async function currentStatus() {
         }
       }
     }
-    // Wait 5 seconds before updating again
-    await sleep(5000);
+    // Wait 2 seconds before updating again
+    await sleep(2000);
   }
 }
 
