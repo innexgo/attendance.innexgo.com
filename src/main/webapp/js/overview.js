@@ -206,7 +206,7 @@ async function recentActivity() {
       console.log(err);
       giveTempError('Failed to fetch recent activity data.');
     }
-    await sleep(5000);
+    await sleep(2000);
   }
 }
 
