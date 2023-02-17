@@ -104,7 +104,7 @@ def loadTeacher(row):
                 })
     if len(usersWithSameUsername ) > 0:
         print(f'> A user with the name {userName} already exists. Skipping.')
-        return existing[0]
+        return usersWithSameUsername[0]
 
     usersWithSameEmail = getJSON(f'{hostname}/api/user/',
                 {
